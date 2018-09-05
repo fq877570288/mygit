@@ -1,0 +1,16 @@
+package cn.cucsi.bsd.ucc.service;
+
+import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+
+public interface UccUserService {
+    Page<UccUsers> findAll(UccUserCriteria search);
+    UccUsers findOne(String userId);
+    UccUsers save(UccUsers uccUsers);
+    Boolean delete(String userId);
+    Boolean multiDelete(String userIds);
+    List<UccUsers> findAllList(UccUserCriteria search);
+}

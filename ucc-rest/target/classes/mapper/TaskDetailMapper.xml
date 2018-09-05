@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.ucc.common.mapper.TaskDetailMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.ucc.data.domain.TaskDetail" >
+    <id column="TASK_DETAIL_ID" property="taskDetailId" jdbcType="VARCHAR" />
+    <result column="BUSINESS_CODE" property="businessCode" jdbcType="VARCHAR" />
+    <result column="TASK_TYPE_ID" property="taskTypeId" jdbcType="VARCHAR" />
+    <result column="DEPT_MESH_ID" property="deptMeshId" jdbcType="VARCHAR" />
+    <result column="DEPT_AREA_ID" property="deptAreaId" jdbcType="VARCHAR" />
+    <result column="DEPT_AGENCY_ID" property="deptAgencyId" jdbcType="VARCHAR" />
+    <result column="TASK_CODE" property="taskCode" jdbcType="VARCHAR" />
+    <result column="PRODUCT_TYPE" property="productType" jdbcType="VARCHAR" />
+    <result column="PHONE_NUMBER" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="RATE" property="rate" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS1" property="customfields1" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS2" property="customfields2" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS3" property="customfields3" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS4" property="customfields4" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS5" property="customfields5" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS6" property="customfields6" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS7" property="customfields7" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS8" property="customfields8" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS9" property="customfields9" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS10" property="customfields10" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS11" property="customfields11" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS12" property="customfields12" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS13" property="customfields13" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS14" property="customfields14" jdbcType="VARCHAR" />
+    <result column="CUSTOMFIELDS15" property="customfields15" jdbcType="VARCHAR" />
+    <result column="RESPONSIBLE" property="responsible" jdbcType="VARCHAR" />
+    <result column="NET_STOP" property="netStop" jdbcType="VARCHAR" />
+    <result column="PACKAGE_NAME" property="packageName" jdbcType="VARCHAR" />
+    <result column="CONTRACT_NAME" property="contractName" jdbcType="VARCHAR" />
+    <result column="CONTRACT_START_TIME" property="contractStartTime" jdbcType="VARCHAR" />
+    <result column="CONTRACT_END_TIME" property="contractEndTime" jdbcType="VARCHAR" />
+    <result column="ACTIVATION_TIME" property="activationTime" jdbcType="VARCHAR" />
+    <result column="DEVELOPMENT_DEPT" property="developmentDept" jdbcType="VARCHAR" />
+    <result column="IMPORT_BATCH" property="importBatch" jdbcType="VARCHAR" />
+    <result column="IMPORT_PERSON_ID" property="importPersonId" jdbcType="VARCHAR" />
+    <result column="IMPORT_TIME" property="importTime" jdbcType="TIMESTAMP" />
+    <result column="CONTACTS" property="contacts" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="INSTALLED_ADDRESS" property="installedAddress" jdbcType="VARCHAR" />
+    <result column="PON_LOGO" property="ponLogo" jdbcType="VARCHAR" />
+    <result column="TARIFF_NAME" property="tariffName" jdbcType="VARCHAR" />
+    <result column="PHONE_NUMBER2" property="phoneNumber2" jdbcType="VARCHAR" />
+    <result column="PHONE_NUMBER3" property="phoneNumber3" jdbcType="VARCHAR" />
+    <result column="TASK_STATUS" property="taskStatus" jdbcType="VARCHAR" />
+    <result column="ROPERATE_DEPT_ID" property="roperateDeptId" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+    <result column="DEFULT_PHONE" property="defultPhone" jdbcType="VARCHAR" />
+    <result column="INIT_DEVELOPMENT" property="initDevelopment" jdbcType="VARCHAR" />
+    <result column="INIT_MESH_ID" property="initMeshId" jdbcType="VARCHAR" />
+    <result column="INIT_AREA_ID" property="initAreaId" jdbcType="VARCHAR" />
+    <result column="END_DATE" property="endDate" jdbcType="TIMESTAMP" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="customer_phone" property="customerPhone" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TASK_DETAIL_ID, BUSINESS_CODE, TASK_TYPE_ID, DEPT_MESH_ID, DEPT_AREA_ID, DEPT_AGENCY_ID, 
+    TASK_CODE, PRODUCT_TYPE, PHONE_NUMBER, RATE, CUSTOMFIELDS1, CUSTOMFIELDS2, CUSTOMFIELDS3, 
+    CUSTOMFIELDS4, CUSTOMFIELDS5, CUSTOMFIELDS6, CUSTOMFIELDS7, CUSTOMFIELDS8, CUSTOMFIELDS9, 
+    CUSTOMFIELDS10, CUSTOMFIELDS11, CUSTOMFIELDS12, CUSTOMFIELDS13, CUSTOMFIELDS14, CUSTOMFIELDS15, 
+    RESPONSIBLE, NET_STOP, PACKAGE_NAME, CONTRACT_NAME, CONTRACT_START_TIME, CONTRACT_END_TIME, 
+    ACTIVATION_TIME, DEVELOPMENT_DEPT, IMPORT_BATCH, IMPORT_PERSON_ID, IMPORT_TIME, CONTACTS, 
+    STATUS, INSTALLED_ADDRESS, PON_LOGO, TARIFF_NAME, PHONE_NUMBER2, PHONE_NUMBER3, TASK_STATUS, 
+    ROPERATE_DEPT_ID, USER_NAME, DEFULT_PHONE, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID, 
+    END_DATE, USER_ID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from OC_TASK_DETAIL
+    where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OC_TASK_DETAIL
+    where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskDetail" >
+    insert into OC_TASK_DETAIL (TASK_DETAIL_ID, BUSINESS_CODE, TASK_TYPE_ID, 
+      DEPT_MESH_ID, DEPT_AREA_ID, DEPT_AGENCY_ID, 
+      TASK_CODE, PRODUCT_TYPE, PHONE_NUMBER, 
+      RATE, CUSTOMFIELDS1, CUSTOMFIELDS2, 
+      CUSTOMFIELDS3, CUSTOMFIELDS4, CUSTOMFIELDS5, 
+      CUSTOMFIELDS6, CUSTOMFIELDS7, CUSTOMFIELDS8, 
+      CUSTOMFIELDS9, CUSTOMFIELDS10, CUSTOMFIELDS11, 
+      CUSTOMFIELDS12, CUSTOMFIELDS13, CUSTOMFIELDS14, 
+      CUSTOMFIELDS15, RESPONSIBLE, NET_STOP, 
+      PACKAGE_NAME, CONTRACT_NAME, CONTRACT_START_TIME, 
+      CONTRACT_END_TIME, ACTIVATION_TIME, DEVELOPMENT_DEPT, 
+      IMPORT_BATCH, IMPORT_PERSON_ID, IMPORT_TIME, 
+      CONTACTS, STATUS, INSTALLED_ADDRESS, 
+      PON_LOGO, TARIFF_NAME, PHONE_NUMBER2, 
+      PHONE_NUMBER3, TASK_STATUS, ROPERATE_DEPT_ID, 
+      USER_NAME, DEFULT_PHONE, INIT_DEVELOPMENT, 
+      INIT_MESH_ID, INIT_AREA_ID, END_DATE, 
+      USER_ID)
+    values (#{taskDetailId,jdbcType=VARCHAR}, #{businessCode,jdbcType=VARCHAR}, #{taskTypeId,jdbcType=VARCHAR}, 
+      #{deptMeshId,jdbcType=VARCHAR}, #{deptAreaId,jdbcType=VARCHAR}, #{deptAgencyId,jdbcType=VARCHAR}, 
+      #{taskCode,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, 
+      #{rate,jdbcType=VARCHAR}, #{customfields1,jdbcType=VARCHAR}, #{customfields2,jdbcType=VARCHAR}, 
+      #{customfields3,jdbcType=VARCHAR}, #{customfields4,jdbcType=VARCHAR}, #{customfields5,jdbcType=VARCHAR}, 
+      #{customfields6,jdbcType=VARCHAR}, #{customfields7,jdbcType=VARCHAR}, #{customfields8,jdbcType=VARCHAR}, 
+      #{customfields9,jdbcType=VARCHAR}, #{customfields10,jdbcType=VARCHAR}, #{customfields11,jdbcType=VARCHAR}, 
+      #{customfields12,jdbcType=VARCHAR}, #{customfields13,jdbcType=VARCHAR}, #{customfields14,jdbcType=VARCHAR}, 
+      #{customfields15,jdbcType=VARCHAR}, #{responsible,jdbcType=VARCHAR}, #{netStop,jdbcType=VARCHAR}, 
+      #{packageName,jdbcType=VARCHAR}, #{contractName,jdbcType=VARCHAR}, #{contractStartTime,jdbcType=VARCHAR}, 
+      #{contractEndTime,jdbcType=VARCHAR}, #{activationTime,jdbcType=VARCHAR}, #{developmentDept,jdbcType=VARCHAR}, 
+      #{importBatch,jdbcType=VARCHAR}, #{importPersonId,jdbcType=VARCHAR}, #{importTime,jdbcType=TIMESTAMP}, 
+      #{contacts,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{installedAddress,jdbcType=VARCHAR}, 
+      #{ponLogo,jdbcType=VARCHAR}, #{tariffName,jdbcType=VARCHAR}, #{phoneNumber2,jdbcType=VARCHAR}, 
+      #{phoneNumber3,jdbcType=VARCHAR}, #{taskStatus,jdbcType=VARCHAR}, #{roperateDeptId,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{defultPhone,jdbcType=VARCHAR}, #{initDevelopment,jdbcType=VARCHAR}, 
+      #{initMeshId,jdbcType=VARCHAR}, #{initAreaId,jdbcType=VARCHAR}, #{endDate,jdbcType=TIMESTAMP}, 
+      #{userId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskDetail" >
+    insert into OC_TASK_DETAIL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskDetailId != null" >
+        TASK_DETAIL_ID,
+      </if>
+      <if test="businessCode != null" >
+        BUSINESS_CODE,
+      </if>
+      <if test="taskTypeId != null" >
+        TASK_TYPE_ID,
+      </if>
+      <if test="deptMeshId != null" >
+        DEPT_MESH_ID,
+      </if>
+      <if test="deptAreaId != null" >
+        DEPT_AREA_ID,
+      </if>
+      <if test="deptAgencyId != null" >
+        DEPT_AGENCY_ID,
+      </if>
+      <if test="taskCode != null" >
+        TASK_CODE,
+      </if>
+      <if test="productType != null" >
+        PRODUCT_TYPE,
+      </if>
+      <if test="phoneNumber != null" >
+        PHONE_NUMBER,
+      </if>
+      <if test="rate != null" >
+        RATE,
+      </if>
+      <if test="customfields1 != null" >
+        CUSTOMFIELDS1,
+      </if>
+      <if test="customfields2 != null" >
+        CUSTOMFIELDS2,
+      </if>
+      <if test="customfields3 != null" >
+        CUSTOMFIELDS3,
+      </if>
+      <if test="customfields4 != null" >
+        CUSTOMFIELDS4,
+      </if>
+      <if test="customfields5 != null" >
+        CUSTOMFIELDS5,
+      </if>
+      <if test="customfields6 != null" >
+        CUSTOMFIELDS6,
+      </if>
+      <if test="customfields7 != null" >
+        CUSTOMFIELDS7,
+      </if>
+      <if test="customfields8 != null" >
+        CUSTOMFIELDS8,
+      </if>
+      <if test="customfields9 != null" >
+        CUSTOMFIELDS9,
+      </if>
+      <if test="customfields10 != null" >
+        CUSTOMFIELDS10,
+      </if>
+      <if test="customfields11 != null" >
+        CUSTOMFIELDS11,
+      </if>
+      <if test="customfields12 != null" >
+        CUSTOMFIELDS12,
+      </if>
+      <if test="customfields13 != null" >
+        CUSTOMFIELDS13,
+      </if>
+      <if test="customfields14 != null" >
+        CUSTOMFIELDS14,
+      </if>
+      <if test="customfields15 != null" >
+        CUSTOMFIELDS15,
+      </if>
+      <if test="responsible != null" >
+        RESPONSIBLE,
+      </if>
+      <if test="netStop != null" >
+        NET_STOP,
+      </if>
+      <if test="packageName != null" >
+        PACKAGE_NAME,
+      </if>
+      <if test="contractName != null" >
+        CONTRACT_NAME,
+      </if>
+      <if test="contractStartTime != null" >
+        CONTRACT_START_TIME,
+      </if>
+      <if test="contractEndTime != null" >
+        CONTRACT_END_TIME,
+      </if>
+      <if test="activationTime != null" >
+        ACTIVATION_TIME,
+      </if>
+      <if test="developmentDept != null" >
+        DEVELOPMENT_DEPT,
+      </if>
+      <if test="importBatch != null" >
+        IMPORT_BATCH,
+      </if>
+      <if test="importPersonId != null" >
+        IMPORT_PERSON_ID,
+      </if>
+      <if test="importTime != null" >
+        IMPORT_TIME,
+      </if>
+      <if test="contacts != null" >
+        CONTACTS,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="installedAddress != null" >
+        INSTALLED_ADDRESS,
+      </if>
+      <if test="ponLogo != null" >
+        PON_LOGO,
+      </if>
+      <if test="tariffName != null" >
+        TARIFF_NAME,
+      </if>
+      <if test="phoneNumber2 != null" >
+        PHONE_NUMBER2,
+      </if>
+      <if test="phoneNumber3 != null" >
+        PHONE_NUMBER3,
+      </if>
+      <if test="taskStatus != null" >
+        TASK_STATUS,
+      </if>
+      <if test="roperateDeptId != null" >
+        ROPERATE_DEPT_ID,
+      </if>
+      <if test="userName != null" >
+        USER_NAME,
+      </if>
+      <if test="defultPhone != null" >
+        DEFULT_PHONE,
+      </if>
+      <if test="initDevelopment != null" >
+        INIT_DEVELOPMENT,
+      </if>
+      <if test="initMeshId != null" >
+        INIT_MESH_ID,
+      </if>
+      <if test="initAreaId != null" >
+        INIT_AREA_ID,
+      </if>
+      <if test="endDate != null" >
+        END_DATE,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskDetailId != null" >
+        #{taskDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessCode != null" >
+        #{businessCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTypeId != null" >
+        #{taskTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptMeshId != null" >
+        #{deptMeshId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptAreaId != null" >
+        #{deptAreaId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptAgencyId != null" >
+        #{deptAgencyId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCode != null" >
+        #{taskCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields1 != null" >
+        #{customfields1,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields2 != null" >
+        #{customfields2,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields3 != null" >
+        #{customfields3,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields4 != null" >
+        #{customfields4,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields5 != null" >
+        #{customfields5,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields6 != null" >
+        #{customfields6,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields7 != null" >
+        #{customfields7,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields8 != null" >
+        #{customfields8,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields9 != null" >
+        #{customfields9,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields10 != null" >
+        #{customfields10,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields11 != null" >
+        #{customfields11,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields12 != null" >
+        #{customfields12,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields13 != null" >
+        #{customfields13,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields14 != null" >
+        #{customfields14,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields15 != null" >
+        #{customfields15,jdbcType=VARCHAR},
+      </if>
+      <if test="responsible != null" >
+        #{responsible,jdbcType=VARCHAR},
+      </if>
+      <if test="netStop != null" >
+        #{netStop,jdbcType=VARCHAR},
+      </if>
+      <if test="packageName != null" >
+        #{packageName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractStartTime != null" >
+        #{contractStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="contractEndTime != null" >
+        #{contractEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="activationTime != null" >
+        #{activationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="developmentDept != null" >
+        #{developmentDept,jdbcType=VARCHAR},
+      </if>
+      <if test="importBatch != null" >
+        #{importBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="importPersonId != null" >
+        #{importPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="importTime != null" >
+        #{importTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contacts != null" >
+        #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="installedAddress != null" >
+        #{installedAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ponLogo != null" >
+        #{ponLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="tariffName != null" >
+        #{tariffName,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber2 != null" >
+        #{phoneNumber2,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber3 != null" >
+        #{phoneNumber3,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null" >
+        #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="roperateDeptId != null" >
+        #{roperateDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="defultPhone != null" >
+        #{defultPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="initDevelopment != null" >
+        #{initDevelopment,jdbcType=VARCHAR},
+      </if>
+      <if test="initMeshId != null" >
+        #{initMeshId,jdbcType=VARCHAR},
+      </if>
+      <if test="initAreaId != null" >
+        #{initAreaId,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskDetail" >
+    update OC_TASK_DETAIL
+    <set >
+      <if test="businessCode != null" >
+        BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTypeId != null" >
+        TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptMeshId != null" >
+        DEPT_MESH_ID = #{deptMeshId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptAreaId != null" >
+        DEPT_AREA_ID = #{deptAreaId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptAgencyId != null" >
+        DEPT_AGENCY_ID = #{deptAgencyId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskCode != null" >
+        TASK_CODE = #{taskCode,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        RATE = #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields1 != null" >
+        CUSTOMFIELDS1 = #{customfields1,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields2 != null" >
+        CUSTOMFIELDS2 = #{customfields2,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields3 != null" >
+        CUSTOMFIELDS3 = #{customfields3,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields4 != null" >
+        CUSTOMFIELDS4 = #{customfields4,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields5 != null" >
+        CUSTOMFIELDS5 = #{customfields5,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields6 != null" >
+        CUSTOMFIELDS6 = #{customfields6,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields7 != null" >
+        CUSTOMFIELDS7 = #{customfields7,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields8 != null" >
+        CUSTOMFIELDS8 = #{customfields8,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields9 != null" >
+        CUSTOMFIELDS9 = #{customfields9,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields10 != null" >
+        CUSTOMFIELDS10 = #{customfields10,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields11 != null" >
+        CUSTOMFIELDS11 = #{customfields11,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields12 != null" >
+        CUSTOMFIELDS12 = #{customfields12,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields13 != null" >
+        CUSTOMFIELDS13 = #{customfields13,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields14 != null" >
+        CUSTOMFIELDS14 = #{customfields14,jdbcType=VARCHAR},
+      </if>
+      <if test="customfields15 != null" >
+        CUSTOMFIELDS15 = #{customfields15,jdbcType=VARCHAR},
+      </if>
+      <if test="responsible != null" >
+        RESPONSIBLE = #{responsible,jdbcType=VARCHAR},
+      </if>
+      <if test="netStop != null" >
+        NET_STOP = #{netStop,jdbcType=VARCHAR},
+      </if>
+      <if test="packageName != null" >
+        PACKAGE_NAME = #{packageName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractName != null" >
+        CONTRACT_NAME = #{contractName,jdbcType=VARCHAR},
+      </if>
+      <if test="contractStartTime != null" >
+        CONTRACT_START_TIME = #{contractStartTime,jdbcType=VARCHAR},
+      </if>
+      <if test="contractEndTime != null" >
+        CONTRACT_END_TIME = #{contractEndTime,jdbcType=VARCHAR},
+      </if>
+      <if test="activationTime != null" >
+        ACTIVATION_TIME = #{activationTime,jdbcType=VARCHAR},
+      </if>
+      <if test="developmentDept != null" >
+        DEVELOPMENT_DEPT = #{developmentDept,jdbcType=VARCHAR},
+      </if>
+      <if test="importBatch != null" >
+        IMPORT_BATCH = #{importBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="importPersonId != null" >
+        IMPORT_PERSON_ID = #{importPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="importTime != null" >
+        IMPORT_TIME = #{importTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="contacts != null" >
+        CONTACTS = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="installedAddress != null" >
+        INSTALLED_ADDRESS = #{installedAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="ponLogo != null" >
+        PON_LOGO = #{ponLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="tariffName != null" >
+        TARIFF_NAME = #{tariffName,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber2 != null" >
+        PHONE_NUMBER2 = #{phoneNumber2,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber3 != null" >
+        PHONE_NUMBER3 = #{phoneNumber3,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null" >
+        TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="roperateDeptId != null" >
+        ROPERATE_DEPT_ID = #{roperateDeptId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        USER_NAME = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="defultPhone != null" >
+        DEFULT_PHONE = #{defultPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="initDevelopment != null" >
+        INIT_DEVELOPMENT = #{initDevelopment,jdbcType=VARCHAR},
+      </if>
+      <if test="initMeshId != null" >
+        INIT_MESH_ID = #{initMeshId,jdbcType=VARCHAR},
+      </if>
+      <if test="initAreaId != null" >
+        INIT_AREA_ID = #{initAreaId,jdbcType=VARCHAR},
+      </if>
+      <if test="endDate != null" >
+        END_DATE = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskDetail" >
+    update OC_TASK_DETAIL
+    set BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR},
+      TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR},
+      DEPT_MESH_ID = #{deptMeshId,jdbcType=VARCHAR},
+      DEPT_AREA_ID = #{deptAreaId,jdbcType=VARCHAR},
+      DEPT_AGENCY_ID = #{deptAgencyId,jdbcType=VARCHAR},
+      TASK_CODE = #{taskCode,jdbcType=VARCHAR},
+      PRODUCT_TYPE = #{productType,jdbcType=VARCHAR},
+      PHONE_NUMBER = #{phoneNumber,jdbcType=VARCHAR},
+      RATE = #{rate,jdbcType=VARCHAR},
+      CUSTOMFIELDS1 = #{customfields1,jdbcType=VARCHAR},
+      CUSTOMFIELDS2 = #{customfields2,jdbcType=VARCHAR},
+      CUSTOMFIELDS3 = #{customfields3,jdbcType=VARCHAR},
+      CUSTOMFIELDS4 = #{customfields4,jdbcType=VARCHAR},
+      CUSTOMFIELDS5 = #{customfields5,jdbcType=VARCHAR},
+      CUSTOMFIELDS6 = #{customfields6,jdbcType=VARCHAR},
+      CUSTOMFIELDS7 = #{customfields7,jdbcType=VARCHAR},
+      CUSTOMFIELDS8 = #{customfields8,jdbcType=VARCHAR},
+      CUSTOMFIELDS9 = #{customfields9,jdbcType=VARCHAR},
+      CUSTOMFIELDS10 = #{customfields10,jdbcType=VARCHAR},
+      CUSTOMFIELDS11 = #{customfields11,jdbcType=VARCHAR},
+      CUSTOMFIELDS12 = #{customfields12,jdbcType=VARCHAR},
+      CUSTOMFIELDS13 = #{customfields13,jdbcType=VARCHAR},
+      CUSTOMFIELDS14 = #{customfields14,jdbcType=VARCHAR},
+      CUSTOMFIELDS15 = #{customfields15,jdbcType=VARCHAR},
+      RESPONSIBLE = #{responsible,jdbcType=VARCHAR},
+      NET_STOP = #{netStop,jdbcType=VARCHAR},
+      PACKAGE_NAME = #{packageName,jdbcType=VARCHAR},
+      CONTRACT_NAME = #{contractName,jdbcType=VARCHAR},
+      CONTRACT_START_TIME = #{contractStartTime,jdbcType=VARCHAR},
+      CONTRACT_END_TIME = #{contractEndTime,jdbcType=VARCHAR},
+      ACTIVATION_TIME = #{activationTime,jdbcType=VARCHAR},
+      DEVELOPMENT_DEPT = #{developmentDept,jdbcType=VARCHAR},
+      IMPORT_BATCH = #{importBatch,jdbcType=VARCHAR},
+      IMPORT_PERSON_ID = #{importPersonId,jdbcType=VARCHAR},
+      IMPORT_TIME = #{importTime,jdbcType=TIMESTAMP},
+      CONTACTS = #{contacts,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
+      INSTALLED_ADDRESS = #{installedAddress,jdbcType=VARCHAR},
+      PON_LOGO = #{ponLogo,jdbcType=VARCHAR},
+      TARIFF_NAME = #{tariffName,jdbcType=VARCHAR},
+      PHONE_NUMBER2 = #{phoneNumber2,jdbcType=VARCHAR},
+      PHONE_NUMBER3 = #{phoneNumber3,jdbcType=VARCHAR},
+      TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+      ROPERATE_DEPT_ID = #{roperateDeptId,jdbcType=VARCHAR},
+      USER_NAME = #{userName,jdbcType=VARCHAR},
+      DEFULT_PHONE = #{defultPhone,jdbcType=VARCHAR},
+      INIT_DEVELOPMENT = #{initDevelopment,jdbcType=VARCHAR},
+      INIT_MESH_ID = #{initMeshId,jdbcType=VARCHAR},
+      INIT_AREA_ID = #{initAreaId,jdbcType=VARCHAR},
+      END_DATE = #{endDate,jdbcType=TIMESTAMP},
+      USER_ID = #{userId,jdbcType=VARCHAR}
+    where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 查询外呼任务列表 add by wangxiaoyu 2018-08-29-->
+  <select id="selectDetailByUserId" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.OngoingTaskCriteria">
+    SELECT
+      a.BUSINESS_CODE,
+      a.USER_ID,
+      <if test="taskCountsFlag != null">
+      a.TASK_STATUS,
+      </if>
+      b.defult_phone as customer_phone,
+      b.cust_name as cust_name
+    FROM
+      OC_TASK_DETAIL AS a
+    LEFT JOIN ucc_customers AS b ON a.BUSINESS_CODE = b.businesscode
+    <if test='taskCountsFlag != null and taskCountsFlag =="2" '>
+    LEFT JOIN OC_TASK_TRANSFER AS t on a.TASK_DETAIL_ID = t.TASK_DETAIL_ID
+    </if>
+    WHERE
+       1 = 1
+    AND a.USER_ID = #{userId,jdbcType=VARCHAR}
+    <if test='taskCountsFlag == null or taskCountsFlag =="" '>
+      AND a.TASK_STATUS IN ('2', '3')
+    </if>
+    <if test='taskCountsFlag != null and taskCountsFlag =="1" '>
+      AND a.TASK_STATUS = '1'
+    </if>
+    <if test='taskCountsFlag != null and taskCountsFlag =="0" '>
+      AND a.TASK_STATUS IN ('2', '3')
+    </if>
+    <if test='taskCountsFlag != null and taskCountsFlag =="2" '>
+      AND a.TASK_STATUS = '4'
+      AND t.TRANSFER_TIME BETWEEN #{dateStart} and #{dateEnd}
+    </if>
+    <if test='checkFlag != null and checkFlag =="0" '>
+      AND b.defult_phone LIKE '%${keyWords}%'
+    </if>
+    <if test='checkFlag != null and checkFlag == "1" '>
+      AND b.cust_name LIKE '%${keyWords}%'
+    </if>
+      GROUP BY b.cust_name
+      order by a.TASK_CODE DESC
+  </select>
+
+  <!-- 更新任务状态 add by wangxiaoyu 2018-08-30-->
+  <update id="updateTaskStatus" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskTransfer">
+    update OC_TASK_DETAIL
+    <set>
+      TASK_STATUS=#{transferStatus}
+    </set>
+    where TASK_DETAIL_ID=#{taskDetailId}
+  </update>
+
+
+  <!-- 根据businessCode查询任务明细表 add by wangxiaoyu 2018-08-30-->
+  <select id="selectDetailByBusinessCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+      a.TASK_DETAIL_ID,
+      a.USER_ID,
+      a.BUSINESS_CODE
+    FROM
+      OC_TASK_DETAIL AS a
+    where a.BUSINESS_CODE = #{businessCode}
+  </select>
+
+
+  <!-- 根据userId获取待办任务数量 add by wangxiaoyu 2018-09-01-->
+  <select id="selectPendingTaskCounts" resultType="int" parameterType="cn.cucsi.bsd.ucc.common.beans.OngoingTaskCriteria">
+   SELECT
+	  count(d.TASK_DETAIL_ID)
+   FROM
+	  OC_TASK_DETAIL as d
+   WHERE d.TASK_STATUS = '1'
+   AND d.USER_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 根据userId获取在办任务数量 add by wangxiaoyu 2018-09-01-->
+  <select id="selectToGoTaskCounts" resultType="int" parameterType="cn.cucsi.bsd.ucc.common.beans.OngoingTaskCriteria">
+    SELECT
+    count(d.TASK_DETAIL_ID)
+    FROM
+    OC_TASK_DETAIL as d
+    WHERE
+    (d.TASK_STATUS = '3' OR d.TASK_STATUS = '2')
+    AND d.USER_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 根据userId获取本月办结任务数量 add by wangxiaoyu 2018-09-01-->
+  <select id="selectCompletedTaskCounts" resultType="int" parameterType="java.util.Map">
+    SELECT
+	   count(d.TASK_RECORD_ID)
+    FROM
+	   OC_TASK_RECORD as d
+    LEFT JOIN OC_TASK_TRANSFER_RECORD as r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID
+    WHERE
+	   r.TRANSFER_STATUS = '4'
+    AND r.TRANSFER_TIME BETWEEN #{dateStart} and #{dateEnd}
+    AND d.OPERATOR_ID = #{userId,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

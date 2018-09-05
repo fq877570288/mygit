@@ -1,0 +1,124 @@
+package cn.cucsi.bsd.ucc.common.beans;
+
+import io.swagger.annotations.ApiModel;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@ApiModel
+public class UccUserCriteria extends BasicCriteria {
+    private String userName;
+    private String password;
+    private String mobile;
+    private String domainId;
+    private String email;
+    private String nickName;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdTimeFrom;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdTimeTo;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastLoginTimeFrom;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastLoginTimeTo;
+    private List<String> uccDepts = new ArrayList<>();
+    private List<String> userRoles = new ArrayList<>();
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public Date getCreatedTimeFrom() {
+        return createdTimeFrom;
+    }
+
+    public void setCreatedTimeFrom(Date createdTimeFrom) {
+        this.createdTimeFrom = createdTimeFrom;
+    }
+
+    public Date getCreatedTimeTo() {
+        return createdTimeTo;
+    }
+
+    public void setCreatedTimeTo(Date createdTimeTo) {
+        this.createdTimeTo = createdTimeTo;
+    }
+
+    public Date getLastLoginTimeFrom() {
+        return lastLoginTimeFrom;
+    }
+
+    public void setLastLoginTimeFrom(Date lastLoginTimeFrom) {
+        this.lastLoginTimeFrom = lastLoginTimeFrom;
+    }
+
+    public Date getLastLoginTimeTo() {
+        return lastLoginTimeTo;
+    }
+
+    public void setLastLoginTimeTo(Date lastLoginTimeTo) {
+        this.lastLoginTimeTo = lastLoginTimeTo;
+    }
+
+    public List<String> getUccDepts() {
+        return uccDepts;
+    }
+
+    public void setUccDepts(List<String> uccDepts) {
+        this.uccDepts = uccDepts;
+    }
+
+    public List<String> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(List<String> userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}
