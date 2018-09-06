@@ -21,14 +21,14 @@ public class PbxGwNumbersController {
     @Autowired
     private PbxGwNumbersService PbxGwNumbersService;
 
-    @ApiOperation(value="根据查询条件获取网关大号表", notes="根据查询条件获取网关大号表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<PbxGwNumbers>> findAll(@ModelAttribute PbxGwNumbersCriteria search){
+    @ApiOperation(value="根据查询条件获取网关大号表", notes="根据查询条件获取网关大号表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<PbxGwNumbers>> findAll(@RequestBody PbxGwNumbersCriteria search){
         return new PageResultBean(this.PbxGwNumbersService.findAll(search));
     }
-    @ApiOperation(value="根据查询条件获取网关大号表", notes="根据查询条件获取网关大号表", httpMethod = "GET")
-    @RequestMapping(value = "/findAllOfNoPage", method= RequestMethod.GET)
-    public ResultBean<List<PbxGwNumbers>> findAllOfNoPage(@ModelAttribute PbxGwNumbersCriteria search){
+    @ApiOperation(value="根据查询条件获取网关大号表", notes="根据查询条件获取网关大号表", httpMethod = "POST")
+    @RequestMapping(value = "/findAllOfNoPage", method= RequestMethod.POST)
+    public ResultBean<List<PbxGwNumbers>> findAllOfNoPage(@RequestBody PbxGwNumbersCriteria search){
         return new ResultBean(this.PbxGwNumbersService.findAllOfNoPage(search));
     }
     @ApiOperation(value = "根据gwNumber查询PbxGwNumbers", notes = "根据gwNumber查询PbxGwNumbers")

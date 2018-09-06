@@ -4,18 +4,11 @@ import cn.cucsi.bsd.ucc.common.beans.PbxDialplansCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.data.domain.*;
-import cn.cucsi.bsd.ucc.data.repo.PbxExtsRepository;
-import cn.cucsi.bsd.ucc.data.repo.PbxGatewaysRepository;
-import cn.cucsi.bsd.ucc.data.repo.PbxIvrsRepository;
-import cn.cucsi.bsd.ucc.data.repo.PbxQueuesRepository;
 import cn.cucsi.bsd.ucc.service.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -28,10 +21,9 @@ public class PbxDialplansController {
     @Autowired
     private PbxDialplansService PbxDialplansService;
 
-    @ApiOperation(value="根据查询条件获取拨号方案表", notes="根据查询条件获取拨号方案表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<PbxDialplans>> findAll(@ModelAttribute PbxDialplansCriteria PbxDialplansCriteria){
-
+    @ApiOperation(value="根据查询条件获取拨号方案表", notes="根据查询条件获取拨号方案表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    public PageResultBean<List<PbxDialplans>> findAll(@RequestBody PbxDialplansCriteria PbxDialplansCriteria){
         return new PageResultBean(this.PbxDialplansService.findAll(PbxDialplansCriteria));
     }
     @ApiOperation(value = "根据dialplanId查询PbxDialplans", notes = "根据dialplanId查询PbxDialplans")

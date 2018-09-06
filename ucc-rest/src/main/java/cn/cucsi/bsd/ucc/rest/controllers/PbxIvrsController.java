@@ -23,17 +23,17 @@ public class PbxIvrsController {
     @Autowired
     private PbxIvrsService PbxIvrsService;
 
-    @ApiOperation(value = "根据查询条件获取IVR列表", notes = "根据查询条件获取IVR列表", httpMethod = "GET")
+    @ApiOperation(value = "根据查询条件获取IVR列表", notes = "根据查询条件获取IVR列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     @JsonView(JSONView.PbxIvrsWithDomainAndUser.class)
     public PageResultBean<List<PbxIvrs>> findAll(@RequestBody PbxIvrsCriteria search) {
         return new PageResultBean(this.PbxIvrsService.findAll(search));
     }
 
-    @ApiOperation(value = "根据查询条件获取IVR列表", notes = "根据查询条件获取IVR列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.GET)
+    @ApiOperation(value = "根据查询条件获取IVR列表", notes = "根据查询条件获取IVR列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.POST)
     @JsonView(JSONView.PbxIvrsWithDomainAndUser.class)
-    public ResultBean<List<PbxIvrs>> findAllOfNoPage(@ModelAttribute PbxIvrsCriteria search) {
+    public ResultBean<List<PbxIvrs>> findAllOfNoPage(@RequestBody PbxIvrsCriteria search) {
         return new ResultBean(this.PbxIvrsService.findAllOfNoPage(search));
     }
 
