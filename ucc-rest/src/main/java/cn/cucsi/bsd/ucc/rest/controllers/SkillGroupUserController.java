@@ -26,9 +26,9 @@ public class SkillGroupUserController {
     @Autowired
     SkillGroupUserService skillGroupUserService;
 
-    @ApiOperation(value="根据查询条件获取技能组用户列表", notes="根据查询条件获取技能组用户列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<SkillGroupUser>> findAll(@ModelAttribute SkillGroupUserCriteria search) {
+    @ApiOperation(value="根据查询条件获取技能组用户列表", notes="根据查询条件获取技能组用户列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    public PageResultBean<List<SkillGroupUser>> findAll(@RequestBody SkillGroupUserCriteria search) {
         return new PageResultBean(this.skillGroupUserService.findAll(search));
     }
 

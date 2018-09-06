@@ -28,9 +28,9 @@ public class UccSkillGroupController {
     @Autowired
     UccSkillGroupService uccSkillGroupService;
 
-    @ApiOperation(value="根据查询条件获取技能组表", notes="根据查询条件获取技能组表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<UccSkillGroup>> findAll(@ModelAttribute UccSkillGroupCriteria search){
+    @ApiOperation(value="根据查询条件获取技能组表", notes="根据查询条件获取技能组表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<UccSkillGroup>> findAll(@RequestBody UccSkillGroupCriteria search){
         PageResultBean<List<UccSkillGroup>> list= new PageResultBean(this.uccSkillGroupService.findAll(search));
         return new PageResultBean(this.uccSkillGroupService.findAll(search));
     }
