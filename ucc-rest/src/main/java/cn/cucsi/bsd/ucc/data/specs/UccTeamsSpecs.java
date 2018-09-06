@@ -12,6 +12,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import java.util.Date;
+
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -26,6 +28,24 @@ public class UccTeamsSpecs {
             }
         };
     }
+    public static Specification<UccTeams> createTimeThanOrEqualTo(final Date from) {
+        return new Specification<UccTeams>() {
+            @Override
+            public Predicate toPredicate(Root<UccTeams> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createdTime"), from);
+            }
+        };
+    }
+
+    public static Specification<UccTeams> createTimeLessOrEqualTo(final Date to) {
+        return new Specification<UccTeams>() {
+            @Override
+            public Predicate toPredicate(Root<UccTeams> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.lessThanOrEqualTo(root.<Date>get("createdTime"), to);
+            }
+        };
+    }
+
     public static Specification<UccTeams> createSpec(final UccTeamsCriteria criteria) {
         Specification<UccTeams> spec = null;
         if(criteria==null) return spec;
@@ -35,6 +55,16 @@ public class UccTeamsSpecs {
         if(!Strings.isNullOrEmpty(criteria.getTeamName())){
             specs = specs.and(teamNameLike(criteria.getTeamName()));
         }
+        if(null != criteria.getCreatedTimeFrom()){
+            specs = specs.and(createTimeThanOrEqualTo(criteria.getCreatedTimeFrom()));
+        }
+
+        if(null != criteria.getCreatedTimeTo()){
+            specs = specs.and(createTimeLessOrEqualTo(criteria.getCreatedTimeTo()));
+        }
         return specs;
     }
+
+
+
 }

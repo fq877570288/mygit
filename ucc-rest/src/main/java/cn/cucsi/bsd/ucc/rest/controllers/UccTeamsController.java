@@ -25,9 +25,9 @@ public class UccTeamsController {
     @Autowired
     UccTeamsService uccTeamsService;
 
-    @ApiOperation(value="根据查询条件获取班组列表", notes="根据查询条件获取班组列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<UccTeams>> findAll(@ModelAttribute UccTeamsCriteria search){
+    @ApiOperation(value="根据查询条件获取班组列表", notes="根据查询条件获取班组列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<UccTeams>> findAll(@RequestBody UccTeamsCriteria search){
         return new PageResultBean(this.uccTeamsService.findAll(search));
     }
 
