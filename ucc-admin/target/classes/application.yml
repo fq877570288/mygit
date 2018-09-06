@@ -1,6 +1,0 @@
-spring:
-    application:
-        name: ucc-admin
-
-spring.boot.admin.context-path: /admin
-server.port: 8888
