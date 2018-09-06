@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.UccCustomersCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccToBlackCriteria;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.UccCustomers;
 import cn.cucsi.bsd.ucc.data.repo.UccCustomersRepository;
 import cn.cucsi.bsd.ucc.data.specs.UccCustomersSpecs;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
@@ -46,13 +48,13 @@ public class UccCustomersServiceImpl implements UccCustomersService{
 
     @Override
     public int inBlackListByBusinessCode(UccToBlackCriteria uccToBlackCriteria) throws Exception {
-        Integer type = uccToBlackCriteria.getType()==null?null:uccToBlackCriteria.getType();
         String userId = uccToBlackCriteria.getUserId()==null?"":uccToBlackCriteria.getUserId();
         String pullBlackReason = uccToBlackCriteria.getPullBlackReason()==null?"":uccToBlackCriteria.getPullBlackReason();
         String businesscode = uccToBlackCriteria.getBusinesscode()==null?"":uccToBlackCriteria.getBusinesscode();
-        Date updatedTime = uccToBlackCriteria.getUpdatedTime()==null?new Date():uccToBlackCriteria.getUpdatedTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date updatedTime = sdf.parse(MyUtils.getToday());
 
-        return this.uccCustomersRepository.inBlackListByBusinessCode(type,userId,updatedTime,pullBlackReason,businesscode);
+        return this.uccCustomersRepository.inBlackListByBusinessCode(7,userId,updatedTime,pullBlackReason,businesscode);
     }
 
     /***

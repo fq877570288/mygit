@@ -65,7 +65,6 @@ public class UccCustomersController {
     @ApiOperation(value = "将客户移至黑名单", notes = "将客户移至黑名单")
     @RequestMapping(value = "/toBlackList", method= RequestMethod.POST)
     public ResultBean<String> mvCustomersToBlackList(@RequestBody UccToBlackCriteria uccToBlackCriteria){
-        uccToBlackCriteria.setUpdatedTime(new Date());
         int resultCode = 0;
         String message = "操作失败！";
         try {
