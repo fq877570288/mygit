@@ -25,9 +25,9 @@ public class PbxMusicsController {
     @Autowired
     private PbxMusicsService PbxMusicsService;
 
-    @ApiOperation(value = "根据查询条件获取音乐文件列表", notes = "根据查询条件获取音乐文件列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<PbxMusics>> findAll(@ModelAttribute PbxMusicsCriteria search) {
+    @ApiOperation(value = "根据查询条件获取音乐文件列表", notes = "根据查询条件获取音乐文件列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    public PageResultBean<List<PbxMusics>> findAll(@RequestBody PbxMusicsCriteria search) {
         return new PageResultBean(this.PbxMusicsService.findAll(search));
     }
 

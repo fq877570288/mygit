@@ -32,7 +32,7 @@ public class UccUserController  {
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
-    public PageResultBean<List<UccUsers>> findAll(@ModelAttribute UccUserCriteria criteria){
+    public PageResultBean<List<UccUsers>> findAll(@RequestBody UccUserCriteria criteria){
         PageResultBean<List<UccUsers>> list = new PageResultBean(this.uccUserService.findAll(criteria));
         return list;
     }
