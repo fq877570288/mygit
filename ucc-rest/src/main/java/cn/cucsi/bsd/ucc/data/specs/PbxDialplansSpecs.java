@@ -72,11 +72,11 @@ public class PbxDialplansSpecs {
         if (PbxDialplansCriteria == null) return spec;
         Specifications specs = where(spec);
 
-        if(!Strings.isNullOrEmpty(PbxDialplansCriteria.getphoneNumber())){
-            specs = specs.and(phoneNumberLike(PbxDialplansCriteria.getphoneNumber()));
+        if(!Strings.isNullOrEmpty(PbxDialplansCriteria.getPhoneNumber())){
+            specs = specs.and(phoneNumberLike(PbxDialplansCriteria.getPhoneNumber()));
         }
-        if(!Strings.isNullOrEmpty(PbxDialplansCriteria.getdestination())){
-            specs = specs.and(destinationLike(PbxDialplansCriteria.getdestination()));
+        if(!Strings.isNullOrEmpty(PbxDialplansCriteria.getDestination())){
+            specs = specs.and(destinationLike(PbxDialplansCriteria.getDestination()));
         }
         if(!Strings.isNullOrEmpty(PbxDialplansCriteria.getMemo())){
             specs = specs.and(memoLike(PbxDialplansCriteria.getMemo()));

@@ -24,21 +24,21 @@ public class PbxExtsController {
     @Autowired
     private PbxExtsService PbxExtsService;
 
-    @ApiOperation(value = "根据查询条件获取分机表", notes = "根据查询条件获取分机表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<PbxExts>> findAll(@ModelAttribute PbxExtsCriteria search) {
+    @ApiOperation(value = "根据查询条件获取分机表", notes = "根据查询条件获取分机表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    public PageResultBean<List<PbxExts>> findAll(@RequestBody PbxExtsCriteria search) {
         return new PageResultBean(this.PbxExtsService.findAll(search));
     }
 
-    @ApiOperation(value = "根据查询条件获取分机表", notes = "根据查询条件获取分机表", httpMethod = "GET")
-    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.GET)
-    public ResultBean<List<PbxExts>> findAllOfNoPage(@ModelAttribute PbxExtsCriteria search) {
+    @ApiOperation(value = "根据查询条件获取分机表", notes = "根据查询条件获取分机表", httpMethod = "POST")
+    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.POST)
+    public ResultBean<List<PbxExts>> findAllOfNoPage(@RequestBody PbxExtsCriteria search) {
         return new ResultBean(this.PbxExtsService.findAllOfNoPage(search));
     }
 
-    @ApiOperation(value = "根据ExtNum和ExtId获取分机表", notes = "根据ExtNum和ExtId获取分机表", httpMethod = "GET")
-    @RequestMapping(value = "/findBySeach", method = RequestMethod.GET)
-    public ResultBean<List<PbxExts>> findBySeach(@ModelAttribute PbxExtsCriteria search) {
+    @ApiOperation(value = "根据ExtNum和ExtId获取分机表", notes = "根据ExtNum和ExtId获取分机表", httpMethod = "POST")
+    @RequestMapping(value = "/findBySeach", method = RequestMethod.POST)
+    public ResultBean<List<PbxExts>> findBySeach(@RequestBody PbxExtsCriteria search) {
         return new ResultBean(this.PbxExtsService.findAllBySearch(search));
     }
 

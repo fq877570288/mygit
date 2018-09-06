@@ -25,14 +25,14 @@ public class PbxQueuesController {
     @Autowired
     private PbxQueueNumbersService pbxQueueNumbersService;
 
-    @ApiOperation(value="根据查询条件获取队列列表", notes="根据查询条件获取队列列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<PbxQueues>> findAll(@ModelAttribute PbxQueuesCriteria search){
+    @ApiOperation(value="根据查询条件获取队列列表", notes="根据查询条件获取队列列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<PbxQueues>> findAll(@RequestBody PbxQueuesCriteria search){
         return new PageResultBean(this.PbxQueuesService.findAll(search));
     }
-    @ApiOperation(value="根据查询条件获取队列列表", notes="根据查询条件获取队列列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAllOfNoPage", method= RequestMethod.GET)
-    public ResultBean<List<PbxQueues>> findAllOfNoPage(@ModelAttribute PbxQueuesCriteria search){
+    @ApiOperation(value="根据查询条件获取队列列表", notes="根据查询条件获取队列列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAllOfNoPage", method= RequestMethod.POST)
+    public ResultBean<List<PbxQueues>> findAllOfNoPage(@RequestBody PbxQueuesCriteria search){
         return new ResultBean(this.PbxQueuesService.findAllOfNoPage(search));
     }
     @ApiOperation(value = "根据queueId查询PbxQueues", notes = "根据queueId查询PbxQueues")
@@ -115,9 +115,9 @@ public class PbxQueuesController {
     }
 
     // 该方法用于 添加分布式队列时列出所有的分机组的分机列表
-    @ApiOperation(value="无任何条件查询分机组", notes="无任何条件查询分机组", httpMethod = "GET")
-    @RequestMapping(value = "/findNoCheckPbxExts", method= RequestMethod.GET)
-    public ResultBean<Map<String,List<PbxExts>>> findNoCheckPbxExts(@ModelAttribute PbxQueuesCriteria search){
+    @ApiOperation(value="无任何条件查询分机组", notes="无任何条件查询分机组", httpMethod = "POST")
+    @RequestMapping(value = "/findNoCheckPbxExts", method= RequestMethod.POST)
+    public ResultBean<Map<String,List<PbxExts>>> findNoCheckPbxExts(@RequestBody PbxQueuesCriteria search){
         return new ResultBean(this.PbxQueuesService.findAllPbxExtGroups(search));
     }
 }

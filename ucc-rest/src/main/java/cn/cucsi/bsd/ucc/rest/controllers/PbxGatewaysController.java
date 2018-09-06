@@ -6,14 +6,11 @@ import cn.cucsi.bsd.ucc.data.domain.PbxGwCalleeRewriteRules;
 import cn.cucsi.bsd.ucc.data.domain.PbxGwNumbers;
 import cn.cucsi.bsd.ucc.service.PbxGatewaysService;
 import cn.cucsi.bsd.ucc.service.PbxGwCalleeRewriteRulesService;
-import cn.cucsi.bsd.ucc.service.PbxGwNumbersService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;

@@ -17,30 +17,6 @@ public class PbxDialplansCriteria extends BasicCriteria{
     private String memo;
     private String domainId;
 
-    public String getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(String domainId) {
-        this.domainId = domainId;
-    }
-
-    public String getphoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setphoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getdestination() {
-        return destination;
-    }
-
-    public void setdestination(String destination) {
-        this.destination = destination;
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -95,5 +71,13 @@ public class PbxDialplansCriteria extends BasicCriteria{
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }
