@@ -22,9 +22,9 @@ public class UccServersController {
     UccServersService uccServersService;
 
 
-    @ApiOperation(value="根据查询条件获取服务端地址信息表", notes="根据查询条件获取服务端地址信息表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<UccServers>> findAll(@ModelAttribute UccServersCriteria search){
+    @ApiOperation(value="根据查询条件获取服务端地址信息表", notes="根据查询条件获取服务端地址信息表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<UccServers>> findAll(@RequestBody UccServersCriteria search){
         return new PageResultBean(this.uccServersService.findAll(search));
     }
 

@@ -24,9 +24,9 @@ public class SystemConfigController {
     @Autowired
     SystemConfigService systemConfigService;
 
-    @ApiOperation(value="根据查询条件获取系统配置列表", notes="根据查询条件获取系统配置列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<SystemConfig>> findAll(@ModelAttribute SystemConfigCriteria search) {
+    @ApiOperation(value="根据查询条件获取系统配置列表", notes="根据查询条件获取系统配置列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    public PageResultBean<List<SystemConfig>> findAll(@RequestBody SystemConfigCriteria search) {
         return new PageResultBean(this.systemConfigService.findAll(search));
     }
 
