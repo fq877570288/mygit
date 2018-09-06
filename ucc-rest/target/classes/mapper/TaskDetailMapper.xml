@@ -656,6 +656,7 @@
     SELECT
       a.BUSINESS_CODE,
       a.USER_ID,
+      a.TASK_DETAIL_ID,
       <if test="taskCountsFlag != null">
       a.TASK_STATUS,
       </if>
