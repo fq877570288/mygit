@@ -20,9 +20,9 @@ public class DomainWeekendExceptionController {
 
     @Autowired
     private DomainWeekendExceptionService domainWeekendExceptionService;
-    @ApiOperation(value="根据查询条件获取班组工作日例外表", notes="根据查询条件获取班组工作日例外表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll",method = RequestMethod.GET)
-    public PageResultBean<List<DomainWeekendException>> findAll(@ModelAttribute DomainWeekendExceptionCriteria search){
+    @ApiOperation(value="根据查询条件获取班组工作日例外表", notes="根据查询条件获取班组工作日例外表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll",method = RequestMethod.POST)
+    public PageResultBean<List<DomainWeekendException>> findAll(@RequestBody DomainWeekendExceptionCriteria search){
         return new PageResultBean(this.domainWeekendExceptionService.findAll(search));
     }
     @ApiOperation(value = "根据exceptionId查询DomainWeekendException", notes = "根据exceptionId查询DomainWeekendException")
