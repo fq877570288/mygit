@@ -72,7 +72,7 @@ public class UccDeptsController {
         List<UccDepts> list = pages.getContent();
         List<DeptsTree> trees = new ArrayList<DeptsTree>();
 
-//        List<AllDeptsTreeBean> allDeptsTreeBeen = new ArrayList<AllDeptsTreeBean>();
+//        List<AllDeptsTreeBean>  allDeptsTreeBeen = new ArrayList<AllDeptsTreeBean>();
 //        if(list != null && list.size() > 0){
 //            for(int i = 0; i < list.size(); i++){
 //                UccDepts uccDept = list.get(i);
