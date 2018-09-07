@@ -32,9 +32,10 @@ public class UccDeptsController {
     @Autowired
     UccDeptsService uccDeptsService;
 
-    @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "GET")
+    @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
-    public PageResultBean<List<UccDepts>> findAll(@ModelAttribute UccDeptsCriteria search) {
+    @ResponseBody
+    public PageResultBean<List<UccDepts>> findAll(UccDeptsCriteria search) {
         return new PageResultBean(this.uccDeptsService.findAll(search));
     }
 
