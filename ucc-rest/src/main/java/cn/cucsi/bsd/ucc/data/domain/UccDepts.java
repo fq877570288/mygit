@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
@@ -120,10 +121,11 @@ public class UccDepts {
 
     @Basic
     @Column(name = "dept_create_time", nullable = false)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getDeptCreateTime() {
         return deptCreateTime;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public void setDeptCreateTime(Date deptCreateTime) {
         this.deptCreateTime = deptCreateTime;
     }
