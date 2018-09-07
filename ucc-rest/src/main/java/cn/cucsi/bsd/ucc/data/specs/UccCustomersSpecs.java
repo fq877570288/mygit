@@ -77,7 +77,14 @@ public class UccCustomersSpecs {
             }
         };
     }
-
+    public static Specification<UccCustomers> uccCustomersCustDomainIdEq(final String domainId) {
+        return new Specification<UccCustomers>() {
+            @Override
+            public Predicate toPredicate(Root<UccCustomers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.like(root.<String>get("domainId"), domainId);
+            }
+        };
+    }
 
     public static Specification<UccCustomers> createSpec(final UccCustomersCriteria criteria) {
         Specification<UccCustomers> spec = null;
@@ -104,7 +111,9 @@ public class UccCustomersSpecs {
         if(null != criteria.getCreatetimeTo()){
             specs = specs.and(uccCustomersCustCreatetimeFromeLess(criteria.getCreatetimeTo()));
         }
-
+        if(null != criteria.getDomainId()){
+            specs = specs.and(uccCustomersCustDomainIdEq(criteria.getDomainId()));
+        }
         return specs;
     }
 }

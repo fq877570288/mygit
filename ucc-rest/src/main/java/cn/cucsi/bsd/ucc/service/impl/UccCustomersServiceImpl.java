@@ -31,7 +31,7 @@ public class UccCustomersServiceImpl implements UccCustomersService{
     private UccCustomersMapper uccCustomersMapper;
     @Override
     public Page<UccCustomers> findAll(UccCustomersCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "createtime");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccCustomersRepository.findAll(UccCustomersSpecs.createSpec(criteria), pageable);
     }

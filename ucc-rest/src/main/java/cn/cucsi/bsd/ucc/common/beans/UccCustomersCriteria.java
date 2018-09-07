@@ -19,6 +19,15 @@ public class UccCustomersCriteria extends BasicCriteria {
     private Date createtimeFrome;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createtimeTo;
+    private String domainId;
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
 
     public String getCustCode() {
         return custCode;

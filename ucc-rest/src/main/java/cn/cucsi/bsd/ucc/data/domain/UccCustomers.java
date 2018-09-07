@@ -35,8 +35,8 @@ public class UccCustomers {
     private String companyname;
     private Integer companynature;
     private Integer industrytype;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    private Date createtime;
+   // @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //private Date createtime;
     private String changephone1;
     private String changephone2;
     private String changephone3;
@@ -598,6 +598,7 @@ public class UccCustomers {
 
     @Basic
     @Column(nullable = true)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getCreatedTime() {
         return createdTime;
     }
@@ -624,4 +625,5 @@ public class UccCustomers {
     public void setDomainName(String domainName) {
         this.domainName = domainName;
     }
+
 }
