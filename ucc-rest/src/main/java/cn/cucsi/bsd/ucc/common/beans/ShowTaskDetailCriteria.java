@@ -11,19 +11,8 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class ShowTaskDetailCriteria{
 
-    @ApiModelProperty(value = "任务明细主键",required = true)
-    private String taskDetailId;
-
     @ApiModelProperty(value = "业务编码",required = true)
     private String businessCode;
-
-    public String getTaskDetailId() {
-        return taskDetailId;
-    }
-
-    public void setTaskDetailId(String taskDetailId) {
-        this.taskDetailId = taskDetailId;
-    }
 
     public String getBusinessCode() {
         return businessCode;

@@ -11,6 +11,10 @@ import java.util.Date;
  */
 public class TaskDetail {
 
+    private String transferStatus;//流转状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
+    private String callMemo;//外呼备注
+    private String callResult;//外呼结果
+
     private String custName;//客户姓名
 
     private String customerPhone;//客户联系电话
@@ -600,4 +604,27 @@ public class TaskDetail {
         this.customerPhone = customerPhone;
     }
 
+    public String getTransferStatus() {
+        return transferStatus;
+    }
+
+    public void setTransferStatus(String transferStatus) {
+        this.transferStatus = transferStatus;
+    }
+
+    public String getCallMemo() {
+        return callMemo;
+    }
+
+    public void setCallMemo(String callMemo) {
+        this.callMemo = callMemo;
+    }
+
+    public String getCallResult() {
+        return callResult;
+    }
+
+    public void setCallResult(String callResult) {
+        this.callResult = callResult;
+    }
 }

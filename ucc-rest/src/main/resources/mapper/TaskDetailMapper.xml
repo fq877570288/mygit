@@ -56,6 +56,9 @@
     <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
     <result column="customer_phone" property="customerPhone" jdbcType="VARCHAR" />
     <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="TRANSFER_STATUS" property="transferStatus" jdbcType="VARCHAR" />
+    <result column="CALL_MEMO" property="callMemo" jdbcType="VARCHAR" />
+    <result column="CALL_RESULT" property="callResult" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TASK_DETAIL_ID, BUSINESS_CODE, TASK_TYPE_ID, DEPT_MESH_ID, DEPT_AREA_ID, DEPT_AGENCY_ID, 
@@ -69,10 +72,14 @@
     END_DATE, USER_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from OC_TASK_DETAIL
-    where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+    SELECT
+      a.*, b.TRANSFER_STATUS,
+      b.CALL_MEMO,
+      b.CALL_RESULT,MAX(b.TRANSFER_TIME)
+    FROM
+	  OC_TASK_DETAIL AS a
+    LEFT JOIN OC_TASK_TRANSFER AS b ON a.TASK_DETAIL_ID = b.TASK_DETAIL_ID
+    where a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from OC_TASK_DETAIL
