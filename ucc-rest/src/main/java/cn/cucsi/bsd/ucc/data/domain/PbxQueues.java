@@ -27,6 +27,17 @@ public class PbxQueues {
     private String updatedUserName;
     private String updatedNickName;
 
+    private String[] extGroupExts;
+
+    @Transient
+    public String[] getExtGroupExts() {
+        return extGroupExts;
+    }
+
+    public void setExtGroupExts(String[] extGroupExts) {
+        this.extGroupExts = extGroupExts;
+    }
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createdTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
