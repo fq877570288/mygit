@@ -57,4 +57,10 @@ public class UccClientsController {
     public ResultBean<UccClients> save(@PathVariable String name, @RequestBody UccClients uccClients){
         return new ResultBean<>(this.uccClientsService.save(uccClients));
     }
+
+    @ApiOperation(value = "删除全部UccClients", notes = "删除全部UccClients")
+    @RequestMapping(value = "/deleteAll",method =  RequestMethod.DELETE)
+    public ResultBean<Boolean> deleteAll(){
+        return new ResultBean<>(this.uccClientsService.deleteAll());
+    }
 }

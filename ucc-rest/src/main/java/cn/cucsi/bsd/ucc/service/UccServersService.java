@@ -12,4 +12,5 @@ public interface UccServersService {
     UccServers findOne(String serverName );
     UccServers save(UccServers uccServers);
     Boolean delete(String serverName);
+    Boolean deleteAll();
 }

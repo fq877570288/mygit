@@ -15,4 +15,5 @@ public interface UccClientsService {
     UccClients findOne(String name);
     UccClients save(UccClients uccClients);
     Boolean delete(String name);
+    Boolean deleteAll();
 }

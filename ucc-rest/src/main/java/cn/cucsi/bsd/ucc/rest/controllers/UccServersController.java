@@ -54,4 +54,9 @@ public class UccServersController {
         boolean result=this.uccServersService.save(uccServers)!=null;
         return new ResultBean<>(result);
     }
+    @ApiOperation(value = "删除全部UccServers", notes = "删除全部UccServers")
+    @RequestMapping(value = "/deleteAll",method = RequestMethod.DELETE)
+    public ResultBean<Boolean> deleteAll(){
+        return new ResultBean<>(this.uccServersService.deleteAll());
+    }
 }
