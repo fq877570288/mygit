@@ -36,8 +36,8 @@ public class UccSkillGroupController {
     }
 
     @ApiOperation(value = "根据skillGroupId查询UccSkillGroup", notes = "根据skillGroupId查询UccSkillGroup")
-    @RequestMapping(value = "/{skillGroupId}", method= RequestMethod.GET)
-    public ResultBean<UccSkillGroup> findOne(@PathVariable String skillGroupId){
+    @RequestMapping(value = "/{skillGroupId}", method= RequestMethod.POST)
+    public ResultBean<UccSkillGroup> findOne(@RequestBody String skillGroupId){
         return new ResultBean<>(this.uccSkillGroupService.findOne(skillGroupId));
     }
 

@@ -31,14 +31,14 @@ import java.util.List;
 public class UserDeptController {
     @Autowired
     private UserDeptService userDeptService;
-    @ApiOperation(value="根据查询条件获取用户归属部门关系表", notes="根据查询条件获取用户归属部门关系表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<UserDept>> findAll(@ModelAttribute UserDeptCriteria search){
+    @ApiOperation(value="根据查询条件获取用户归属部门关系表", notes="根据查询条件获取用户归属部门关系表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<UserDept>> findAll(@RequestBody UserDeptCriteria search){
         return new PageResultBean(this.userDeptService.findAll(search));
     }
     @ApiOperation(value = "根据userId、deptId查询UserDept", notes = "根据userId、deptId查询UserDept")
-    @RequestMapping(value = "/{userId}/{deptId}", method= RequestMethod.GET)
-    public ResultBean<UserDept> findOne(@PathVariable String userId,@PathVariable String deptId){
+    @RequestMapping(value = "/{userId}/{deptId}", method= RequestMethod.POST)
+    public ResultBean<UserDept> findOne(@RequestBody String userId,@PathVariable String deptId){
         UserDeptPK userDeptPK=new UserDeptPK();
         userDeptPK.setUserId(userId);
         userDeptPK.setDeptId(deptId);

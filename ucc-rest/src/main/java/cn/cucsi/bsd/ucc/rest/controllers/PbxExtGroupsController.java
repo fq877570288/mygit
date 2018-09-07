@@ -28,22 +28,22 @@ public class PbxExtGroupsController {
     @ApiOperation(value="根据查询条件获取号码群组表", notes="根据查询条件获取号码群组表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     @JsonView(JSONView.PbxPbxExtGroupsWithUser.class)
-    public PageResultBean<List<PbxExtGroups>> findAll(@ModelAttribute PbxExtGroupsCriteria search){
+    public PageResultBean<List<PbxExtGroups>> findAll(@RequestBody PbxExtGroupsCriteria search){
         return new PageResultBean(this.pbxextGroupsService.findAll(search));
     }
-    @ApiOperation(value="根据分机号id获取分机组列表", notes="根据查询条件获取分机表", httpMethod = "GET")
-    @RequestMapping(value = "/queryExtGroupByextId", method= RequestMethod.GET)
-    public ResultBean<List<PbxExtGroups>> queryExtGroupByextId(String extId){
+    @ApiOperation(value="根据分机号id获取分机组列表", notes="根据查询条件获取分机表", httpMethod = "POST")
+    @RequestMapping(value = "/queryExtGroupByextId", method= RequestMethod.POST)
+    public ResultBean<List<PbxExtGroups>> queryExtGroupByextId(@RequestBody String extId){
         return new ResultBean(this.pbxextGroupsService.findGroupsByExtId(extId));
     }
-    @ApiOperation(value="获取所有群组表", notes="获取所有号码群组表", httpMethod = "GET")
-    @RequestMapping(value = "/findAllGroups", method= RequestMethod.GET)
-    public ResultBean<List<PbxExtGroups>> findAllGroups(@ModelAttribute PbxExtGroupsCriteria search){
+    @ApiOperation(value="获取所有群组表", notes="获取所有号码群组表", httpMethod = "POST")
+    @RequestMapping(value = "/findAllGroups", method= RequestMethod.POST)
+    public ResultBean<List<PbxExtGroups>> findAllGroups(@RequestBody PbxExtGroupsCriteria search){
         return new ResultBean(this.pbxextGroupsService.findAllGroups(search));
     }
     @ApiOperation(value = "根据groupId查询PbxExtGroups", notes = "根据groupId查询PbxExtGroups")
-    @RequestMapping(value = "/{groupId}", method= RequestMethod.GET)
-    public ResultBean<PbxExtGroups> findOne(@PathVariable String groupId){
+    @RequestMapping(value = "/{groupId}", method= RequestMethod.POST)
+    public ResultBean<PbxExtGroups> findOne(@RequestBody String groupId){
         return new ResultBean<>(this.pbxextGroupsService.findOne(groupId));
     }
     @ApiOperation(value = "根据groupId删除PbxExtGroups", notes = "根据groupId删除PbxExtGroups")

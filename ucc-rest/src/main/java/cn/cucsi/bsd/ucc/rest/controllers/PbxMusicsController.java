@@ -32,15 +32,15 @@ public class PbxMusicsController {
     }
 
 
-    @ApiOperation(value = "根据查询条件获取音乐文件列表", notes = "根据查询条件获取音乐文件列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.GET)
-    public ResultBean<List<PbxMusics>> findAllOfNoPage(@ModelAttribute PbxMusicsCriteria search) {
+    @ApiOperation(value = "根据查询条件获取音乐文件列表", notes = "根据查询条件获取音乐文件列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.POST)
+    public ResultBean<List<PbxMusics>> findAllOfNoPage(@RequestBody PbxMusicsCriteria search) {
         return new ResultBean(this.PbxMusicsService.findAllOfNoPage(search));
     }
 
     @ApiOperation(value = "根据musicId查询PbxMusics", notes = "根据musicId查询PbxMusics")
-    @RequestMapping(value = "/{musicId}", method = RequestMethod.GET)
-    public ResultBean<PbxMusics> findOne(@PathVariable String musicId) {
+    @RequestMapping(value = "/{musicId}", method = RequestMethod.POST)
+    public ResultBean<PbxMusics> findOne(@RequestBody String musicId) {
         return new ResultBean<>(this.PbxMusicsService.findOne(musicId));
     }
 
