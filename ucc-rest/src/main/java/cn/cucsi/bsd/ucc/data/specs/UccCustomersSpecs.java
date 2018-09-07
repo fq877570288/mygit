@@ -64,7 +64,7 @@ public class UccCustomersSpecs {
         return new Specification<UccCustomers>() {
             @Override
             public Predicate toPredicate(Root<UccCustomers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createtime"), createtimeFrome);
+                return criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createdTime"), createtimeFrome);
             }
         };
     }
@@ -73,7 +73,7 @@ public class UccCustomersSpecs {
         return new Specification<UccCustomers>() {
             @Override
             public Predicate toPredicate(Root<UccCustomers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.lessThanOrEqualTo(root.<Date>get("createtime"), createtimeTo);
+                return criteriaBuilder.lessThanOrEqualTo(root.<Date>get("createdTime"), createtimeTo);
             }
         };
     }
