@@ -45,7 +45,11 @@ public class UccCustomersServiceImpl implements UccCustomersService{
         this.uccCustomersRepository.delete(custId);
         return true;
     }
-
+    /***
+     * 将客户移至黑名单
+     * add by wangxiaoyu
+     * 2018-08-24
+     */
     @Override
     public int inBlackListByBusinessCode(UccToBlackCriteria uccToBlackCriteria) throws Exception {
         String userId = uccToBlackCriteria.getUserId()==null?"":uccToBlackCriteria.getUserId();

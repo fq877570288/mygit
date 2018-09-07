@@ -16,6 +16,7 @@ import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import cn.cucsi.bsd.ucc.data.repo.UccCustomersRepository;
 import cn.cucsi.bsd.ucc.service.TaskService;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -121,9 +122,7 @@ public class TaskServiceImpl implements TaskService {
 		String taskDetailId = "";
 		TaskDetail taskDetail = null;
 		if(!MyUtils.isBlank(businessCodeList)){
-
 			for (int i = 0; i < businessCodeList.size(); i++) {
-
 				String businessCode = businessCodeList.get(i);
 				//根据businessCode查询任务明细表userId 、taskDetailId
 				taskDetailList = taskDetailMapper.selectDetailByBusinessCode(businessCode);
@@ -195,50 +194,78 @@ public class TaskServiceImpl implements TaskService {
 		//初始化赋值
 		resultBean.setReturnMsg("操作失败！");
 		resultBean.setReturnCode(ResultBean_New.FAIL);
-		StringBuilder taskDetailForAPPTemp = new StringBuilder();
-		String taskDetailId = showTaskDetailCriteria.getTaskDetailId()==null?"":showTaskDetailCriteria.getTaskDetailId();
+		String taskDetailId = "";
+		//String taskDetailId = showTaskDetailCriteria.getTaskDetailId()==null?"":showTaskDetailCriteria.getTaskDetailId();
 		String businessCode = showTaskDetailCriteria.getBusinessCode()==null?"":showTaskDetailCriteria.getBusinessCode();
-		if(MyUtils.isBlank(taskDetailId)||MyUtils.isBlank(businessCode)){//入参为空
+		if(MyUtils.isBlank(businessCode)){//入参为空
 			resultBean.setReturnMsg("入参为空！");
 			return resultBean;
 		}
 		TaskDetail taskDetail = null;
 		String taskDetailForAPP = "";//用于手机端返回任务明细
 		String isInBlackList = "";//用于手机端返回用户是否进入黑名单
+		List<TaskDetail> taskDetailList = null;
+		JSONArray taskDetailsArray = new JSONArray();
+		JSONObject taskDetailObj = null;
+		JSONObject taskDetilInfoJson = new JSONObject();
+		String responsible = "";
+		String packageName = "";
+		String contractName = "";
+		String contractEndTime = "";
+		String activationTime = "";
+		StringBuilder taskDetailForAPPTemp = null;
+		String transferStatus = "";//流转状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
+		String callMemo = "";//外呼备注
+		String callResult = "";//外呼结果
 		try {
-			//根据任务明细ID查询客户任务详情
-			taskDetail =  taskDetailMapper.selectByPrimaryKey(taskDetailId);
-			String responsible = taskDetail.getResponsible()==null?"":taskDetail.getResponsible();//责任体
-			String packageName = taskDetail.getPackageName()==null?"":taskDetail.getPackageName();//套餐名称
-			String contractName = taskDetail.getContractName()==null?"":taskDetail.getContractName();//合约名称
-			String contractEndTime = taskDetail.getContractEndTime()==null?"":taskDetail.getContractEndTime();//合约结束时间
-			String activationTime = taskDetail.getActivationTime()==null?"":taskDetail.getActivationTime();//激活时间
+			taskDetailList = taskDetailMapper.selectDetailByBusinessCode(businessCode);
+			if(!MyUtils.isBlank(taskDetailList)){
+				for (int j = 0; j < taskDetailList.size(); j++) {
+					taskDetail = taskDetailList.get(j);
+					taskDetailId = taskDetail.getTaskDetailId()==null?"":taskDetail.getTaskDetailId();
+					//根据任务明细ID查询客户任务详情
+					taskDetail =  taskDetailMapper.selectByPrimaryKey(taskDetailId);
+					responsible = taskDetail.getResponsible()==null?"":taskDetail.getResponsible();//责任体
+					packageName = taskDetail.getPackageName()==null?"":taskDetail.getPackageName();//套餐名称
+					contractName = taskDetail.getContractName()==null?"":taskDetail.getContractName();//合约名称
+					contractEndTime = taskDetail.getContractEndTime()==null?"":taskDetail.getContractEndTime();//合约结束时间
+					activationTime = taskDetail.getActivationTime()==null?"":taskDetail.getActivationTime();//激活时间
+					taskDetailForAPPTemp = new StringBuilder();
+					taskDetailForAPPTemp.append("责任体：").append(responsible)
+							.append(";").append("套餐名称:").append(packageName)
+							.append(";").append("合约名称:").append(contractName)
+							.append(";").append("合约结束时间:").append(contractEndTime)
+							.append(";").append("激活时间:").append(activationTime);
 
-			taskDetailForAPPTemp.append("责任体：").append(responsible)
-					.append(";").append("套餐名称:").append(packageName)
-					.append(";").append("合约名称:").append(contractName)
-					.append(";").append("合约结束时间:").append(contractEndTime)
-					.append(";").append("激活时间:").append(activationTime);
+					taskDetailForAPP = taskDetailForAPPTemp.toString();
+					transferStatus = taskDetail.getTransferStatus()==null?"":taskDetail.getTransferStatus();
+					callMemo = taskDetail.getCallMemo()==null?"":taskDetail.getCallMemo();
+					callResult = taskDetail.getCallResult()==null?"":taskDetail.getCallResult();
 
-			taskDetailForAPP = taskDetailForAPPTemp.toString();
+					//根据businessCode查询客户是否在黑名单
+					int type = uccCustomersRepository.checkCustmIsBlack(businessCode);
+					if(type==7){
+						isInBlackList = "该用户已被拉进黑名单";
+					}else{
+						isInBlackList = "未进入黑名单";
+					}
+					taskDetailObj = new JSONObject();
+					taskDetailObj.put("taskDetailForAPP",taskDetailForAPP);
+					taskDetailObj.put("isInBlackList",isInBlackList);
+					taskDetailObj.put("transferStatus",transferStatus);
+					taskDetailObj.put("callMemo",callMemo);
+					taskDetailObj.put("callResult",callResult);
 
-			//根据businessCode查询客户是否在黑名单
-			int type = uccCustomersRepository.checkCustmIsBlack(businessCode);
-			if(type==7){
-				isInBlackList = "该用户已被拉进黑名单";
-			}else{
-				isInBlackList = "未进入黑名单";
+					taskDetailsArray.add(taskDetailObj);
+				}
+				taskDetilInfoJson.put("taskDetailsArray",taskDetailsArray);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("根据任务明细ID查询客户任务详情发生错误！");
 			return resultBean;
 		}
-
-		JSONObject retData = new JSONObject();
-		retData.put("taskDetailForAPP",taskDetailForAPP);
-		retData.put("isInBlackList",isInBlackList);
-		resultBean.setData(retData);
+		resultBean.setData(taskDetilInfoJson);
 		resultBean.setReturnMsg("操作成功！");
 		resultBean.setReturnCode(ResultBean_New.SUCCESS);
 		return resultBean;
