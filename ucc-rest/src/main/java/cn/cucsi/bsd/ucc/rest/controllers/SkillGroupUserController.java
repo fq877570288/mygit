@@ -33,8 +33,8 @@ public class SkillGroupUserController {
     }
 
     @ApiOperation(value = "根据SkillGroupUserPK查询SkillGroupUser", notes = "根据SkillGroupUserPK查询SkillGroupUser")
-    @RequestMapping(value = "/{skillGroupId}/{userId}", method= RequestMethod.GET)
-    public ResultBean<SkillGroupUser> findOne(@PathVariable String skillGroupId, @PathVariable String userId){
+    @RequestMapping(value = "/{skillGroupId}/{userId}", method= RequestMethod.POST)
+    public ResultBean<SkillGroupUser> findOne(@RequestBody String skillGroupId, @PathVariable String userId){
         SkillGroupUserPK pk = new SkillGroupUserPK();
         pk.setSkillGroupId(skillGroupId);
         pk.setUserId(userId);
@@ -69,21 +69,21 @@ public class SkillGroupUserController {
     }
 
 
-    @ApiOperation(value = "查询没有绑定技能组的用户", notes = "查询没有绑定技能组的用户", httpMethod = "GET")
-    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.GET)
-    public ResultBean<List<UccUsers>> findAllOfNoPage(@ModelAttribute UccUserCriteria search) {
+    @ApiOperation(value = "查询没有绑定技能组的用户", notes = "查询没有绑定技能组的用户", httpMethod = "POST")
+    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.POST)
+    public ResultBean<List<UccUsers>> findAllOfNoPage(@RequestBody UccUserCriteria search) {
         return new ResultBean(this.skillGroupUserService.findAllOfNoPage(search));
     }
 
     @ApiOperation(value = "批量创建SkillGroupUser", notes = "批量创建SkillGroupUser")
     @RequestMapping(value = "/insert", method =  RequestMethod.POST)
-    public ResultBean<Boolean> insert(  String userId,  String skillGroup,   String createdPerson) {
+    public ResultBean<Boolean> insert(@RequestBody String userId,  String skillGroup,   String createdPerson) {
        boolean result = this.skillGroupUserService.insert(userId,skillGroup,createdPerson) != null;
         return new ResultBean<>(result);
     }
-    @ApiOperation(value = "根据userId查询所绑定的技能组集合", notes = "根据userId查询所绑定的技能组集合", httpMethod = "GET")
-    @RequestMapping(value = "/findSkillGroupUsersByUserIdEquals/{userId}", method = RequestMethod.GET)
-    public ResultBean<List<SkillGroupUser>> findSkillGroupUsersByUserIdEquals(@PathVariable String  userId) {
+    @ApiOperation(value = "根据userId查询所绑定的技能组集合", notes = "根据userId查询所绑定的技能组集合", httpMethod = "POST")
+    @RequestMapping(value = "/findSkillGroupUsersByUserIdEquals/{userId}", method = RequestMethod.POST)
+    public ResultBean<List<SkillGroupUser>> findSkillGroupUsersByUserIdEquals(@RequestBody String  userId) {
         String num=userId;
         return new ResultBean<>(skillGroupUserService.findSkillGroupUsersByUserIdEquals(userId));
 

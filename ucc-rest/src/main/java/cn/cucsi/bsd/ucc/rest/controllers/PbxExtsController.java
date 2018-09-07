@@ -42,15 +42,15 @@ public class PbxExtsController {
         return new ResultBean(this.PbxExtsService.findAllBySearch(search));
     }
 
-    @ApiOperation(value = "查询所有没有分配的分机号码", notes = "查询所有没有分配的分机号码", httpMethod = "GET")
-    @RequestMapping(value = "/findAllFree/{domainId}", method = RequestMethod.GET)
-    public List<PbxExts> findAllFree(@PathVariable String domainId) {
+    @ApiOperation(value = "查询所有没有分配的分机号码", notes = "查询所有没有分配的分机号码", httpMethod = "POST")
+    @RequestMapping(value = "/findAllFree/{domainId}", method = RequestMethod.POST)
+    public List<PbxExts> findAllFree(@RequestBody String domainId) {
         return this.PbxExtsService.findAllFreeExts(domainId);
     }
 
     @ApiOperation(value = "根据extId查询PbxExts", notes = "根据extId查询PbxExts")
-    @RequestMapping(value = "/{extId}", method = RequestMethod.GET)
-    public ResultBean<PbxExts> findOne(@PathVariable String extId) {
+    @RequestMapping(value = "/{extId}", method = RequestMethod.POST)
+    public ResultBean<PbxExts> findOne(@RequestBody String extId) {
         return new ResultBean<>(this.PbxExtsService.findOne(extId));
     }
 

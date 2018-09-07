@@ -23,14 +23,14 @@ public class UserRoleController {
     @Autowired
     private UserRoleService userRoleService;
 
-    @ApiOperation(value="根据查询条件获取用户角色表", notes="根据查询条件获取用户角色表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public ResultBean<List<UserRole>> findAll(@ModelAttribute  UserRoleCriteria search){
+    @ApiOperation(value="根据查询条件获取用户角色表", notes="根据查询条件获取用户角色表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public ResultBean<List<UserRole>> findAll(@RequestBody  UserRoleCriteria search){
         return new ResultBean(this.userRoleService.findAll(search));
     }
     @ApiOperation(value = "根据userId、roleId查询UserRole", notes = "根据userId、roleId查询UserRole")
-    @RequestMapping(value = "/{userId}/{roleId}", method= RequestMethod.GET)
-    public ResultBean<UserRole> findOne(@PathVariable String userId,@PathVariable String roleId){
+    @RequestMapping(value = "/{userId}/{roleId}", method= RequestMethod.POST)
+    public ResultBean<UserRole> findOne(@RequestBody String userId,@PathVariable String roleId){
         UserRolePK userRolePK=new UserRolePK();
         userRolePK.setUserId(userId);
         userRolePK.setRoleId(roleId);

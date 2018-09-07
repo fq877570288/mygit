@@ -37,10 +37,10 @@ public class UccUserController  {
         return list;
     }
 
-    @ApiOperation(value="根据查询条件获取用户", notes="根据查询条件获取用户", httpMethod = "GET")
-    @RequestMapping(value = "/login", method= RequestMethod.GET)
+    @ApiOperation(value="根据查询条件获取用户", notes="根据查询条件获取用户", httpMethod = "POST")
+    @RequestMapping(value = "/login", method= RequestMethod.POST)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
-    public List<UccUsers> login(@ModelAttribute UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response){
+    public List<UccUsers> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response){
         List<UccUsers> list =this.uccUserService.findAllList(criteria);
 
 
@@ -69,8 +69,8 @@ public class UccUserController  {
 
 
     @ApiOperation(value = "根据userId查询UccUsers", notes = "根据userId查询UccUsers")
-    @RequestMapping(value = "/{userId}", method= RequestMethod.GET)
-    public ResultBean<UccUsers> findOne(@PathVariable String userId){
+    @RequestMapping(value = "/{userId}", method= RequestMethod.POST)
+    public ResultBean<UccUsers> findOne(@RequestBody String userId){
         return new ResultBean<>(this.uccUserService.findOne(userId));
     }
 

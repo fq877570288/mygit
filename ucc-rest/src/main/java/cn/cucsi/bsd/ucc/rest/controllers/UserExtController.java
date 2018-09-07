@@ -23,14 +23,14 @@ public class UserExtController {
 
     @Autowired
     private UserExtService userExtService;
-    @ApiOperation(value="根据查询条件获取用户号码关系表", notes="根据查询条件获取用户号码关系表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<UserExt>> findAll(@ModelAttribute  UserExtCriteria search){
+    @ApiOperation(value="根据查询条件获取用户号码关系表", notes="根据查询条件获取用户号码关系表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<UserExt>> findAll(@RequestBody  UserExtCriteria search){
         return new PageResultBean(this.userExtService.findAll(search));
     }
     @ApiOperation(value = "根据userId查询UserExt", notes = "根据userId查询UserExt")
-    @RequestMapping(value = "/{userId}", method= RequestMethod.GET)
-    public ResultBean<UserExt> findOne(@PathVariable String userId){
+    @RequestMapping(value = "/{userId}", method= RequestMethod.POST)
+    public ResultBean<UserExt> findOne(@RequestBody String userId){
         return new ResultBean<>(this.userExtService.findOne(userId));
     }
     @ApiOperation(value = "根据userId删除UserExt", notes = "根据userId查询UserExt")
