@@ -61,15 +61,16 @@ public class PbxQueuesController {
     }
     @ApiOperation(value = "创建PbxQueues", notes = "创建PbxQueues")
     @RequestMapping(value = "" , method =  RequestMethod.POST)
-    public ResultBean<Boolean> create(@RequestBody PbxQueues PbxQueues,String extGroupExts) {
+    public ResultBean<Boolean> create(@RequestBody PbxQueues PbxQueues) {
+        String[] extGroupExts=PbxQueues.getExtGroupExts();
         PbxQueues queues = this.PbxQueuesService.save(PbxQueues);
 
         boolean result =queues != null;
 
         if(result){
-            String[] extIds = extGroupExts.split(",");
+
             result = false ;
-            for (String extId:extIds
+            for (String extId:extGroupExts
                     ) {
                 PbxQueueNumbers pbxQueueNumbers = new PbxQueueNumbers();
                 pbxQueueNumbers.setExtId(extId);
@@ -85,7 +86,8 @@ public class PbxQueuesController {
     }
     @ApiOperation(value = "修改PbxQueues", notes = "修改PbxQueues")
     @RequestMapping(value = "/{queueId}", method= RequestMethod.PUT)
-    public ResultBean<Boolean> save(@PathVariable String queueId,@RequestBody PbxQueues PbxQueues,String extGroupExts){
+    public ResultBean<Boolean> save(@PathVariable String queueId,@RequestBody PbxQueues PbxQueues){
+        String[] extGroupExts = PbxQueues.getExtGroupExts();
         PbxQueues queues = this.PbxQueuesService.save(PbxQueues);
         boolean result = queues != null;
         if(result){
@@ -98,8 +100,7 @@ public class PbxQueuesController {
                 pk.setExtId(pbxQueueNumbers.getExtId());
                 this.pbxQueueNumbersService.delete(pk);
             }
-            String[] extIds = extGroupExts.split(",");
-            for (String extId:extIds
+            for (String extId:extGroupExts
                     ) {
                 PbxQueueNumbers pbxQueueNumbers = new PbxQueueNumbers();
                 pbxQueueNumbers.setExtId(extId);
