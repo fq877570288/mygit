@@ -88,7 +88,7 @@ public class UccCustomersController {
     public PageResultBean_New<List<UccCustomers>> findBlackList( UccBlackListCriteria uccBlackListCriteria){
         PageResultBean_New<List<UccCustomers>> pageResultBean = null;
         try{
-            pageResultBean = this.uccCustomersService.findBlackList(uccBlackListCriteria);
+            pageResultBean =  this.uccCustomersService.findBlackList(uccBlackListCriteria);
         }catch (Exception e){
             System.out.println("查询黑名单列表异常"+e);
         }
