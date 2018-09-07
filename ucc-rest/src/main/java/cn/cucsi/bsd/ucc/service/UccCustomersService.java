@@ -1,9 +1,13 @@
 package cn.cucsi.bsd.ucc.service;
 
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
+import cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccCustomersCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccToBlackCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccCustomers;
 import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * Created by tianyuwei on 2017/10/13.
@@ -28,5 +32,11 @@ public interface UccCustomersService {
      * 2018-08-31
      */
     int custmIsBlack(String businessCode);
+    /***
+     * 根据条件查询黑名单列表
+     * add by zss
+     * 2018-09-6
+     */
+    PageResultBean_New<List<UccCustomers>> findBlackList(UccBlackListCriteria uccBlackListCriteria);
 }
 

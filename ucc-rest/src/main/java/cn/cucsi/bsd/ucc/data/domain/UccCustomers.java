@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
@@ -50,6 +51,8 @@ public class UccCustomers {
     private String rate;
     private String pullBlackReason;
     private String domainId;
+    //不是这张表的字段它是关联表字段
+    private String domainName;
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
     private String createdUserId;
@@ -530,11 +533,11 @@ public class UccCustomers {
 
     @ManyToOne
     @JoinColumn(name = "domain_id", referencedColumnName = "domain_id", nullable = false, updatable = false, insertable = false)
-    public cn.cucsi.bsd.ucc.data.domain.UccDomain getUccDomain() {
+    public UccDomain getUccDomain() {
         return uccDomain;
     }
 
-    public void setUccDomain(cn.cucsi.bsd.ucc.data.domain.UccDomain uccDomain) {
+    public void setUccDomain(UccDomain uccDomain) {
         this.uccDomain = uccDomain;
     }
 
@@ -605,11 +608,20 @@ public class UccCustomers {
 
     @Basic
     @Column(nullable = true)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getUpdatedTime() {
         return updatedTime;
     }
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
     }
 }
