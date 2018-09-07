@@ -25,13 +25,14 @@ public class UccCustomersController {
     private UccCustomersService uccCustomersService;
 
     @ApiOperation(value="根据查询条件获取客户列表", notes="根据查询条件获取客户列表", httpMethod = "POST")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<UccCustomers>> findAll(@ModelAttribute UccCustomersCriteria search) {
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    @ResponseBody
+    public PageResultBean<List<UccCustomers>> findAll(UccCustomersCriteria search) {
         return new PageResultBean(this.uccCustomersService.findAll(search));
     }
 
     @ApiOperation(value = "根据custId查询UccCustomers", notes = "根据custId查询UccCustomers")
-    @RequestMapping(value = "/{custId}", method= RequestMethod.GET)
+    @RequestMapping(value = "/{custId}", method= RequestMethod.POST)
     public ResultBean<UccCustomers> findOne(@PathVariable String custId){
         return new ResultBean<>(this.uccCustomersService.findOne(custId));
     }
