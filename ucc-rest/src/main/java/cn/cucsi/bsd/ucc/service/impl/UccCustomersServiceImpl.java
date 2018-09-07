@@ -1,12 +1,16 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
+import cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccCustomersCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccToBlackCriteria;
+import cn.cucsi.bsd.ucc.common.mapper.UccCustomersMapper;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.UccCustomers;
 import cn.cucsi.bsd.ucc.data.repo.UccCustomersRepository;
 import cn.cucsi.bsd.ucc.data.specs.UccCustomersSpecs;
 import cn.cucsi.bsd.ucc.service.UccCustomersService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,13 +20,15 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UccCustomersServiceImpl implements UccCustomersService{
 
     @Autowired
     private UccCustomersRepository uccCustomersRepository;
-
+    @Autowired
+    private UccCustomersMapper uccCustomersMapper;
     @Override
     public Page<UccCustomers> findAll(UccCustomersCriteria criteria) {
         Sort sort = new Sort(Sort.Direction.DESC, "createtime");
@@ -69,5 +75,19 @@ public class UccCustomersServiceImpl implements UccCustomersService{
     @Override
     public int custmIsBlack(String businessCode){
         return this.uccCustomersRepository.checkCustmIsBlack(businessCode);
+    }
+
+    /***
+     * 根据条件查询黑名单列表
+     * add by zss
+     * 2018-09-6
+     */
+    @Override
+    public PageResultBean_New<List<UccCustomers>> findBlackList(UccBlackListCriteria uccBlackListCriteria){
+        com.github.pagehelper.Page pageInfo = PageHelper.startPage(uccBlackListCriteria.getPageNum(), uccBlackListCriteria.getPageSize());
+        List<UccCustomers> list = uccCustomersMapper.selectByPrimaryKey(uccBlackListCriteria);
+        PageResultBean_New<List<UccCustomers>> pageResultBean = new PageResultBean_New(pageInfo);
+        pageResultBean.setList(list);
+        return pageResultBean;
     }
 }

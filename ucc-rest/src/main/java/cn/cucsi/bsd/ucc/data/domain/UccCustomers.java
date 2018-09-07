@@ -533,11 +533,11 @@ public class UccCustomers {
 
     @ManyToOne
     @JoinColumn(name = "domain_id", referencedColumnName = "domain_id", nullable = false, updatable = false, insertable = false)
-    public cn.cucsi.bsd.ucc.data.domain.UccDomain getUccDomain() {
+    public UccDomain getUccDomain() {
         return uccDomain;
     }
 
-    public void setUccDomain(cn.cucsi.bsd.ucc.data.domain.UccDomain uccDomain) {
+    public void setUccDomain(UccDomain uccDomain) {
         this.uccDomain = uccDomain;
     }
 
