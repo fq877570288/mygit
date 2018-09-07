@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.common.beans;
 /**
  * Created by mk on 2017/10/16.
  */
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
@@ -87,6 +88,7 @@ public class UccRolesCriteria extends  BasicCriteria {
         this.updated_user_name = updated_user_name;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreatedTimeFrom() {
         return createdTimeFrom;
     }
@@ -95,6 +97,7 @@ public class UccRolesCriteria extends  BasicCriteria {
         this.createdTimeFrom = createdTimeFrom;
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreatedTimeTo() {
         return createdTimeTo;
     }
