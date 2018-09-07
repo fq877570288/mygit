@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.data.domain;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.data.repo.UccPermissionsRepository;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
@@ -232,6 +233,7 @@ public class UccRoles {
 
     @Basic
     @Column(nullable = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreatedTime() {
         return createdTime;
     }
@@ -242,6 +244,7 @@ public class UccRoles {
 
     @Basic
     @Column(nullable = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getUpdatedTime() {
         return updatedTime;
     }

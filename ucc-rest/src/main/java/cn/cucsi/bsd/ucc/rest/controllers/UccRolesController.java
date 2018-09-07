@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import cn.cucsi.bsd.ucc.data.domain.RolesPermissions;
 import cn.cucsi.bsd.ucc.service.RolesPermissionsService;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,8 +28,8 @@ public class UccRolesController {
     private RolesPermissionsService rolesPermissionsService;
 
     @ApiOperation(value="根据查询条件获取角色列表", notes="根据查询条件获取角色列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<UccRoles>> findAll(@ModelAttribute UccRolesCriteria search){
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<UccRoles>> findAll(@RequestBody UccRolesCriteria search){
         return new PageResultBean(this.uccRolesService.findAll(search));
     }
 
@@ -47,6 +49,8 @@ public class UccRolesController {
     @ApiOperation(value = "创建UccRoles", notes = "创建UccRoles")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody  UccRoles uccRoles,String permissions) {
+        Date dateTime = new Date();
+        uccRoles.setCreatedTime(dateTime);
         UccRoles queues = this.uccRolesService.save(uccRoles);
         boolean result =queues != null;
 
@@ -71,9 +75,24 @@ public class UccRolesController {
 
     @ApiOperation(value = "修改UccRoles", notes = "修改UccRoles")
     @RequestMapping(value = "/{roleId}",method = RequestMethod.PUT)
-    public ResultBean<Boolean> save(@PathVariable String roleId,@RequestBody UccRoles uccRoles){
-        boolean result = this.uccRolesService.save(uccRoles) != null;
-        return new ResultBean<>(result);
+    public ResultBean<Boolean> save(@PathVariable String roleId,@RequestBody UccRoles uccRoles,String permissions){
+        Date dateTime = new Date();
+        uccRoles.setUpdatedTime(dateTime);
+        UccRoles queues = this.uccRolesService.save(uccRoles);
+        boolean result =queues != null;
+        if(result){
+            String[] permissionsIds = permissions.split(",");
+            result = false ;
+            for (String permissionsId:permissionsIds) {
+                RolesPermissions  rolesPermissions = new RolesPermissions();
+                rolesPermissions.setPermissionId(permissionsId);
+                rolesPermissions.setRoleId(queues.getRoleId());
+                result = this.rolesPermissionsService.save(rolesPermissions)!=null;
+            }
+            return new ResultBean<>(result);
+        }else{
+            return new ResultBean<>(result);
+        }
     }
 
 }
