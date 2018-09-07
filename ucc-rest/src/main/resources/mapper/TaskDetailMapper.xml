@@ -73,12 +73,16 @@
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     SELECT
-      a.*, b.TRANSFER_STATUS,
-      b.CALL_MEMO,
-      b.CALL_RESULT,MAX(b.TRANSFER_TIME)
+        a.*, b.TRANSFER_STATUS,
+        b.CALL_MEMO,
+        b.CALL_RESULT,
+        c.cust_name,
+        c.defult_phone AS customer_phone,
+        MAX(b.TRANSFER_TIME)
     FROM
-	  OC_TASK_DETAIL AS a
+	    OC_TASK_DETAIL AS a
     LEFT JOIN OC_TASK_TRANSFER AS b ON a.TASK_DETAIL_ID = b.TASK_DETAIL_ID
+    LEFT JOIN ucc_customers AS c ON a.BUSINESS_CODE = c.businesscode
     where a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >

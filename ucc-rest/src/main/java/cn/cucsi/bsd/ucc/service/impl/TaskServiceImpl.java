@@ -71,7 +71,7 @@ public class TaskServiceImpl implements TaskService {
                 ongoingTaskCriteria.setDateStart(sdfyyyyMM.format(now)+"-01 00:00:00");
                 ongoingTaskCriteria.setDateEnd(dateStr+" 23:59:59");
             }
-            if(!MyUtils.isBlank(taskCountsFlag)){
+            /*if(!MyUtils.isBlank(taskCountsFlag)){
 
                 String taskStatus = "";// 任务状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
                 for (TaskDetail taskDetail:informationList){
@@ -90,7 +90,7 @@ public class TaskServiceImpl implements TaskService {
                         taskDetail.setTaskStatus("退回");
                     }
                 }
-            }
+            }*/
 			PageResultBean_New<List<TaskDetail>> pageResultBean_new = new PageResultBean_New(pageInfo);
 			pageResultBean_new.setList(informationList);
 			return pageResultBean_new;
@@ -217,6 +217,8 @@ public class TaskServiceImpl implements TaskService {
 		String transferStatus = "";//流转状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
 		String callMemo = "";//外呼备注
 		String callResult = "";//外呼结果
+        String custName = "";//客户姓名
+        String customerPhone = "";//客户联系电话
 		try {
 			taskDetailList = taskDetailMapper.selectDetailByBusinessCode(businessCode);
 			if(!MyUtils.isBlank(taskDetailList)){
@@ -241,6 +243,8 @@ public class TaskServiceImpl implements TaskService {
 					transferStatus = taskDetail.getTransferStatus()==null?"":taskDetail.getTransferStatus();
 					callMemo = taskDetail.getCallMemo()==null?"":taskDetail.getCallMemo();
 					callResult = taskDetail.getCallResult()==null?"":taskDetail.getCallResult();
+                    custName = taskDetail.getCustName()==null?"":taskDetail.getCustName();
+                    customerPhone = taskDetail.getCustomerPhone()==null?"":taskDetail.getCustomerPhone();
 
 					//根据businessCode查询客户是否在黑名单
 					int type = uccCustomersRepository.checkCustmIsBlack(businessCode);
@@ -251,15 +255,18 @@ public class TaskServiceImpl implements TaskService {
 					}
 					taskDetailObj = new JSONObject();
 					taskDetailObj.put("taskDetailForAPP",taskDetailForAPP);
-					taskDetailObj.put("isInBlackList",isInBlackList);
+					//taskDetailObj.put("isInBlackList",isInBlackList);
 					taskDetailObj.put("transferStatus",transferStatus);
 					taskDetailObj.put("callMemo",callMemo);
 					taskDetailObj.put("callResult",callResult);
 
 					taskDetailsArray.add(taskDetailObj);
 				}
-				taskDetilInfoJson.put("taskDetailsArray",taskDetailsArray);
-			}
+				taskDetilInfoJson.put("isInBlackList",isInBlackList);
+                taskDetilInfoJson.put("custName",custName);
+                taskDetilInfoJson.put("customerPhone",customerPhone);
+                taskDetilInfoJson.put("taskDetailsArray",taskDetailsArray);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("根据任务明细ID查询客户任务详情发生错误！");
