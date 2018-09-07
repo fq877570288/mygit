@@ -41,4 +41,10 @@ public class UccServersServiceImpl implements UccServersService{
         this.uccServersRepository.delete(serverName);
         return true;
     }
+
+    @Override
+    public Boolean deleteAll() {
+        this.uccServersRepository.deleteAll();
+        return true;
+    }
 }

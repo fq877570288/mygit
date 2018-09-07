@@ -51,4 +51,10 @@ public class UccClientsServiceImpl implements UccClientsService{
         this.uccClientsRepository.delete(name);
         return true;
     }
+
+    @Override
+    public Boolean deleteAll() {
+        this.uccClientsRepository.deleteAll();
+        return true;
+    }
 }
