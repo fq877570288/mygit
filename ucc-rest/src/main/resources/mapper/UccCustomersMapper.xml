@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.ucc.common.mapper.UccCustomersMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.ucc.data.domain.UccCustomers" >
+    <id column="cust_id" property="custId" jdbcType="VARCHAR" />
+    <result column="address1" property="address1" jdbcType="INTEGER" />
+    <result column="address2" property="address2" jdbcType="INTEGER" />
+    <result column="address3" property="address3" jdbcType="INTEGER" />
+    <result column="address4" property="address4" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+    <result column="businesscode" property="businesscode" jdbcType="VARCHAR" />
+    <result column="changephone1" property="changephone1" jdbcType="VARCHAR" />
+    <result column="changephone2" property="changephone2" jdbcType="VARCHAR" />
+    <result column="changephone3" property="changephone3" jdbcType="VARCHAR" />
+    <result column="companyname" property="companyname" jdbcType="VARCHAR" />
+    <result column="companynature" property="companynature" jdbcType="INTEGER" />
+    <result column="contacts" property="contacts" jdbcType="VARCHAR" />
+    <result column="created_nick_name" property="createdNickName" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="created_user_id" property="createdUserId" jdbcType="VARCHAR" />
+    <result column="created_user_name" property="createdUserName" jdbcType="VARCHAR" />
+    <result column="cust_code" property="custCode" jdbcType="VARCHAR" />
+    <result column="cust_name" property="custName" jdbcType="VARCHAR" />
+    <result column="defult_phone" property="defultPhone" jdbcType="VARCHAR" />
+    <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="industrytype" property="industrytype" jdbcType="INTEGER" />
+    <result column="installedaddress" property="installedaddress" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="msg_resource" property="msgResource" jdbcType="INTEGER" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="phone2" property="phone2" jdbcType="VARCHAR" />
+    <result column="phone3" property="phone3" jdbcType="VARCHAR" />
+    <result column="ponlogo" property="ponlogo" jdbcType="VARCHAR" />
+    <result column="product_type" property="productType" jdbcType="VARCHAR" />
+    <result column="pull_black_reason" property="pullBlackReason" jdbcType="VARCHAR" />
+    <result column="qq" property="qq" jdbcType="VARCHAR" />
+    <result column="rate" property="rate" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="tariffname" property="tariffname" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="updated_nick_name" property="updatedNickName" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="updated_user_id" property="updatedUserId" jdbcType="VARCHAR" />
+    <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
+    <!-- 不是这张表的字段它是关联表字段 -->
+    <result column="domain_name" property="domainName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cust_id, address1, address2, address3, address4, birthday, businesscode, changephone1, 
+    changephone2, changephone3, companyname, companynature, contacts, created_nick_name, 
+    created_time, created_user_id, created_user_name, cust_code, cust_name, defult_phone, 
+    domain_id, email, fax, idcard, industrytype, installedaddress, memo, msg_resource, 
+    phone, phone2, phone3, ponlogo, product_type, pull_black_reason, qq, rate, sex, status, 
+    tariffname, type, updated_nick_name, updated_time, updated_user_id, updated_user_name,domain_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria" >
+    select
+    a.cust_id as cust_id,
+    a.cust_code as cust_code,
+    a.cust_name as cust_name,
+    b.domain_name as domain_name,
+    a.contacts as contacts,
+    a.phone as phone,
+    a.status as status,
+    a.type as type,
+    a.updated_time as updated_time
+    from ucc_customers as a
+    LEFT join ucc_domain as b ON a.domain_id = b.domain_id
+    where 1=1
+    <if test="type !=null and type!=''">
+      AND a.type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="custId != null and custId!=''" >
+      AND a.cust_id = #{custId,jdbcType=VARCHAR}
+    </if>
+    <if test="domainId != null and domainId!=''" >
+      AND a.domain_id = #{domainId,jdbcType=VARCHAR}
+    </if>
+    <if test="custName != null and custName!=''" >
+      AND a.cust_name LIKE '%${custName}%'
+    </if>
+    <if test="startTime!=null and startTime!=''">
+      and DATE_FORMAT(a.updated_time,'%Y-%m-%d %H:%i:%S') &gt;=#{startTime}
+    </if>
+    <if test="endTime!=null and endTime!=''">
+      and DATE_FORMAT(a.updated_time,'%Y-%m-%d %H:%i:%S') &lt;=#{endTime}
+    </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ucc_customers
+    where cust_id = #{custId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers" >
+    insert into ucc_customers (cust_id, address1, address2, 
+      address3, address4, birthday, 
+      businesscode, changephone1, changephone2, 
+      changephone3, companyname, companynature, 
+      contacts, created_nick_name, created_time, 
+      created_user_id, created_user_name, cust_code, 
+      cust_name, defult_phone, domain_id, 
+      email, fax, idcard, 
+      industrytype, installedaddress, memo, 
+      msg_resource, phone, phone2, 
+      phone3, ponlogo, product_type, 
+      pull_black_reason, qq, rate, 
+      sex, status, tariffname, 
+      type, updated_nick_name, updated_time, 
+      updated_user_id, updated_user_name)
+    values (#{custId,jdbcType=VARCHAR}, #{address1,jdbcType=INTEGER}, #{address2,jdbcType=INTEGER}, 
+      #{address3,jdbcType=INTEGER}, #{address4,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, 
+      #{businesscode,jdbcType=VARCHAR}, #{changephone1,jdbcType=VARCHAR}, #{changephone2,jdbcType=VARCHAR}, 
+      #{changephone3,jdbcType=VARCHAR}, #{companyname,jdbcType=VARCHAR}, #{companynature,jdbcType=INTEGER}, 
+      #{contacts,jdbcType=VARCHAR}, #{createdNickName,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=VARCHAR}, #{createdUserName,jdbcType=VARCHAR}, #{custCode,jdbcType=VARCHAR}, 
+      #{custName,jdbcType=VARCHAR}, #{defultPhone,jdbcType=VARCHAR}, #{domainId,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{fax,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
+      #{industrytype,jdbcType=INTEGER}, #{installedaddress,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{msgResource,jdbcType=INTEGER}, #{phone,jdbcType=VARCHAR}, #{phone2,jdbcType=VARCHAR}, 
+      #{phone3,jdbcType=VARCHAR}, #{ponlogo,jdbcType=VARCHAR}, #{productType,jdbcType=VARCHAR}, 
+      #{pullBlackReason,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{rate,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{tariffname,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{updatedNickName,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=VARCHAR}, #{updatedUserName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers" >
+    insert into ucc_customers
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="custId != null" >
+        cust_id,
+      </if>
+      <if test="address1 != null" >
+        address1,
+      </if>
+      <if test="address2 != null" >
+        address2,
+      </if>
+      <if test="address3 != null" >
+        address3,
+      </if>
+      <if test="address4 != null" >
+        address4,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="businesscode != null" >
+        businesscode,
+      </if>
+      <if test="changephone1 != null" >
+        changephone1,
+      </if>
+      <if test="changephone2 != null" >
+        changephone2,
+      </if>
+      <if test="changephone3 != null" >
+        changephone3,
+      </if>
+      <if test="companyname != null" >
+        companyname,
+      </if>
+      <if test="companynature != null" >
+        companynature,
+      </if>
+      <if test="contacts != null" >
+        contacts,
+      </if>
+      <if test="createdNickName != null" >
+        created_nick_name,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id,
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name,
+      </if>
+      <if test="custCode != null" >
+        cust_code,
+      </if>
+      <if test="custName != null" >
+        cust_name,
+      </if>
+      <if test="defultPhone != null" >
+        defult_phone,
+      </if>
+      <if test="domainId != null" >
+        domain_id,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="fax != null" >
+        fax,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="industrytype != null" >
+        industrytype,
+      </if>
+      <if test="installedaddress != null" >
+        installedaddress,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="msgResource != null" >
+        msg_resource,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="phone2 != null" >
+        phone2,
+      </if>
+      <if test="phone3 != null" >
+        phone3,
+      </if>
+      <if test="ponlogo != null" >
+        ponlogo,
+      </if>
+      <if test="productType != null" >
+        product_type,
+      </if>
+      <if test="pullBlackReason != null" >
+        pull_black_reason,
+      </if>
+      <if test="qq != null" >
+        qq,
+      </if>
+      <if test="rate != null" >
+        rate,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="tariffname != null" >
+        tariffname,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id,
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="custId != null" >
+        #{custId,jdbcType=VARCHAR},
+      </if>
+      <if test="address1 != null" >
+        #{address1,jdbcType=INTEGER},
+      </if>
+      <if test="address2 != null" >
+        #{address2,jdbcType=INTEGER},
+      </if>
+      <if test="address3 != null" >
+        #{address3,jdbcType=INTEGER},
+      </if>
+      <if test="address4 != null" >
+        #{address4,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businesscode != null" >
+        #{businesscode,jdbcType=VARCHAR},
+      </if>
+      <if test="changephone1 != null" >
+        #{changephone1,jdbcType=VARCHAR},
+      </if>
+      <if test="changephone2 != null" >
+        #{changephone2,jdbcType=VARCHAR},
+      </if>
+      <if test="changephone3 != null" >
+        #{changephone3,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="companynature != null" >
+        #{companynature,jdbcType=INTEGER},
+      </if>
+      <if test="contacts != null" >
+        #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="createdNickName != null" >
+        #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="custCode != null" >
+        #{custCode,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="defultPhone != null" >
+        #{defultPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="domainId != null" >
+        #{domainId,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="industrytype != null" >
+        #{industrytype,jdbcType=INTEGER},
+      </if>
+      <if test="installedaddress != null" >
+        #{installedaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="msgResource != null" >
+        #{msgResource,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="phone2 != null" >
+        #{phone2,jdbcType=VARCHAR},
+      </if>
+      <if test="phone3 != null" >
+        #{phone3,jdbcType=VARCHAR},
+      </if>
+      <if test="ponlogo != null" >
+        #{ponlogo,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="pullBlackReason != null" >
+        #{pullBlackReason,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="tariffname != null" >
+        #{tariffname,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="updatedNickName != null" >
+        #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers" >
+    update ucc_customers
+    <set >
+      <if test="address1 != null" >
+        address1 = #{address1,jdbcType=INTEGER},
+      </if>
+      <if test="address2 != null" >
+        address2 = #{address2,jdbcType=INTEGER},
+      </if>
+      <if test="address3 != null" >
+        address3 = #{address3,jdbcType=INTEGER},
+      </if>
+      <if test="address4 != null" >
+        address4 = #{address4,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businesscode != null" >
+        businesscode = #{businesscode,jdbcType=VARCHAR},
+      </if>
+      <if test="changephone1 != null" >
+        changephone1 = #{changephone1,jdbcType=VARCHAR},
+      </if>
+      <if test="changephone2 != null" >
+        changephone2 = #{changephone2,jdbcType=VARCHAR},
+      </if>
+      <if test="changephone3 != null" >
+        changephone3 = #{changephone3,jdbcType=VARCHAR},
+      </if>
+      <if test="companyname != null" >
+        companyname = #{companyname,jdbcType=VARCHAR},
+      </if>
+      <if test="companynature != null" >
+        companynature = #{companynature,jdbcType=INTEGER},
+      </if>
+      <if test="contacts != null" >
+        contacts = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="createdNickName != null" >
+        created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="custCode != null" >
+        cust_code = #{custCode,jdbcType=VARCHAR},
+      </if>
+      <if test="custName != null" >
+        cust_name = #{custName,jdbcType=VARCHAR},
+      </if>
+      <if test="defultPhone != null" >
+        defult_phone = #{defultPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="domainId != null" >
+        domain_id = #{domainId,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="industrytype != null" >
+        industrytype = #{industrytype,jdbcType=INTEGER},
+      </if>
+      <if test="installedaddress != null" >
+        installedaddress = #{installedaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="msgResource != null" >
+        msg_resource = #{msgResource,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="phone2 != null" >
+        phone2 = #{phone2,jdbcType=VARCHAR},
+      </if>
+      <if test="phone3 != null" >
+        phone3 = #{phone3,jdbcType=VARCHAR},
+      </if>
+      <if test="ponlogo != null" >
+        ponlogo = #{ponlogo,jdbcType=VARCHAR},
+      </if>
+      <if test="productType != null" >
+        product_type = #{productType,jdbcType=VARCHAR},
+      </if>
+      <if test="pullBlackReason != null" >
+        pull_black_reason = #{pullBlackReason,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null" >
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null" >
+        rate = #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="tariffname != null" >
+        tariffname = #{tariffname,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where cust_id = #{custId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers" >
+    update ucc_customers
+    set address1 = #{address1,jdbcType=INTEGER},
+      address2 = #{address2,jdbcType=INTEGER},
+      address3 = #{address3,jdbcType=INTEGER},
+      address4 = #{address4,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=TIMESTAMP},
+      businesscode = #{businesscode,jdbcType=VARCHAR},
+      changephone1 = #{changephone1,jdbcType=VARCHAR},
+      changephone2 = #{changephone2,jdbcType=VARCHAR},
+      changephone3 = #{changephone3,jdbcType=VARCHAR},
+      companyname = #{companyname,jdbcType=VARCHAR},
+      companynature = #{companynature,jdbcType=INTEGER},
+      contacts = #{contacts,jdbcType=VARCHAR},
+      created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      cust_code = #{custCode,jdbcType=VARCHAR},
+      cust_name = #{custName,jdbcType=VARCHAR},
+      defult_phone = #{defultPhone,jdbcType=VARCHAR},
+      domain_id = #{domainId,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      fax = #{fax,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      industrytype = #{industrytype,jdbcType=INTEGER},
+      installedaddress = #{installedaddress,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
+      msg_resource = #{msgResource,jdbcType=INTEGER},
+      phone = #{phone,jdbcType=VARCHAR},
+      phone2 = #{phone2,jdbcType=VARCHAR},
+      phone3 = #{phone3,jdbcType=VARCHAR},
+      ponlogo = #{ponlogo,jdbcType=VARCHAR},
+      product_type = #{productType,jdbcType=VARCHAR},
+      pull_black_reason = #{pullBlackReason,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      tariffname = #{tariffname,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+    where cust_id = #{custId,jdbcType=VARCHAR}
+  </update>
+</mapper>

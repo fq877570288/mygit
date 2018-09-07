@@ -33,13 +33,13 @@ public class UccDeptsController {
     UccDeptsService uccDeptsService;
 
     @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     public PageResultBean<List<UccDepts>> findAll(@ModelAttribute UccDeptsCriteria search) {
         return new PageResultBean(this.uccDeptsService.findAll(search));
     }
 
     @ApiOperation(value = "根据deptId查询UccDepts", notes = "根据deptId查询UccDepts")
-    @RequestMapping(value = "/{deptId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{deptId}", method = RequestMethod.POST)
     public ResultBean<UccDepts> findOne(@PathVariable String deptId){
         return new ResultBean<>(this.uccDeptsService.findOne(deptId));
     }
@@ -63,8 +63,8 @@ public class UccDeptsController {
         return new ResultBean<>(this.uccDeptsService.save(uccDepts));
     }
 
-    @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "GET")
-    @RequestMapping(value = "/deptTree", method = RequestMethod.GET)
+    @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
+    @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
     public ResultBean<List<UccDepts>> findAllTree(@ModelAttribute UccDeptsCriteria search) {
         Page<UccDepts> pages = this.uccDeptsService.findAllTree(search);
         List<UccDepts> list = pages.getContent();

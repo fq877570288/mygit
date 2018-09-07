@@ -1,11 +1,9 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
-import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
-import cn.cucsi.bsd.ucc.common.beans.ResultBean;
-import cn.cucsi.bsd.ucc.common.beans.UccCustomersCriteria;
-import cn.cucsi.bsd.ucc.common.beans.UccToBlackCriteria;
+import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.UccCustomers;
 import cn.cucsi.bsd.ucc.service.UccCustomersService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +24,15 @@ public class UccCustomersController {
     @Autowired
     private UccCustomersService uccCustomersService;
 
-    @ApiOperation(value="根据查询条件获取客户列表", notes="根据查询条件获取客户列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<UccCustomers>> findAll(@ModelAttribute UccCustomersCriteria search) {
+    @ApiOperation(value="根据查询条件获取客户列表", notes="根据查询条件获取客户列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    @ResponseBody
+    public PageResultBean<List<UccCustomers>> findAll(UccCustomersCriteria search) {
         return new PageResultBean(this.uccCustomersService.findAll(search));
     }
 
     @ApiOperation(value = "根据custId查询UccCustomers", notes = "根据custId查询UccCustomers")
-    @RequestMapping(value = "/{custId}", method= RequestMethod.GET)
+    @RequestMapping(value = "/{custId}", method= RequestMethod.POST)
     public ResultBean<UccCustomers> findOne(@PathVariable String custId){
         return new ResultBean<>(this.uccCustomersService.findOne(custId));
     }
@@ -78,4 +77,23 @@ public class UccCustomersController {
         }
         return new ResultBean<>(message);
     }
+    /*****
+     * 查询黑名单列表
+     * add by ZSS
+     * 2018-9-6
+     */
+    @ApiOperation(value = "根据条件查询黑名单列表", notes = "根据条件查询黑名单列表")
+    @RequestMapping(value = "/findBlackList", method= RequestMethod.POST)
+    @ResponseBody
+    public PageResultBean_New<List<UccCustomers>> findBlackList( UccBlackListCriteria uccBlackListCriteria){
+        PageResultBean_New<List<UccCustomers>> pageResultBean = null;
+        try{
+            pageResultBean = this.uccCustomersService.findBlackList(uccBlackListCriteria);
+        }catch (Exception e){
+            System.out.println("查询黑名单列表异常"+e);
+        }
+        return pageResultBean;
+    }
+
+
 }

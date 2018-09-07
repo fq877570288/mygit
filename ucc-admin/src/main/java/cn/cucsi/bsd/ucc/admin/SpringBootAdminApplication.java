@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Created by zhuanghaitao on 2017/10/11.
+ * Created by zhuanghaitao on 2017/10/11 .
  */
 @Configuration
 @EnableAutoConfiguration
