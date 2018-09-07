@@ -66,17 +66,21 @@
     a.contacts as contacts,
     a.phone as phone,
     a.status as status,
+    a.type as type,
     a.updated_time as updated_time
     from ucc_customers as a
     LEFT join ucc_domain as b ON a.domain_id = b.domain_id
     where 1=1
-    <if test="custId != null" >
+    <if test="type !=null and type!=''">
+      AND a.type = #{type,jdbcType=INTEGER}
+    </if>
+    <if test="custId != null and custId!=''" >
       AND a.cust_id = #{custId,jdbcType=VARCHAR}
     </if>
-    <if test="domainId != null" >
+    <if test="domainId != null and domainId!=''" >
       AND a.domain_id = #{domainId,jdbcType=VARCHAR}
     </if>
-    <if test="custName != null" >
+    <if test="custName != null and custName!=''" >
       AND a.cust_name LIKE '%${custName}%'
     </if>
     <if test="startTime!=null and startTime!=''">
