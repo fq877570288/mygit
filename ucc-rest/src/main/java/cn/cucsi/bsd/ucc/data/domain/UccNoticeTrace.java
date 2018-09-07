@@ -13,7 +13,7 @@ import java.util.Date;
 @Table(name = "ucc_notice_trace", schema = "ucc", catalog = "")
 public class UccNoticeTrace {
     private String noticeTraceId;
-    private String flag;
+    private String flag;//已读标识(未读：0,已读：1)
     private Date operateTime;
     private String noticeId;
     private String userId;

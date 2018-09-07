@@ -76,7 +76,7 @@
         a.*, b.TRANSFER_STATUS,
         b.CALL_MEMO,
         b.CALL_RESULT,
-        c.cust_name,
+        c.cust_name as cust_name,
         c.defult_phone AS customer_phone,
         MAX(b.TRANSFER_TIME)
     FROM
