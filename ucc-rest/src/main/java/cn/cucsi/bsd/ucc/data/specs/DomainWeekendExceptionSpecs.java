@@ -34,7 +34,7 @@ public class DomainWeekendExceptionSpecs {
         return new Specification<DomainWeekendException>() {
             @Override
             public Predicate toPredicate(Root<DomainWeekendException> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("exceptionDate"), exceptionDate);
+                return criteriaBuilder.equal(root.get("exceptionDate"), exceptionDate);
             }
         };
     }
