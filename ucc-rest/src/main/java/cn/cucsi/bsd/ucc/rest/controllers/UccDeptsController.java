@@ -66,7 +66,8 @@ public class UccDeptsController {
 
     @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
     @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
-    public ResultBean<List<UccDepts>> findAllTree(@ModelAttribute UccDeptsCriteria search) {
+    @ResponseBody
+    public ResultBean<List<UccDepts>> findAllTree(UccDeptsCriteria search) {
         Page<UccDepts> pages = this.uccDeptsService.findAllTree(search);
         List<UccDepts> list = pages.getContent();
         List<DeptsTree> trees = new ArrayList<DeptsTree>();
