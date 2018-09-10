@@ -15,11 +15,12 @@
     <result column="BACK_MEMO" property="backMemo" jdbcType="VARCHAR" />
     <result column="OPERATOR_ID" property="operatorId" jdbcType="VARCHAR" />
     <result column="OPERATOR_DEPT" property="operatorDept" jdbcType="VARCHAR" />
+    <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TASK_TRANSFER_ID, TASK_DETAIL_ID, TRANSFER_STATUS, ROPERATE_PERSON_ID, ROPERATE_DEPT_ID, 
     CALL_MEMO, CALL_RESULT, TRANSFE_ROPERATE, TRANSFER_TIME, CDR_ID, BACK_MEMO, OPERATOR_ID, 
-    OPERATOR_DEPT
+    OPERATOR_DEPT,domain_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -36,12 +37,12 @@
       ROPERATE_PERSON_ID, ROPERATE_DEPT_ID, CALL_MEMO, 
       CALL_RESULT, TRANSFE_ROPERATE, TRANSFER_TIME, 
       CDR_ID, BACK_MEMO, OPERATOR_ID, 
-      OPERATOR_DEPT)
+      OPERATOR_DEPT,domain_id)
     values (#{taskTransferId,jdbcType=VARCHAR}, #{taskDetailId,jdbcType=VARCHAR}, #{transferStatus,jdbcType=VARCHAR}, 
       #{roperatePersonId,jdbcType=VARCHAR}, #{roperateDeptId,jdbcType=VARCHAR}, #{callMemo,jdbcType=VARCHAR}, 
       #{callResult,jdbcType=VARCHAR}, #{transfeRoperate,jdbcType=VARCHAR}, #{transferTime,jdbcType=TIMESTAMP}, 
       #{cdrId,jdbcType=VARCHAR}, #{backMemo,jdbcType=VARCHAR}, #{operatorId,jdbcType=VARCHAR}, 
-      #{operatorDept,jdbcType=VARCHAR})
+      #{operatorDept,jdbcType=VARCHAR},#{domainId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskTransfer" >
     insert into OC_TASK_TRANSFER
@@ -85,6 +86,9 @@
       <if test="operatorDept != null" >
         OPERATOR_DEPT,
       </if>
+      <if test="domainId != null" >
+        domain_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="taskTransferId != null" >
@@ -125,6 +129,9 @@
       </if>
       <if test="operatorDept != null" >
         #{operatorDept,jdbcType=VARCHAR},
+      </if>
+      <if test="domainId != null" >
+        #{domainId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -167,6 +174,9 @@
       <if test="operatorDept != null" >
         OPERATOR_DEPT = #{operatorDept,jdbcType=VARCHAR},
       </if>
+      <if test="domainId != null" >
+        domain_id = #{domainId,jdbcType=VARCHAR},
+      </if>
     </set>
     where TASK_TRANSFER_ID = #{taskTransferId,jdbcType=VARCHAR}
   </update>
@@ -183,7 +193,8 @@
       CDR_ID = #{cdrId,jdbcType=VARCHAR},
       BACK_MEMO = #{backMemo,jdbcType=VARCHAR},
       OPERATOR_ID = #{operatorId,jdbcType=VARCHAR},
-      OPERATOR_DEPT = #{operatorDept,jdbcType=VARCHAR}
+      OPERATOR_DEPT = #{operatorDept,jdbcType=VARCHAR},
+      domain_id = #{domainId,jdbcType=VARCHAR}
     where TASK_TRANSFER_ID = #{taskTransferId,jdbcType=VARCHAR}
   </update>
 
@@ -231,7 +242,7 @@
       left join OC_TASK_DETAIL d on t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
     where t.TASK_DETAIL_ID in (
     <foreach collection="taskDetailList" item="item" index="index" separator=",">
-      #{item.businessCode}
+      #{item.taskDetailId}
     </foreach>
     )
     and t.CDR_ID is not null

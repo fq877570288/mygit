@@ -1,10 +1,10 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
-import cn.cucsi.bsd.ucc.data.repo.UccDeptsRepository;
 import cn.cucsi.bsd.ucc.data.repo.UccUserRepository;
-import cn.cucsi.bsd.ucc.data.repo.UserDeptRepository;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import cn.cucsi.bsd.ucc.data.specs.UccUserSpecs;
 import cn.cucsi.bsd.ucc.service.UserDeptService;
@@ -33,6 +33,9 @@ public class UccUserServiceImpl implements UccUserService{
     private UserExtService userExtService;
     @Autowired
     private UserRoleService userRoleService;
+    @Autowired
+    private UccUsersMapper uccUsersMapper;
+
 
     @Override
     public Page<UccUsers> findAll(UccUserCriteria criteria) {
@@ -168,5 +171,37 @@ public class UccUserServiceImpl implements UccUserService{
         }
 
         return true;
+    }
+
+    /***
+     * 根据用户名、密码获取用户列表（APP登录用）
+     * add by wangxiaoyu
+     * 2018-09-10
+     */
+    @Override
+    public ResultBean_New<UccUsers> userLoginForAPP(UserLoginForAPPCriteria userLoginForAPPCriteria){
+        ResultBean_New<UccUsers> resultBean = new ResultBean_New<>();
+        //初始化赋值
+        resultBean.setReturnMsg("操作失败！");
+        resultBean.setReturnCode(ResultBean_New.FAIL);
+        if(MyUtils.isBlank(userLoginForAPPCriteria.getUserName())||MyUtils.isBlank(userLoginForAPPCriteria.getPassword())){
+            resultBean.setReturnMsg("用户名或密码为空！");
+            return resultBean;
+        }
+        UccUsers uccUsers = null;
+        try {
+            uccUsers = uccUsersMapper.userLoginForAPP(userLoginForAPPCriteria);
+            if(MyUtils.isBlank(uccUsers)){
+                resultBean.setReturnMsg("用户名或密码错误！");
+                return resultBean;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resultBean.setReturnMsg("APP根据用户名、密码登录出现异常！");
+            return resultBean;
+        }
+        resultBean.setData(uccUsers);
+        resultBean.setReturnMsg("登录成功！");
+        return resultBean;
     }
 }

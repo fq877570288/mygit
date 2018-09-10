@@ -1,10 +1,8 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
-import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
-import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
-import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -100,6 +98,18 @@ public class UccUserController  {
         uccUsers.setUserId(userId);
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
+    }
+
+    /***
+     * 根据用户名、密码获取用户列表（APP登录用）
+     * 此方法临时用，后期需要做补充
+     * add by wangxiaoyu
+     * 2018-09-10
+     */
+    @ApiOperation(value="根据用户名、密码获取用户列表（APP登录用）", notes="根据用户名、密码获取用户列表（APP登录用）", httpMethod = "POST")
+    @RequestMapping(value = "/userLoginForAPP", method= RequestMethod.POST)
+    public ResultBean_New<UccUsers> userLoginForAPP(@RequestBody UserLoginForAPPCriteria userLoginForAPPCriteria){
+        return uccUserService.userLoginForAPP(userLoginForAPPCriteria);
     }
 
 }
