@@ -244,6 +244,7 @@ public class TaskServiceImpl implements TaskService {
 					callMemo = taskDetail.getCallMemo()==null?"":taskDetail.getCallMemo();
 					callResult = taskDetail.getCallResult()==null?"":taskDetail.getCallResult();
                     custName = taskDetail.getCustName()==null?"":taskDetail.getCustName();
+					System.out.println("custName:::" + custName);
                     customerPhone = taskDetail.getCustomerPhone()==null?"":taskDetail.getCustomerPhone();
 
 					//根据businessCode查询客户是否在黑名单

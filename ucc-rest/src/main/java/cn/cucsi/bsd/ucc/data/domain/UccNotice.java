@@ -13,20 +13,22 @@ import java.util.Collection;
 @Entity
 @Table(name = "ucc_notice", schema = "ucc", catalog = "")
 public class UccNotice {
-    private String noticeId;
-    private String noticeCode;
-    private String noticeTitle;
-    private String noticeContent;
-    private String noticeType;
-    private String releaseTime;
+    private String noticeId; //公告主键
+    private String noticeCode; //公告编码
+    private String noticeTitle; //公告标题
+    private String noticeContent; //公告内容
+    private String noticeType; //公告类型(0:公告 1：通知)add by wangxiaoyu
+    private String releaseTime; //发布时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date startDate;
+    private Date startDate; //公告有效期开始日期
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date endDate;
-    private String noticeStatus;
-    private String memo;
+    private Date endDate; //公告有效期结束日期
+    private String noticeStatus; //公告状态
+    private String memo; //备注
     private String userId;
     private String domainId;
+    private String flag;//已读标识(未读：0,已读：1)
+
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
     private String createdUserId;
@@ -222,21 +224,21 @@ public class UccNotice {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, updatable = false, insertable = false)
-    public cn.cucsi.bsd.ucc.data.domain.UccUsers getUccUser() {
+    public UccUsers getUccUser() {
         return uccUser;
     }
 
-    public void setUccUser(cn.cucsi.bsd.ucc.data.domain.UccUsers uccUser) {
+    public void setUccUser(UccUsers uccUser) {
         this.uccUser = uccUser;
     }
 
     @ManyToOne
     @JoinColumn(name = "domain_id", referencedColumnName = "domain_id", nullable = false, updatable = false, insertable = false)
-    public cn.cucsi.bsd.ucc.data.domain.UccDomain getUccDomain() {
+    public UccDomain getUccDomain() {
         return uccDomain;
     }
 
-    public void setUccDomain(cn.cucsi.bsd.ucc.data.domain.UccDomain uccDomain) {
+    public void setUccDomain(UccDomain uccDomain) {
         this.uccDomain = uccDomain;
     }
 
@@ -331,5 +333,13 @@ public class UccNotice {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 }
