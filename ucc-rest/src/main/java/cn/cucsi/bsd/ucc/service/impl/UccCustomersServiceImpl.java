@@ -43,6 +43,10 @@ public class UccCustomersServiceImpl implements UccCustomersService{
 
     @Override
     public UccCustomers save(UccCustomers uccCustomers) {
+        if(uccCustomers!=null){
+            uccCustomers.setCreatedTime(new Date(System.currentTimeMillis()));
+            uccCustomers.setUpdatedTime(new Date(System.currentTimeMillis()));
+        }
         return this.uccCustomersRepository.save(uccCustomers);
     }
 
