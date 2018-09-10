@@ -9,7 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 2018-08-24
  */
 @ApiModel
-public class UccToBlackCriteria{
+public class UccToBlackCriteria extends BasicPageCriteria{
 
     @ApiModelProperty(value = "业务编码",required = true)
     private String businesscode;
