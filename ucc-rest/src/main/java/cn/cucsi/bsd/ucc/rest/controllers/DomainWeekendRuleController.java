@@ -21,9 +21,9 @@ public class DomainWeekendRuleController {
 
     @Autowired
     private DomainWeekendRuleService domainWeekendRuleService;
-    @ApiOperation(value="根据查询条件获取班组工作日规则表", notes="根据查询条件获取班组工作日规则表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll",method = RequestMethod.GET)
-    public PageResultBean<List<DomainWeekendRule>> findAll(@ModelAttribute DomainWeekendRuleCriteria domainWeekendRuleCriteria){
+    @ApiOperation(value="根据查询条件获取班组工作日规则表", notes="根据查询条件获取班组工作日规则表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll",method = RequestMethod.POST)
+    public PageResultBean<List<DomainWeekendRule>> findAll(@RequestBody DomainWeekendRuleCriteria domainWeekendRuleCriteria){
         return new PageResultBean<>(this.domainWeekendRuleService.findAll(domainWeekendRuleCriteria));
     }
     @ApiOperation(value = "根据domainId、teamId查询DomainWeekendRule", notes = "根据domainId、teamId查询DomainWeekendRule")
