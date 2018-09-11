@@ -129,13 +129,14 @@ public class UccUsers {
     private Collection<PermissionGroups> permissionGroupss;
 
     private Collection<UccPermissions> uccPermissionss;
-//    @JsonView(JSONView.UccUserWithDept.class)
-//    private Collection<UserDept> userDepts;
+    @JsonView(JSONView.UccUserWithDept.class)
+    private Collection<UserDept> userDepts;
 
-//    @JsonView(JSONView.UccUserWithExt.class)
-//    private UserExt userExt;
-//    @JsonIgnore
-//    private Collection<UserRole> userRoles;
+    @JsonView(JSONView.UccUserWithExt.class)
+    private UserExt userExt;
+    @JsonView(JSONView.UccUserWithRole.class)
+    @JsonIgnore
+    private Collection<UserRole> userRoles;
 
     @JsonView(JSONView.UccUserWithRole.class)
     private Collection<UccRoles> roles;
@@ -692,32 +693,32 @@ public class UccUsers {
         this.uccDomain = uccDomain;
     }
 
-//    @OneToMany(mappedBy = "uccUser")
-//    public Collection<UserDept> getUserDepts() {
-//        return userDepts;
-//    }
-//
-//    public void setUserDepts(Collection<UserDept> userDepts) {
-//        this.userDepts = userDepts;
-//    }
-//
-//    @OneToOne(mappedBy = "uccUser")
-//    public UserExt getUserExt() {
-//        return userExt;
-//    }
-//
-//    public void setUserExt(UserExt userExt) {
-//        this.userExt = userExt;
-//    }
-//
-//    @OneToMany(mappedBy = "uccUser")
-//    public Collection<UserRole> getUserRoles() {
-//        return userRoles;
-//    }
-//
-//    public void setUserRoles(Collection<UserRole> userRoles) {
-//        this.userRoles = userRoles;
-//    }
+    @OneToMany(mappedBy = "uccUser")
+    public Collection<UserDept> getUserDepts() {
+        return userDepts;
+    }
+
+    public void setUserDepts(Collection<UserDept> userDepts) {
+        this.userDepts = userDepts;
+    }
+
+    @OneToOne(mappedBy = "uccUser")
+    public UserExt getUserExt() {
+        return userExt;
+    }
+
+    public void setUserExt(UserExt userExt) {
+        this.userExt = userExt;
+    }
+
+    @OneToMany(mappedBy = "uccUser")
+    public Collection<UserRole> getUserRoles() {
+        return userRoles;
+    }
+
+    public void setUserRoles(Collection<UserRole> userRoles) {
+        this.userRoles = userRoles;
+    }
 
     @Basic
     @Column(name = "created_user_id", nullable = true, length = 32)

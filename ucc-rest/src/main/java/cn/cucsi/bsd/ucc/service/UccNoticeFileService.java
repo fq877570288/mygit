@@ -11,8 +11,6 @@ import org.springframework.data.domain.Page;
 public interface UccNoticeFileService {
     Page<UccNoticeFile> findAll(UccNoticeFileCriteria criteria);
     UccNoticeFile findOne(String noticeFileId);
-    //UccNoticeFile save(UccNoticeFile uccNoticeFile);
-    UccNoticeFile save(byte[] fileBox,UccNoticeFile uccNoticeFile);
-    UccNoticeFile updateById(UccNoticeFile uccNoticeFile);
+    UccNoticeFile save(UccNoticeFile uccNoticeFile);
     Boolean delete(String noticeFileId);
 }

@@ -12,49 +12,48 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
-
+/*
+* 域
+* */
 @Entity
 @Table(name = "ucc_domain", schema = "ucc", catalog = "")
 public class UccDomain {
     @JsonView(JSONView.Summary.class)
-    private String domainId;
+    private String domainId;//域ID
     @JsonView(JSONView.Summary.class)
-    private String tel1;
+    private String tel1;//联系电话1
     @JsonView(JSONView.Summary.class)
-    private String tel2;
+    private String tel2;//联系电话2
     @JsonView(JSONView.Summary.class)
-    private String domainEmail;
+    private String domainEmail;//邮箱
     @JsonView(JSONView.Summary.class)
-    private String domainName;
+    private String domainName;//域名城
     @JsonView(JSONView.Summary.class)
-    private String domainDesc;
+    private String domainDesc;//域描述
     @JsonView(JSONView.Summary.class)
-    private String status = "1";
+    private String status = "1";//状态
     @JsonView(JSONView.Summary.class)
-    private String addr1;
+    private String addr1;//地址1
     @JsonView(JSONView.Summary.class)
-    private String addr2;
+    private String addr2;//地址2
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
 
     @JsonView(JSONView.Summary.class)
-    private String createdUserId;
+    private String createdUserId;//创建人ID
     @JsonView(JSONView.Summary.class)
-    private String createdUserName;
+    private String createdUserName;//创建人姓名
     @JsonView(JSONView.Summary.class)
-    private String createdNickName;
+    private String createdNickName;//创建人昵称
     @JsonView(JSONView.Summary.class)
-    private String updatedUserId;
+    private String updatedUserId;//修改人ID
     @JsonView(JSONView.Summary.class)
-    private String updatedUserName;
+    private String updatedUserName;//修改人姓名
     @JsonView(JSONView.Summary.class)
-    private String updatedNickName;
-
-    @JsonView(JSONView.Summary.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date createdTime;
-    @JsonView(JSONView.Summary.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date updatedTime;
+    private String updatedNickName;//修改人昵称
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdTime;//创建时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updatedTime;//修改时间
     @JsonIgnore
     private Collection<DomainWeekendException> domainWeekendExceptions;
     @JsonIgnore

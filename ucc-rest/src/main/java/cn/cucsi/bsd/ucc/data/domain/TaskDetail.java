@@ -14,13 +14,14 @@ public class TaskDetail {
     private String transferStatus;//流转状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
     private String callMemo;//外呼备注
     private String callResult;//外呼结果
+
     private String custName;//客户姓名
-    private String custId;//客户ID
 
     private String customerPhone;//客户联系电话
+
     private String taskDetailId;//主键
-    private String businessCode;//业务编码
-    private String domainId;//租户ID
+
+    private String businessCode;// 业务编码
 
     @JsonIgnore
     private String taskTypeId;//任务类型
@@ -624,21 +625,5 @@ public class TaskDetail {
 
     public void setCallResult(String callResult) {
         this.callResult = callResult;
-    }
-
-    public String getCustId() {
-        return custId;
-    }
-
-    public void setCustId(String custId) {
-        this.custId = custId;
-    }
-
-    public String getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(String domainId) {
-        this.domainId = domainId;
     }
 }

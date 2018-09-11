@@ -27,11 +27,11 @@ public interface UccCustomersService {
     int inBlackListByBusinessCode(UccToBlackCriteria uccToBlackCriteria) throws Exception;
 
     /***
-     * 根据条件查询客户是否在黑名单
+     * 根据businessCode查询客户是否在黑名单
      * add by wangxiaoyu
      * 2018-08-31
      */
-    int custmIsBlack(String businessCode,String domainId);
+    int custmIsBlack(String businessCode);
     /***
      * 根据条件查询黑名单列表
      * add by zss

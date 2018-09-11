@@ -63,22 +63,22 @@ public class UccCustomersServiceImpl implements UccCustomersService{
     @Override
     public int inBlackListByBusinessCode(UccToBlackCriteria uccToBlackCriteria) throws Exception {
         String userId = uccToBlackCriteria.getUserId()==null?"":uccToBlackCriteria.getUserId();
-        String custId = uccToBlackCriteria.getCustId()==null?"":uccToBlackCriteria.getCustId();
         String pullBlackReason = uccToBlackCriteria.getPullBlackReason()==null?"":uccToBlackCriteria.getPullBlackReason();
+        String businesscode = uccToBlackCriteria.getBusinesscode()==null?"":uccToBlackCriteria.getBusinesscode();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date updatedTime = sdf.parse(MyUtils.getToday());
 
-        return this.uccCustomersRepository.inBlackListByBusinessCode(7,userId,updatedTime,pullBlackReason,custId);
+        return this.uccCustomersRepository.inBlackListByBusinessCode(7,userId,updatedTime,pullBlackReason,businesscode);
     }
 
     /***
-     * 根据条件查询客户是否在黑名单
+     * 根据businessCode查询客户是否在黑名单
      * add by wangxiaoyu
      * 2018-08-31
      */
     @Override
-    public int custmIsBlack(String businessCode,String domainId){
-        return this.uccCustomersRepository.checkCustmIsBlack(businessCode,domainId);
+    public int custmIsBlack(String businessCode){
+        return this.uccCustomersRepository.checkCustmIsBlack(businessCode);
     }
 
     /***

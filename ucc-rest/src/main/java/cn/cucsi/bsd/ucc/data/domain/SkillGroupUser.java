@@ -7,36 +7,36 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
-
+/*
+* 技能组用户关系
+* */
 @Entity
 @Table(name = "skill_group_user", schema = "ucc", catalog = "")
 @IdClass(SkillGroupUserPK.class)
 public class SkillGroupUser {
-    private String skillGroupId;
-    private String userId;
+    private String skillGroupId;//技能组ID
+    private String userId;//用户ID
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
-    private String createdUserId;
+    private String createdUserId;//创建人ID
     @JsonView(JSONView.Summary.class)
-    private String createdUserName;
+    private String createdUserName;//创建人姓名
     @JsonView(JSONView.Summary.class)
-    private String createdNickName;
+    private String createdNickName;//创建人昵称
     @JsonView(JSONView.Summary.class)
-    private String updatedUserId;
+    private String updatedUserId;//修改人ID
     @JsonView(JSONView.Summary.class)
-    private String updatedUserName;
+    private String updatedUserName;//修改人姓名
     @JsonView(JSONView.Summary.class)
-    private String updatedNickName;
+    private String updatedNickName;//修改人昵称
 
-    //用户名
-    private String userName;
-    //技能组名称
-    private String groupName;
+    private String userName;//用户名
+    private String groupName;//技能组名称
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdTime;
+    private Date createdTime;//创建时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updatedTime;
+    private Date updatedTime;//修改时间
     @JsonIgnore
     private UccSkillGroup uccSkillGroup;
     @JsonIgnore

@@ -10,45 +10,46 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Collection;
-
+/*
+* 部门
+* */
 @Entity
 @Table(name = "ucc_depts", schema = "ucc", catalog = "")
 public class UccDepts {
     @JsonView(JSONView.Summary.class)
-    private String deptId;
+    private String deptId;//部门编码
     @JsonView(JSONView.Summary.class)
-    private String createdBy;
+    private String createdBy;//创建人
     @JsonView(JSONView.Summary.class)
-    private String deptName;
+    private String deptName;//部门名称
     @JsonView(JSONView.Summary.class)
-    private String deptPid;
+    private String deptPid;//上级部门
     @JsonView(JSONView.Summary.class)
-    private Integer deptLevel;
+    private Integer deptLevel;//部门级别
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date deptCreateTime;
+    private Date deptCreateTime;//部门创建时间
     @JsonView(JSONView.Summary.class)
-    private String deptDesc;
-    private String domainId;
-    private String deptAdmin;
+    private String deptDesc;//部门描述
+    private String domainId;//域ID
+    private String deptAdmin;//部门管理员ID
 //    private String userId;
 //以下六个字段，作为创建和更新 使用，不再使用关联关系
+@JsonView(JSONView.Summary.class)
+private String createdUserId;//创建人ID
     @JsonView(JSONView.Summary.class)
-    private String createdUserId;
+    private String createdUserName;//创建人姓名
     @JsonView(JSONView.Summary.class)
-    private String createdUserName;
+    private String createdNickName;//创建人昵称
     @JsonView(JSONView.Summary.class)
-    private String createdNickName;
+    private String updatedUserId;//修改人ID
     @JsonView(JSONView.Summary.class)
-    private String updatedUserId;
+    private String updatedUserName;//修改人姓名
     @JsonView(JSONView.Summary.class)
-    private String updatedUserName;
-    @JsonView(JSONView.Summary.class)
-    private String updatedNickName;
-
+    private String updatedNickName;//修改人昵称
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdTime;
+    private Date createdTime;//创建时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updatedTime;
+    private Date updatedTime;//修改时间
     @JsonIgnore
     private UccDomain uccDomain;
     @JsonIgnore

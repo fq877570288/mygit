@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.common.beans;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +16,7 @@ public class UccUserCriteria extends BasicCriteria {
     private String domainId;
     private String email;
     private String nickName;
+    private String extNum;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeFrom;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -25,6 +27,7 @@ public class UccUserCriteria extends BasicCriteria {
     private Date lastLoginTimeTo;
     private List<String> uccDepts = new ArrayList<>();
     private List<String> userRoles = new ArrayList<>();
+    private List<String> extId = new ArrayList<>();
 
     public String getUserName() {
         return userName;
@@ -65,7 +68,7 @@ public class UccUserCriteria extends BasicCriteria {
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreatedTimeFrom() {
         return createdTimeFrom;
     }
@@ -73,7 +76,7 @@ public class UccUserCriteria extends BasicCriteria {
     public void setCreatedTimeFrom(Date createdTimeFrom) {
         this.createdTimeFrom = createdTimeFrom;
     }
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreatedTimeTo() {
         return createdTimeTo;
     }
@@ -120,5 +123,21 @@ public class UccUserCriteria extends BasicCriteria {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<String> getExtId() {
+        return extId;
+    }
+
+    public void setExtId(List<String> extId) {
+        this.extId = extId;
+    }
+
+    public String getExtNum() {
+        return extNum;
+    }
+
+    public void setExtNum(String extNum) {
+        this.extNum = extNum;
     }
 }
