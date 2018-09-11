@@ -1,9 +1,9 @@
 package cn.cucsi.bsd.ucc.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
-import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import com.alibaba.fastjson.JSONObject;
 
@@ -14,7 +14,7 @@ public interface TaskService {
 	 * add by wangxiaoyu
 	 * 2018-08-27
 	 */
-	PageResultBean_New<List<TaskDetail>> selectDetailByUserId(OngoingTaskCriteria ongoingTaskCriteria);
+	Map<String,Object> selectDetailByUserId(OngoingTaskCriteria ongoingTaskCriteria);
 
 	/***
 	 * 任务回退

@@ -34,7 +34,6 @@ public class TaskDetail {
     @JsonIgnore
     private String deptAgencyId;//代理商
 
-    @JsonIgnore
     private String taskCode;//任务编码
 
     @JsonIgnore

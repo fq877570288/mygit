@@ -10,7 +10,13 @@ import io.swagger.annotations.ApiModelProperty;
  * 2018-08-27
  */
 @ApiModel
-public class OngoingTaskCriteria extends BasicPageCriteria{
+public class OngoingTaskCriteria{
+
+    @ApiModelProperty(value = "任务编码(查询任务列表分页起始点判断字段)",required = false)
+    private String taskCode;
+
+    @ApiModelProperty(value = "每页显示的条数（默认是10条）",required = false)
+    private Integer pageSize = 10;
 
     @ApiModelProperty(value = "查询条件的关键字",required = false)
     private String keyWords;
@@ -79,5 +85,21 @@ public class OngoingTaskCriteria extends BasicPageCriteria{
 
     public void setDateEnd(String dateEnd) {
         this.dateEnd = dateEnd;
+    }
+
+    public String getTaskCode() {
+        return taskCode;
+    }
+
+    public void setTaskCode(String taskCode) {
+        this.taskCode = taskCode;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }

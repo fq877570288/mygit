@@ -48,10 +48,10 @@ public class TaskServiceImpl implements TaskService {
 	 * 2018-08-27
 	 */
 	@Override
-	public PageResultBean_New<List<TaskDetail>> selectDetailByUserId(OngoingTaskCriteria ongoingTaskCriteria){
+	public Map<String,Object> selectDetailByUserId(OngoingTaskCriteria ongoingTaskCriteria){
 
-		Page pageInfo = PageHelper.startPage(ongoingTaskCriteria.getPageNum(), ongoingTaskCriteria.getPageSize());
-
+		//Page pageInfo = PageHelper.startPage(ongoingTaskCriteria.getPageNum(), ongoingTaskCriteria.getPageSize());
+		Map<String,Object> taskDetailsMap = new HashMap<String,Object>();
 		List<TaskDetail> informationList = null;
 
 		String keyWords = ongoingTaskCriteria.getKeyWords()== null ? "":ongoingTaskCriteria.getKeyWords();
@@ -91,12 +91,18 @@ public class TaskServiceImpl implements TaskService {
                     }
                 }
             }*/
-			PageResultBean_New<List<TaskDetail>> pageResultBean_new = new PageResultBean_New(pageInfo);
-			pageResultBean_new.setList(informationList);
-			return pageResultBean_new;
+			//PageResultBean_New<List<TaskDetail>> pageResultBean_new = new PageResultBean_New(pageInfo);
+			//pageResultBean_new.setList(informationList);
+			//return pageResultBean_new;
+			taskDetailsMap.put("taskDetails",informationList);
+			taskDetailsMap.put("return_msg","操作成功！");
+			taskDetailsMap.put("return_code","SUCCESS");
+			return taskDetailsMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("根据查询条件获取当前坐席任务外乎列表发生异常！");
+			taskDetailsMap.put("return_msg","操作失败！");
+			taskDetailsMap.put("return_code","FAIL");
 			return null;
 		}
 	}

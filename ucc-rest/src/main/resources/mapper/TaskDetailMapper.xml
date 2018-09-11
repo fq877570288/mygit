@@ -689,6 +689,7 @@
       a.USER_ID,
       a.domain_id,
       a.TASK_DETAIL_ID,
+      a.TASK_CODE,
       <if test="taskCountsFlag != null">
       a.TASK_STATUS,
       </if>
@@ -703,6 +704,10 @@
     </if>
     WHERE
        1 = 1
+    AND a.domain_id = b.domain_id
+    <if test='taskCode == null or taskCode =="" '>
+    AND a.TASK_CODE >= #{taskCode,jdbcType=VARCHAR}
+    </if>
     AND a.USER_ID = #{userId,jdbcType=VARCHAR}
     <if test='taskCountsFlag == null or taskCountsFlag =="" '>
       AND a.TASK_STATUS IN ('2', '3')
@@ -723,7 +728,8 @@
     <if test='checkFlag != null and checkFlag == "1" '>
       AND b.cust_name LIKE '%${keyWords}%'
     </if>
-      order by b.cust_name DESC
+    order by b.cust_name DESC
+    limit 0,#{pageSize}
   </select>
 
   <!-- 更新任务状态 add by wangxiaoyu 2018-08-30-->
