@@ -2,7 +2,6 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.PbxCdrs;
-import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import cn.cucsi.bsd.ucc.service.PbxCdrsService;
 import cn.cucsi.bsd.ucc.service.TaskService;
@@ -13,7 +12,9 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /***
  * 任务操作类
@@ -259,16 +260,16 @@ public class TaskController {
 	 */
 	@ApiOperation(value="根据查询条件获取当前坐席任务外呼列表", notes="根据查询条件获取当前坐席任务外呼列表")
 	@RequestMapping(value = "/findByUserId", method= RequestMethod.POST)
-	public PageResultBean_New<List<TaskDetail>> findTasksByUserId(@RequestBody OngoingTaskCriteria ongoingTaskCriteria){
+	public Map<String,Object> findTasksByUserId(@RequestBody OngoingTaskCriteria ongoingTaskCriteria){
 
-		PageResultBean_New<List<TaskDetail>> pageResultBean_new = null;
+		Map<String,Object> taskDetailsMap = new HashMap<String,Object>();
 		try {
-			pageResultBean_new = taskService.selectDetailByUserId(ongoingTaskCriteria);
+			taskDetailsMap = taskService.selectDetailByUserId(ongoingTaskCriteria);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("根据查询条件获取当前坐席任务外呼列表发生异常！");
 		}
-		return pageResultBean_new;
+		return taskDetailsMap;
 	}
 
 	/***
@@ -277,7 +278,7 @@ public class TaskController {
 	 * 2018-08-30
 	 */
 	@ApiOperation(value="撤回任务", notes="撤回任务")
-	@RequestMapping(value = "/taskBackByUserId", method= RequestMethod.POST)
+	@RequestMapping(value = "/taskBackByTaskDetailIds", method= RequestMethod.POST)
 	public ResultBean_New<TaskTransfer> taskBackByUserId(@RequestBody TaskBackCriteria taskBackCriteria){
 		return taskService.taskBack(taskBackCriteria);
 	}

@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /***
- * 根据任务明细ID查询客户任务详情--入参封装实体
+ * 查询客户任务详情--入参封装实体
  * add by wangxiaoyu
  * 2018-08-31
  */
