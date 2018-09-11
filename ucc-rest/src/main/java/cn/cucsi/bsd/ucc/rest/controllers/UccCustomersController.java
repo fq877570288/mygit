@@ -118,7 +118,8 @@ public class UccCustomersController {
         try{
             pageResultBean =  this.uccCustomersService.findBlackList(uccBlackListCriteria);
         }catch (Exception e){
-            System.out.println("查询黑名单列表异常"+e);
+            e.printStackTrace();
+            System.out.println("查询黑名单列表异常"+e.toString());
         }
         return pageResultBean;
     }
