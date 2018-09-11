@@ -705,7 +705,7 @@
     WHERE
        1 = 1
     AND a.domain_id = b.domain_id
-    <if test='taskCode == null or taskCode =="" '>
+    <if test="taskCode != null ">
     AND a.TASK_CODE >= #{taskCode,jdbcType=VARCHAR}
     </if>
     AND a.USER_ID = #{userId,jdbcType=VARCHAR}
