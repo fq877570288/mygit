@@ -26,32 +26,62 @@ public class UccCustomersController {
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     @ResponseBody
     public PageResultBean<List<UccCustomers>> findAll(UccCustomersCriteria search) {
-        return new PageResultBean(this.uccCustomersService.findAll(search));
+        try {
+            return new PageResultBean(this.uccCustomersService.findAll(search));
+        } catch (Exception e) {
+            System.out.println("查询客户列表失败！");
+            e.printStackTrace();
+            return new PageResultBean<List<UccCustomers>>();
+        }
     }
 
     @ApiOperation(value = "根据custId查询UccCustomers", notes = "根据custId查询UccCustomers")
     @RequestMapping(value = "/{custId}", method= RequestMethod.POST)
     public ResultBean<UccCustomers> findOne(@PathVariable String custId){
-        return new ResultBean<>(this.uccCustomersService.findOne(custId));
+        try {
+            return new ResultBean<>(this.uccCustomersService.findOne(custId));
+        } catch (Exception e) {
+            System.out.println("根据custId查询客户失败！");
+            e.printStackTrace();
+            return new PageResultBean<UccCustomers>();
+        }
     }
 
     @ApiOperation(value = "根据custId删除UccCustomers", notes = "根据custId删除UccCustomers")
     @RequestMapping(value = "/{custId}", method= RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String custId){
-        return new ResultBean<>(this.uccCustomersService.delete(custId));
+        try {
+            return new ResultBean<>(this.uccCustomersService.delete(custId));
+        } catch (Exception e) {
+            System.out.println("根据custId删除客户失败！");
+            e.printStackTrace();
+            return new PageResultBean<Boolean>();
+        }
     }
 
     @ApiOperation(value = "创建UccCustomers", notes = "创建UccCustomers")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccCustomers uccCustomers) {
-        boolean result = this.uccCustomersService.save(uccCustomers) != null;
+        boolean result = false;
+        try {
+            result = this.uccCustomersService.save(uccCustomers) != null;
+        } catch (Exception e) {
+            System.out.println("创建UccCustomers客户失败！");
+            e.printStackTrace();
+        }
         return new ResultBean<>(result);
     }
 
     @ApiOperation(value = "修改UccCustomers", notes = "修改UccCustomers")
     @RequestMapping(value = "/{custId}",method =  RequestMethod.PUT)
     public ResultBean<UccCustomers> save(@PathVariable String custId, @RequestBody UccCustomers uccCustomers){
-        return new ResultBean<>(this.uccCustomersService.save(uccCustomers));
+        try {
+            return new ResultBean<>(this.uccCustomersService.save(uccCustomers));
+        } catch (Exception e) {
+            System.out.println("创建UccCustomers客户失败！");
+            e.printStackTrace();
+            return new ResultBean<UccCustomers>();
+        }
     }
 
     /***
