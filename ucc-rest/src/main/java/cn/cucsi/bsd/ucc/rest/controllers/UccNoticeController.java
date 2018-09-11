@@ -21,14 +21,14 @@ public class UccNoticeController {
     @Autowired
     UccNoticeService uccNoticeService;
 
-    @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<UccNotice>> findAll(@ModelAttribute UccNoticeCriteria search) {
+    @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    public PageResultBean<List<UccNotice>> findAll(@RequestBody UccNoticeCriteria search) {
         return new PageResultBean(this.uccNoticeService.findAll(search));
     }
 
     @ApiOperation(value = "根据noticeId查询UccNotice", notes = "根据noticeId查询UccNotice")
-    @RequestMapping(value = "/{noticeId}", method= RequestMethod.GET)
+    @RequestMapping(value = "/{noticeId}", method= RequestMethod.POST)
     public ResultBean<UccNotice> findOne(@PathVariable String noticeId){
         return new ResultBean<>(this.uccNoticeService.findOne(noticeId));
     }
