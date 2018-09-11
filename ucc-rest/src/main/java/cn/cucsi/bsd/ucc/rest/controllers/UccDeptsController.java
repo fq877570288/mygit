@@ -36,42 +36,74 @@ public class UccDeptsController {
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     @ResponseBody
     public PageResultBean<List<UccDepts>> findAll(UccDeptsCriteria search) {
-        return new PageResultBean(this.uccDeptsService.findAll(search));
+        try {
+            return new PageResultBean(this.uccDeptsService.findAll(search));
+        } catch (Exception e) {
+            System.out.println("根据查询条件获取部门列表失败！");
+            e.printStackTrace();
+            return new PageResultBean<List<UccDepts>>();
+        }
     }
 
     @ApiOperation(value = "根据deptId查询UccDepts", notes = "根据deptId查询UccDepts")
     @RequestMapping(value = "/{deptId}", method = RequestMethod.POST)
     public ResultBean<UccDepts> findOne(@PathVariable String deptId){
-        return new ResultBean<>(this.uccDeptsService.findOne(deptId));
+        try {
+            return new ResultBean<>(this.uccDeptsService.findOne(deptId));
+        } catch (Exception e) {
+            System.out.println("根据deptId查询UccDepts失败！");
+            e.printStackTrace();
+            return new ResultBean<UccDepts>();
+        }
     }
 
     @ApiOperation(value = "根据deptId删除UccDepts", notes = "根据deptId删除UccDepts")
     @RequestMapping(value = "/{deptId}", method = RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String deptId){
-        return new ResultBean<>(this.uccDeptsService.delete(deptId));
+        try {
+            return new ResultBean<>(this.uccDeptsService.delete(deptId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("根据deptId删除UccDepts失败！");
+            return new ResultBean<Boolean>();
+        }
     }
 
     @ApiOperation(value = "创建UccDepts", notes = "创建UccDepts")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccDepts uccDepts) {
-        boolean result = this.uccDeptsService.save(uccDepts) != null;
+        boolean result = false;
+        try {
+            result = this.uccDeptsService.save(uccDepts) != null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("创建UccDepts失败！");
+        }
         return new ResultBean<>(result);
     }
 
     @ApiOperation(value = "修改UccDepts", notes = "修改UccDepts")
     @RequestMapping(value = "/{deptId}", method =  RequestMethod.PUT)
     public ResultBean<UccDepts> save(@PathVariable String deptId,@RequestBody UccDepts uccDepts){
-        return new ResultBean<>(this.uccDeptsService.save(uccDepts));
+        try {
+            return new ResultBean<>(this.uccDeptsService.save(uccDepts));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("修改UccDepts失败！");
+            return new ResultBean<UccDepts>();
+        }
     }
 
     @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
     @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
     @ResponseBody
     public ResultBean<List<UccDepts>> findAllTree(UccDeptsCriteria search) {
-        Page<UccDepts> pages = this.uccDeptsService.findAllTree(search);
-        List<UccDepts> list = pages.getContent();
-        List<DeptsTree> trees = new ArrayList<DeptsTree>();
 
+        Page<UccDepts> pages = null;
+        List<DeptsTree> trees = new ArrayList<DeptsTree>();
+        try {
+            pages = this.uccDeptsService.findAllTree(search);
+            List<UccDepts> list = pages.getContent();
 //        List<AllDeptsTreeBean>  allDeptsTreeBeen = new ArrayList<AllDeptsTreeBean>();
 //        if(list != null && list.size() > 0){
 //            for(int i = 0; i < list.size(); i++){
@@ -105,7 +137,10 @@ public class UccDeptsController {
                 trees.add(deptsTree);
             }
         }
-
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("根据查询条件获取部门列表失败！");
+        }
         return new ResultBean(trees);
     }
 
