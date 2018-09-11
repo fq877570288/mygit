@@ -1,8 +1,13 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
-import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
+import cn.cucsi.bsd.ucc.common.beans.PbxExtsCriteria;
+import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.data.domain.PbxExts;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
+import cn.cucsi.bsd.ucc.service.PbxExtsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -17,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,11 +32,23 @@ public class UccUserController  {
 
     @Autowired
     private UccUserService uccUserService;
+    @Autowired
+    private PbxExtsService PbxExtsService;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
     public PageResultBean<List<UccUsers>> findAll(@RequestBody UccUserCriteria criteria){
+        PbxExtsCriteria search = new PbxExtsCriteria();
+        if(criteria.getExtNum()!=null&&!"".equals(criteria.getExtNum())){
+            search.setExtNumVague(criteria.getExtNum());
+            Page<PbxExts> extList = this.PbxExtsService.findAll(search);
+            List<String> extId = new ArrayList<>();
+            for (PbxExts pbxExts:extList) {
+                extId.add(pbxExts.getExtId());
+            }
+            criteria.setExtId(extId);
+        }
         PageResultBean<List<UccUsers>> list = new PageResultBean(this.uccUserService.findAll(criteria));
         return list;
     }
@@ -95,21 +113,8 @@ public class UccUserController  {
     //@ApiImplicitParam(name = "uccUsers", value = "用户entity", required = true, dataType = "UccUsers")
     @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
     public ResultBean<Boolean> save(@PathVariable String userId,@RequestBody UccUsers uccUsers){
-        uccUsers.setUserId(userId);
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
-    }
-
-    /***
-     * 根据用户名、密码获取用户列表（APP登录用）
-     * 此方法临时用，后期需要做补充
-     * add by wangxiaoyu
-     * 2018-09-10
-     */
-    @ApiOperation(value="根据用户名、密码获取用户列表（APP登录用）", notes="根据用户名、密码获取用户列表（APP登录用）", httpMethod = "POST")
-    @RequestMapping(value = "/userLoginForAPP", method= RequestMethod.POST)
-    public ResultBean_New<UccUsers> userLoginForAPP(@RequestBody UserLoginForAPPCriteria userLoginForAPPCriteria){
-        return uccUserService.userLoginForAPP(userLoginForAPPCriteria);
     }
 
 }

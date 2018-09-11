@@ -14,34 +14,35 @@ import javax.persistence.Transient;
 
 import java.util.Collection;
 import java.util.Date;
-
+/*
+*分机
+* */
 @Entity
 @Table(name = "pbx_exts", schema = "ucc", catalog = "")
 public class PbxExts {
     @JsonView(JSONView.Summary.class)
-    private String extId;
+    private String extId;//分机ID
     @JsonView(JSONView.Summary.class)
-    private String extNum;
-    private String extPwd;
-    private String domainId;
+    private String extNum;//分机号
+    private String extPwd;//分机密码
+    private String domainId;//域ID
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
-    private String createdUserId;
+    private String createdUserId;//创建人ID
     @JsonView(JSONView.Summary.class)
-    private String createdUserName;
+    private String createdUserName;//创建人姓名
     @JsonView(JSONView.Summary.class)
-    private String createdNickName;
+    private String createdNickName;//创建人昵称
     @JsonView(JSONView.Summary.class)
-    private String updatedUserId;
+    private String updatedUserId;//修改人ID
     @JsonView(JSONView.Summary.class)
-    private String updatedUserName;
+    private String updatedUserName;//修改人姓名
     @JsonView(JSONView.Summary.class)
-    private String updatedNickName;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date createdTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date updatedTime;
+    private String updatedNickName;//修改人昵称
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createdTime;//创建时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updatedTime;//修改时间
     @JsonIgnore
     private Collection<ExtGroupExts> extGroupExts;
     @JsonIgnore

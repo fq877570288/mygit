@@ -115,53 +115,61 @@ public class TaskServiceImpl implements TaskService {
 		resultBean.setReturnMsg("操作失败！");
 		resultBean.setReturnCode(ResultBean_New.FAIL);
 
-		List<String> taskDetailIdList = taskBackCriteria.getTaskDetailIdList();
+		List<String> businessCodeList = taskBackCriteria.getBusinessCodeList();
+		List<TaskDetail> taskDetailList = null;
+
 		String userId = "";
-		String domainId = "";
 		String taskDetailId = "";
 		TaskDetail taskDetail = null;
-		if(!MyUtils.isBlank(taskDetailIdList)){
-			for (int j = 0; j < taskDetailIdList.size(); j++) {
-				taskDetailId = taskDetailIdList.get(j);
-				try {
-					taskDetail = taskDetailMapper.selectByPrimaryKey2(taskDetailId);
-					userId = taskDetail.getUserId()==null?"":taskDetail.getUserId();
-					domainId = taskDetail.getDomainId()==null?"":taskDetail.getDomainId();
-					// 主键
-					UUIDGenerator generator = new UUIDGenerator();
-					String taskTransferUuid = generator.generate();
+		if(!MyUtils.isBlank(businessCodeList)){
+			for (int i = 0; i < businessCodeList.size(); i++) {
+				String businessCode = businessCodeList.get(i);
+				//根据businessCode查询任务明细表userId 、taskDetailId
+				taskDetailList = taskDetailMapper.selectDetailByBusinessCode(businessCode);
 
-					TaskTransfer taskTransfer = new TaskTransfer();
-					// 流转时间
-					Timestamp transferTime = new Timestamp(System.currentTimeMillis());
+				if(!MyUtils.isBlank(taskDetailList)){
 
-					taskTransfer.setTaskTransferId(taskTransferUuid);
-					taskTransfer.setTransferStatus("5"); //流转状态   0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
-					taskTransfer.setTransfeRoperate(TaskTransfer.BACK); //流转操作  0:创建、1：分派、2：接收、3：回退
-					taskTransfer.setTransferTime(transferTime); //流转时间
-					taskTransfer.setOperatorId(userId); //操作员
-					taskTransfer.setTaskDetailId(taskDetailId);//任务明细表主键
-					taskTransfer.setDomainId(domainId);
+					for (int j = 0; j < taskDetailList.size(); j++) {
 
-					//撤回任务时执行插入任务流转表
-					try {
-						taskTransferMapper.insert(taskTransfer);
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.out.println("撤回任务时执行插入任务流转表发生错误！");
-						return resultBean;
+						taskDetail = taskDetailList.get(j);
+						taskDetailId = taskDetail.getTaskDetailId()==null?"":taskDetail.getTaskDetailId();
+						userId = taskDetail.getUserId()==null?"": taskDetail.getUserId();
+
+						// 主键
+						UUIDGenerator generator = new UUIDGenerator();
+						String taskTransferUuid = generator.generate();
+
+						TaskTransfer taskTransfer = new TaskTransfer();
+						// 流转时间
+						Timestamp transferTime = new Timestamp(System.currentTimeMillis());
+
+						taskTransfer.setTaskTransferId(taskTransferUuid);
+						taskTransfer.setTransferStatus("5"); //流转状态   0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
+						taskTransfer.setTransfeRoperate(TaskTransfer.BACK); //流转操作  0:创建、1：分派、2：接收、3：回退
+						taskTransfer.setTransferTime(transferTime); //流转时间
+						taskTransfer.setOperatorId(userId); //操作员
+						taskTransfer.setTaskDetailId(taskDetailId);//任务明细表主键
+						//taskTransfer.setOperatorDept(ngtDeptList.get(0).getDeptId().toString());
+
+						//撤回任务时执行插入任务流转表
+						try {
+							taskTransferMapper.insert(taskTransfer);
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.out.println("撤回任务时执行插入任务流转表发生错误！");
+							return resultBean;
+						}
+						//撤回任务时执行更新任务明细表
+						try {
+							taskDetailMapper.updateTaskStatus(taskTransfer);
+						} catch (Exception e) {
+							e.printStackTrace();
+							System.out.println("撤回任务时执行更新任务明细表发生错误！");
+							return resultBean;
+						}
 					}
-					//撤回任务时执行更新任务明细表
-					try {
-						taskDetailMapper.updateTaskStatus(taskTransfer);
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.out.println("撤回任务时执行更新任务明细表发生错误！");
-						return resultBean;
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.out.println("撤回任务时根据主键查询任务明细表发生错误！");
+				}else{
+					resultBean.setReturnMsg("根据businessCode查询任务明细表返回为空！");
 					return resultBean;
 				}
 			}
@@ -187,9 +195,9 @@ public class TaskServiceImpl implements TaskService {
 		resultBean.setReturnMsg("操作失败！");
 		resultBean.setReturnCode(ResultBean_New.FAIL);
 		String taskDetailId = "";
-		String domainId = showTaskDetailCriteria.getDomainId()==null?"":showTaskDetailCriteria.getDomainId();
+		//String taskDetailId = showTaskDetailCriteria.getTaskDetailId()==null?"":showTaskDetailCriteria.getTaskDetailId();
 		String businessCode = showTaskDetailCriteria.getBusinessCode()==null?"":showTaskDetailCriteria.getBusinessCode();
-		if(MyUtils.isBlank(businessCode)||MyUtils.isBlank(domainId)){
+		if(MyUtils.isBlank(businessCode)){//入参为空
 			resultBean.setReturnMsg("入参为空！");
 			return resultBean;
 		}
@@ -212,7 +220,7 @@ public class TaskServiceImpl implements TaskService {
         String custName = "";//客户姓名
         String customerPhone = "";//客户联系电话
 		try {
-			taskDetailList = taskDetailMapper.selectDetailByCriteria(showTaskDetailCriteria);
+			taskDetailList = taskDetailMapper.selectDetailByBusinessCode(businessCode);
 			if(!MyUtils.isBlank(taskDetailList)){
 				for (int j = 0; j < taskDetailList.size(); j++) {
 					taskDetail = taskDetailList.get(j);
@@ -236,10 +244,11 @@ public class TaskServiceImpl implements TaskService {
 					callMemo = taskDetail.getCallMemo()==null?"":taskDetail.getCallMemo();
 					callResult = taskDetail.getCallResult()==null?"":taskDetail.getCallResult();
                     custName = taskDetail.getCustName()==null?"":taskDetail.getCustName();
+					System.out.println("custName:::" + custName);
                     customerPhone = taskDetail.getCustomerPhone()==null?"":taskDetail.getCustomerPhone();
 
-					//根据条件查询客户是否在黑名单
-					int type = uccCustomersRepository.checkCustmIsBlack(businessCode,domainId);
+					//根据businessCode查询客户是否在黑名单
+					int type = uccCustomersRepository.checkCustmIsBlack(businessCode);
 					if(type==7){
 						isInBlackList = "该用户已被拉进黑名单";
 					}else{
@@ -313,31 +322,32 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	/***
-	 * 根据条件查询呼出记录
+	 * 根据业务编码查询呼出记录
 	 * add by wangxiaoyu
 	 * 2018-08-31
 	 */
 	@Override
-	public PageResultBean_New<List<TaskTransfer>> selectCallNotesByCriteria(ShowTaskDetailCriteria showTaskDetailCriteria){
+	public PageResultBean_New<List<TaskTransfer>> selectCallNotesByBusinessCode(TaskCallNotesCriteria taskCallNotesCriteria){
 
-		Page pageInfo = PageHelper.startPage(showTaskDetailCriteria.getPageNum(), showTaskDetailCriteria.getPageSize());
+		Page pageInfo = PageHelper.startPage(taskCallNotesCriteria.getPageNum(), taskCallNotesCriteria.getPageSize());
 
 		List<TaskTransfer> informationList = null;
+		String businessCode = taskCallNotesCriteria.getBusinessCode()==null?"":taskCallNotesCriteria.getBusinessCode();
 		try {
-			//根据条件查询任务明细表taskDetailId
-			List<TaskDetail> taskDetailList = taskDetailMapper.selectDetailByCriteria(showTaskDetailCriteria);
+			//根据businessCode查询任务明细表taskDetailId
+			List<TaskDetail> taskDetailList = taskDetailMapper.selectDetailByBusinessCode(businessCode);
 			if(!MyUtils.isBlank(taskDetailList)){
                 informationList = taskTransferMapper.selectCallNotesByDetailIds(taskDetailList);
                 PageResultBean_New<List<TaskTransfer>> pageResultBean_new = new PageResultBean_New(pageInfo);
                 pageResultBean_new.setList(informationList);
                 return pageResultBean_new;
             }else{
-                System.out.println("根据条件查询任务明细表taskDetailId为空");
+                System.out.println("根据businessCode查询任务明细表taskDetailId为空");
                 return null;
             }
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("根据条件查询呼出记录发生异常！");
+			System.out.println("根据业务编码查询呼出记录发生异常！");
 			return null;
 		}
 	}

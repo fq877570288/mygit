@@ -38,11 +38,11 @@ public interface TaskService {
 	ResultBean_New<String> taskResultSubmit(TaskSubmitCriteria taskSubmitCriteria);
 
 	/***
-	 * 根据条件查询呼出记录
+	 * 根据业务编码查询呼出记录
 	 * add by wangxiaoyu
 	 * 2018-08-31
 	 */
-	PageResultBean_New<List<TaskTransfer>> selectCallNotesByCriteria(ShowTaskDetailCriteria showTaskDetailCriteria);
+	PageResultBean_New<List<TaskTransfer>> selectCallNotesByBusinessCode(TaskCallNotesCriteria taskCallNotesCriteria);
 
 	/***
 	 * 个人中心--获取当前坐席“在办”、“待办”、“本月办结”数量

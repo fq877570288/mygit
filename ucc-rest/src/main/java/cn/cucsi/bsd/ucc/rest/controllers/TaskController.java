@@ -305,17 +305,17 @@ public class TaskController {
 	}
 
 	/***
-	 * 根据条件查询呼出记录
+	 * 根据业务编码查询呼出记录
 	 * add by wangxiaoyu
 	 * 2018-08-31
 	 */
-	@ApiOperation(value="根据条件查询呼出记录", notes="根据条件查询呼出记录")
-	@RequestMapping(value = "/selectCallNotesByCriteria", method= RequestMethod.POST)
-	public PageResultBean_New<List<TaskTransfer>> selectCallNotesByCriteria(@RequestBody ShowTaskDetailCriteria showTaskDetailCriteria){
+	@ApiOperation(value="根据业务编码查询呼出记录", notes="根据业务编码查询呼出记录")
+	@RequestMapping(value = "/selectCallNotesByBusinessCode", method= RequestMethod.POST)
+	public PageResultBean_New<List<TaskTransfer>> selectCallNotesByBusinessCode(@RequestBody TaskCallNotesCriteria taskCallNotesCriteria){
 
 		PageResultBean_New<List<TaskTransfer>> pageResultBean_new = null;
 		try {
-			pageResultBean_new = taskService.selectCallNotesByCriteria(showTaskDetailCriteria);
+			pageResultBean_new = taskService.selectCallNotesByBusinessCode(taskCallNotesCriteria);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("根据业务编码查询呼出记录发生异常！");

@@ -9,47 +9,49 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.sql.Time;
 import java.util.Date;
-
+/*
+*示忙记录
+* */
 @Entity
 @Table(name = "pbx_showbusy_log", schema = "ucc", catalog = "")
 public class PbxShowbusyLog {
-    private String showbusyLogId;
-    private Integer type;
+    private String showbusyLogId;//示忙主键
+    private Integer type;//示忙类型
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date busyTime;
+    private Date busyTime;//示忙时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date cancelBusyTime;
-    private Time dif;
-    private String userId;
-    private String operatorId;
-    private String extId;
-    private String domainId;
+    private Date cancelBusyTime;//取消示忙时间
+    private Time dif;//dif
+    private String userId;//用户ID
+    private String operatorId;//操作员ID
+    private String extId;//分机ID
+    private String domainId;//域ID
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
-    private String createdUserId;
+    private String createdUserId;//创建人ID
     @JsonView(JSONView.Summary.class)
-    private String createdUserName;
+    private String createdUserName;//创建人姓名
     @JsonView(JSONView.Summary.class)
-    private String createdNickName;
+    private String createdNickName;//创建人昵称
     @JsonView(JSONView.Summary.class)
-    private String updatedUserId;
+    private String updatedUserId;//修改人ID
     @JsonView(JSONView.Summary.class)
-    private String updatedUserName;
+    private String updatedUserName;//修改人姓名
     @JsonView(JSONView.Summary.class)
-    private String updatedNickName;
+    private String updatedNickName;//修改人昵称
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdTime;
+    private Date createdTime;//创建时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updatedTime;
+    private Date updatedTime;//修改时间
     @JsonIgnore
-    private UccUsers uccUser;
+    private UccUsers uccUser;//
     @JsonIgnore
-    private UccUsers uccOperator;
+    private UccUsers uccOperator;//
     @JsonIgnore
-    private PbxExts pbxExt;
+    private PbxExts pbxExt;//
     @JsonIgnore
-    private UccDomain uccDomain;
+    private UccDomain uccDomain;//
 
     @Id
     @Column(name = "showbusy_log_id", nullable = false, length = 32)

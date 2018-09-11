@@ -24,6 +24,15 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 public class PbxExtsSpecs {
 
+    public static Specification<PbxExts> extNumLike(final String extNum) {
+        return new Specification<PbxExts>() {
+            @Override
+            public Predicate toPredicate(Root<PbxExts> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.like(root.<String>get("extNum"), "%" + extNum + "%");
+            }
+        };
+    }
+
     public static Specification<PbxExts> extNumEqual(final String extNum) {
 
         return new Specification<PbxExts>() {
@@ -96,6 +105,9 @@ public class PbxExtsSpecs {
         }
         if(null != criteria.getExtIds()){
             specs =specs.and(extIdIn(criteria.getExtIds()));
+        }
+        if(!Strings.isNullOrEmpty(criteria.getExtNumVague())){
+            specs = specs.and(extNumLike(criteria.getExtNumVague()));
         }
         return specs;
     }

@@ -13,6 +13,7 @@ import java.util.List;
 public class PbxExtsCriteria  extends BasicCriteria  {
     private String extId;
     private String extNum;
+    private String extNumVague;
     private String domainId;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeFrom;
@@ -77,5 +78,13 @@ public class PbxExtsCriteria  extends BasicCriteria  {
 
     public void setDomainId(String domainId) {
         this.domainId = domainId;
+    }
+
+    public String getExtNumVague() {
+        return extNumVague;
+    }
+
+    public void setExtNumVague(String extNumVague) {
+        this.extNumVague = extNumVague;
     }
 }

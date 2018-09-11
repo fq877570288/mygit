@@ -56,9 +56,6 @@ public class TaskTransfer {
     @JsonIgnore
     private String operatorDept; //操作部门
 
-    @JsonIgnore
-    private String domainId;//租户ID
-
     public String getTaskTransferId() {
         return taskTransferId;
     }
@@ -161,13 +158,5 @@ public class TaskTransfer {
 
     public void setOperatorDept(String operatorDept) {
         this.operatorDept = operatorDept == null ? null : operatorDept.trim();
-    }
-
-    public String getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(String domainId) {
-        this.domainId = domainId;
     }
 }

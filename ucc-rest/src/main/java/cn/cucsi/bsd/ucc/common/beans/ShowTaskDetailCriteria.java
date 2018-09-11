@@ -9,13 +9,10 @@ import io.swagger.annotations.ApiModelProperty;
  * 2018-08-31
  */
 @ApiModel
-public class ShowTaskDetailCriteria extends BasicPageCriteria{
+public class ShowTaskDetailCriteria{
 
     @ApiModelProperty(value = "业务编码",required = true)
     private String businessCode;
-
-    @ApiModelProperty(value = "租户ID",required = true)
-    private String domainId;//租户ID
 
     public String getBusinessCode() {
         return businessCode;
@@ -23,13 +20,5 @@ public class ShowTaskDetailCriteria extends BasicPageCriteria{
 
     public void setBusinessCode(String businessCode) {
         this.businessCode = businessCode;
-    }
-
-    public String getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(String domainId) {
-        this.domainId = domainId;
     }
 }

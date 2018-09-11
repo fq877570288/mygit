@@ -6,13 +6,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
-
+/*
+* 用户部门关系
+* */
 @Entity
 @Table(name = "user_dept", schema = "ucc", catalog = "")
 @IdClass(UserDeptPK.class)
 public class UserDept {
-    private String userId;
-    private String deptId;
+    private String userId;//用户ID
+    private String deptId;//部门编码
 
     @JsonIgnore
     private UccUsers uccUser;

@@ -23,7 +23,6 @@ public class UccUserSpecs {
         };
     }
 
-
     public static Specification<UccUsers> passwordLike(final String password) {
         return new Specification<UccUsers>() {
             @Override
@@ -143,6 +142,17 @@ public class UccUserSpecs {
         };
     }
 
+
+    public static Specification<UccUsers> extIdEqual(final String extId) {
+        return new Specification<UccUsers>() {
+            @Override
+            public Predicate toPredicate(Root<UccUsers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                Path<Object> path = root.join("ext").get("extId");
+                return criteriaBuilder.equal(path, extId);
+            }
+        };
+    }
+
     public static Specification<UccUsers> createSpec(final UccUserCriteria criteria) {
         Specification<UccUsers> spec = null;
         if(criteria==null) return spec;
@@ -190,13 +200,32 @@ public class UccUserSpecs {
 
         if(null != criteria.getUccDepts() && criteria.getUccDepts().size() > 0){
             for(int i = 0; i < criteria.getUccDepts().size(); i++){
-                specs = specs.and(deptEqual(criteria.getUccDepts().get(i)));
+                if(i==0) {
+                    specs = specs.and(deptEqual(criteria.getUccDepts().get(i)));
+                }else {
+                    specs = specs.or(deptEqual(criteria.getUccDepts().get(i)));
+                }
             }
         }
 
         if(null != criteria.getUserRoles() && criteria.getUserRoles().size() > 0){
             for(int i = 0; i < criteria.getUserRoles().size(); i++){
-                specs = specs.and(rolesEqual(criteria.getUserRoles().get(i)));
+                if(i==0) {
+                    specs = specs.and(rolesEqual(criteria.getUserRoles().get(i)));
+                }else{
+                    specs = specs.or(rolesEqual(criteria.getUserRoles().get(i)));
+                }
+            }
+        }
+//4028bb81657df6e7016584346a740001
+        if(null != criteria.getExtId() && criteria.getExtId().size() > 0){
+            for(int i = 0; i < criteria.getExtId().size(); i++){
+                if(i==0){
+                    specs = specs.and(extIdEqual(criteria.getExtId().get(i)));
+                }else{
+                    specs = specs.or(extIdEqual(criteria.getExtId().get(i)));
+                }
+
             }
         }
         return specs;

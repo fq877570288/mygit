@@ -133,7 +133,6 @@ public class UccNoticeServiceImpl implements UccNoticeService{
             e.printStackTrace();
             return resultBean;
         }
-        resultBean.setData(uccNotice);
         resultBean.setReturnMsg("操作成功！");
         resultBean.setReturnCode(ResultBean_New.SUCCESS);
         return resultBean;

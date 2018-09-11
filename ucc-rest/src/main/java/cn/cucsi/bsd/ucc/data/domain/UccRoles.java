@@ -11,37 +11,38 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
-
+/*
+* 角色
+* */
 @Entity
 @Table(name = "ucc_roles", schema = "ucc", catalog = "")
 public class UccRoles {
     @JsonView(JSONView.Summary.class)
-    private String roleId;
+    private String roleId;//角色编码
     @JsonView(JSONView.Summary.class)
-    private String roleName;
+    private String roleName;//角色名称
     @JsonView(JSONView.Summary.class)
-    private String blacklistFlag;
-    private String sensitiveFlag;
+    private String blacklistFlag;//黑名单标识
+    private String sensitiveFlag;//号码脱敏标志
     @JsonView(JSONView.Summary.class)
-    private String domainId;
+    private String domainId;//域ID
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
-    private String createdUserId;
+    private String createdUserId;//创建人ID
     @JsonView(JSONView.Summary.class)
-    private String createdUserName;
+    private String createdUserName;//创建人姓名
     @JsonView(JSONView.Summary.class)
-    private String createdNickName;
+    private String createdNickName;//创建人昵称
     @JsonView(JSONView.Summary.class)
-    private String updatedUserId;
+    private String updatedUserId;//修改人ID
     @JsonView(JSONView.Summary.class)
-    private String updatedUserName;
+    private String updatedUserName;//修改人姓名
     @JsonView(JSONView.Summary.class)
-    private String updatedNickName;
-
+    private String updatedNickName;//修改人昵称
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdTime;
+    private Date createdTime;//创建时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updatedTime;
+    private Date updatedTime;//修改时间
     @JsonIgnore
     private Collection<RolesPermissions> rolesPermissions;
 
