@@ -139,7 +139,7 @@ public class UccDeptsController {
         }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("根据查询条件获取部门列表失败！");
+            System.out.println("根据查询条件获取部门列表失败!");
         }
         return new ResultBean(trees);
     }
