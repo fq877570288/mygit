@@ -1,5 +1,7 @@
 package cn.cucsi.bsd.ucc.service;
 
+import cn.cucsi.bsd.ucc.common.beans.ResultBean_New;
+import cn.cucsi.bsd.ucc.common.beans.UserLoginForAPPCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
 import org.springframework.data.domain.Page;
@@ -13,4 +15,11 @@ public interface UccUserService {
     Boolean delete(String userId);
     Boolean multiDelete(String userIds);
     List<UccUsers> findAllList(UccUserCriteria search);
+
+    /***
+     * 根据用户名、密码获取用户列表（APP登录用）
+     * add by wangxiaoyu
+     * 2018-09-10
+     */
+    ResultBean_New<UccUsers> userLoginForAPP(UserLoginForAPPCriteria userLoginForAPPCriteria);
 }

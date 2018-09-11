@@ -11,20 +11,12 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class UccToBlackCriteria{
 
-    @ApiModelProperty(value = "业务编码",required = true)
-    private String businesscode;
     @ApiModelProperty(value = "拉黑原因",required = true)
     private String pullBlackReason;
     @ApiModelProperty(value = "坐席员ID",required = true)
     private String userId;
-
-    public String getBusinesscode() {
-        return businesscode;
-    }
-
-    public void setBusinesscode(String businesscode) {
-        this.businesscode = businesscode;
-    }
+    @ApiModelProperty(value = "客户ID",required = true)
+    private String custId;
 
     public String getPullBlackReason() {
         return pullBlackReason;
@@ -40,5 +32,13 @@ public class UccToBlackCriteria{
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCustId() {
+        return custId;
+    }
+
+    public void setCustId(String custId) {
+        this.custId = custId;
     }
 }
