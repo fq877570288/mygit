@@ -7,10 +7,12 @@ import cn.cucsi.bsd.ucc.data.domain.UccNoticeFile;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.service.UccNoticeFileService;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by tianyuwei on 2017/10/16.
@@ -42,14 +44,30 @@ public class UccNoticeFileController {
 
     @ApiOperation(value = "创建UccNoticeFile", notes = "创建UccNoticeFile")
     @RequestMapping(value = "", method =  RequestMethod.POST)
-    public ResultBean<Boolean> create(@RequestBody UccNoticeFile uccNoticeFile) {
-        boolean result = this.uccNoticeFileService.save(uccNoticeFile) != null;
+    public ResultBean<Boolean> create(@RequestBody UccNoticeFile uccNoticeFile, MultipartFile file) {
+        
+        byte[] fileBox = null;
+        if (file != null && file.getSize() > 0) {
+            uccNoticeFile.setFileName(file.getOriginalFilename());
+            uccNoticeFile.setFileOrder(1);
+            try {
+                fileBox = file.getBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        boolean result = this.uccNoticeFileService.save(fileBox, uccNoticeFile) != null;
         return new ResultBean<>(result);
+        
+        
+        
+        //boolean result = this.uccNoticeFileService.save(uccNoticeFile) != null;
+        //return new ResultBean<>(result);
     }
-
     @ApiOperation(value = "修改UccNoticeFile", notes = "修改UccNoticeFile")
     @RequestMapping(value = "/{noticeFileId}",method =  RequestMethod.PUT)
-    public ResultBean<UccNoticeFile> save(@PathVariable String noticeFileId, @RequestBody UccNoticeFile uccNoticeFile){
-        return new ResultBean<>(this.uccNoticeFileService.save(uccNoticeFile));
+    public ResultBean<Boolean> save(@PathVariable String noticeFileId, @RequestBody UccNoticeFile uccNoticeFile){
+        boolean result = this.uccNoticeFileService.updateById(uccNoticeFile)!= null;
+        return new ResultBean<>(result);
     }
 }
