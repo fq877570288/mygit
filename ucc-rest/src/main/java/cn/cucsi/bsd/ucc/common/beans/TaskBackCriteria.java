@@ -13,20 +13,14 @@ import java.util.List;
 @ApiModel
 public class TaskBackCriteria{
 
-    /*@ApiModelProperty(value = "业务员ID",required = true)
-    private String userId;
+    @ApiModelProperty(value = "任务ID列表",required = true)
+    private List<String> taskDetailIdList = new ArrayList<>();
 
-    @ApiModelProperty(value = "任务明细表主键",required = true)
-    private String taskDetailId;*/
-
-    @ApiModelProperty(value = "业务编码列表",required = true)
-    private List<String> businessCodeList = new ArrayList<>();
-
-    public List<String> getBusinessCodeList() {
-        return businessCodeList;
+    public List<String> getTaskDetailIdList() {
+        return taskDetailIdList;
     }
 
-    public void setBusinessCodeList(List<String> businessCodeList) {
-        this.businessCodeList = businessCodeList;
+    public void setTaskDetailIdList(List<String> taskDetailIdList) {
+        this.taskDetailIdList = taskDetailIdList;
     }
 }
