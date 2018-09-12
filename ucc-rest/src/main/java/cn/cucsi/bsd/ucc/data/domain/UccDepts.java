@@ -10,6 +10,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Collection;
+import java.util.List;
+
 /*
 * 部门
 * */
@@ -67,6 +69,16 @@ private String createdUserId;//创建人ID
 
 //    private UccUsers uccUser;
     private Collection<UserDept> userDepts;
+    @Transient
+    private List<UccDepts> depts;
+    @Transient
+    public List<UccDepts> getDepts() {
+        return depts;
+    }
+
+    public void setDepts(List<UccDepts> depts) {
+        this.depts = depts;
+    }
 
     @Id
     @Column(name = "dept_id", nullable = false, length = 32)

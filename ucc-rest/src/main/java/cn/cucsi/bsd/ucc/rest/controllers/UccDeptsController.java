@@ -97,76 +97,45 @@ public class UccDeptsController {
     @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
     @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
     @ResponseBody
-    public ResultBean<List<UccDepts>> findAllTree(UccDeptsCriteria search) {
-
+    public List<UccDepts> findAllTree(UccDeptsCriteria search) {
         Page<UccDepts> pages = null;
-        List<DeptsTree> trees = new ArrayList<DeptsTree>();
+        List<UccDepts> listOne = new ArrayList<UccDepts>();
         try {
             pages = this.uccDeptsService.findAllTree(search);
             List<UccDepts> list = pages.getContent();
-//        List<AllDeptsTreeBean>  allDeptsTreeBeen = new ArrayList<AllDeptsTreeBean>();
-//        if(list != null && list.size() > 0){
-//            for(int i = 0; i < list.size(); i++){
-//                UccDepts uccDept = list.get(i);
-//
-//                if(uccDept.getDeptPid() == null || "".equals(uccDept.getDeptPid())){
-//                    AllDeptsTreeBean bean = new AllDeptsTreeBean();
-//                    bean.setLabel(uccDept.getDeptName());
-//                    bean.setKey(uccDept.getDeptId());
-//                    bean.setValue(uccDept.getDeptId());
-//
-//                    bean.setChildren(chindernDepts(uccDept.getDeptId()));
-//
-//
-//                    allDeptsTreeBeen.add(bean);
-//                }
-//            }
-//        }
-//        return new ResultBean(allDeptsTreeBeen);
-
-        if(list != null && list.size() > 0){
-
-            for(int i = 0; i < list.size(); i++){
-                UccDepts uccDept = list.get(i);
-                DeptsTree deptsTree = new DeptsTree();
-                deptsTree.setKey(uccDept.getDeptId());
-                deptsTree.setPid(uccDept.getDeptPid());
-                deptsTree.setLabel(uccDept.getDeptName());
-                deptsTree.setValue(uccDept.getDeptId());
-
-                trees.add(deptsTree);
+            if(list!=null&&list.size()!=0) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i) != null && list.get(i).getDeptPid().equals("0")) {//顶级
+                        listOne.add(list.get(i));
+                    }
+                }
+                if(listOne.size()!=0){
+                    for(int i=0;i<listOne.size();i++){
+                        queryChildren(listOne.get(i),list);
+                    }
+                }
             }
-        }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("根据查询条件获取部门列表失败!");
         }
-        return new ResultBean(trees);
+        return listOne;
     }
+    public void queryChildren(UccDepts uccDepts,List<UccDepts> list){
+        List<UccDepts> Childrens = new ArrayList<UccDepts>();
+        if(list.size()!=0){
+            for(int i=0;i<list.size();i++){
+                if(uccDepts!=null&&uccDepts.getDeptId().equals(list.get(i).getDeptPid())){
+                    Childrens.add(list.get(i));
+                }
+            }
+            if(Childrens.size()!=0){
+                uccDepts.setDepts(Childrens);
+                for(int a = 0;a<Childrens.size();a++){
+                    queryChildren(Childrens.get(a),list);
+                }
+            }
+        }
 
-
-//    private List<AllDeptsTreeBean> chindernDepts(String  deptId){
-//        List<AllDeptsTreeBean> list = new ArrayList<AllDeptsTreeBean>();
-//        UccDeptsCriteria criteria = new UccDeptsCriteria();
-//        criteria.setDeptPid(deptId);
-//        Page<UccDepts> pages = this.uccDeptsService.findAllTree(criteria);
-//        List<UccDepts> pDeptList = pages.getContent();
-//
-//        if(pDeptList != null && pDeptList.size() > 0){
-//            for(int i = 0; i< pDeptList.size(); i++){
-//                String id = pDeptList.get(i).getDeptId();
-//
-//                AllDeptsTreeBean bean = new AllDeptsTreeBean();
-//                bean.setLabel(pDeptList.get(i).getDeptName());
-//                bean.setKey(deptId);
-//                bean.setValue(deptId);
-//                bean.setChildren(chindernDepts(id));
-//
-//                list.add(bean);
-//            }
-//        }
-//
-//        return list;
-//    }
-
+    }
 }
