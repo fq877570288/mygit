@@ -345,7 +345,7 @@ public class TaskServiceImpl implements TaskService {
 			if(!MyUtils.isBlank(taskDetailList)){
                 informationList = taskTransferMapper.selectCallNotesByDetailIds(taskDetailList);
                 PageResultBean_New<List<TaskTransfer>> pageResultBean_new = new PageResultBean_New(pageInfo);
-                pageResultBean_new.setList(informationList);
+				pageResultBean_new.setList(informationList);
                 return pageResultBean_new;
             }else{
                 System.out.println("根据businessCode查询任务明细表taskDetailId为空");
