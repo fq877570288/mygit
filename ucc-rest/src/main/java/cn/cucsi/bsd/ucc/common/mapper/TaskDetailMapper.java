@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.common.mapper;
 
 import cn.cucsi.bsd.ucc.common.beans.OngoingTaskCriteria;
+import cn.cucsi.bsd.ucc.common.beans.ShowTaskDetailCriteria;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,7 +19,11 @@ public interface TaskDetailMapper {
 
     int insertSelective(TaskDetail record);
 
+    //根据taskDetailId连表查询
     TaskDetail selectByPrimaryKey(String taskDetailId);
+
+    //根据taskDetailId查询单表
+    TaskDetail selectByPrimaryKey2(String taskDetailId);
 
     int updateByPrimaryKeySelective(TaskDetail record);
 
@@ -40,11 +45,11 @@ public interface TaskDetailMapper {
     void updateTaskStatus(TaskTransfer taskTransfer);
 
     /***
-     * 根据businessCode查询任务明细表
+     * 根据businessCode、domainId查询任务明细表
      * add by wangxiaoyu
      * 2018-08-30
      */
-    List<TaskDetail> selectDetailByBusinessCode(String businessCode);
+    List<TaskDetail> selectDetailByCriteria(ShowTaskDetailCriteria showTaskDetailCriteria);
 
     /***
      * 根据查询条件获取待办任务数量

@@ -28,15 +28,15 @@ public interface UccCustomersRepository  extends PagingAndSortingRepository<UccC
             "uc.updated_user_id = ?2 , " +
             "uc.updated_time = ?3 ," +
             "uc.pull_black_reason = ?4 " +
-            "where uc.businesscode = ?5", nativeQuery = true)
-    int inBlackListByBusinessCode(Integer type, String userId,Date updatedTime,String pullBlackReason,String businesscode);
+            "where uc.cust_id = ?5", nativeQuery = true)
+    int inBlackListByBusinessCode(Integer type, String userId,Date updatedTime,String pullBlackReason,String custId);
 
     /***
-     * 根据businessCode查询客户是否在黑名单
+     * 根据条件查询客户是否在黑名单
      * add by wangxiaoyu
      * 2018-08-31
      */
-    @Query(value =" SELECT a.type from ucc_customers as a where a.businesscode = ?1 ",nativeQuery = true)
-    int checkCustmIsBlack(String businesscode);
+    @Query(value =" SELECT a.type from ucc_customers as a where a.businesscode = ?1 AND a.domain_id = ?2",nativeQuery = true)
+    int checkCustmIsBlack(String businesscode,String domainId);
 
 }
