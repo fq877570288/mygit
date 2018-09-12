@@ -13,6 +13,11 @@ import java.util.*;
 public class MyUtils extends org.apache.commons.lang.StringUtils{
 
     /**
+     * yyyy-MM-dd HH:mm:ss
+     */
+    private static final String YMDHMS = "yyyy-MM-dd HH:mm:ss";
+
+    /**
      * 判断字符串是否为null或空串 DOCUMENT ME!
      * add by wangxiaoyu
      * 2018-08-29
@@ -116,6 +121,18 @@ public class MyUtils extends org.apache.commons.lang.StringUtils{
             }
         }
         return true;
+    }
+
+    /**
+     * 时间格式化
+     */
+    public static String formatDate(Date date) {
+
+        if (date == null) {
+            return "";
+        }
+        SimpleDateFormat f = new SimpleDateFormat(YMDHMS);
+        return f.format(date);
     }
 
     /**
