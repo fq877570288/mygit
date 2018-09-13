@@ -113,7 +113,6 @@ public class UccCustomersController {
      */
     @ApiOperation(value = "根据条件查询黑名单列表", notes = "根据条件查询黑名单列表")
     @RequestMapping(value = "/findBlackList", method= RequestMethod.POST,produces="application/json;charset=UTF-8")
-    @ResponseBody
     public PageResultBean_New<List<UccCustomers>> findBlackList(@RequestBody UccBlackListCriteria uccBlackListCriteria){
         PageResultBean_New<List<UccCustomers>> pageResultBean = null;
         try{

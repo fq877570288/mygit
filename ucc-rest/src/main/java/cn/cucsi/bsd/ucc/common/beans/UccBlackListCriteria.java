@@ -9,27 +9,19 @@ import io.swagger.annotations.ApiModelProperty;
  * 2018-09-6
  */
 @ApiModel
-public class UccBlackListCriteria extends BasicPageCriteria{
-    @ApiModelProperty(value = "客户Id",required = true)
+public class UccBlackListCriteria extends BasicPageCriteriaForBean{
+    @ApiModelProperty(value = "客户Id",required = false)
     private String custId;
-    @ApiModelProperty(value = "域Id",required = true)
+    @ApiModelProperty(value = "域Id",required = false)
     private String domainId;
-    @ApiModelProperty(value = "客户名称",required = true)
+    @ApiModelProperty(value = "客户名称",required = false)
     private String custName;
-    @ApiModelProperty(value = "开始时间",required = true)
+    @ApiModelProperty(value = "开始时间",required = false)
     private String startTime;
-    @ApiModelProperty(value = "结束时间",required = true)
+    @ApiModelProperty(value = "结束时间",required = false)
     private String endTime;
-    @ApiModelProperty(value = "状态（黑名单为7）",required = true)
+    @ApiModelProperty(value = "状态（黑名单为7）",required = false)
     private Integer type;
-
-    public Integer getType() {
-        return type;
-    }
-
-    public void setType(Integer type) {
-        this.type = type;
-    }
 
     public String getCustId() {
         return custId;
@@ -69,5 +61,13 @@ public class UccBlackListCriteria extends BasicPageCriteria{
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }
