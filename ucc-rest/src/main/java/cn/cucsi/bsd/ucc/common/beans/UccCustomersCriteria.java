@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.common.beans;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -60,19 +61,17 @@ public class UccCustomersCriteria extends BasicCriteria {
     public void setType(Integer type) {
         this.type = type;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getCreatetimeFrome() {
         return createtimeFrome;
     }
-
     public void setCreatetimeFrome(Date createtimeFrome) {
         this.createtimeFrome = createtimeFrome;
     }
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getCreatetimeTo() {
         return createtimeTo;
     }
-
     public void setCreatetimeTo(Date createtimeTo) {
         this.createtimeTo = createtimeTo;
     }

@@ -37,7 +37,7 @@ public class UccCustomersSpecs {
         return new Specification<UccCustomers>() {
             @Override
             public Predicate toPredicate(Root<UccCustomers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.like(root.<String>get("custName"), custName);
+                return criteriaBuilder.like(root.<String>get("custName"), '%'+custName+'%');
             }
         };
     }
