@@ -87,14 +87,6 @@
     where 1=1 AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
   </select>
 
-  <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    SELECT
-      a.*
-    FROM
-      OC_TASK_DETAIL AS a
-    where 1=1 AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
-  </select>
-
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from OC_TASK_DETAIL
     where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
@@ -705,8 +697,8 @@
     WHERE
        1 = 1
     AND a.domain_id = b.domain_id
-    <if test='taskCode == null or taskCode =="" '>
-    AND a.TASK_CODE >= #{taskCode,jdbcType=VARCHAR}
+    <if test="taskCode != null ">
+    AND a.TASK_CODE &gt; #{taskCode,jdbcType=VARCHAR}
     </if>
     AND a.USER_ID = #{userId,jdbcType=VARCHAR}
     <if test='taskCountsFlag == null or taskCountsFlag =="" '>
@@ -728,7 +720,8 @@
     <if test='checkFlag != null and checkFlag == "1" '>
       AND b.cust_name LIKE '%${keyWords}%'
     </if>
-    order by b.cust_name DESC
+    GROUP BY b.cust_name
+    order by a.TASK_CODE DESC
     limit 0,#{pageSize}
   </select>
 

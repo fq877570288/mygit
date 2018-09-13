@@ -22,9 +22,6 @@ public interface TaskDetailMapper {
     //根据taskDetailId连表查询
     TaskDetail selectByPrimaryKey(String taskDetailId);
 
-    //根据taskDetailId查询单表
-    TaskDetail selectByPrimaryKey2(String taskDetailId);
-
     int updateByPrimaryKeySelective(TaskDetail record);
 
     int updateByPrimaryKey(TaskDetail record);

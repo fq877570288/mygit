@@ -278,9 +278,9 @@ public class TaskController {
 	 * 2018-08-30
 	 */
 	@ApiOperation(value="撤回任务", notes="撤回任务")
-	@RequestMapping(value = "/taskBackByTaskDetailIds", method= RequestMethod.POST)
-	public ResultBean_New<TaskTransfer> taskBackByUserId(@RequestBody TaskBackCriteria taskBackCriteria){
-		return taskService.taskBack(taskBackCriteria);
+	@RequestMapping(value = "/taskBackByCriteria", method= RequestMethod.POST)
+	public ResultBean_New<TaskTransfer> taskBackByCriteria(@RequestBody ShowTaskDetailCriteria showTaskDetailCriteria){
+		return taskService.taskBack(showTaskDetailCriteria);
 	}
 
 	/***
