@@ -82,8 +82,8 @@ public class UccUserController  {
 
 
     @ApiOperation(value = "根据userId查询UccUsers", notes = "根据userId查询UccUsers")
-    @RequestMapping(value = "/{userId}", method= RequestMethod.POST)
-    public ResultBean<UccUsers> findOne(@RequestBody String userId){
+    @RequestMapping(value = "/{userId}", method= RequestMethod.GET)
+    public ResultBean<UccUsers> findOne(@PathVariable String userId){
         return new ResultBean<>(this.uccUserService.findOne(userId));
     }
 
