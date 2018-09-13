@@ -38,5 +38,11 @@ public interface UccCustomersService {
      * 2018-09-6
      */
     PageResultBean_New<List<UccCustomers>> findBlackList(UccBlackListCriteria uccBlackListCriteria);
+    /***
+     * 根据条件修改客户信息
+     * add by zss
+     * 2018-09-13
+     */
+    UccCustomers update(UccCustomers uccCustomers);
 }
 

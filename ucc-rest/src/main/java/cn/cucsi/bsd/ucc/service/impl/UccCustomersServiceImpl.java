@@ -90,4 +90,13 @@ public class UccCustomersServiceImpl implements UccCustomersService{
         pageResultBean.setList(list);
         return pageResultBean;
     }
+    /*****
+     * 修改客户信息
+     * add by ZSS
+     * 2018-9-13
+     */
+    public UccCustomers update(UccCustomers uccCustomers){
+        uccCustomersMapper.updateByPrimaryKeySelective(uccCustomers);
+        return uccCustomers;
+    }
 }

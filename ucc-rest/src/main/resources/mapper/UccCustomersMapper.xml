@@ -59,15 +59,8 @@
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria" >
     select
-    a.cust_id as cust_id,
-    a.cust_code as cust_code,
-    a.cust_name as cust_name,
-    b.domain_name as domain_name,
-    a.contacts as contacts,
-    a.phone as phone,
-    a.status as status,
-    a.type as type,
-    a.updated_time as updated_time
+    a.*,
+    b.domain_name as domain_name
     from ucc_customers as a
     LEFT join ucc_domain as b ON a.domain_id = b.domain_id
     where 1=1
@@ -397,136 +390,136 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers" >
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers">
     update ucc_customers
     <set >
-      <if test="address1 != null" >
+      <if test="address1 != null and address1 !=''" >
         address1 = #{address1,jdbcType=INTEGER},
       </if>
-      <if test="address2 != null" >
+      <if test="address2 != null and address2 !=''" >
         address2 = #{address2,jdbcType=INTEGER},
       </if>
-      <if test="address3 != null" >
+      <if test="address3 != null and address3 !=''" >
         address3 = #{address3,jdbcType=INTEGER},
       </if>
-      <if test="address4 != null" >
+      <if test="address4 != null and address4 !=''" >
         address4 = #{address4,jdbcType=VARCHAR},
       </if>
-      <if test="birthday != null" >
+      <if test="birthday != null and birthday !=''" >
         birthday = #{birthday,jdbcType=TIMESTAMP},
       </if>
-      <if test="businesscode != null" >
+      <if test="businesscode != null and businesscode !=''" >
         businesscode = #{businesscode,jdbcType=VARCHAR},
       </if>
-      <if test="changephone1 != null" >
+      <if test="changephone1 != null and changephone1 !=''" >
         changephone1 = #{changephone1,jdbcType=VARCHAR},
       </if>
-      <if test="changephone2 != null" >
+      <if test="changephone2 != null and changephone2 !=''" >
         changephone2 = #{changephone2,jdbcType=VARCHAR},
       </if>
-      <if test="changephone3 != null" >
+      <if test="changephone3 != null and changephone3 !=''" >
         changephone3 = #{changephone3,jdbcType=VARCHAR},
       </if>
-      <if test="companyname != null" >
+      <if test="companyname != null and companyname !=''" >
         companyname = #{companyname,jdbcType=VARCHAR},
       </if>
-      <if test="companynature != null" >
+      <if test="companynature != null and companynature !=''" >
         companynature = #{companynature,jdbcType=INTEGER},
       </if>
-      <if test="contacts != null" >
+      <if test="contacts != null and contacts !=''" >
         contacts = #{contacts,jdbcType=VARCHAR},
       </if>
-      <if test="createdNickName != null" >
+      <if test="createdNickName != null and createdNickName !=''" >
         created_nick_name = #{createdNickName,jdbcType=VARCHAR},
       </if>
       <if test="createdTime != null" >
         created_time = #{createdTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="createdUserId != null" >
+      <if test="createdUserId != null and createdUserId !=''" >
         created_user_id = #{createdUserId,jdbcType=VARCHAR},
       </if>
-      <if test="createdUserName != null" >
+      <if test="createdUserName != null and createdUserName !=''" >
         created_user_name = #{createdUserName,jdbcType=VARCHAR},
       </if>
-      <if test="custCode != null" >
+      <if test="custCode != null and custCode !=''" >
         cust_code = #{custCode,jdbcType=VARCHAR},
       </if>
-      <if test="custName != null" >
+      <if test="custName != null and custName !=''" >
         cust_name = #{custName,jdbcType=VARCHAR},
       </if>
-      <if test="defultPhone != null" >
+      <if test="defultPhone != null and defultPhone !=''" >
         defult_phone = #{defultPhone,jdbcType=VARCHAR},
       </if>
-      <if test="domainId != null" >
+      <if test="domainId != null and domainId !=''" >
         domain_id = #{domainId,jdbcType=VARCHAR},
       </if>
-      <if test="email != null" >
+      <if test="email != null and email !=''" >
         email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="fax != null" >
+      <if test="fax != null and fax !=''" >
         fax = #{fax,jdbcType=VARCHAR},
       </if>
-      <if test="idcard != null" >
+      <if test="idcard != null and idcard !=''" >
         idcard = #{idcard,jdbcType=VARCHAR},
       </if>
-      <if test="industrytype != null" >
+      <if test="industrytype != null and industrytype !=''" >
         industrytype = #{industrytype,jdbcType=INTEGER},
       </if>
-      <if test="installedaddress != null" >
+      <if test="installedaddress != null and installedaddress !=''" >
         installedaddress = #{installedaddress,jdbcType=VARCHAR},
       </if>
-      <if test="memo != null" >
+      <if test="memo != null and memo !=''" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
-      <if test="msgResource != null" >
+      <if test="msgResource != null and msgResource !=''" >
         msg_resource = #{msgResource,jdbcType=INTEGER},
       </if>
-      <if test="phone != null" >
+      <if test="phone != null and phone !=''" >
         phone = #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="phone2 != null" >
+      <if test="phone2 != null and phone2 !=''" >
         phone2 = #{phone2,jdbcType=VARCHAR},
       </if>
-      <if test="phone3 != null" >
+      <if test="phone3 != null and phone3 !=''" >
         phone3 = #{phone3,jdbcType=VARCHAR},
       </if>
-      <if test="ponlogo != null" >
+      <if test="ponlogo != null and ponlogo !=''" >
         ponlogo = #{ponlogo,jdbcType=VARCHAR},
       </if>
-      <if test="productType != null" >
+      <if test="productType != null and productType !=''" >
         product_type = #{productType,jdbcType=VARCHAR},
       </if>
-      <if test="pullBlackReason != null" >
+      <if test="pullBlackReason != null and pullBlackReason !=''" >
         pull_black_reason = #{pullBlackReason,jdbcType=VARCHAR},
       </if>
-      <if test="qq != null" >
+      <if test="qq != null and qq !=''" >
         qq = #{qq,jdbcType=VARCHAR},
       </if>
-      <if test="rate != null" >
+      <if test="rate != null and rate !=''" >
         rate = #{rate,jdbcType=VARCHAR},
       </if>
-      <if test="sex != null" >
+      <if test="sex != null and sex !=''" >
         sex = #{sex,jdbcType=INTEGER},
       </if>
-      <if test="status != null" >
+      <if test="status != null and status !=''" >
         status = #{status,jdbcType=VARCHAR},
       </if>
-      <if test="tariffname != null" >
+      <if test="tariffname != null and tariffname !=''" >
         tariffname = #{tariffname,jdbcType=VARCHAR},
       </if>
-      <if test="type != null" >
+      <if test="type != null and type !=''" >
         type = #{type,jdbcType=INTEGER},
       </if>
-      <if test="updatedNickName != null" >
+      <if test="updatedNickName != null and updatedNickName !=''" >
         updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
       </if>
       <if test="updatedTime != null" >
         updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updatedUserId != null" >
+      <if test="updatedUserId != null and updatedUserId !=''" >
         updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
       </if>
-      <if test="updatedUserName != null" >
+      <if test="updatedUserName != null and updatedUserName !=''" >
         updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
       </if>
     </set>
