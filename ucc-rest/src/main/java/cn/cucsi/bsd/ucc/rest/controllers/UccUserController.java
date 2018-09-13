@@ -1,12 +1,9 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
-import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
-import cn.cucsi.bsd.ucc.common.beans.PbxExtsCriteria;
-import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.PbxExts;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
-import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
 import cn.cucsi.bsd.ucc.service.PbxExtsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import com.fasterxml.jackson.annotation.JacksonAnnotation;

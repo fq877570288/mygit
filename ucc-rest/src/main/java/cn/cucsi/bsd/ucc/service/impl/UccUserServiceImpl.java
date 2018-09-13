@@ -1,6 +1,8 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.data.repo.UccDeptsRepository;
 import cn.cucsi.bsd.ucc.data.repo.UccUserRepository;
@@ -190,7 +192,7 @@ public class UccUserServiceImpl implements UccUserService{
         //初始化赋值
         resultBean.setReturnMsg("操作失败！");
         resultBean.setReturnCode(ResultBean_New.FAIL);
-        if(MyUtils.isBlank(userLoginForAPPCriteria.getUserName())||MyUtils.isBlank(userLoginForAPPCriteria.getPassword())){
+        if(MyUtils.isBlank(userLoginForAPPCriteria.getUserName())|| MyUtils.isBlank(userLoginForAPPCriteria.getPassword())){
             resultBean.setReturnMsg("用户名或密码为空！");
             return resultBean;
         }
