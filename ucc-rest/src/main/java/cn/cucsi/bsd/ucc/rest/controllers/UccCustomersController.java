@@ -25,7 +25,7 @@ public class UccCustomersController {
     @ApiOperation(value="根据查询条件获取客户列表", notes="根据查询条件获取客户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     @ResponseBody
-    public PageResultBean<List<UccCustomers>> findAll(UccCustomersCriteria search) {
+    public PageResultBean<List<UccCustomers>> findAll(@RequestBody UccCustomersCriteria search) {
         try {
             return new PageResultBean(this.uccCustomersService.findAll(search));
         } catch (Exception e) {
@@ -74,7 +74,8 @@ public class UccCustomersController {
 
     @ApiOperation(value = "修改UccCustomers", notes = "修改UccCustomers")
     @RequestMapping(value = "/{custId}",method =  RequestMethod.PUT)
-    public ResultBean<UccCustomers> save(@PathVariable String custId, @RequestBody UccCustomers uccCustomers){
+    @ResponseBody
+    public ResultBean<UccCustomers> save(@PathVariable String custId,@RequestBody UccCustomers uccCustomers){
         try {
             return new ResultBean<>(this.uccCustomersService.save(uccCustomers));
         } catch (Exception e) {
