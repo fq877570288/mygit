@@ -14,9 +14,13 @@ import java.util.Date;
 @Entity
 @Table(name = "ucc_teams", schema = "ucc", catalog = "")
 public class UccTeams {
+    @JsonView(JSONView.Summary.class)
     private String teamId;
+    @JsonView(JSONView.Summary.class)
     private String teamName;
+    @JsonView(JSONView.Summary.class)
     private String teamDesc;
+    @JsonView(JSONView.Summary.class)
     private String domainId;
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)

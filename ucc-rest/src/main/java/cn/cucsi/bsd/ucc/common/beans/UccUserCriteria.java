@@ -17,6 +17,7 @@ public class UccUserCriteria extends BasicCriteria {
     private String email;
     private String nickName;
     private String extNum;
+    private String teamId;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeFrom;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -139,5 +140,13 @@ public class UccUserCriteria extends BasicCriteria {
 
     public void setExtNum(String extNum) {
         this.extNum = extNum;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
     }
 }

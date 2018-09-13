@@ -1,6 +1,8 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
+import cn.cucsi.bsd.ucc.common.JSONView;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -17,7 +19,7 @@ public class TeamUsers {
 
     @JsonIgnore
     private UccUsers uccUser;
-    @JsonIgnore
+    @JsonView(JSONView.Summary.class)
     private UccTeams uccTeam;
 
     @Id
