@@ -10,7 +10,7 @@
     <result column="call_time" property="callTime" jdbcType="INTEGER" />
     <result column="callee_job_number" property="calleeJobNumber" jdbcType="VARCHAR" />
     <result column="caller_id_number" property="callerIdNumber" jdbcType="VARCHAR" />
-    <result column="caller_job_number" property="callerJobNumber" jdbcType="VARCHAR" />
+    <result column="caller_job_number" property="callerJobNumber" jdbcType="VARCHAR" /> 
     <result column="cdr" property="cdr" jdbcType="VARCHAR" />
     <result column="created_nick_name" property="createdNickName" jdbcType="VARCHAR" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
