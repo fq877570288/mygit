@@ -12,6 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by tianyuwei on 2017/10/16.
  */
@@ -46,8 +49,40 @@ public class UccDeptsServiceImpl implements UccDeptsService {
 
     @Override
     public Page<UccDepts> findAllTree(UccDeptsCriteria criteria) {
-        Pageable pageable = new PageRequest(0, 9999);
+        List<UccDepts> listOne = new ArrayList<UccDepts>();
+        Pageable pageable = new PageRequest(0, 999999);
         Sort sort = new Sort(Sort.Direction.ASC, "deptLevel");
-        return uccDeptsRepository.findAll(UccDeptsSpecs.createSpec(criteria), pageable);
+        Page<UccDepts> pages  = this.uccDeptsRepository.findAll(UccDeptsSpecs.createSpec(criteria), pageable);
+        List<UccDepts> list = pages.getContent();
+        if(list!=null&&list.size()!=0) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i) != null && list.get(i).getDeptPid().equals("0")) {//顶级
+                    listOne.add(list.get(i));
+                }
+            }
+            if(listOne.size()!=0){
+                for(int i=0;i<listOne.size();i++){
+                    queryChildren(listOne.get(i),list);
+                }
+            }
+        }
+        return pages;
+    }
+    public void queryChildren(UccDepts uccDepts,List<UccDepts> list){
+        List<UccDepts> Childrens = new ArrayList<UccDepts>();
+        if(list.size()!=0){
+            for(int i=0;i<list.size();i++){
+                if(uccDepts!=null&&uccDepts.getDeptId().equals(list.get(i).getDeptPid())){
+                    Childrens.add(list.get(i));
+                }
+            }
+            if(Childrens.size()!=0){
+                uccDepts.setDepts(Childrens);
+                for(int a = 0;a<Childrens.size();a++){
+                    queryChildren(Childrens.get(a),list);
+                }
+            }
+        }
+
     }
 }
