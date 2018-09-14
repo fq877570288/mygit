@@ -42,7 +42,7 @@ public class TaskController {
 	 * @return
 	 */
 	/*@UserFlag(1503)
-	@RequestMapping(value="/task/ongoingTaskList.html",produces = "text/html;charset=UTF-8")
+	@RequestMapping(value="/taskData/ongoingTaskList.html",produces = "text/html;charset=UTF-8")
 	public String ongoingTaskList(Model model,TaskDetailSearch search, HttpSession session){
 		
 		List<Customer> list;
@@ -63,7 +63,7 @@ public class TaskController {
 		model.addAttribute("js_list", new String[] { "page/taskTypeSelect.js","page/ongoingTask.js"});
 		model.addAttribute("search", search);//分页查询信息
 		
-		return "task/ongoingTaskList.view";
+		return "taskData/ongoingTaskList.view";
 	}*/
 	
 	/***
@@ -76,7 +76,7 @@ public class TaskController {
 	 * @return
 	 */
 	/*//@UserFlag(1503)
-	@RequestMapping("/task/taskOutCall.html")
+	@RequestMapping("/taskData/taskOutCall.html")
 	public String taskOutCall(Model model, HttpSession session,String businessCode) {
 
 		businessCode = AESUtil.decrypt(businessCode, this.aesPwd);
@@ -199,7 +199,7 @@ public class TaskController {
 		model.addAttribute("customfieldNames", customfieldNames);
 		model.addAttribute("customfields", customfields);
 		model.addAttribute("js_list", new String[] { "page/taskTypeSelect.js", "page/taskOutCall.js", "chat/taskOutcall.js"});
-		return "task/taskOutCall.view";
+		return "taskData/taskOutCall.view";
 	}*/
 
 	/***
@@ -212,7 +212,7 @@ public class TaskController {
 	 */
 	/*@UserFlag(1503)
 	@ResponseBody
-	@RequestMapping(value="/task/ongoing/saveDetail.html",produces = "text/html;charset=UTF-8")
+	@RequestMapping(value="/taskData/ongoing/saveDetail.html",produces = "text/html;charset=UTF-8")
 	public String saveDetail(String callinfo, String cdrId, String userId) {
 		
 		ObjectMapper mapper = new ObjectMapper();
@@ -234,7 +234,7 @@ public class TaskController {
 	 */
 	/*@UserFlag(1506)
 	@ResponseBody
-	@RequestMapping(value="/task/ongoing/custmIsBlack.html",produces = "text/html;charset=UTF-8")
+	@RequestMapping(value="/taskData/ongoing/custmIsBlack.html",produces = "text/html;charset=UTF-8")
 	public String custmIsBlack(String businessCode) {
 		
 		ObjectMapper mapper = new ObjectMapper();

@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -27,10 +28,13 @@ public class TaskTransfer {
     private String transferStatus; //流转状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
 
     @JsonIgnore
-    private String roperatePersonId; //任务受理人
+    private String roperatePersonId; //任务受理人ID
+    private String userName; //任务受理人
 
     @JsonIgnore
-    private String roperateDeptId; //任务受理部门
+    private String roperateDeptId; //任务受理部门ID
+
+    private String roperateDept; //任务受理部门
 
     @ApiModelProperty(value = "外呼备注",required = true)
     private String callMemo; //外呼备注
@@ -41,7 +45,6 @@ public class TaskTransfer {
     @JsonIgnore
     private String transfeRoperate; //流转操作  0:创建、1：分派、2：接收、3：回退
 
-    @JsonIgnore
     private Date transferTime; //流转时间
 
     @JsonIgnore
@@ -58,6 +61,12 @@ public class TaskTransfer {
 
     @JsonIgnore
     private String domainId;//租户ID
+
+    private String destinationNumber; //被叫
+    @JsonIgnore
+    private Integer callTime;//接通时长
+    private String taskCode;//任务编码
+    private String callTimeStr;//通话时长（*天*小时*分*秒个格式）
 
     public String getTaskTransferId() {
         return taskTransferId;
@@ -123,6 +132,7 @@ public class TaskTransfer {
         this.transfeRoperate = transfeRoperate == null ? null : transfeRoperate.trim();
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getTransferTime() {
         return transferTime;
     }
@@ -169,5 +179,53 @@ public class TaskTransfer {
 
     public void setDomainId(String domainId) {
         this.domainId = domainId;
+    }
+
+    public String getRoperateDept() {
+        return roperateDept;
+    }
+
+    public void setRoperateDept(String roperateDept) {
+        this.roperateDept = roperateDept;
+    }
+
+    public String getDestinationNumber() {
+        return destinationNumber;
+    }
+
+    public void setDestinationNumber(String destinationNumber) {
+        this.destinationNumber = destinationNumber;
+    }
+
+    public Integer getCallTime() {
+        return callTime;
+    }
+
+    public void setCallTime(Integer callTime) {
+        this.callTime = callTime;
+    }
+
+    public String getTaskCode() {
+        return taskCode;
+    }
+
+    public void setTaskCode(String taskCode) {
+        this.taskCode = taskCode;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCallTimeStr() {
+        return callTimeStr;
+    }
+
+    public void setCallTimeStr(String callTimeStr) {
+        this.callTimeStr = callTimeStr;
     }
 }
