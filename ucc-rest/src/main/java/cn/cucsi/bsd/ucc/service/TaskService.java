@@ -21,7 +21,7 @@ public interface TaskService {
 	 * add by wangxiaoyu
 	 * 2018-08-30
 	 */
-	ResultBean_New<TaskTransfer> taskBack(TaskBackCriteria taskBackCriteria);
+	ResultBean_New<TaskTransfer> taskBack(ShowTaskDetailCriteria showTaskDetailCriteria);
 
 	/***
 	 * 查询客户任务详情
