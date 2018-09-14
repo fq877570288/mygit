@@ -24,7 +24,7 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     @Override
     public Page<UccDepts> findAll(UccDeptsCriteria criteria) {
         Sort sort = new Sort(Sort.Direction.DESC, "deptCreateTime");
-        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
+        Pageable pageable = new PageRequest(0, 999999, sort);
         return uccDeptsRepository.findAll(UccDeptsSpecs.createSpec(criteria), pageable);
     }
 

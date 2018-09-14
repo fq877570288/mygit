@@ -32,10 +32,10 @@ public class UccDeptsController {
     @Autowired
     UccDeptsService uccDeptsService;
 
-    @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
+    @ApiOperation(value="根据查询条件获取部门列表（不分页了查全部）", notes="根据查询条件获取部门列表（不分页了查全部）", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     @ResponseBody
-    public PageResultBean<List<UccDepts>> findAll(UccDeptsCriteria search) {
+    public PageResultBean<List<UccDepts>> findAll(@RequestBody UccDeptsCriteria search) {
         try {
             return new PageResultBean(this.uccDeptsService.findAll(search));
         } catch (Exception e) {
