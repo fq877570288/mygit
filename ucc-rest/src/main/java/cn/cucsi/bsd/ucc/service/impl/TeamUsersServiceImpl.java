@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
+import cn.cucsi.bsd.ucc.common.mapper.TeamUsersMapper;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.data.repo.TeamUsersRepository;
 import cn.cucsi.bsd.ucc.data.repo.UccUserRepository;
@@ -21,6 +22,8 @@ public class TeamUsersServiceImpl implements TeamUsersService{
     private TeamUsersRepository teamUsersRepository;
     @Autowired
     private UccUserRepository uccUserRepository;
+    @Autowired
+    private TeamUsersMapper teamUsersMapper;
 
     @Override
     public Page<UccUsers> findAll(UccUserCriteria criteria) {
@@ -35,7 +38,6 @@ public class TeamUsersServiceImpl implements TeamUsersService{
     }
 
     @Override
-    @Transactional
     public TeamUsers save(TeamUsers teamUsers) {
         return this.teamUsersRepository.save(teamUsers);
     }
@@ -44,6 +46,11 @@ public class TeamUsersServiceImpl implements TeamUsersService{
     public Boolean delete(String userId) {
         this.teamUsersRepository.delete(userId);
         return true;
+    }
+
+    @Override
+    public Integer deleteByPrimaryKey(TeamUsers teamUsers) {
+        return teamUsersMapper.deleteByPrimaryKey(teamUsers);
     }
 
 }

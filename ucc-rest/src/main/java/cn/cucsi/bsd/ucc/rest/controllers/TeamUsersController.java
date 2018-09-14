@@ -63,12 +63,15 @@ public class TeamUsersController {
     @RequestMapping(value = "/{userId}",method = RequestMethod.PUT)
     public ResultBean<Boolean> save(@PathVariable String userId, @RequestBody TeamUsersCriteria teamUsersCriteria){
         String[] teamIds = teamUsersCriteria.getTeamId().split(",");
+        TeamUsers teamUsers = new TeamUsers();
+        teamUsers.setUserId(userId);
+        Integer i = teamUsersService.deleteByPrimaryKey(teamUsers);
         boolean result=false;
-        for (String teamId:teamIds) {
-            TeamUsers teamUsers = new TeamUsers();
-            teamUsers.setUserId(teamUsersCriteria.getUsersId());
-            teamUsers.setTeamId(teamId);
-            result = this.teamUsersService.save(teamUsers)!=null;
+        if(i>0){
+            for (String teamId:teamIds) {
+                teamUsers.setTeamId(teamId);
+                result = this.teamUsersService.save(teamUsers)!=null;
+            }
         }
         return new ResultBean<>(result);
     }
