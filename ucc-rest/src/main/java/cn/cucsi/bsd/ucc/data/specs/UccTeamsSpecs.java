@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.data.specs;
 
 
 import cn.cucsi.bsd.ucc.common.beans.UccTeamsCriteria;
+import cn.cucsi.bsd.ucc.data.domain.TeamUsers;
 import cn.cucsi.bsd.ucc.data.domain.UccTeams;
 import com.google.common.base.Strings;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,7 +25,7 @@ public class UccTeamsSpecs {
         return new Specification<UccTeams>() {
             @Override
             public Predicate toPredicate(Root<UccTeams> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.like(root.<String>get("teamName"), teamName);
+                return criteriaBuilder.like(root.<String>get("teamName"),"%" + teamName + "%");
             }
         };
     }

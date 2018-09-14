@@ -12,7 +12,8 @@ public class JSONView {
     public interface UccUserWithRole extends Summary {}
     public interface UccUserWithDept extends Summary {}
     public interface UccUserWithExt extends Summary {}
-    public interface UccUserWithDeptAndRoleAndExt extends UccUserWithRole,UccUserWithDept,UccUserWithExt  {}
+    public interface UccUserWithTeams extends Summary {}
+    public interface UccUserWithDeptAndRoleAndExt extends UccUserWithRole,UccUserWithDept,UccUserWithExt,UccUserWithTeams  {}
 
     public interface DomainWithUser extends Summary {}
 

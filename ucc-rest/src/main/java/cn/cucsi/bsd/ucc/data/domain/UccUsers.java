@@ -8,8 +8,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ucc_users", schema = "ucc", catalog = "")
@@ -144,6 +146,9 @@ public class UccUsers {
     private Collection<UccDepts> depts;
     @JsonView(JSONView.UccUserWithExt.class)
     private Collection<PbxExts> ext;
+    @JsonView(JSONView.UccUserWithTeams.class)
+    private Collection<UccTeams> teams;
+
 
     @ManyToMany
     @JoinTable(name="user_role",
@@ -174,6 +179,21 @@ public class UccUsers {
 
     public void setDepts(Collection<UccDepts> depts) {
         this.depts = depts;
+    }
+
+    @ManyToMany
+    @JoinTable(name="team_users",
+            joinColumns=
+            @JoinColumn(name="user_id", referencedColumnName="user_id"),
+            inverseJoinColumns=
+            @JoinColumn(name="team_id", referencedColumnName="team_id")
+    )
+    public Collection<UccTeams> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Collection<UccTeams> teams) {
+        this.teams = teams;
     }
 
     @OneToMany
