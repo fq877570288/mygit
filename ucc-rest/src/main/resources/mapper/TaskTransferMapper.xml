@@ -16,6 +16,11 @@
     <result column="OPERATOR_ID" property="operatorId" jdbcType="VARCHAR" />
     <result column="OPERATOR_DEPT" property="operatorDept" jdbcType="VARCHAR" />
     <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
+    <result column="destination_number" property="destinationNumber" jdbcType="VARCHAR" />
+    <result column="call_time" property="callTime" jdbcType="INTEGER" />
+    <result column="TASK_CODE" property="taskCode" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     TASK_TRANSFER_ID, TASK_DETAIL_ID, TRANSFER_STATUS, ROPERATE_PERSON_ID, ROPERATE_DEPT_ID, 
@@ -221,25 +226,29 @@
   <!-- 根据业务编码查询呼出记录 add by wangxiaoyu 2018-08-31-->
   <select id="selectCallNotesByDetailIds" resultMap="BaseResultMap" >
     select
-      t.TASK_TRANSFER_ID TASK_TRANSFER_ID,
-      t.TASK_DETAIL_ID TASK_DETAIL_ID,
-      t.TRANSFER_STATUS TRANSFER_STATUS,
-      t.ROPERATE_PERSON_ID ROPERATE_PERSON_ID,
-      t.ROPERATE_DEPT_ID ROPERATE_DEPT_ID,
-      t.CALL_MEMO CALL_MEMO,
-      t.CALL_RESULT CALL_RESULT,
-      t.TRANSFE_ROPERATE TRANSFE_ROPERATE,
-      t.TRANSFER_TIME TRANSFER_TIME,
-      t.CDR_ID CDR_ID,
-      t.BACK_MEMO BACK_MEMO,
-      t.OPERATOR_ID OPERATOR_ID,
-      t.OPERATOR_DEPT OPERATOR_DEPT,
-      c.destination_number destination_number,
-      c.call_time call_time,
-      d.TASK_CODE TASK_CODE
+      t.TASK_TRANSFER_ID as TASK_TRANSFER_ID,
+      t.TASK_DETAIL_ID as TASK_DETAIL_ID,
+      t.TRANSFER_STATUS as TRANSFER_STATUS,
+      t.ROPERATE_PERSON_ID as ROPERATE_PERSON_ID,
+      t.ROPERATE_DEPT_ID as ROPERATE_DEPT_ID,
+      t.CALL_MEMO as CALL_MEMO,
+      t.CALL_RESULT as CALL_RESULT,
+      t.TRANSFE_ROPERATE as TRANSFE_ROPERATE,
+      t.TRANSFER_TIME as TRANSFER_TIME,
+      t.CDR_ID as CDR_ID,
+      t.BACK_MEMO as BACK_MEMO,
+      t.OPERATOR_ID as OPERATOR_ID,
+      t.OPERATOR_DEPT as OPERATOR_DEPT,
+      c.destination_number as destination_number,
+      c.call_time as call_time,
+      d.TASK_CODE as TASK_CODE,
+      ud.dept_name as roperateDept,
+      uu.user_name as user_name
     from OC_TASK_TRANSFER t
       left join pbx_cdrs c on t.CDR_ID = c.cdr_id
       left join OC_TASK_DETAIL d on t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
+      left join ucc_depts as ud on t.ROPERATE_DEPT_ID =  ud.dept_id
+      left join ucc_users as uu on t.ROPERATE_PERSON_ID = uu.user_id
     where t.TASK_DETAIL_ID in (
     <foreach collection="taskDetailList" item="item" index="index" separator=",">
       #{item.taskDetailId}
