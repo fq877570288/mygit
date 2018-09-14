@@ -8,6 +8,7 @@ import cn.cucsi.bsd.ucc.common.beans.UccDomainCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import cn.cucsi.bsd.ucc.data.domain.UccDomain;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import cn.cucsi.bsd.ucc.data.domain.UpdateUtil;
 import cn.cucsi.bsd.ucc.service.UccDomainService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
@@ -66,6 +67,8 @@ public class UccDomainController {
     @ApiOperation(value = "修改UccDomain", notes = "修改UccDomain")
     @RequestMapping(value = "/{domainId}", method =  RequestMethod.PUT)
     public ResultBean<UccDomain> save(@PathVariable String domainId, @RequestBody UccDomain uccDomain){
+        UccDomain targetDomain = this.uccDomainService.findOne(domainId);
+        UpdateUtil.copyNullProperties(targetDomain,uccDomain);
         uccDomain.setUpdatedTime(new Date());
         return new ResultBean<>(this.uccDomainService.save(uccDomain));
     }
@@ -74,5 +77,13 @@ public class UccDomainController {
     @RequestMapping(value = "/${domainId}/${status}", method = RequestMethod.DELETE)
     public ResultBean<Boolean> updateStatusById(@PathVariable String domainId, @PathVariable String status){
         return new ResultBean<>(this.uccDomainService.updateStatusById(domainId, status));
+    }
+
+    @ApiOperation(value="获取所有租户的基本信息列表", notes="获取所有租户的基本信息列表", httpMethod = "GET")
+    @JsonView(JSONView.DomainWithUser.class)
+    @RequestMapping(value = "/allDoamin", method = RequestMethod.GET)
+    public PageResultBean<List<UccDomain>> allDoamin() {
+        UccDomainCriteria search = new UccDomainCriteria();
+        return new PageResultBean(this.uccDomainService.findAll(search));
     }
 }
