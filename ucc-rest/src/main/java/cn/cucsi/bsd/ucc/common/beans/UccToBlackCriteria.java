@@ -13,7 +13,7 @@ public class UccToBlackCriteria{
 
     @ApiModelProperty(value = "拉黑原因",required = true)
     private String pullBlackReason;
-    @ApiModelProperty(value = "坐席员ID",required = true)
+    @ApiModelProperty(value = "坐席员ID",required = false)
     private String userId;
     @ApiModelProperty(value = "客户ID",required = true)
     private String custId;
