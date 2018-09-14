@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.PbxCdrsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.data.domain.PbxCdrs;
 import cn.cucsi.bsd.ucc.service.PbxCdrsService;
@@ -21,10 +22,10 @@ public class PbxCdrsController {
     @Autowired
     private PbxCdrsService PbxCdrsService;
 
-    @ApiOperation(value="根据查询条件获取通话详单表", notes="根据查询条件获取通话详单表", httpMethod = "GET")
+    @ApiOperation(value="根据查询条件获取通话详单表", notes="根据查询条件获取通话详单表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
-    public PageResultBean<List<PbxCdrs>> findAll(@RequestBody PbxCdrsCriteria PbxCdrsCriteria){
-        return new PageResultBean(this.PbxCdrsService.findAll(PbxCdrsCriteria));
+    public PageResultBean_New<List<PbxCdrs>> findAll(@RequestBody PbxCdrsCriteria pbxCdrsCriteria){
+        return new PageResultBean_New(this.PbxCdrsService.findAll(pbxCdrsCriteria));
     }
     @ApiOperation(value = "根据cdrId查询PbxCdrs", notes = "根据cdrId查询PbxCdrs")
     @RequestMapping(value = "/{cdrId}", method= RequestMethod.GET)

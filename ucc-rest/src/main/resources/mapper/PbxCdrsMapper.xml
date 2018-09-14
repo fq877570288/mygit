@@ -66,4 +66,66 @@
 	  a.first_caller = #{userTel,jdbcType=VARCHAR}
     OR a.destination_number = #{userTel,jdbcType=VARCHAR}
   </select>
+  <select id="selectByPrimary" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.PbxCdrsCriteria">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM
+	  pbx_cdrs 
+    WHERE 1=1
+    <if test="cdrId != null and cdrId != ''" >
+	AND cdr_id = #{cdrId,jdbcType=VARCHAR},
+    </if>
+    <if test="number != null and number != ''" >
+        AND first_caller LIKE '%${number}%' AND first_callee LIKE '%${number}%' 
+    </if>
+    <if test="aftergwId != null and aftergwId != ''" >
+        AND aftergw = #{aftergwId,jdbcType=VARCHAR}
+    </if>
+    <if test="afterivrId != null and afterivrId != ''" >
+        AND afterivr = #{afterivrId,jdbcType=VARCHAR}
+    </if>
+    <if test="afterqueueId != null and afterqueueId != ''" >
+        AND afterqueue = #{afterqueueId,jdbcType=VARCHAR}
+    </if>
+    <if test="hangupCauseEn != null and hangupCauseEn != ''" >
+        AND hangup_cause LIKE '%${hangupCauseEn}%'
+    </if>
+
+    <if test="isRecord1 == '1'" >
+        AND (recordid1 = '' or ISNULL(recordid1))
+    </if>
+    <if test="isRecord1 == '2'" >
+        AND (recordid1 != '' or !ISNULL(recordid1))
+    </if>
+    <if test="isRecord2 == '1'" >
+        AND (recordid2 = '' or ISNULL(recordid2))
+    </if>
+    <if test="isRecord2 == '2'" >
+        AND (recordid2 != '' or !ISNULL(recordid2))
+    </if>
+    <if test="createTimeFrom != null and createTimeFrom != ''"  >
+        AND (Date(created_time) &gt;= Date('${createTimeFrom}')
+    </if>
+    <if test="createTimeTo != null and createTimeTo != ''"  >
+        AND Date(created_time) &lt;= Date('${createTimeTo}')
+    </if>
+    <if test="totalTimeFrom != null and totalTimeFrom != ''"  >
+        AND total_time &gt;= #{totalTimeFrom,jdbcType=INTEGER}
+    </if>
+    <if test="totalTimeTo != null and totalTimeTo != ''"  >
+        AND total_time &lt;= #{totalTimeTo,jdbcType=INTEGER}
+    </if>
+    <if test="callTimeFrom != null and callTimeFrom != ''"  >
+        AND call_time &gt;= #{callTimeFrom,jdbcType=INTEGER}
+    </if>
+    <if test="callTimeTo != null and callTimeTo != ''"  >
+        AND call_time &lt;= #{callTimeTo,jdbcType=INTEGER}
+    </if>
+    <if test="satisfaction != null and satisfaction != ''"  >
+        AND qc = #{satisfaction,jdbcType=INTEGER}
+    </if>
+    <if test="type != null and type != ''"  >
+        AND type = #{type,jdbcType=INTEGER}
+    </if>
+  </select>
 </mapper>

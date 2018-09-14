@@ -34,9 +34,21 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
     private PbxCdrsMapper pbxCdrsMapper;
 
     @Override
-    public Page<PbxCdrs> findAll(PbxCdrsCriteria PbxCdrsCriteria) {
-        Pageable pageable = new PageRequest(PbxCdrsCriteria.getPage(), PbxCdrsCriteria.getSize());
-        return PbxCdrsRepository.findAll(PbxCdrsSpecs.createSpec(PbxCdrsCriteria), pageable);
+    public PageResultBean_New<List<PbxCdrs>> findAll(PbxCdrsCriteria pbxCdrsCriteria) {
+           com.github.pagehelper.Page pageInfo = PageHelper.startPage(pbxCdrsCriteria.getPageNum(), pbxCdrsCriteria.getPageSize());
+
+        List<PbxCdrs> informationList = null;
+        try {
+            informationList = pbxCdrsMapper.selectByPrimary(pbxCdrsCriteria);
+            System.out.println("informationList::::" + informationList.size());
+            PageResultBean_New<List<PbxCdrs>> pageResultBean_new = new PageResultBean_New(pageInfo);
+            pageResultBean_new.setList(informationList);
+            return pageResultBean_new;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("根据条件查询通话记录列表发生异常！");
+            return null;
+        }
     }
 
     @Override
@@ -73,4 +85,5 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
             return null;
         }
     }
+    
 }
