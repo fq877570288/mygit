@@ -335,6 +335,13 @@ public class TaskServiceImpl implements TaskService {
 			List<TaskDetail> taskDetailList = taskDetailMapper.selectDetailByCriteria(showTaskDetailCriteria);
 			if(!MyUtils.isBlank(taskDetailList)){
                 informationList = taskTransferMapper.selectCallNotesByDetailIds(taskDetailList);
+                if(!MyUtils.isBlank(informationList)){
+					for (TaskTransfer taskTransfer:informationList) {
+						Integer datetemp = taskTransfer.getCallTime();
+						String callTimeStr = MyUtils.formatDateTime(Integer.valueOf(datetemp));
+						taskTransfer.setCallTimeStr(callTimeStr);
+					}
+				}
                 PageResultBean_New<List<TaskTransfer>> pageResultBean_new = new PageResultBean_New(pageInfo);
                 pageResultBean_new.setList(informationList);
                 return pageResultBean_new;
