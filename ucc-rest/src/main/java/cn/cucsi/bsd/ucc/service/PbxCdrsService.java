@@ -16,7 +16,7 @@ public interface PbxCdrsService {
     PbxCdrs findOne(String cdrId);
     PbxCdrs save(PbxCdrs PbxCdrs);
     Boolean delete(String cdrId);
-
+    List<PbxCdrs> findAllExcel(PbxCdrsCriteria PbxCdrsCriteria);
     //根据条件查询通话记录列表（移动端查询通话记录） by wangxiaoyu 2018-09-04
     PageResultBean_New<List<PbxCdrs>> showListByTel(PbxCdrsForAPPCriteria pbxCdrsForAPPCriteria);
     
