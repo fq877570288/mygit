@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Collection;
@@ -18,6 +17,10 @@ import java.util.List;
 @Entity
 @Table(name = "ucc_depts", schema = "ucc", catalog = "")
 public class UccDepts {
+
+    @Transient
+    private List<UccDepts> subDepts;
+
     @JsonView(JSONView.Summary.class)
     private String deptId;//部门编码
     @JsonView(JSONView.Summary.class)
@@ -34,10 +37,10 @@ public class UccDepts {
     private String deptDesc;//部门描述
     private String domainId;//域ID
     private String deptAdmin;//部门管理员ID
-//    private String userId;
-//以下六个字段，作为创建和更新 使用，不再使用关联关系
-@JsonView(JSONView.Summary.class)
-private String createdUserId;//创建人ID
+    //    private String userId;
+    //以下六个字段，作为创建和更新 使用，不再使用关联关系
+    @JsonView(JSONView.Summary.class)
+    private String createdUserId;//创建人ID
     @JsonView(JSONView.Summary.class)
     private String createdUserName;//创建人姓名
     @JsonView(JSONView.Summary.class)
@@ -322,5 +325,14 @@ private String createdUserId;//创建人ID
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    @Transient
+    public List<UccDepts> getSubDepts() {
+        return subDepts;
+    }
+
+    public void setSubDepts(List<UccDepts> subDepts) {
+        this.subDepts = subDepts;
     }
 }
