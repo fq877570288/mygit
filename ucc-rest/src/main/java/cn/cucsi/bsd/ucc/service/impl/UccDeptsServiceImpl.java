@@ -68,8 +68,6 @@ public class UccDeptsServiceImpl implements UccDeptsService {
         return pages;
     }
 
-    }
-
     @Override
     @Transactional("txManager")
     public int deleteByPrimaryKey(String deptId) throws Exception {
