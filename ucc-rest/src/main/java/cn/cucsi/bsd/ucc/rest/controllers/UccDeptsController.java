@@ -93,7 +93,7 @@ public class UccDeptsController {
             return new ResultBean<UccDepts>();
         }
     }
-
+    //zss
     @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
     @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
     @ResponseBody
@@ -122,6 +122,7 @@ public class UccDeptsController {
         }
         return new PageResultBean<List<UccDepts>>();
     }
+    //zss
     public void queryChildren(UccDepts uccDepts,List<UccDepts> list){
         List<UccDepts> Childrens = new ArrayList<UccDepts>();
         if(list.size()!=0){
