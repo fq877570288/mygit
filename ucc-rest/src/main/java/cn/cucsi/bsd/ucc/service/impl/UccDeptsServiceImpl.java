@@ -66,7 +66,7 @@ public class UccDeptsServiceImpl implements UccDeptsService {
         Page<UccDepts> pages  = this.uccDeptsRepository.findAll(UccDeptsSpecs.createSpec(criteria), pageable);
 
         return pages;
-    }
+
 
     }
 
