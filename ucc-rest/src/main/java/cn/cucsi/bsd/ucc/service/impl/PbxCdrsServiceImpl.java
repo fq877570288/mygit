@@ -50,7 +50,19 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
             return null;
         }
     }
-
+    @Override
+    public List<PbxCdrs> findAllExcel(PbxCdrsCriteria pbxCdrsCriteria) {
+        com.github.pagehelper.Page pageInfo = PageHelper.startPage(pbxCdrsCriteria.getPageNum(), pbxCdrsCriteria.getPageSize());
+        List<PbxCdrs> informationList = null;
+        try {
+            informationList = pbxCdrsMapper.selectByPrimary(pbxCdrsCriteria);
+            return informationList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("根据条件查询通话记录列表发生异常！");
+            return null;
+        }
+    }
     @Override
     public PbxCdrs findOne(String cdrId) {
         return this.PbxCdrsRepository.findOne(cdrId);
@@ -85,5 +97,6 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
             return null;
         }
     }
+    
     
 }

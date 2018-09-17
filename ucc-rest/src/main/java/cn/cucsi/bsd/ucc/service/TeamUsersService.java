@@ -10,4 +10,5 @@ public interface TeamUsersService {
     UccUsers findOne(String userId);
     TeamUsers save(TeamUsers teamUsers);
     Boolean delete(String userId);
+    Integer deleteByPrimaryKey(TeamUsers teamUsers);
 }

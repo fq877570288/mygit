@@ -10,7 +10,7 @@
     <result column="call_time" property="callTime" jdbcType="INTEGER" />
     <result column="callee_job_number" property="calleeJobNumber" jdbcType="VARCHAR" />
     <result column="caller_id_number" property="callerIdNumber" jdbcType="VARCHAR" />
-    <result column="caller_job_number" property="callerJobNumber" jdbcType="VARCHAR" />
+    <result column="caller_job_number" property="callerJobNumber" jdbcType="VARCHAR" /> 
     <result column="cdr" property="cdr" jdbcType="VARCHAR" />
     <result column="created_nick_name" property="createdNickName" jdbcType="VARCHAR" />
     <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
@@ -103,28 +103,28 @@
     <if test="isRecord2 == '2'" >
         AND (recordid2 != '' or !ISNULL(recordid2))
     </if>
-    <if test="createTimeFrom != null and createTimeFrom != ''"  >
-        AND (Date(created_time) &gt;= Date('${createTimeFrom}')
+    <if test="createTimeFrom != null"  >
+        AND (Date(created_time) &gt;= Date('#{createTimeFrom,jdbcType=TIMESTAMP}')
     </if>
-    <if test="createTimeTo != null and createTimeTo != ''"  >
-        AND Date(created_time) &lt;= Date('${createTimeTo}')
+    <if test="createTimeTo != null"  >
+        AND Date(created_time) &lt;= Date('#{createTimeTo,jdbcType=TIMESTAMP}')
     </if>
-    <if test="totalTimeFrom != null and totalTimeFrom != ''"  >
+    <if test="totalTimeFrom != null"  >
         AND total_time &gt;= #{totalTimeFrom,jdbcType=INTEGER}
     </if>
-    <if test="totalTimeTo != null and totalTimeTo != ''"  >
+    <if test="totalTimeTo != null"  >
         AND total_time &lt;= #{totalTimeTo,jdbcType=INTEGER}
     </if>
-    <if test="callTimeFrom != null and callTimeFrom != ''"  >
+    <if test="callTimeFrom != null"  >
         AND call_time &gt;= #{callTimeFrom,jdbcType=INTEGER}
     </if>
-    <if test="callTimeTo != null and callTimeTo != ''"  >
+    <if test="callTimeTo != null"  >
         AND call_time &lt;= #{callTimeTo,jdbcType=INTEGER}
     </if>
-    <if test="satisfaction != null and satisfaction != ''"  >
+    <if test="satisfaction != null"  >
         AND qc = #{satisfaction,jdbcType=INTEGER}
     </if>
-    <if test="type != null and type != ''"  >
+    <if test="type != null"  >
         AND type = #{type,jdbcType=INTEGER}
     </if>
   </select>
