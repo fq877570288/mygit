@@ -98,14 +98,46 @@ public class UccDeptsController {
     @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
     @ResponseBody
     public ResultBean<List<UccDepts>> findAllTree(UccDeptsCriteria search) {
-        Page<UccDepts> pages = null;
-        List<UccDepts> listOne = new ArrayList<UccDepts>();
         try {
-            return new PageResultBean(this.uccDeptsService.findAllTree(search));
+            ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
+            List<UccDepts> list = bean.getData();
+            List<UccDepts> listOne = new ArrayList<UccDepts>();
+            if(list!=null&&list.size()!=0) {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i) != null && list.get(i).getDeptPid().equals("0")) {//顶级
+                        listOne.add(list.get(i));
+                    }
+                }
+                if(listOne.size()!=0){
+                    for(int i=0;i<listOne.size();i++){
+                        queryChildren(listOne.get(i),list);
+                    }
+                }
+            }
+            bean.setData(listOne);
+            return bean;
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("根据查询条件获取部门列表失败!");
         }
         return new PageResultBean<List<UccDepts>>();
+    }
+    public void queryChildren(UccDepts uccDepts,List<UccDepts> list){
+        List<UccDepts> Childrens = new ArrayList<UccDepts>();
+        if(list.size()!=0){
+            for(int i=0;i<list.size();i++){
+                if(uccDepts!=null&&uccDepts.getDeptId().equals(list.get(i).getDeptPid())){
+                    Childrens.add(list.get(i));
+                    System.out.println(uccDepts.getDeptId()+" "+list.get(i).getDeptPid()+uccDepts.getDeptId().equals(list.get(i).getDeptPid()));
+                }
+            }
+            if(Childrens.size()!=0){
+                uccDepts.setDepts(Childrens);
+                for(int a = 0;a<Childrens.size();a++){
+                    queryChildren(Childrens.get(a),list);
+                }
+            }
+        }
+
     }
 }
