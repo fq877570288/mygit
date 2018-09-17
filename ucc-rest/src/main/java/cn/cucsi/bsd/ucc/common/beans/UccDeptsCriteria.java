@@ -1,7 +1,6 @@
 package cn.cucsi.bsd.ucc.common.beans;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.util.Date;
 
 /**
@@ -11,14 +10,20 @@ import io.swagger.annotations.ApiModel;
 
 @ApiModel
 public class UccDeptsCriteria extends BasicCriteria {
-    String createdBy;
-    String deptName;
-    String deptPid;
-    String domainId;
+
+    private String createdBy;
+    private String deptName;
+    private String deptPid;
+    private String domainId;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    Date deptCreateTimeFrom;
+    private Date deptCreateTimeFrom;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    Date deptCreateTimeTo;
+    private Date deptCreateTimeTo;
+
+    private Integer deptLevel;//部门级别
+    private String deptIdAndChildIds; //部门ID以及自部门ID字符串，逗号分隔;
 
     public String getCreatedBy() {
         return createdBy;
@@ -66,5 +71,21 @@ public class UccDeptsCriteria extends BasicCriteria {
 
     public void setDeptCreateTimeTo(Date deptCreateTimeTo) {
         this.deptCreateTimeTo = deptCreateTimeTo;
+    }
+
+    public Integer getDeptLevel() {
+        return deptLevel;
+    }
+
+    public void setDeptLevel(Integer deptLevel) {
+        this.deptLevel = deptLevel;
+    }
+
+    public String getDeptIdAndChildIds() {
+        return deptIdAndChildIds;
+    }
+
+    public void setDeptIdAndChildIds(String deptIdAndChildIds) {
+        this.deptIdAndChildIds = deptIdAndChildIds;
     }
 }
