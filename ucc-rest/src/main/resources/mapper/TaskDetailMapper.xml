@@ -783,4 +783,12 @@
     AND d.OPERATOR_ID = #{userId,jdbcType=VARCHAR}
   </select>
 
+  <!-- 按批次删除数据 -->
+  <delete id="deleteBYBatch" parameterType="java.util.Map">
+    delete from
+      OC_TASK_DETAIL
+    where IMPORT_BATCH = #{oldTaskBatch} and TASK_STATUS not
+    in ('4')
+  </delete>
+
 </mapper>
