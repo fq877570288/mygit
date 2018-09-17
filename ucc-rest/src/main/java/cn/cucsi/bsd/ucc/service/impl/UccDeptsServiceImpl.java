@@ -63,10 +63,10 @@ public class UccDeptsServiceImpl implements UccDeptsService {
 
         Pageable pageable = new PageRequest(0, 999999);
         Sort sort = new Sort(Sort.Direction.ASC, "deptLevel");
-        Page<UccDepts> pages  = this.uccDeptsRepository.findAll(UccDeptsSpecs.createSpec(criteria), pageable);
+        Page<UccDepts> pages = this.uccDeptsRepository.findAll(UccDeptsSpecs.createSpec(criteria), pageable);
 
         return pages;
-
+    }
 
     @Override
     @Transactional("txManager")
