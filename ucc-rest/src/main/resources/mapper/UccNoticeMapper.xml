@@ -57,4 +57,29 @@
       and u.notice_type =  #{noticeType,jdbcType=VARCHAR}
       and u.user_id = #{userId,jdbcType=VARCHAR}
   </select>
+
+  <select id="findAll" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccNoticeCriteria" >
+    SELECT
+    *
+    FROM
+        ucc_notice 
+    WHERE 1=1
+  
+    <if test="noticeTitle != null and noticeTitle != ''" >
+        AND notice_title LIKE '%${noticeTitle}%'
+    </if>
+    <if test="noticeType != null and noticeType != ''" >
+        AND notice_type = #{noticeType,jdbcType=VARCHAR}
+    </if>
+    <if test="noticeTimeFrom != null"  >
+        AND Date(start_date) &gt;= #{noticeTimeFrom,jdbcType=DATE}
+    </if>
+    <if test="noticeTimeTo != null"  >
+        AND Date(start_date) &lt;= #{noticeTimeTo,jdbcType=DATE}
+    </if>   
+    <if test="userId != null and userId != ''"  >
+        AND user_id= #{userId,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
 </mapper>

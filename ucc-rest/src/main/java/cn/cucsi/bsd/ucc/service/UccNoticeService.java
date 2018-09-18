@@ -10,7 +10,7 @@ import java.util.List;
  * Created by tianyuwei on 2017/10/16.
  */
 public interface UccNoticeService {
-    Page<UccNotice> findAll(UccNoticeCriteria criteria);
+    PageResultBean_New<List<UccNotice>>  findAll(UccNoticeCriteria criteria);
     UccNotice findOne(String noticeId);
     UccNotice save(UccNotice uccNotice);
     Boolean delete(String noticeId);
