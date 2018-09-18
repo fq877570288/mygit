@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.ucc.common.mapper.UserCustomFieldMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.ucc.data.domain.UserCustomField" >
+    <id column="USER_CUSTOMFIELDS_ID" property="userCustomfieldsId" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="DATA_CUSTOMFIELDS_ID" property="dataCustomfieldsId" jdbcType="VARCHAR" />
+    <result column="IE_FLAG" property="ieFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    USER_CUSTOMFIELDS_ID, USER_ID, DATA_CUSTOMFIELDS_ID, IE_FLAG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from OC_USER_CUSTOMFIELDS
+    where USER_CUSTOMFIELDS_ID = #{userCustomfieldsId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OC_USER_CUSTOMFIELDS
+    where USER_CUSTOMFIELDS_ID = #{userCustomfieldsId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.UserCustomField" >
+    <selectKey resultType="java.lang.String" keyProperty="userCustomfieldsId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into OC_USER_CUSTOMFIELDS (USER_ID, DATA_CUSTOMFIELDS_ID, IE_FLAG
+      )
+    values (#{userId,jdbcType=VARCHAR}, #{dataCustomfieldsId,jdbcType=VARCHAR}, #{ieFlag,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UserCustomField" >
+    <selectKey resultType="java.lang.String" keyProperty="userCustomfieldsId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into OC_USER_CUSTOMFIELDS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="dataCustomfieldsId != null" >
+        DATA_CUSTOMFIELDS_ID,
+      </if>
+      <if test="ieFlag != null" >
+        IE_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCustomfieldsId != null" >
+        #{dataCustomfieldsId,jdbcType=VARCHAR},
+      </if>
+      <if test="ieFlag != null" >
+        #{ieFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UserCustomField" >
+    update OC_USER_CUSTOMFIELDS
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="dataCustomfieldsId != null" >
+        DATA_CUSTOMFIELDS_ID = #{dataCustomfieldsId,jdbcType=VARCHAR},
+      </if>
+      <if test="ieFlag != null" >
+        IE_FLAG = #{ieFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where USER_CUSTOMFIELDS_ID = #{userCustomfieldsId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.UserCustomField" >
+    update OC_USER_CUSTOMFIELDS
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      DATA_CUSTOMFIELDS_ID = #{dataCustomfieldsId,jdbcType=VARCHAR},
+      IE_FLAG = #{ieFlag,jdbcType=VARCHAR}
+    where USER_CUSTOMFIELDS_ID = #{userCustomfieldsId,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <!-- Add by bli  begin -->
+    <!-- 批量插入 -->
+  	<insert id="insertGroup" parameterType="map">
+	  insert into OC_USER_CUSTOMFIELDS (USER_CUSTOMFIELDS_ID, USER_ID, DATA_CUSTOMFIELDS_ID, IE_FLAG)
+	   values 
+		<foreach collection="list" item="record" index="index" separator=",">
+		(#{record.userCustomfieldsId,jdbcType=VARCHAR}, #{record.userId,jdbcType=VARCHAR}, #{record.dataCustomfieldsId,jdbcType=VARCHAR}, #{record.ieFlag,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	
+	<!-- 删除导入BY用户ID -->
+	<delete id="deleteImportByUserID" parameterType="java.lang.String" >
+       delete from OC_USER_CUSTOMFIELDS where USER_ID = #{userId,jdbcType=VARCHAR} and IE_FLAG = '0'
+    </delete>
+    
+    <!-- 删除导出BY用户ID -->
+	<delete id="deleteExportByUserID" parameterType="java.lang.String" >
+       delete from OC_USER_CUSTOMFIELDS where USER_ID = #{userId,jdbcType=VARCHAR} and IE_FLAG = '1'
+    </delete>
+    
+    <!-- 查询导入BY用户ID -->
+    <select id="selectImportByUserID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+      select 
+      <include refid="Base_Column_List" />
+        from OC_USER_CUSTOMFIELDS
+        where USER_ID = #{userId,jdbcType=VARCHAR} and IE_FLAG = '0'
+    </select>
+    
+
+    <!-- 查询导出BY用户ID -->
+    <select id="selectExportByUserID" resultMap="BaseResultMap" parameterType="java.lang.String" >
+      select 
+      <include refid="Base_Column_List" />
+        from OC_USER_CUSTOMFIELDS
+        where USER_ID = #{userId,jdbcType=VARCHAR} and IE_FLAG = '1'
+    </select>
+  
+  
+	<!-- Add by bli  end -->
+</mapper>
