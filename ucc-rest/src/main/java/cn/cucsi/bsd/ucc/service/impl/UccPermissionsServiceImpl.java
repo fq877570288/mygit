@@ -30,6 +30,14 @@ public class UccPermissionsServiceImpl implements UccPermissionsService {
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccPermissionsRepository.findAll(UccPermissionsSpecs.createSpec(criteria),pageable);
     }
+
+    @Override
+    public Page<UccPermissions> findAllTree(UccPermissionsCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.ASC, "permissionId");
+        Pageable pageable = new PageRequest(0, 999999, sort);
+        return uccPermissionsRepository.findAll(UccPermissionsSpecs.createSpec(criteria),pageable);
+    }
+
     @Override
     public List<UccPermissions> findAll(UccPermissionsCriteria criteria) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
