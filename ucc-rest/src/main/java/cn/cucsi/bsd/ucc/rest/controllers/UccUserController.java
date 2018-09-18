@@ -4,6 +4,7 @@ import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.PbxExts;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import cn.cucsi.bsd.ucc.data.domain.UpdateUtil;
 import cn.cucsi.bsd.ucc.service.PbxExtsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import com.fasterxml.jackson.annotation.JacksonAnnotation;
@@ -102,6 +103,7 @@ public class UccUserController  {
     @ApiOperation(value = "创建UccUsers", notes = "创建UccUsers")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers) {
+        uccUsers.setCreatedTime(new Date());
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
     }
@@ -110,6 +112,9 @@ public class UccUserController  {
     //@ApiImplicitParam(name = "uccUsers", value = "用户entity", required = true, dataType = "UccUsers")
     @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
     public ResultBean<Boolean> save(@PathVariable String userId,@RequestBody UccUsers uccUsers){
+        UccUsers targetUser = this.uccUserService.findOne(uccUsers.getUserId());
+        UpdateUtil.copyNullProperties(targetUser,uccUsers);
+        uccUsers.setUpdatedTime(new Date());
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
     }
