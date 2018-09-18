@@ -1,23 +1,41 @@
 package cn.cucsi.bsd.ucc.rest.controllers.taskData;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import cn.cucsi.bsd.ucc.common.beans.AutoSearchTaskCriteria;
+import cn.cucsi.bsd.ucc.common.beans.CustomFieldsSaveCriteria;
 import cn.cucsi.bsd.ucc.common.beans.DataImportCriteria;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
+import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.DataCustomfield;
 import cn.cucsi.bsd.ucc.data.domain.DataImport;
+import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
+import cn.cucsi.bsd.ucc.data.domain.TaskType;
 import cn.cucsi.bsd.ucc.service.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jxl.read.biff.BiffException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import javax.servlet.http.HttpSession;
 
 /****
  * 数据导入Controller
@@ -28,6 +46,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/taskDataControl")
 public class DataImportController {
+
 	private static Logger logger = Logger.getLogger(DataImportController.class);
 	@Autowired
 	private DataImportService dataImportService;
@@ -92,7 +111,7 @@ public class DataImportController {
 	 * 2018-09-11
 	 */
 	@ApiOperation(value="数据导入列表", notes="数据导入列表")
-	@RequestMapping(value = "/dataImportList", method= RequestMethod.POST)
+	@RequestMapping(value = "/dataImportList", method= RequestMethod.POST,produces="application/json;charset=UTF-8")
 	public Map<String,Object> dataImportList(@RequestBody DataImportCriteria dataImportCriteria){
 
 		Map<String,Object> dataImportMap = new HashMap<String,Object>();
@@ -208,27 +227,26 @@ public class DataImportController {
 
 	/****
 	 * 搜索可删除批次-补全
-	 * add by wangxiaoyu 2016-08-09
-	 *//*
-	@RequestMapping(value = "/data/autoSearchDeleteBatch.html")
-	public void autoSearchDeleteBatch(String word, HttpServletResponse response, HttpSession session) {
+	 * add by wangxiaoyu
+	 * 2018-09-11
+	 */
+	@ApiOperation(value="搜索可删除批次-补全", notes="搜索可删除批次-补全")
+	@RequestMapping(value = "/autoSearchDeleteBatch", method= RequestMethod.POST,produces="application/json;charset=UTF-8")
+	public String autoSearchDeleteBatch(@RequestBody AutoSearchTaskCriteria autoSearchTaskCriteria) {
 		
 		List<String> strList = new ArrayList<String>();
 		String xmlStr = "";
+		String userId = autoSearchTaskCriteria.getUserId()==null?"":autoSearchTaskCriteria.getUserId();
+		String word = autoSearchTaskCriteria.getWord()==null?"":autoSearchTaskCriteria.getWord();
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("userId", Auth.getLoginUser(session).getId());
+		map.put("userId", userId);
 		map.put("batchFlag", ImportBatch.BATCHFLAGN); // 未生产任务数据
-		
 		try {
-			
-			response.setCharacterEncoding("utf-8");
-			
 			if (word != ""){
 				map.put("word", word);
 			}
 			strList = createTaskService.autoSearchTaskBatch(map);
-			
 			xmlStr = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + "<words>";
 			if (strList != null && strList.size() > 0) {
 				for (int i = 0; i < strList.size(); i++) {
@@ -236,26 +254,21 @@ public class DataImportController {
 				}
 			}
 			xmlStr += "</words>";
-			
-			response.setContentType("charset=utf-8");
-			response.setCharacterEncoding("utf-8");
-			PrintWriter out = response.getWriter();
-			out.print(xmlStr);
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+			return "";
 		}
-	}*/
-    //public Map<String,Object> dataImportList(@RequestBody DataImportCriteria dataImportCriteria){
+		return xmlStr;
+	}
 	/***
 	 * 按批次删除数据
 	 * add by wangxiaoyu
      * 2018-09-13
 	 */
 	@ApiOperation(value="按批次删除数据", notes="按批次删除数据")
-	@RequestMapping(value="/deleteByBatch",method= RequestMethod.POST)
-	public Map<String,Object> deleteByBatch(String taskBatchCode){
+	@RequestMapping(value="/deleteByBatch/{taskBatchCode}",method= RequestMethod.DELETE,produces="application/json;charset=UTF-8")
+	public Map<String,Object> deleteByBatch(@PathVariable String taskBatchCode){
 
         Map<String,Object> deleteByBatchMap = new HashMap<String,Object>();
 		//model.addAttribute("infomsg", "删除失败!");
@@ -272,6 +285,7 @@ public class DataImportController {
 			} catch (Exception e) {
 				e.printStackTrace();
     			logger.error(e.getMessage(), e);
+				System.out.println("按批次删除数据发生异常！");
 			}
 		}else {
 			//model.addAttribute("infomsg", "请选择要删除的数据批次!");
@@ -282,689 +296,700 @@ public class DataImportController {
 
 	/***
 	 * 自定义显示字段
-	 * @param customfieldNames
-	 * @param userId
-	 * @return
-	 *//*
-	@UserFlag(1400)
-	@ResponseBody
-	@RequestMapping(value="/data/cusfsSave.html",produces = "text/html;charset=UTF-8")
-	public String customfieldsSave(String customfieldNames, String userId) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		
-		String json = null;
-		
-		String message = "保存失败！";
-		
+	 */
+	@ApiOperation(value="自定义显示字段", notes="自定义显示字段")
+	@RequestMapping(value="/cusfsSave",method= RequestMethod.POST,produces="application/json;charset=UTF-8")
+	public Map<String,Object> customfieldsSave(@RequestBody CustomFieldsSaveCriteria customFieldsSaveCriteria){
+
+		String customfieldNames = customFieldsSaveCriteria.getCustomfieldNames()==null?"":customFieldsSaveCriteria.getCustomfieldNames();
+		String userId = customFieldsSaveCriteria.getUserId()==null?"":customFieldsSaveCriteria.getUserId();
+		Map<String,Object> customFieldsSaveMap = new HashMap<String,Object>();
 		try {
 			userCustomFieldService.saveUserCustomField(customfieldNames, userId);
-			
 			List<DataCustomfield> dataCustomfieldList = dataCustomfieldService.selectImportByUserID(userId);
-			
-			httpSession.setAttribute("DataCustomfields", dataCustomfieldList);
-			
-			message = "保存成功！";
-			
-			json = mapper.writeValueAsString(message);
-			
+			customFieldsSaveMap.put("DataCustomfields", dataCustomfieldList);
+			customFieldsSaveMap.put("message","保存成功！");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+			customFieldsSaveMap.put("message","自定义显示字段操作失败！");
 		}
-		
-		return json;
+		return customFieldsSaveMap;
 	}
 
-	*//***
+	/***
 	 * 导入
-	 * @param model
-	 * @param file
-	 * @param session
-	 * @return
-	 *//*
-	@UserFlag(1400)
-	@RequestMapping(value = "/data/upload.html", method = RequestMethod.POST ,produces = "text/html;charset=UTF-8")
-	public String uploadFile(Model model, @RequestParam("file") CommonsMultipartFile file, HttpSession session) {
-		model.addAttribute("infomsg", "上传失败!");
-		model.addAttribute("infourl", "/data/dataImportList.html");
+	 */
+	@ApiOperation(value="导入", notes="导入")
+	@RequestMapping(value="/upload",method= RequestMethod.POST,produces="application/json;charset=UTF-8")
+	public Map<String,Object> uploadFile(@RequestParam("file") CommonsMultipartFile file,HttpSession httpSession) {
+
+		Map<String,Object> customFieldsSaveMap = new HashMap<String,Object>();
+		//model.addAttribute("infomsg", "上传失败!");
+		//model.addAttribute("infourl", "/data/dataImportList.html");
+		customFieldsSaveMap.put("infomsg", "上传失败!");
+		customFieldsSaveMap.put("infourl", "/dataImportList");
 		if (file != null && file.getSize() > 0) {
 			try {
-				
 				List<DataImport> dataImportList = null;
+				Map<String,Object> dataImportMap = null;
 				// 获取文件后缀 
 				String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 				
 				if(DataImport.XLS.equals(suffix)){
-					dataImportList = readExcelXls(file.getInputStream(), session, model);
+					dataImportMap = readExcelXls(file.getInputStream(), httpSession);
+					if(!MyUtils.isBlank(dataImportMap)){
+						if(dataImportMap.get("returnCode").equals("SUCCESS")){
+							if(!MyUtils.isBlank(dataImportMap.get("list"))){
+								dataImportList = (List<DataImport>)dataImportMap.get("list");
+							}
+						}
+					}
 				}else if(DataImport.XLSX.equals(suffix)){
-					dataImportList = readExcelXlsx(file.getInputStream(), session, model);
+					dataImportMap = readExcelXlsx(file.getInputStream(), httpSession);
+					if(!MyUtils.isBlank(dataImportMap)){
+						if(dataImportMap.get("returnCode").equals("SUCCESS")){
+							if(!MyUtils.isBlank(dataImportMap.get("list"))){
+								dataImportList = (List<DataImport>)dataImportMap.get("list");
+							}
+						}
+					}
 				}
-				
 				// 数据校验
 				DataImport dataImport = null;
-				
 				String taskType = "";
+				String deptIdAndChildIds = (String)httpSession.getAttribute("DeptIdAndChildIds");
 
-				String deptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
 				if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
-					model.addAttribute("infomsg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
-					return "info.view";
+					//model.addAttribute("infomsg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
+					customFieldsSaveMap.put("infomsg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
+					return customFieldsSaveMap;
 				}
-				
 				for(int i=0; i<dataImportList.size(); i++){
-					
 					taskType = dataImportList.get(0).getTaskTypeName();
-					
 					dataImport = dataImportList.get(i);
-					
 					int rownumber = i+3;
-
 					if(dataImport.getTaskTypeName() == null || "".equals(dataImport.getTaskTypeName())){
-						model.addAttribute("infomsg", "第"+rownumber+"行：任务类型不可空!");
-						return "info.view";
+						//model.addAttribute("infomsg", "第"+rownumber+"行：任务类型不可空!");
+						//return "info.view";
+						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：任务类型不可空!");
+						return customFieldsSaveMap;
 					}else if(!taskType.equals(dataImport.getTaskTypeName())){
-						model.addAttribute("infomsg", "导入任务类型请保持一致!");
-						return "info.view";
+						//model.addAttribute("infomsg", "导入任务类型请保持一致!");
+						//return "info.view";
+						customFieldsSaveMap.put("infomsg", "导入任务类型请保持一致!");
+						return customFieldsSaveMap;
 					}
 					if(dataImport.getDeptMeshName() == null || "".equals(dataImport.getDeptMeshName())){
-						model.addAttribute("infomsg", "第"+rownumber+"行：名称不可空!");
-						return "info.view";
+						//model.addAttribute("infomsg", "第"+rownumber+"行：名称不可空!");
+						//return "info.view";
+						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：名称不可空!");
+						return customFieldsSaveMap;
 					}
 					if(dataImport.getDeptAreaName() == null || "".equals(dataImport.getDeptAreaName())){
-						model.addAttribute("infomsg", "第"+rownumber+"行：包区名称不可空!");
-						return "info.view";
+						//model.addAttribute("infomsg", "第"+rownumber+"行：包区名称不可空!");
+						//return "info.view";
+						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：包区名称不可空!");
+						return customFieldsSaveMap;
 					}
 					if(dataImport.getBusinessCode() == null || "".equals(dataImport.getBusinessCode())){
-						model.addAttribute("infomsg", "第"+rownumber+"行：业务号码不可空!");
-						return "info.view";
+						//model.addAttribute("infomsg", "第"+rownumber+"行：业务号码不可空!");
+						//return "info.view";
+						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：业务号码不可空!");
+						return customFieldsSaveMap;
 					}
-
 				}
-				
 				if(!checkTaskType(taskType)){
-					model.addAttribute("infomsg", "任务类型不存在，请检查您的任务类型!");
-					return "info.view";
+					//model.addAttribute("infomsg", "任务类型不存在，请检查您的任务类型!");
+					//return "info.view";
+					customFieldsSaveMap.put("infomsg", "任务类型不存在，请检查您的任务类型!");
+					return customFieldsSaveMap;
 				}
-				
 				dataImportService.insertGroup(dataImportList);
-				model.addAttribute("infourl", "/data/dataImportList.html");
-				model.addAttribute("infomsg", "本次成功导入数据："+dataImportList.size()+"条!");
+				//model.addAttribute("infourl", "/data/dataImportList.html");
+				//model.addAttribute("infomsg", "本次成功导入数据："+dataImportList.size()+"条!");
+				customFieldsSaveMap.put("infourl", "/dataImportList");
+				customFieldsSaveMap.put("infomsg", "本次成功导入数据："+dataImportList.size()+"条!");
 			} catch (Exception e) {
 				e.printStackTrace();
     			logger.error(e.getMessage(), e);
 			}
 		}
-		return "info.view";
+		return customFieldsSaveMap;
 	}
 	
-	
-	*//***
+	/***
 	 * 校验任务类型
-	 * 
-	 * add by wangxiaoyu 2016-08-08
-	 * @param taskTypeName
-	 * @return
-	 *//*
+	 * add by wangxiaoyu
+	 */
 	private boolean checkTaskType(String taskTypeName) throws Exception{
-		
 		TaskType taskType = businessService.selectByNameInCache(taskTypeName);
-		
 		if(taskType != null && taskType.getTaskTypeId() != null && !"".equals(taskType.getTaskTypeId())){
 			return true;
 		}
-		
 		return false;
 	}
 
+	/****
+	 * 读取Excel.xls内容 Map<String,List<DataImport>>
+	 * add by wangxiaoyu
+	 * 2018-09-18
+	 */
+	public static Map<String,Object> readExcelXls(InputStream stream, HttpSession session) throws BiffException, IOException {
 
+		Map<String,Object> readExcelXlsMap = new HashMap<String,Object>();
+		readExcelXlsMap.put("returnCode","FAIL");
+		readExcelXlsMap.put("infomsg","操作失败！");
+		List<DataImport> list = null;
+		try {
+			// 创建一个list 用来存储读取的内容
+			list = new ArrayList<DataImport>();
+			// 数据导入实体类
+			DataImport dataImport = null;
+			// key：字段名  value：列编码
+			HashMap<String, Integer> importMap = new HashMap<String, Integer>();
 
-	*//****
-	 * 读取Excel.xls内容
-	 * 
-	 * add by wangxiaoyu 2016-07-15
-	 * @param stream
-	 * @param session
-	 * @return
-	 * @throws BiffException
-	 * @throws IOException
-	 *//*
-	public static List<DataImport> readExcelXls(InputStream stream, HttpSession session, Model model) throws BiffException, IOException {
-		// 创建一个list 用来存储读取的内容
-		List<DataImport> list = new ArrayList<DataImport>();
-		// 数据导入实体类
-		DataImport dataImport = null;
-		// key：字段名  value：列编码
-		HashMap<String, Integer> importMap = new HashMap<String, Integer>();
-		
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		
-		Date date = new Date();
-		
-		String TIME = new String(df.format(date));
-		
-		String userID = Auth.getLoginUser(session).getId().toString();
-		// 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
-		String eventId = TIME+userID+createRandomCode(10);
-		// 主键
-		UUIDGenerator generator = new UUIDGenerator();
-		//导入时间
-		Timestamp importTime = new Timestamp(System.currentTimeMillis());
-		
-		HSSFWorkbook hwb=new HSSFWorkbook(stream);
-		// 第一个标签
-		HSSFSheet sheet=hwb.getSheetAt(0);
-		// 总行数
-		int rowcount = sheet.getLastRowNum();
-		// 总列数
-		int cellcount = sheet.getRow(0).getPhysicalNumberOfCells();
-		// 获得表头对应实体类字段名
-		for(int i=0; i<cellcount; i++){
-			// 第一行  表头
-			HSSFRow row = sheet.getRow(0);
-			String cell = row.getCell(i).toString();
-			if(!StringUtils.isNumeric(cell)){
-				model.addAttribute("infomsg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
-				throw new NumberFormatException("已经处理的数字格式化异常！！内容为： "+"第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
-			}
-			Integer cellCode = Integer.parseInt(cell.trim());
-			String cellName = getCellName(cellCode);
-			importMap.put(cellName, i);
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date date = new Date();
+			String TIME = new String(df.format(date));
+
+			//String userID = Auth.getLoginUser(session).getId().toString();
+			String userID = (String)session.getAttribute("userID");
+			String eventId = "";
+			if(!MyUtils.isBlank(userID)){
+                // 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
+                eventId = TIME+userID+createRandomCode(10);
+            }else{
+                System.out.println("读取Excel.xls内容,session获取userID为空！");
+				readExcelXlsMap.put("infomsg","读取Excel.xls内容,session获取userID为空！");
+                return readExcelXlsMap;
+            }
+			// 主键
+			UUIDGenerator generator = new UUIDGenerator();
+			//导入时间
+			Timestamp importTime = new Timestamp(System.currentTimeMillis());
+
+			HSSFWorkbook hwb=new HSSFWorkbook(stream);
+			// 第一个标签
+			HSSFSheet sheet=hwb.getSheetAt(0);
+			// 总行数
+			int rowcount = sheet.getLastRowNum();
+			// 总列数
+			int cellcount = sheet.getRow(0).getPhysicalNumberOfCells();
+			// 获得表头对应实体类字段名
+			for(int i=0; i<cellcount; i++){
+                // 第一行  表头
+                HSSFRow row = sheet.getRow(0);
+                String cell = row.getCell(i).toString();
+                if(!StringUtils.isNumeric(cell)){
+					readExcelXlsMap.put("infomsg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
+					return readExcelXlsMap;
+                    //throw new NumberFormatException("已经处理的数字格式化异常！！内容为： "+"第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
+                }
+                Integer cellCode = Integer.parseInt(cell.trim());
+                String cellName = getCellName(cellCode);
+                importMap.put(cellName, i);
+            }
+			// 获取列编码
+			getColumnCode(importMap);
+			// 初始化单元格
+			HSSFCell businessCode = null;
+			HSSFCell taskTypeName = null;
+			HSSFCell deptMeshName = null;
+			HSSFCell deptAreaName = null;
+			HSSFCell productType = null;
+			HSSFCell phoneNumber3 = null;
+			HSSFCell velocity = null;
+			HSSFCell customfields1 = null;
+			HSSFCell customfields2 = null;
+			HSSFCell customfields3 = null;
+			HSSFCell customfields4 = null;
+			HSSFCell customfields5 = null;
+			HSSFCell customfields6 = null;
+			HSSFCell customfields7 = null;
+			HSSFCell customfields8 = null;
+			HSSFCell customfields9 = null;
+			HSSFCell customfields10 = null;
+			HSSFCell customfields11 = null;
+			HSSFCell customfields12 = null;
+			HSSFCell customfields13 = null;
+			HSSFCell customfields14 = null;
+			HSSFCell customfields15 = null;
+			HSSFCell responsible = null;
+			HSSFCell netStop = null;
+			HSSFCell packageName = null;
+			HSSFCell contractName = null;
+			HSSFCell contractStartTime = null;
+			HSSFCell contractEndTime = null;
+			HSSFCell activationTime = null;
+			HSSFCell developmentDept = null;
+			HSSFCell phoneNumber1 = null;
+			HSSFCell phoneNumber2 = null;
+			HSSFCell contacts = null;
+			HSSFCell userName = null;
+			HSSFCell tariffName = null;
+			HSSFCell installedAddress = null;
+			HSSFCell status = null;
+			HSSFCell ponLogo = null;
+			// 行数(表头的目录不需要，从3开始)
+			for (int i = 2; i <= rowcount; i++) {
+                dataImport = new DataImport();
+                // 行
+                HSSFRow row = sheet.getRow(i);
+                // 列编码大于0 获取单元格内容 存入DataImport实体类
+                if(businessCodeCell >= 0){
+                    businessCode = row.getCell(businessCodeCell);
+                    dataImport.setBusinessCode(getColumnXls(businessCode));
+                }
+                if(taskTypeNameCell >= 0){
+                    taskTypeName = row.getCell(taskTypeNameCell);
+                    dataImport.setTaskTypeName(getColumnXls(taskTypeName));
+                }
+                if(deptMeshNameCell >= 0){
+                    deptMeshName = row.getCell(deptMeshNameCell);
+                    dataImport.setDeptMeshName(getColumnXls(deptMeshName));
+                }
+                if(deptAreaNameCell >= 0){
+                    deptAreaName = row.getCell(deptAreaNameCell);
+                    dataImport.setDeptAreaName(getColumnXls(deptAreaName));
+                }
+                if(productTypeCell >= 0){
+                    productType = row.getCell(productTypeCell);
+                    dataImport.setProductType(getColumnXls(productType));
+                }
+                if(phoneNumber3Cell >= 0){
+                    phoneNumber3 = row.getCell(phoneNumber3Cell);
+                    dataImport.setPhoneNumber3(getColumnXls(phoneNumber3));
+                }
+                if(phoneNumber2Cell >= 0){
+                    phoneNumber2 = row.getCell(phoneNumber2Cell);
+                    dataImport.setPhoneNumber2(getColumnXls(phoneNumber2));
+                }
+                if(phoneNumber1Cell >= 0){
+                    phoneNumber1 = row.getCell(phoneNumber1Cell);
+                    dataImport.setPhoneNumber1(getColumnXls(phoneNumber1));
+                }
+                if(velocityCell >= 0){
+                    velocity = row.getCell(velocityCell);
+                    dataImport.setVelocity(getColumnXls(velocity));
+                }
+                if(responsibleCell >= 0){
+                    responsible = row.getCell(responsibleCell);
+                    dataImport.setResponsible(getColumnXls(responsible));
+                }
+                if(netStopCell >= 0){
+                    netStop = row.getCell(netStopCell);
+                    dataImport.setNetStop(getColumnXls(netStop));
+                }
+                if(packageNameCell >= 0){
+                    packageName = row.getCell(packageNameCell);
+                    dataImport.setPackageName(getColumnXls(packageName));
+                }
+                if(contractNameCell >= 0){
+                    contractName = row.getCell(contractNameCell);
+                    dataImport.setContractName(getColumnXls(contractName));
+                }
+                if(contractStartTimeCell >= 0){
+                    contractStartTime = row.getCell(contractStartTimeCell);
+                    dataImport.setContractStartTime(getColumnXls(contractStartTime));
+                }
+                if(contractEndTimeCell >= 0){
+                    contractEndTime = row.getCell(contractEndTimeCell);
+                    dataImport.setContractEndTime(getColumnXls(contractEndTime));
+                }
+                if(activationTimeCell >= 0){
+                    activationTime = row.getCell(activationTimeCell);
+                    dataImport.setActivationTime(getColumnXls(activationTime));
+                }
+                if(developmentDeptCell >= 0){
+                    developmentDept = row.getCell(developmentDeptCell);
+                    dataImport.setDevelopmentDept(getColumnXls(developmentDept));
+                }
+                if(contactsCell >= 0){
+                    contacts = row.getCell(contactsCell);
+                    dataImport.setContacts(getColumnXls(contacts));
+                }
+                if(userNameCell >= 0){
+                    userName = row.getCell(userNameCell);
+                    dataImport.setUserName(getColumnXls(userName));
+                }
+                if(tariffNameCell >= 0){
+                    tariffName = row.getCell(tariffNameCell);
+                    dataImport.setTariffName(getColumnXls(tariffName));
+                }
+                if(installedAddressCell >= 0){
+                    installedAddress = row.getCell(installedAddressCell);
+                    dataImport.setInstalledAddress(getColumnXls(installedAddress));
+                }
+                if(statusCell >= 0){
+                    status = row.getCell(statusCell);
+                    dataImport.setStatus(getColumnXls(status));
+                }
+                if(ponLogoCell >= 0){
+                    ponLogo = row.getCell(ponLogoCell);
+                    dataImport.setPonLogo(getColumnXls(ponLogo));
+                }
+                if(customfields1Cell >= 0){
+                    customfields1 = row.getCell(customfields1Cell);
+                    dataImport.setCustomfields1(getColumnXls(customfields1));
+                }
+                if(customfields2Cell >= 0){
+                    customfields2 = row.getCell(customfields2Cell);
+                    dataImport.setCustomfields2(getColumnXls(customfields2));
+                }
+                if(customfields3Cell >= 0){
+                    customfields3 = row.getCell(customfields3Cell);
+                    dataImport.setCustomfields3(getColumnXls(customfields3));
+                }
+                if(customfields4Cell >= 0){
+                    customfields4 = row.getCell(customfields4Cell);
+                    dataImport.setCustomfields4(getColumnXls(customfields4));
+                }
+                if(customfields5Cell >= 0){
+                    customfields5 = row.getCell(customfields5Cell);
+                    dataImport.setCustomfields5(getColumnXls(customfields5));
+                }
+                if(customfields6Cell >= 0){
+                    customfields6 = row.getCell(customfields6Cell);
+                    dataImport.setCustomfields6(getColumnXls(customfields6));
+                }
+                if(customfields7Cell >= 0){
+                    customfields7 = row.getCell(customfields7Cell);
+                    dataImport.setCustomfields7(getColumnXls(customfields7));
+                }
+                if(customfields8Cell >= 0){
+                    customfields8 = row.getCell(customfields8Cell);
+                    dataImport.setCustomfields8(getColumnXls(customfields8));
+                }
+                if(customfields9Cell >= 0){
+                    customfields9 = row.getCell(customfields9Cell);
+                    dataImport.setCustomfields9(getColumnXls(customfields9));
+                }
+                if(customfields10Cell >= 0){
+                    customfields10 = row.getCell(customfields10Cell);
+                    dataImport.setCustomfields10(getColumnXls(customfields10));
+                }
+                if(customfields11Cell >= 0){
+                    customfields11 = row.getCell(customfields11Cell);
+                    dataImport.setCustomfields11(getColumnXls(customfields11));
+                }
+                if(customfields12Cell >= 0){
+                    customfields12 = row.getCell(customfields12Cell);
+                    dataImport.setCustomfields12(getColumnXls(customfields12));
+                }
+                if(customfields13Cell >= 0){
+                    customfields13 = row.getCell(customfields13Cell);
+                    dataImport.setCustomfields13(getColumnXls(customfields13));
+                }
+                if(customfields14Cell >= 0){
+                    customfields14 = row.getCell(customfields14Cell);
+                    dataImport.setCustomfields14(getColumnXls(customfields14));
+                }
+                if(customfields15Cell >= 0){
+                    customfields15 = row.getCell(customfields15Cell);
+                    dataImport.setCustomfields15(getColumnXls(customfields15));
+                }
+                dataImport.setImportBatch(eventId);
+                dataImport.setImportPersonId(userID);
+                dataImport.setImportTime(importTime);
+
+                String uuid = generator.generate();
+                dataImport.setDataImportId(uuid);
+                list.add(dataImport);
+            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
-		
-		
-		// 获取列编码
-		getColumnCode(importMap);
-		
-		// 初始化单元格
-		HSSFCell businessCode = null;
-		HSSFCell taskTypeName = null;
-		HSSFCell deptMeshName = null;
-		HSSFCell deptAreaName = null;
-		HSSFCell productType = null;
-		HSSFCell phoneNumber3 = null;
-		HSSFCell velocity = null;
-		HSSFCell customfields1 = null;
-		HSSFCell customfields2 = null;
-		HSSFCell customfields3 = null;
-		HSSFCell customfields4 = null;
-		HSSFCell customfields5 = null;
-		HSSFCell customfields6 = null;
-		HSSFCell customfields7 = null;
-		HSSFCell customfields8 = null;
-		HSSFCell customfields9 = null;
-		HSSFCell customfields10 = null;
-		HSSFCell customfields11 = null;
-		HSSFCell customfields12 = null;
-		HSSFCell customfields13 = null;
-		HSSFCell customfields14 = null;
-		HSSFCell customfields15 = null;
-		HSSFCell responsible = null;
-		HSSFCell netStop = null;
-		HSSFCell packageName = null;
-		HSSFCell contractName = null;
-		HSSFCell contractStartTime = null;
-		HSSFCell contractEndTime = null;
-		HSSFCell activationTime = null;
-		HSSFCell developmentDept = null;
-		HSSFCell phoneNumber1 = null;
-		HSSFCell phoneNumber2 = null;
-		HSSFCell contacts = null;
-		HSSFCell userName = null;
-		HSSFCell tariffName = null;
-		HSSFCell installedAddress = null;
-		HSSFCell status = null;
-		HSSFCell ponLogo = null;
-		
-		
-		// 行数(表头的目录不需要，从3开始)
-		for (int i = 2; i <= rowcount; i++) {
-			
-			dataImport = new DataImport();
-			// 行
-			HSSFRow row = sheet.getRow(i);
-			// 列编码大于0 获取单元格内容 存入DataImport实体类
-			if(businessCodeCell >= 0){
-				businessCode = row.getCell(businessCodeCell);
-				dataImport.setBusinessCode(getColumnXls(businessCode));
-			}
-			if(taskTypeNameCell >= 0){
-				taskTypeName = row.getCell(taskTypeNameCell);
-				dataImport.setTaskTypeName(getColumnXls(taskTypeName));
-			}
-			if(deptMeshNameCell >= 0){
-				deptMeshName = row.getCell(deptMeshNameCell);
-				dataImport.setDeptMeshName(getColumnXls(deptMeshName));
-			}
-			if(deptAreaNameCell >= 0){
-				deptAreaName = row.getCell(deptAreaNameCell);
-				dataImport.setDeptAreaName(getColumnXls(deptAreaName));
-			}
-			if(productTypeCell >= 0){
-				productType = row.getCell(productTypeCell);
-				dataImport.setProductType(getColumnXls(productType));
-			}
-			if(phoneNumber3Cell >= 0){
-				phoneNumber3 = row.getCell(phoneNumber3Cell);
-				dataImport.setPhoneNumber3(getColumnXls(phoneNumber3));
-			}
-			if(phoneNumber2Cell >= 0){
-				phoneNumber2 = row.getCell(phoneNumber2Cell);
-				dataImport.setPhoneNumber2(getColumnXls(phoneNumber2));
-			}
-			if(phoneNumber1Cell >= 0){
-				phoneNumber1 = row.getCell(phoneNumber1Cell);
-				dataImport.setPhoneNumber1(getColumnXls(phoneNumber1));
-			}
-			if(velocityCell >= 0){
-				velocity = row.getCell(velocityCell);
-				dataImport.setVelocity(getColumnXls(velocity));
-			}
-			if(responsibleCell >= 0){
-				responsible = row.getCell(responsibleCell);
-				dataImport.setResponsible(getColumnXls(responsible));
-			}
-			if(netStopCell >= 0){
-				netStop = row.getCell(netStopCell);
-				dataImport.setNetStop(getColumnXls(netStop));
-			}
-			if(packageNameCell >= 0){
-				packageName = row.getCell(packageNameCell);
-				dataImport.setPackageName(getColumnXls(packageName));
-			}
-			if(contractNameCell >= 0){
-				contractName = row.getCell(contractNameCell);
-				dataImport.setContractName(getColumnXls(contractName));
-			}
-			if(contractStartTimeCell >= 0){
-				contractStartTime = row.getCell(contractStartTimeCell);
-				dataImport.setContractStartTime(getColumnXls(contractStartTime));
-			}
-			if(contractEndTimeCell >= 0){
-				contractEndTime = row.getCell(contractEndTimeCell);
-				dataImport.setContractEndTime(getColumnXls(contractEndTime));
-			}
-			if(activationTimeCell >= 0){
-				activationTime = row.getCell(activationTimeCell);
-				dataImport.setActivationTime(getColumnXls(activationTime));
-			}
-			if(developmentDeptCell >= 0){
-				developmentDept = row.getCell(developmentDeptCell);
-				dataImport.setDevelopmentDept(getColumnXls(developmentDept));
-			}
-			if(contactsCell >= 0){
-				contacts = row.getCell(contactsCell);
-				dataImport.setContacts(getColumnXls(contacts));
-			}
-			if(userNameCell >= 0){
-				userName = row.getCell(userNameCell);
-				dataImport.setUserName(getColumnXls(userName));
-			}
-			if(tariffNameCell >= 0){
-				tariffName = row.getCell(tariffNameCell);
-				dataImport.setTariffName(getColumnXls(tariffName));
-			}
-			if(installedAddressCell >= 0){
-				installedAddress = row.getCell(installedAddressCell);
-				dataImport.setInstalledAddress(getColumnXls(installedAddress));
-			}
-			if(statusCell >= 0){
-				status = row.getCell(statusCell);
-				dataImport.setStatus(getColumnXls(status));
-			}
-			if(ponLogoCell >= 0){
-				ponLogo = row.getCell(ponLogoCell);
-				dataImport.setPonLogo(getColumnXls(ponLogo));
-			}
-			if(customfields1Cell >= 0){
-				customfields1 = row.getCell(customfields1Cell);
-				dataImport.setCustomfields1(getColumnXls(customfields1));
-			}
-			if(customfields2Cell >= 0){
-				customfields2 = row.getCell(customfields2Cell);
-				dataImport.setCustomfields2(getColumnXls(customfields2));
-			}
-			if(customfields3Cell >= 0){
-				customfields3 = row.getCell(customfields3Cell);
-				dataImport.setCustomfields3(getColumnXls(customfields3));
-			}
-			if(customfields4Cell >= 0){
-				customfields4 = row.getCell(customfields4Cell);
-				dataImport.setCustomfields4(getColumnXls(customfields4));
-			}
-			if(customfields5Cell >= 0){
-				customfields5 = row.getCell(customfields5Cell);
-				dataImport.setCustomfields5(getColumnXls(customfields5));
-			}
-			if(customfields6Cell >= 0){
-				customfields6 = row.getCell(customfields6Cell);
-				dataImport.setCustomfields6(getColumnXls(customfields6));
-			}
-			if(customfields7Cell >= 0){
-				customfields7 = row.getCell(customfields7Cell);
-				dataImport.setCustomfields7(getColumnXls(customfields7));
-			}
-			if(customfields8Cell >= 0){
-				customfields8 = row.getCell(customfields8Cell);
-				dataImport.setCustomfields8(getColumnXls(customfields8));
-			}
-			if(customfields9Cell >= 0){
-				customfields9 = row.getCell(customfields9Cell);
-				dataImport.setCustomfields9(getColumnXls(customfields9));
-			}
-			if(customfields10Cell >= 0){
-				customfields10 = row.getCell(customfields10Cell);
-				dataImport.setCustomfields10(getColumnXls(customfields10));
-			}
-			if(customfields11Cell >= 0){
-				customfields11 = row.getCell(customfields11Cell);
-				dataImport.setCustomfields11(getColumnXls(customfields11));
-			}
-			if(customfields12Cell >= 0){
-				customfields12 = row.getCell(customfields12Cell);
-				dataImport.setCustomfields12(getColumnXls(customfields12));
-			}
-			if(customfields13Cell >= 0){
-				customfields13 = row.getCell(customfields13Cell);
-				dataImport.setCustomfields13(getColumnXls(customfields13));
-			}
-			if(customfields14Cell >= 0){
-				customfields14 = row.getCell(customfields14Cell);
-				dataImport.setCustomfields14(getColumnXls(customfields14));
-			}
-			if(customfields15Cell >= 0){
-				customfields15 = row.getCell(customfields15Cell);
-				dataImport.setCustomfields15(getColumnXls(customfields15));
-			}
-			
-			dataImport.setImportBatch(eventId);
-			dataImport.setImportPersonId(userID);
-			dataImport.setImportTime(importTime);
-			
-			String uuid = generator.generate();
-			dataImport.setDataImportId(uuid);
-			
-			list.add(dataImport);
-		}
-		
-		return list;
+		readExcelXlsMap.put("list",list);
+		readExcelXlsMap.put("returnCode","SUCCESS");
+		readExcelXlsMap.put("infomsg","操作成功！");
+		return readExcelXlsMap;
 	}
 	
-	
-	*//****
+	/****
 	 * 读取Excel.xlsx内容
-	 * 
-	 * add by wangxiaoyu 2016-07-13
-	 * @param stream
-	 * @param session
-	 * @return
-	 * @throws BiffException
-	 * @throws IOException
-	 *//*
-	public static List<DataImport> readExcelXlsx(InputStream stream, HttpSession session, Model model) throws BiffException, IOException {
-		// 创建一个list 用来存储读取的内容
-		List<DataImport> list = new ArrayList<DataImport>();
-		// 数据导入实体类
-		DataImport dataImport = null;
-		// key：字段名  value：列编码
-		HashMap<String, Integer> importMap = new HashMap<String, Integer>();
-		
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		
-		Date date = new Date();
-		
-		String TIME = new String(df.format(date));
-		
-		String userID = Auth.getLoginUser(session).getId().toString();
-		// 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
-		String eventId = TIME+userID+createRandomCode(10);
-		// 主键
-		UUIDGenerator generator = new UUIDGenerator();
-		//导入时间
-		Timestamp importTime = new Timestamp(System.currentTimeMillis());
-		
-		XSSFWorkbook xwb=new XSSFWorkbook(stream);
-		// 第一个标签
-		XSSFSheet sheet=xwb.getSheetAt(0);
-		// 总行数
-		int rowcount = sheet.getLastRowNum();
-		// 总列数
-		int cellcount = sheet.getRow(0).getPhysicalNumberOfCells();
-		// 获得表头对应实体类字段名
-		for(int i=0; i<cellcount; i++){
-			// 第一行  表头
-			XSSFRow row = sheet.getRow(0);
-			String cell = row.getCell(i) == null? "": row.getCell(i).toString();
-			if(cell==null || cell.trim().isEmpty() || !StringUtils.isNumeric(cell)){
-				model.addAttribute("infomsg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
-				throw new NumberFormatException("已经处理的数字格式化异常！！内容为： "+"第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
-			}
-			Integer cellCode = Integer.parseInt(cell.trim());
-			String cellName = getCellName(cellCode);
-			importMap.put(cellName, i);
-		}
-		
-		// 获取列编码
-		getColumnCode(importMap);
-		
-		// 初始化单元格
-		XSSFCell businessCode = null;
-		XSSFCell taskTypeName = null;
-		XSSFCell deptMeshName = null;
-		XSSFCell deptAreaName = null;
-		XSSFCell productType = null;
-		XSSFCell phoneNumber3 = null;
-		XSSFCell velocity = null;
-		XSSFCell customfields1 = null;
-		XSSFCell customfields2 = null;
-		XSSFCell customfields3 = null;
-		XSSFCell customfields4 = null;
-		XSSFCell customfields5 = null;
-		XSSFCell customfields6 = null;
-		XSSFCell customfields7 = null;
-		XSSFCell customfields8 = null;
-		XSSFCell customfields9 = null;
-		XSSFCell customfields10 = null;
-		XSSFCell customfields11 = null;
-		XSSFCell customfields12 = null;
-		XSSFCell customfields13 = null;
-		XSSFCell customfields14 = null;
-		XSSFCell customfields15 = null;
-		XSSFCell responsible = null;
-		XSSFCell netStop = null;
-		XSSFCell packageName = null;
-		XSSFCell contractName = null;
-		XSSFCell contractStartTime = null;
-		XSSFCell contractEndTime = null;
-		XSSFCell activationTime = null;
-		XSSFCell developmentDept = null;
-		XSSFCell phoneNumber1 = null;
-		XSSFCell phoneNumber2 = null;
-		XSSFCell contacts = null;
-		XSSFCell userName = null;
-		XSSFCell tariffName = null;
-		XSSFCell installedAddress = null;
-		XSSFCell status = null;
-		XSSFCell ponLogo = null;
-		
-		
-		// 行数(表头的目录不需要，从3开始)
-		for (int i = 2; i <= rowcount; i++) {
-			
-			dataImport = new DataImport();
-			// 行
-			XSSFRow row = sheet.getRow(i);
-			// 列编码大于0 获取单元格内容 存入DataImport实体类
+	 * add by wangxiaoyu
+	 */
+	public static Map<String,Object> readExcelXlsx(InputStream stream, HttpSession session) throws BiffException, IOException {
 
-			if(row==null){
-				model.addAttribute("infomsg", "第"+(i+1)+"行，整行为空，请修正！");
-				throw new NumberFormatException("已经处理的EXCEL数据导入异常！！内容为： "+"第"+(i+1)+"行，整行为空，请修正！");
-			}
+		Map<String,Object> readExcelXlsxMap = new HashMap<String,Object>();
+		readExcelXlsxMap.put("returnCode","FAIL");
+		readExcelXlsxMap.put("infomsg","操作失败！");
+		List<DataImport> list = null;
+		try {
+			// 创建一个list 用来存储读取的内容
+			list = new ArrayList<DataImport>();
+			// 数据导入实体类
+			DataImport dataImport = null;
+			// key：字段名  value：列编码
+			HashMap<String, Integer> importMap = new HashMap<String, Integer>();
 
-			if(businessCodeCell >= 0){
-				businessCode = row.getCell(businessCodeCell);
-				dataImport.setBusinessCode(getColumnXlsx(businessCode));
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+			Date date = new Date();
+			String TIME = new String(df.format(date));
+
+			//String userID = Auth.getLoginUser(session).getId().toString();
+			String userID = (String)session.getAttribute("userID");
+			String eventId = "";
+			if(!MyUtils.isBlank(userID)){
+			// 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
+				eventId = TIME+userID+createRandomCode(10);
+			}else{
+				System.out.println("读取Excel.xlsx内容,session获取userID为空！");
+				readExcelXlsxMap.put("infomsg","读取Excel.xlsx内容,session获取userID为空！");
+				return readExcelXlsxMap;
 			}
-			if(taskTypeNameCell >= 0){
-				taskTypeName = row.getCell(taskTypeNameCell);
-				dataImport.setTaskTypeName(getColumnXlsx(taskTypeName));
-			}
-			if(deptMeshNameCell >= 0){
-				deptMeshName = row.getCell(deptMeshNameCell);
-				dataImport.setDeptMeshName(getColumnXlsx(deptMeshName));
-			}
-			if(deptAreaNameCell >= 0){
-				deptAreaName = row.getCell(deptAreaNameCell);
-				dataImport.setDeptAreaName(getColumnXlsx(deptAreaName));
-			}
-			if(productTypeCell >= 0){
-				productType = row.getCell(productTypeCell);
-				dataImport.setProductType(getColumnXlsx(productType));
-			}
-			if(phoneNumber3Cell >= 0){
-				phoneNumber3 = row.getCell(phoneNumber3Cell);
-				dataImport.setPhoneNumber3(getColumnXlsx(phoneNumber3));
-			}
-			if(phoneNumber2Cell >= 0){
-				phoneNumber2 = row.getCell(phoneNumber2Cell);
-				dataImport.setPhoneNumber2(getColumnXlsx(phoneNumber2));
-			}
-			if(phoneNumber1Cell >= 0){
-				phoneNumber1 = row.getCell(phoneNumber1Cell);
-				dataImport.setPhoneNumber1(getColumnXlsx(phoneNumber1));
-			}
-			if(velocityCell >= 0){
-				velocity = row.getCell(velocityCell);
-				dataImport.setVelocity(getColumnXlsx(velocity));
-			}
-			if(responsibleCell >= 0){
-				responsible = row.getCell(responsibleCell);
-				dataImport.setResponsible(getColumnXlsx(responsible));
-			}
-			if(netStopCell >= 0){
-				netStop = row.getCell(netStopCell);
-				dataImport.setNetStop(getColumnXlsx(netStop));
-			}
-			if(packageNameCell >= 0){
-				packageName = row.getCell(packageNameCell);
-				dataImport.setPackageName(getColumnXlsx(packageName));
-			}
-			if(contractNameCell >= 0){
-				contractName = row.getCell(contractNameCell);
-				dataImport.setContractName(getColumnXlsx(contractName));
-			}
-			if(contractStartTimeCell >= 0){
-				contractStartTime = row.getCell(contractStartTimeCell);
-				dataImport.setContractStartTime(getColumnXlsx(contractStartTime));
-			}
-			if(contractEndTimeCell >= 0){
-				contractEndTime = row.getCell(contractEndTimeCell);
-				dataImport.setContractEndTime(getColumnXlsx(contractEndTime));
-			}
-			if(activationTimeCell >= 0){
-				activationTime = row.getCell(activationTimeCell);
-				dataImport.setActivationTime(getColumnXlsx(activationTime));
-			}
-			if(developmentDeptCell >= 0){
-				developmentDept = row.getCell(developmentDeptCell);
-				dataImport.setDevelopmentDept(getColumnXlsx(developmentDept));
-			}
-			if(contactsCell >= 0){
-				contacts = row.getCell(contactsCell);
-				dataImport.setContacts(getColumnXlsx(contacts));
-			}
-			if(userNameCell >= 0){
-				userName = row.getCell(userNameCell);
-				dataImport.setUserName(getColumnXlsx(userName));
-			}
-			if(tariffNameCell >= 0){
-				tariffName = row.getCell(tariffNameCell);
-				dataImport.setTariffName(getColumnXlsx(tariffName));
-			}
-			if(installedAddressCell >= 0){
-				installedAddress = row.getCell(installedAddressCell);
-				dataImport.setInstalledAddress(getColumnXlsx(installedAddress));
-			}
-			if(statusCell >= 0){
-				status = row.getCell(statusCell);
-				dataImport.setStatus(getColumnXlsx(status));
-			}
-			if(ponLogoCell >= 0){
-				ponLogo = row.getCell(ponLogoCell);
-				dataImport.setPonLogo(getColumnXlsx(ponLogo));
-			}
-			if(customfields1Cell >= 0){
-				customfields1 = row.getCell(customfields1Cell);
-				dataImport.setCustomfields1(getColumnXlsx(customfields1));
-			}
-			if(customfields2Cell >= 0){
-				customfields2 = row.getCell(customfields2Cell);
-				dataImport.setCustomfields2(getColumnXlsx(customfields2));
-			}
-			if(customfields3Cell >= 0){
-				customfields3 = row.getCell(customfields3Cell);
-				dataImport.setCustomfields3(getColumnXlsx(customfields3));
-			}
-			if(customfields4Cell >= 0){
-				customfields4 = row.getCell(customfields4Cell);
-				dataImport.setCustomfields4(getColumnXlsx(customfields4));
-			}
-			if(customfields5Cell >= 0){
-				customfields5 = row.getCell(customfields5Cell);
-				dataImport.setCustomfields5(getColumnXlsx(customfields5));
-			}
-			if(customfields6Cell >= 0){
-				customfields6 = row.getCell(customfields6Cell);
-				dataImport.setCustomfields6(getColumnXlsx(customfields6));
-			}
-			if(customfields7Cell >= 0){
-				customfields7 = row.getCell(customfields7Cell);
-				dataImport.setCustomfields7(getColumnXlsx(customfields7));
-			}
-			if(customfields8Cell >= 0){
-				customfields8 = row.getCell(customfields8Cell);
-				dataImport.setCustomfields8(getColumnXlsx(customfields8));
-			}
-			if(customfields9Cell >= 0){
-				customfields9 = row.getCell(customfields9Cell);
-				dataImport.setCustomfields9(getColumnXlsx(customfields9));
-			}
-			if(customfields10Cell >= 0){
-				customfields10 = row.getCell(customfields10Cell);
-				dataImport.setCustomfields10(getColumnXlsx(customfields10));
-			}
-			if(customfields11Cell >= 0){
-				customfields11 = row.getCell(customfields11Cell);
-				dataImport.setCustomfields11(getColumnXlsx(customfields11));
-			}
-			if(customfields12Cell >= 0){
-				customfields12 = row.getCell(customfields12Cell);
-				dataImport.setCustomfields12(getColumnXlsx(customfields12));
-			}
-			if(customfields13Cell >= 0){
-				customfields13 = row.getCell(customfields13Cell);
-				dataImport.setCustomfields13(getColumnXlsx(customfields13));
-			}
-			if(customfields14Cell >= 0){
-				customfields14 = row.getCell(customfields14Cell);
-				dataImport.setCustomfields14(getColumnXlsx(customfields14));
-			}
-			if(customfields15Cell >= 0){
-				customfields15 = row.getCell(customfields15Cell);
-				dataImport.setCustomfields15(getColumnXlsx(customfields15));
-			}
-			
-			dataImport.setImportBatch(eventId);
-			dataImport.setImportPersonId(userID);
-			dataImport.setImportTime(importTime);
-			
-			String uuid = generator.generate();
-			dataImport.setDataImportId(uuid);
-			
-			list.add(dataImport);
+			// 主键
+			UUIDGenerator generator = new UUIDGenerator();
+			//导入时间
+			Timestamp importTime = new Timestamp(System.currentTimeMillis());
+
+			XSSFWorkbook xwb=new XSSFWorkbook(stream);
+			// 第一个标签
+			XSSFSheet sheet=xwb.getSheetAt(0);
+			// 总行数
+			int rowcount = sheet.getLastRowNum();
+			// 总列数
+			int cellcount = sheet.getRow(0).getPhysicalNumberOfCells();
+			// 获得表头对应实体类字段名
+			for(int i=0; i<cellcount; i++){
+                // 第一行  表头
+                XSSFRow row = sheet.getRow(0);
+                String cell = row.getCell(i) == null? "": row.getCell(i).toString();
+                if(cell==null || cell.trim().isEmpty() || !StringUtils.isNumeric(cell)){
+					readExcelXlsxMap.put("infomsg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
+					return readExcelXlsxMap;
+                    //throw new NumberFormatException("已经处理的数字格式化异常！！内容为： "+"第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
+                }
+                Integer cellCode = Integer.parseInt(cell.trim());
+                String cellName = getCellName(cellCode);
+                importMap.put(cellName, i);
+            }
+			// 获取列编码
+			getColumnCode(importMap);
+			// 初始化单元格
+			XSSFCell businessCode = null;
+			XSSFCell taskTypeName = null;
+			XSSFCell deptMeshName = null;
+			XSSFCell deptAreaName = null;
+			XSSFCell productType = null;
+			XSSFCell phoneNumber3 = null;
+			XSSFCell velocity = null;
+			XSSFCell customfields1 = null;
+			XSSFCell customfields2 = null;
+			XSSFCell customfields3 = null;
+			XSSFCell customfields4 = null;
+			XSSFCell customfields5 = null;
+			XSSFCell customfields6 = null;
+			XSSFCell customfields7 = null;
+			XSSFCell customfields8 = null;
+			XSSFCell customfields9 = null;
+			XSSFCell customfields10 = null;
+			XSSFCell customfields11 = null;
+			XSSFCell customfields12 = null;
+			XSSFCell customfields13 = null;
+			XSSFCell customfields14 = null;
+			XSSFCell customfields15 = null;
+			XSSFCell responsible = null;
+			XSSFCell netStop = null;
+			XSSFCell packageName = null;
+			XSSFCell contractName = null;
+			XSSFCell contractStartTime = null;
+			XSSFCell contractEndTime = null;
+			XSSFCell activationTime = null;
+			XSSFCell developmentDept = null;
+			XSSFCell phoneNumber1 = null;
+			XSSFCell phoneNumber2 = null;
+			XSSFCell contacts = null;
+			XSSFCell userName = null;
+			XSSFCell tariffName = null;
+			XSSFCell installedAddress = null;
+			XSSFCell status = null;
+			XSSFCell ponLogo = null;
+
+			// 行数(表头的目录不需要，从3开始)
+			for (int i = 2; i <= rowcount; i++) {
+                dataImport = new DataImport();
+                // 行
+                XSSFRow row = sheet.getRow(i);
+                // 列编码大于0 获取单元格内容 存入DataImport实体类
+                if(row==null){
+					readExcelXlsxMap.put("infomsg", "第"+(i+1)+"行，整行为空，请修正！");
+                    return readExcelXlsxMap;
+					//throw new NumberFormatException("已经处理的EXCEL数据导入异常！！内容为： "+"第"+(i+1)+"行，整行为空，请修正！");
+                }
+                if(businessCodeCell >= 0){
+                    businessCode = row.getCell(businessCodeCell);
+                    dataImport.setBusinessCode(getColumnXlsx(businessCode));
+                }
+                if(taskTypeNameCell >= 0){
+                    taskTypeName = row.getCell(taskTypeNameCell);
+                    dataImport.setTaskTypeName(getColumnXlsx(taskTypeName));
+                }
+                if(deptMeshNameCell >= 0){
+                    deptMeshName = row.getCell(deptMeshNameCell);
+                    dataImport.setDeptMeshName(getColumnXlsx(deptMeshName));
+                }
+                if(deptAreaNameCell >= 0){
+                    deptAreaName = row.getCell(deptAreaNameCell);
+                    dataImport.setDeptAreaName(getColumnXlsx(deptAreaName));
+                }
+                if(productTypeCell >= 0){
+                    productType = row.getCell(productTypeCell);
+                    dataImport.setProductType(getColumnXlsx(productType));
+                }
+                if(phoneNumber3Cell >= 0){
+                    phoneNumber3 = row.getCell(phoneNumber3Cell);
+                    dataImport.setPhoneNumber3(getColumnXlsx(phoneNumber3));
+                }
+                if(phoneNumber2Cell >= 0){
+                    phoneNumber2 = row.getCell(phoneNumber2Cell);
+                    dataImport.setPhoneNumber2(getColumnXlsx(phoneNumber2));
+                }
+                if(phoneNumber1Cell >= 0){
+                    phoneNumber1 = row.getCell(phoneNumber1Cell);
+                    dataImport.setPhoneNumber1(getColumnXlsx(phoneNumber1));
+                }
+                if(velocityCell >= 0){
+                    velocity = row.getCell(velocityCell);
+                    dataImport.setVelocity(getColumnXlsx(velocity));
+                }
+                if(responsibleCell >= 0){
+                    responsible = row.getCell(responsibleCell);
+                    dataImport.setResponsible(getColumnXlsx(responsible));
+                }
+                if(netStopCell >= 0){
+                    netStop = row.getCell(netStopCell);
+                    dataImport.setNetStop(getColumnXlsx(netStop));
+                }
+                if(packageNameCell >= 0){
+                    packageName = row.getCell(packageNameCell);
+                    dataImport.setPackageName(getColumnXlsx(packageName));
+                }
+                if(contractNameCell >= 0){
+                    contractName = row.getCell(contractNameCell);
+                    dataImport.setContractName(getColumnXlsx(contractName));
+                }
+                if(contractStartTimeCell >= 0){
+                    contractStartTime = row.getCell(contractStartTimeCell);
+                    dataImport.setContractStartTime(getColumnXlsx(contractStartTime));
+                }
+                if(contractEndTimeCell >= 0){
+                    contractEndTime = row.getCell(contractEndTimeCell);
+                    dataImport.setContractEndTime(getColumnXlsx(contractEndTime));
+                }
+                if(activationTimeCell >= 0){
+                    activationTime = row.getCell(activationTimeCell);
+                    dataImport.setActivationTime(getColumnXlsx(activationTime));
+                }
+                if(developmentDeptCell >= 0){
+                    developmentDept = row.getCell(developmentDeptCell);
+                    dataImport.setDevelopmentDept(getColumnXlsx(developmentDept));
+                }
+                if(contactsCell >= 0){
+                    contacts = row.getCell(contactsCell);
+                    dataImport.setContacts(getColumnXlsx(contacts));
+                }
+                if(userNameCell >= 0){
+                    userName = row.getCell(userNameCell);
+                    dataImport.setUserName(getColumnXlsx(userName));
+                }
+                if(tariffNameCell >= 0){
+                    tariffName = row.getCell(tariffNameCell);
+                    dataImport.setTariffName(getColumnXlsx(tariffName));
+                }
+                if(installedAddressCell >= 0){
+                    installedAddress = row.getCell(installedAddressCell);
+                    dataImport.setInstalledAddress(getColumnXlsx(installedAddress));
+                }
+                if(statusCell >= 0){
+                    status = row.getCell(statusCell);
+                    dataImport.setStatus(getColumnXlsx(status));
+                }
+                if(ponLogoCell >= 0){
+                    ponLogo = row.getCell(ponLogoCell);
+                    dataImport.setPonLogo(getColumnXlsx(ponLogo));
+                }
+                if(customfields1Cell >= 0){
+                    customfields1 = row.getCell(customfields1Cell);
+                    dataImport.setCustomfields1(getColumnXlsx(customfields1));
+                }
+                if(customfields2Cell >= 0){
+                    customfields2 = row.getCell(customfields2Cell);
+                    dataImport.setCustomfields2(getColumnXlsx(customfields2));
+                }
+                if(customfields3Cell >= 0){
+                    customfields3 = row.getCell(customfields3Cell);
+                    dataImport.setCustomfields3(getColumnXlsx(customfields3));
+                }
+                if(customfields4Cell >= 0){
+                    customfields4 = row.getCell(customfields4Cell);
+                    dataImport.setCustomfields4(getColumnXlsx(customfields4));
+                }
+                if(customfields5Cell >= 0){
+                    customfields5 = row.getCell(customfields5Cell);
+                    dataImport.setCustomfields5(getColumnXlsx(customfields5));
+                }
+                if(customfields6Cell >= 0){
+                    customfields6 = row.getCell(customfields6Cell);
+                    dataImport.setCustomfields6(getColumnXlsx(customfields6));
+                }
+                if(customfields7Cell >= 0){
+                    customfields7 = row.getCell(customfields7Cell);
+                    dataImport.setCustomfields7(getColumnXlsx(customfields7));
+                }
+                if(customfields8Cell >= 0){
+                    customfields8 = row.getCell(customfields8Cell);
+                    dataImport.setCustomfields8(getColumnXlsx(customfields8));
+                }
+                if(customfields9Cell >= 0){
+                    customfields9 = row.getCell(customfields9Cell);
+                    dataImport.setCustomfields9(getColumnXlsx(customfields9));
+                }
+                if(customfields10Cell >= 0){
+                    customfields10 = row.getCell(customfields10Cell);
+                    dataImport.setCustomfields10(getColumnXlsx(customfields10));
+                }
+                if(customfields11Cell >= 0){
+                    customfields11 = row.getCell(customfields11Cell);
+                    dataImport.setCustomfields11(getColumnXlsx(customfields11));
+                }
+                if(customfields12Cell >= 0){
+                    customfields12 = row.getCell(customfields12Cell);
+                    dataImport.setCustomfields12(getColumnXlsx(customfields12));
+                }
+                if(customfields13Cell >= 0){
+                    customfields13 = row.getCell(customfields13Cell);
+                    dataImport.setCustomfields13(getColumnXlsx(customfields13));
+                }
+                if(customfields14Cell >= 0){
+                    customfields14 = row.getCell(customfields14Cell);
+                    dataImport.setCustomfields14(getColumnXlsx(customfields14));
+                }
+                if(customfields15Cell >= 0){
+                    customfields15 = row.getCell(customfields15Cell);
+                    dataImport.setCustomfields15(getColumnXlsx(customfields15));
+                }
+                dataImport.setImportBatch(eventId);
+                dataImport.setImportPersonId(userID);
+                dataImport.setImportTime(importTime);
+
+                String uuid = generator.generate();
+                dataImport.setDataImportId(uuid);
+
+                list.add(dataImport);
+            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
 		}
-		
-		return list;
+		readExcelXlsxMap.put("list",list);
+		readExcelXlsxMap.put("returnCode","SUCCESS");
+		readExcelXlsxMap.put("infomsg","操作成功！");
+		return readExcelXlsxMap;
 	}
 	
 	public static String createRandomCode(int ln) {
@@ -975,14 +1000,10 @@ public class DataImportController {
 		return pwd;
 	}
 	
-	
-	*//****
+	/****
 	 * 列编码--字段名 对照
-	 * 
-	 * add by wangxiaoyu 2016-07-13
-	 * @param cellCode
-	 * @return
-	 *//*
+	 * add by wangxiaoyu
+	 */
 	public static String getCellName(int cellCode) {
 		String cellName = "";
 		
@@ -1105,17 +1126,13 @@ public class DataImportController {
 		default:
 			break;
 		}
-		
 		return cellName;
 	}
 	
-	
-	*//****
+	/****
 	 * 获取列编码
-	 * 
-	 * add by wangxiaoyu 2016-07-15
-	 * @param importMap
-	 *//*
+	 * add by wangxiaoyu
+	 */
 	public static void getColumnCode(HashMap<String, Integer> importMap){
 		
 		businessCodeCell = importMap.get(DataImport.BUSINESSCODE) == null ? -1 : importMap.get(DataImport.BUSINESSCODE);                                                   
@@ -1156,15 +1173,11 @@ public class DataImportController {
 		installedAddressCell = importMap.get(DataImport.INSTALLEDADDRESS) == null ? -1 : importMap.get(DataImport.INSTALLEDADDRESS);                                       
 		statusCell = importMap.get(DataImport.STATUS) == null ? -1 : importMap.get(DataImport.STATUS);                                                          
 		ponLogoCell = importMap.get(DataImport.PONLOGO) == null ? -1 : importMap.get(DataImport.PONLOGO);          
-		
-	} 
-	*/
+	}
 	
 	/****
 	 * 获取字符串编码格式
-	 * 
-	 * add by wangxiaoyu 2016-07-15
-	 * @param str
+	 * add by wangxiaoyu
 	 */
 	public static String getEncoding(String str) {
 		String encode = "UTF-8";
@@ -1206,8 +1219,7 @@ public class DataImportController {
 		return "";
 	}
 	
-	
-	/*public static String getColumnXlsx(XSSFCell colu) throws UnsupportedEncodingException  {
+	public static String getColumnXlsx(XSSFCell colu) throws UnsupportedEncodingException  {
 		if(colu != null){
 			colu.setCellType(Cell.CELL_TYPE_STRING);
 		}
@@ -1219,8 +1231,7 @@ public class DataImportController {
 			colu.setCellType(Cell.CELL_TYPE_STRING);
 		}
 		return colu == null ? "" : colu.getStringCellValue().trim();
-	}*/
-	
+	}
 	
 	public static String gbToUtf8(String str) throws UnsupportedEncodingException {
 		StringBuffer sb = new StringBuffer();

@@ -1,8 +1,9 @@
 package cn.cucsi.bsd.ucc.service;
 
+import cn.cucsi.bsd.ucc.data.domain.DataCustomfield;
+
 import java.util.List;
 import java.util.Map;
-import cn.cucsi.bsd.ucc.data.domain.DataCustomfield;
 
 /****
  * 自定义显示字段

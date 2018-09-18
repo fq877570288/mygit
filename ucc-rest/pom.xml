@@ -172,6 +172,18 @@
             <artifactId>jxl</artifactId>
             <version>2.6.12</version>
         </dependency>
+
+        <!-- poi操作Excel依赖 by wangxiaoyu -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.13</version>
+        </dependency>
     </dependencies>
 
     <build>
