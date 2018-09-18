@@ -91,4 +91,35 @@ public class UccPermissionsController {
         boolean result=this.uccPermissionsService.save(uccPermissions) != null;
         return new ResultBean<>(result);
     }
+
+    @ApiOperation(value="根据查询获取权限树", notes="根据查询获取权限树", httpMethod = "POST")
+    @RequestMapping(value = "/tree", method= RequestMethod.POST)
+    public PageResultBean<List<UccPermissions>> tree(@RequestBody UccPermissionsCriteria search){
+        PageResultBean<List<UccPermissions>> uccPermissionsList = new PageResultBean(this.uccPermissionsService.findAllTree(search));
+        List<UccPermissions> list = uccPermissionsList.getData();
+        List<UccPermissions> pIdList = new ArrayList<>();
+        if(list!=null&&list.size()!=0) {
+            //父ID
+            for (UccPermissions uccPermissions : list) {
+                if (uccPermissions.getMpid() == null) {
+                    pIdList.add(uccPermissions);
+                }
+            }
+            //往父ID中添加子节点
+            if(pIdList!=null&&pIdList.size()!=0) {
+                for (UccPermissions pId : pIdList) {
+                    List<UccPermissions> childNodeList = new ArrayList<>();
+                    for (UccPermissions uccPermissions : list) {
+                        if(pId.getPermissionId().equals(uccPermissions.getMpid())){
+                            childNodeList.add(uccPermissions);
+                        }
+                    }
+                    pId.setUccPermissions(childNodeList);
+                }
+                uccPermissionsList.setData(pIdList);
+                return uccPermissionsList;
+            }
+        }
+        return new PageResultBean(this.uccPermissionsService.findAllTree(search));
+    }
 }

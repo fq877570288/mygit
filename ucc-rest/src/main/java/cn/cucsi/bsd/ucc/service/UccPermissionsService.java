@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface UccPermissionsService {
     Page<UccPermissions> findWhole(UccPermissionsCriteria search);
+    Page<UccPermissions> findAllTree(UccPermissionsCriteria search);
     List<UccPermissions> findAll(UccPermissionsCriteria search);
     UccPermissions findOne(String permissionId );
     UccPermissions save(UccPermissions uccPermissions);

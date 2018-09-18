@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ucc_permissions", schema = "ucc", catalog = "")
@@ -54,6 +55,8 @@ public class UccPermissions {
     private Collection<RolesPermissions> rolesPermissions;
     @JsonIgnore
     private UccDomain uccDomain;
+    @Transient
+    private List<UccPermissions> uccPermissions;
 
     @Id
     @Column(name = "permission_id", nullable = false, length = 32)
@@ -251,4 +254,13 @@ public class UccPermissions {
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
     }
+    @Transient
+    public List<UccPermissions> getUccPermissions() {
+        return uccPermissions;
+    }
+
+    public void setUccPermissions(List<UccPermissions> uccPermissions) {
+        this.uccPermissions = uccPermissions;
+    }
+
 }
