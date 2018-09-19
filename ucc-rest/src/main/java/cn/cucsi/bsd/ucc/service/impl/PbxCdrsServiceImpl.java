@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.PbxCdrsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PbxCdrsForAPPCriteria;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import org.springframework.data.domain.Sort;
 
 /**
  * Created by Song on 2017/10/16.
@@ -35,29 +37,21 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
     @Autowired
     private PbxCdrsMapper pbxCdrsMapper;
 
-    @Override
-    public PageResultBean_New<List<PbxCdrs>> findAll(PbxCdrsCriteria pbxCdrsCriteria) {
-           com.github.pagehelper.Page pageInfo = PageHelper.startPage(pbxCdrsCriteria.getPageNum(), pbxCdrsCriteria.getPageSize());
+    @Autowired
+    PbxCdrsRepository pbxCdrsRepository;
 
-        List<PbxCdrs> informationList = null;
-        try {
-            informationList = pbxCdrsMapper.selectByPrimary(pbxCdrsCriteria);
-            //System.out.println("informationList::::" + informationList.size());
-            PageResultBean_New<List<PbxCdrs>> pageResultBean_new = new PageResultBean_New(pageInfo);
-            pageResultBean_new.setList(informationList);
-            return pageResultBean_new;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("根据条件查询通话记录列表发生异常！");
-            return null;
-        }
+    
+    @Override
+    public Page<PbxCdrs> findAll(PbxCdrsCriteria pbxCdrsCriteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
+        Pageable pageable = new PageRequest(pbxCdrsCriteria.getPage(), pbxCdrsCriteria.getSize(), sort);
+        return pbxCdrsRepository.findAll(PbxCdrsSpecs.createSpec(pbxCdrsCriteria), pageable);
     }
     @Override
     public List<PbxCdrs> findAllExcel(PbxCdrsCriteria pbxCdrsCriteria) {
-        com.github.pagehelper.Page pageInfo = PageHelper.startPage(pbxCdrsCriteria.getPageNum(), pbxCdrsCriteria.getPageSize());
         List<PbxCdrs> informationList = null;
         try {
-            informationList = pbxCdrsMapper.selectByPrimary(pbxCdrsCriteria);
+            informationList = pbxCdrsMapper.selectByPrimaryExcel(pbxCdrsCriteria);
             return informationList;
         } catch (Exception e) {
             e.printStackTrace();

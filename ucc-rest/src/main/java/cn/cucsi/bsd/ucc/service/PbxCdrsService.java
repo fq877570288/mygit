@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.service;
 
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.PbxCdrsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PbxCdrsForAPPCriteria;
@@ -12,7 +13,8 @@ import java.util.List;
  * Created by Song on 2017/10/16.
  */
 public interface PbxCdrsService {
-    PageResultBean_New<List<PbxCdrs>> findAll(PbxCdrsCriteria PbxCdrsCriteria);
+    Page<PbxCdrs> findAll(PbxCdrsCriteria PbxCdrsCriteria);
+
     PbxCdrs findOne(String cdrId);
     PbxCdrs save(PbxCdrs PbxCdrs);
     Boolean delete(String cdrId);

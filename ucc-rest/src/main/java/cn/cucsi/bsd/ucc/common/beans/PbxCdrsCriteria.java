@@ -8,13 +8,13 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 
 
-public class PbxCdrsCriteria extends BasicPageCriteriaForBean{
+public class PbxCdrsCriteria extends BasicCriteria{
     private String firstCaller;
     
     private String callerJobNumber;
 
     private String cdrId;	        
-    private String number;
+    private String extsNum;
 
     private String aftergwId;
 
@@ -24,9 +24,9 @@ public class PbxCdrsCriteria extends BasicPageCriteriaForBean{
 
     private String hangupCauseEn;
 
-    private Integer isRecord1;
+    private String isRecord1;
 
-    private Integer isRecord2;
+    private String isRecord2;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTimeFrom;
@@ -71,16 +71,16 @@ public class PbxCdrsCriteria extends BasicPageCriteriaForBean{
         this.hangupCauseEn = hangupCauseEn;
     }
 
-    public void setIsRecord1(Integer isRecord1) {
+    public void setIsRecord1(String isRecord1) {
         this.isRecord1 = isRecord1;
     }
 
-    public void setIsRecord2(Integer isRecord2) {
+    public void setIsRecord2(String isRecord2) {
         this.isRecord2 = isRecord2;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setExtsNum(String extsNum) {
+        this.extsNum = extsNum;
     }
 
     public void setSatisfaction(Integer satisfaction) {
@@ -143,15 +143,15 @@ public class PbxCdrsCriteria extends BasicPageCriteriaForBean{
         return satisfaction;
     }
 
-    public String getNumber() {
-        return number;
+    public String getExtsNum() {
+        return extsNum;
     }
 
-    public Integer getIsRecord2() {
+    public String getIsRecord2() {
         return isRecord2;
     }
 
-    public Integer getIsRecord1() {
+    public String getIsRecord1() {
         return isRecord1;
     }
 
