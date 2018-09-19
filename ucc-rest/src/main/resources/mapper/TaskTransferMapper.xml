@@ -257,4 +257,9 @@
     and t.CDR_ID is not null
     order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC
   </select>
+
+  <delete id="deleteByTaskDetailId" parameterType="java.lang.String" >
+    delete from OC_TASK_TRANSFER
+    where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+  </delete>
 </mapper>

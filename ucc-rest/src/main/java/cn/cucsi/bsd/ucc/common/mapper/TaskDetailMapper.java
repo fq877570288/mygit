@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.common.mapper;
 
 import cn.cucsi.bsd.ucc.common.beans.OngoingTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.ShowTaskDetailCriteria;
+import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import org.apache.ibatis.annotations.Mapper;
@@ -73,4 +74,11 @@ public interface TaskDetailMapper {
     int insertGroup(Map<String, Object> taskMap) throws Exception;
 
     void deleteBYBatch(Map<String, Object> taskDetailMap) throws Exception;
+
+    // 查询明细表中客户信息部分
+    List<TaskDetail> getCustomerInfo() throws Exception;
+
+    List<TaskDetail> selectByWhere(Map<String, Object> whereMap) throws Exception;
+
+    List<TaskDetail> selectImportBatchsBySearch(TaskDetailSearch search) throws Exception;
 }

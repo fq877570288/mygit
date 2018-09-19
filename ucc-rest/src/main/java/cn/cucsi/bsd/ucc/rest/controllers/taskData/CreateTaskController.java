@@ -35,7 +35,7 @@ public class CreateTaskController {
 	private CreateTaskService createTaskService;
 
 	/***
-	 * 生成任务 导入数据批次列表
+	 * 生成任务 导入数据批次列表(列表展示用)
 	 * add by wangxiaoyu
 	 * 2018-09-13
 	 */
@@ -61,8 +61,6 @@ public class CreateTaskController {
 			logger.error(e.getMessage(), e);
 			return null;
 		}
-		//model.addAttribute("userId", Auth.getLoginUser(session).getId());
-		//model.addAttribute("js_list", new String[] { "page/taskTypeSelect.js","page/createTask.js", "autoComplete.js"});
 	}
 
 	/***

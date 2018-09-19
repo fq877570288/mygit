@@ -679,7 +679,7 @@
     SELECT
       a.BUSINESS_CODE,
       a.USER_ID,
-      a.domain_id,
+      uu.domain_id,
       a.TASK_DETAIL_ID,
       a.TASK_CODE,
       <if test="taskCountsFlag != null">
@@ -691,6 +691,7 @@
     FROM
       OC_TASK_DETAIL AS a
     INNER JOIN ucc_customers AS b ON a.BUSINESS_CODE = b.businesscode and a.domain_id = b.domain_id
+    LEFT JOIN ucc_users AS uu ON a.USER_ID = uu.user_id
     <if test='taskCountsFlag != null and taskCountsFlag =="2" '>
     LEFT JOIN OC_TASK_TRANSFER AS t on a.TASK_DETAIL_ID = t.TASK_DETAIL_ID
     </if>
@@ -755,18 +756,21 @@
 	  count(d.TASK_DETAIL_ID)
    FROM
 	  OC_TASK_DETAIL as d
-   WHERE d.TASK_STATUS = '1'
+	  LEFT JOIN ucc_users AS uu ON d.USER_ID = uu.user_id
+   WHERE d.TASK_STATUS = '2'
+   and d.domain_id = uu.domain_id
    AND d.USER_ID = #{userId,jdbcType=VARCHAR}
   </select>
 
   <!-- 根据userId获取在办任务数量 add by wangxiaoyu 2018-09-01-->
   <select id="selectToGoTaskCounts" resultType="int" parameterType="cn.cucsi.bsd.ucc.common.beans.OngoingTaskCriteria">
     SELECT
-    count(d.TASK_DETAIL_ID)
+      count(d.TASK_DETAIL_ID)
     FROM
-    OC_TASK_DETAIL as d
-    WHERE
-    (d.TASK_STATUS = '3' OR d.TASK_STATUS = '2')
+      OC_TASK_DETAIL as d
+      LEFT JOIN ucc_users AS uu ON d.USER_ID = uu.user_id and d.domain_id = uu.domain_id
+    WHERE d.TASK_STATUS = '3'
+    and d.domain_id = uu.domain_id
     AND d.USER_ID = #{userId,jdbcType=VARCHAR}
   </select>
 
@@ -777,8 +781,10 @@
     FROM
 	   OC_TASK_RECORD as d
     LEFT JOIN OC_TASK_TRANSFER_RECORD as r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID
+    LEFT JOIN ucc_users AS uu ON d.OPERATOR_ID = uu.user_id and d.domain_id = uu.domain_id
     WHERE
 	   r.TRANSFER_STATUS = '4'
+	and d.domain_id = uu.domain_id
     AND r.TRANSFER_TIME BETWEEN #{dateStart} and #{dateEnd}
     AND d.OPERATOR_ID = #{userId,jdbcType=VARCHAR}
   </select>
@@ -790,5 +796,139 @@
     where IMPORT_BATCH = #{oldTaskBatch} and TASK_STATUS not
     in ('4')
   </delete>
+
+  <!-- 查询明细表中客户信息部分 -->
+  <select id="getCustomerInfo" resultMap="BaseResultMap">
+    select
+      d.BUSINESS_CODE
+      BUSINESS_CODE,
+      d.CONTACTS CONTACTS,
+      d.STATUS STATUS,
+      d.INSTALLED_ADDRESS
+      INSTALLED_ADDRESS,
+      d.PON_LOGO PON_LOGO,
+      d.TARIFF_NAME TARIFF_NAME,
+      d.USER_NAME USER_NAME,
+      d.PHONE_NUMBER PHONE_NUMBER,
+      d.PHONE_NUMBER2
+      PHONE_NUMBER2,
+      d.PHONE_NUMBER3 PHONE_NUMBER3
+    from OC_TASK_DETAIL d
+    where
+    d.TASK_STATUS = '0'
+  </select>
+
+  <!-- 分页查询 -->
+  <sql id="Sql_Where">
+    <if test="businessCode != null and businessCode != ''">
+      and d.BUSINESS_CODE LIKE '%${businessCode}%'
+    </if>
+    <if test="taskTypeName != null and taskTypeName != ''">
+      and d.TASK_TYPE_ID = #{taskTypeName}
+    </if>
+    <if test="deptMeshName != null and deptMeshName != ''">
+      and p1.dept_name LIKE '%${deptMeshName}%'
+    </if>
+    <if test="deptAreaName != null and deptAreaName != ''">
+      and p2.dept_name LIKE '%${deptAreaName}%'
+    </if>
+    <if test="developmentDeptName != null and developmentDeptName != ''">
+      and p3.dept_name LIKE '%${developmentDeptName}%'
+    </if>
+    <if test="roperateDeptId != null and roperateDeptId != ''">
+      and d.ROPERATE_DEPT_ID = #{roperateDeptId}
+    </if>
+    <if test="taskStatus != null and taskStatus != ''">
+      and (d.TASK_STATUS = #{taskStatus} or d.TASK_STATUS = '5')
+    </if>
+    <if test="taskStatusList != null and taskStatusList != ''">
+      and (d.TASK_STATUS in (${taskStatusList}) or d.TASK_STATUS = '5')
+    </if>
+    <if test="taskTypeId != null and taskTypeId != ''">
+      and d.TASK_TYPE_ID = #{taskTypeId}
+    </if>
+    <if test="taskCode != null and taskCode != ''">
+      and d.TASK_CODE LIKE '%${taskCode}%'
+    </if>
+    <if test="defultPhone != null and defultPhone != ''">
+      and d.DEFULT_PHONE LIKE '%${defultPhone}%'
+    </if>
+    <if test="userName != null and userName != ''">
+      and c.cust_name LIKE '%${userName}%'
+    </if>
+    <if test="importPersonId != null and importPersonId != ''">
+      and d.IMPORT_PERSON_ID = #{importPersonId}
+    </if>
+    <if test="barchs != null and barchs != ''">
+      and d.IMPORT_BATCH in (${barchs})
+    </if>
+  </sql>
+
+  <!-- 条件查询 -->
+  <select id="selectByWhere" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+      <include refid="Base_Column_List" />
+    from OC_TASK_DETAIL d
+    where 1=1
+      <include refid="Sql_Where" />
+    order by d.TASK_CODE DESC
+  </select>
+
+  <!-- 分派任务列表 -->
+  <sql id="Sql_AllocationWhere">
+    <if test="businessCode != null and businessCode != ''">
+      and d.BUSINESS_CODE LIKE '%${businessCode}%'
+    </if>
+    <if test="taskTypeName != null and taskTypeName != ''">
+      and d.TASK_TYPE_ID = #{taskTypeName}
+    </if>
+    <if test="deptMeshName != null and deptMeshName != ''">
+      and p1.dept_name LIKE '%${deptMeshName}%'
+    </if>
+    <if test="deptAreaName != null and deptAreaName != ''">
+      and p2.dept_name LIKE '%${deptAreaName}%'
+    </if>
+    <if test="developmentDeptName != null and developmentDeptName != ''">
+      and p3.dept_name LIKE '%${developmentDeptName}%'
+    </if>
+    <if test="roperateDeptId != null and roperateDeptId != ''">
+      and d.ROPERATE_DEPT_ID = #{roperateDeptId}
+    </if>
+    <if test="taskStatus != null and taskStatus != ''">
+      and (d.TASK_STATUS = #{taskStatus} or d.TASK_STATUS = '5')
+    </if>
+    <if test="taskStatusList != null and taskStatusList != ''">
+      and (d.TASK_STATUS in (${taskStatusList}) or d.TASK_STATUS = '5')
+    </if>
+    <if test="taskTypeId != null and taskTypeId != ''">
+      and d.TASK_TYPE_ID = #{taskTypeId}
+    </if>
+    <if test="taskCode != null and taskCode != ''">
+      and d.TASK_CODE LIKE '%${taskCode}%'
+    </if>
+    <if test="defultPhone != null and defultPhone != ''">
+      and d.DEFULT_PHONE LIKE '%${defultPhone}%'
+    </if>
+    <if test="userName != null and userName != ''">
+      and c.name LIKE '%${userName}%'
+    </if>
+    <if test="importPersonId != null and importPersonId != ''">
+      and d.IMPORT_PERSON_ID = #{importPersonId}
+    </if>
+  </sql>
+
+  <select id="selectImportBatchsBySearch" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT DISTINCT
+      IMPORT_BATCH
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+      LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+      LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+  </select>
 
 </mapper>

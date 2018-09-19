@@ -15,15 +15,15 @@
   
   <select id="selectAllByBatchFlag" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.data.domain.ImportBatch" >
     select
-    OC_IMPORT_BATCH.IMPORT_BATCH as IMPORT_BATCH,
-    OC_IMPORT_BATCH.IMPORT_PERSON_ID as IMPORT_PERSON_ID,
-    OC_IMPORT_BATCH.IMPORT_TIME as IMPORT_TIME,
-    OC_IMPORT_BATCH.TASK_TYPE as TASK_TYPE,
-    OC_IMPORT_BATCH.BATCH_FLAG as BATCH_FLAG,
-    ucc_users.nick_name as IMPORT_PERSON_NAME  from OC_IMPORT_BATCH as OC_IMPORT_BATCH
-    left join ucc_users as ucc_users on ucc_users.user_id = OC_IMPORT_BATCH.IMPORT_PERSON_ID
+      OC_IMPORT_BATCH.IMPORT_BATCH as IMPORT_BATCH,
+      OC_IMPORT_BATCH.IMPORT_PERSON_ID as IMPORT_PERSON_ID,
+      OC_IMPORT_BATCH.IMPORT_TIME as IMPORT_TIME,
+      OC_IMPORT_BATCH.TASK_TYPE as TASK_TYPE,
+      OC_IMPORT_BATCH.BATCH_FLAG as BATCH_FLAG,
+      ucc_users.nick_name as IMPORT_PERSON_NAME  from OC_IMPORT_BATCH as OC_IMPORT_BATCH
+      left join ucc_users as ucc_users on ucc_users.user_id = OC_IMPORT_BATCH.IMPORT_PERSON_ID
     where OC_IMPORT_BATCH.BATCH_FLAG = #{batchFlag,jdbcType=VARCHAR}
-    and OC_IMPORT_BATCH.IMPORT_PERSON_ID = #{importPersonId,jdbcType=VARCHAR}
+      and OC_IMPORT_BATCH.IMPORT_PERSON_ID = #{importPersonId,jdbcType=VARCHAR}
     <if test="importBatchs != null and importBatchs != ''">
 		or OC_IMPORT_BATCH.IMPORT_BATCH in ( ${importBatchs} )
 	</if>

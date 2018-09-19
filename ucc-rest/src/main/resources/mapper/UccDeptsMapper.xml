@@ -233,7 +233,7 @@
     where dept_id = #{deptId,jdbcType=VARCHAR}
   </update>
 
-  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
       c.*
     from ucc_users a left join user_dept b on a.user_id = b.user_id
@@ -242,7 +242,7 @@
   </select>
 
   <!-- 获取ID最大值 -->
-  <select id="selectMaxDeptID" resultType="java.lang.Long" >
+  <select id="selectMaxDeptID" resultType="java.lang.String" >
     SELECT max(dept_id) FROM ucc_depts
   </select>
 

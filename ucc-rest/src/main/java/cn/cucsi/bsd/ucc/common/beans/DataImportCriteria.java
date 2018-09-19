@@ -13,28 +13,28 @@ import java.util.List;
 @ApiModel
 public class DataImportCriteria extends Paging {
 
-	@ApiModelProperty(value = "？",required = true)
+	@ApiModelProperty(value = "？",required = false)
 	private List<DataCustomfield> DataCustomfields;
 
-	@ApiModelProperty(value = "业务编码",required = true)
+	@ApiModelProperty(value = "业务编码",required = false)
 	private String businessCode; //业务号码
 
-	@ApiModelProperty(value = "坐席员ID",required = true)
+	@ApiModelProperty(value = "坐席员ID",required = false)
 	private String userId; //坐席员ID
 
-	@ApiModelProperty(value = "任务类型名称",required = true)
+	@ApiModelProperty(value = "任务类型名称",required = false)
     private String taskTypeName; //任务类型名称
 
-	@ApiModelProperty(value = "网给名称",required = true)
+	@ApiModelProperty(value = "网给名称",required = false)
     private String deptMeshName; //网给名称
 
-	@ApiModelProperty(value = "包区名称",required = true)
+	@ApiModelProperty(value = "包区名称",required = false)
     private String deptAreaName; //包区名称
 
-	@ApiModelProperty(value = "发展部门",required = true)
+	@ApiModelProperty(value = "发展部门",required = false)
     private String developmentDept; //发展部门
 
-	@ApiModelProperty(value = "导入人",required = true)
+	@ApiModelProperty(value = "导入人",required = false)
     private String importPersonId; //导入人
 
 	public String getImportPersonId() {

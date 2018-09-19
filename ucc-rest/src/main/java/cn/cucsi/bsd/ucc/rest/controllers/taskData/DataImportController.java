@@ -11,10 +11,7 @@ import cn.cucsi.bsd.ucc.common.beans.CustomFieldsSaveCriteria;
 import cn.cucsi.bsd.ucc.common.beans.DataImportCriteria;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
-import cn.cucsi.bsd.ucc.data.domain.DataCustomfield;
-import cn.cucsi.bsd.ucc.data.domain.DataImport;
-import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
-import cn.cucsi.bsd.ucc.data.domain.TaskType;
+import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -111,12 +108,15 @@ public class DataImportController {
 	 * 2018-09-11
 	 */
 	@ApiOperation(value="数据导入列表", notes="数据导入列表")
-	@RequestMapping(value = "/dataImportList", method= RequestMethod.POST,produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/dataImportList", method= RequestMethod.POST)
 	public Map<String,Object> dataImportList(@RequestBody DataImportCriteria dataImportCriteria){
 
 		Map<String,Object> dataImportMap = new HashMap<String,Object>();
+		dataImportMap.put("msg","操作失败！");
+		dataImportMap.put("code",-1);
+
 		List<DataImport> list;
-		List<DataCustomfield> dataCustomfieldList;
+		List<DataCustomfield> dataCustomfieldList = null;
 		
 		String dataCustomfieldJson = "";
 		String dataImportJson = "";
@@ -129,6 +129,7 @@ public class DataImportController {
 		String userId = dataImportCriteria.getUserId()==null?"":dataImportCriteria.getUserId();
 		try {
 			dataImportCriteria.setImportPersonId(userId);
+			dataImportCriteria.setup(dataImportService.selectBySearchCount(dataImportCriteria), Paging.SHOW_LINES);
 			list = dataImportService.selectBySearch(dataImportCriteria);
             System.out.println("数据导入列表 list.size():::" + list.size());
 			//model.addAttribute("list", list);
@@ -185,7 +186,6 @@ public class DataImportController {
             }
 			//dataCustomfieldList = (List<DataCustomfield>) session.getAttribute("DataCustomfields");
 			dataCustomfieldList = dataImportCriteria.getDataCustomfields();
-            System.out.println("数据导入列表 dataCustomfieldList.size():::" + dataCustomfieldList.size());
 
 			if(!MyUtils.isBlank(dataCustomfieldList)){
 				for(DataCustomfield dataCustomfield : dataCustomfieldList){
@@ -212,17 +212,18 @@ public class DataImportController {
                 //model.addAttribute("cfieldAll", cfieldAll);
                 dataImportMap.put("cfieldAll", cfieldAll);
             }
+			dataImportMap.put("dataCustomfieldJson", dataCustomfieldJson);
+			dataImportMap.put("msg","操作成功！");
+			dataImportMap.put("code",0);
+			return dataImportMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			System.out.println("数据导入列表时发生异常！");
+			dataImportMap.put("msg","操作失败！");
+			dataImportMap.put("code",-1);
+			return dataImportMap;
 		}
-		/*model.addAttribute("userId", userId);
-		model.addAttribute("js_list", new String[] { "page/dataImport.js", "page/autoCompleteImport.js"});
-		model.addAttribute("search", search);//分页查询信息
-		model.addAttribute("dataCustomfieldJson", dataCustomfieldJson);//用户自定义显示字段JSON*/
-		dataImportMap.put("dataCustomfieldJson", dataCustomfieldJson);
-		return dataImportMap;
 	}
 
 	/****
@@ -231,7 +232,7 @@ public class DataImportController {
 	 * 2018-09-11
 	 */
 	@ApiOperation(value="搜索可删除批次-补全", notes="搜索可删除批次-补全")
-	@RequestMapping(value = "/autoSearchDeleteBatch", method= RequestMethod.POST,produces="application/json;charset=UTF-8")
+	@RequestMapping(value = "/autoSearchDeleteBatch", method= RequestMethod.POST)
 	public String autoSearchDeleteBatch(@RequestBody AutoSearchTaskCriteria autoSearchTaskCriteria) {
 		
 		List<String> strList = new ArrayList<String>();
@@ -267,29 +268,31 @@ public class DataImportController {
      * 2018-09-13
 	 */
 	@ApiOperation(value="按批次删除数据", notes="按批次删除数据")
-	@RequestMapping(value="/deleteByBatch/{taskBatchCode}",method= RequestMethod.DELETE,produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/deleteByBatch/{taskBatchCode}",method= RequestMethod.DELETE)
 	public Map<String,Object> deleteByBatch(@PathVariable String taskBatchCode){
 
         Map<String,Object> deleteByBatchMap = new HashMap<String,Object>();
-		//model.addAttribute("infomsg", "删除失败!");
-        deleteByBatchMap.put("infomsg", "删除失败!");
-		//model.addAttribute("infourl", "/data/dataImportList.html");
-        deleteByBatchMap.put("infourl", "/dataImportList");
+		//model.addAttribute("msg", "删除失败!");
+        deleteByBatchMap.put("msg", "删除失败!");
+        deleteByBatchMap.put("code", -1);
+		//model.addAttribute("data", "/data/dataImportList.html");
+        deleteByBatchMap.put("data", "/dataImportList");
 		if (taskBatchCode != null && taskBatchCode.length() > 0) {
 			try {
 				dataImportService.deleteByBatch(taskBatchCode);
-				//model.addAttribute("infourl", "/data/dataImportList.html");
-                deleteByBatchMap.put("infourl", "/dataImportList");
-				//model.addAttribute("infomsg", "删除成功!");
-                deleteByBatchMap.put("infomsg", "删除成功!");
+				//model.addAttribute("data", "/data/dataImportList.html");
+                deleteByBatchMap.put("data", "/dataImportList");
+				//model.addAttribute("msg", "删除成功!");
+                deleteByBatchMap.put("msg", "删除成功!");
+				deleteByBatchMap.put("code", 1);
 			} catch (Exception e) {
 				e.printStackTrace();
     			logger.error(e.getMessage(), e);
 				System.out.println("按批次删除数据发生异常！");
 			}
 		}else {
-			//model.addAttribute("infomsg", "请选择要删除的数据批次!");
-            deleteByBatchMap.put("infomsg", "请选择要删除的数据批次!");
+			//model.addAttribute("msg", "请选择要删除的数据批次!");
+            deleteByBatchMap.put("msg", "请选择要删除的数据批次!");
 		}
 		return deleteByBatchMap;
 	}
@@ -298,14 +301,17 @@ public class DataImportController {
 	 * 自定义显示字段
 	 */
 	@ApiOperation(value="自定义显示字段", notes="自定义显示字段")
-	@RequestMapping(value="/cusfsSave",method= RequestMethod.POST,produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/cusfsSave",method= RequestMethod.POST)
 	public Map<String,Object> customfieldsSave(@RequestBody CustomFieldsSaveCriteria customFieldsSaveCriteria){
 
 		String customfieldNames = customFieldsSaveCriteria.getCustomfieldNames()==null?"":customFieldsSaveCriteria.getCustomfieldNames();
 		String userId = customFieldsSaveCriteria.getUserId()==null?"":customFieldsSaveCriteria.getUserId();
 		Map<String,Object> customFieldsSaveMap = new HashMap<String,Object>();
 		try {
-			userCustomFieldService.saveUserCustomField(customfieldNames, userId);
+			int retcode = userCustomFieldService.saveUserCustomField(customfieldNames, userId);
+			if(retcode<0){
+				customFieldsSaveMap.put("message","保存失败！");
+			}
 			List<DataCustomfield> dataCustomfieldList = dataCustomfieldService.selectImportByUserID(userId);
 			customFieldsSaveMap.put("DataCustomfields", dataCustomfieldList);
 			customFieldsSaveMap.put("message","保存成功！");
@@ -321,14 +327,15 @@ public class DataImportController {
 	 * 导入
 	 */
 	@ApiOperation(value="导入", notes="导入")
-	@RequestMapping(value="/upload",method= RequestMethod.POST,produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/upload",method= RequestMethod.POST)
 	public Map<String,Object> uploadFile(@RequestParam("file") CommonsMultipartFile file,HttpSession httpSession) {
 
 		Map<String,Object> customFieldsSaveMap = new HashMap<String,Object>();
-		//model.addAttribute("infomsg", "上传失败!");
-		//model.addAttribute("infourl", "/data/dataImportList.html");
-		customFieldsSaveMap.put("infomsg", "上传失败!");
-		customFieldsSaveMap.put("infourl", "/dataImportList");
+		//model.addAttribute("msg", "上传失败!");
+		//model.addAttribute("data", "/data/dataImportList.html");
+		customFieldsSaveMap.put("msg", "上传失败!");
+		customFieldsSaveMap.put("code", -1);
+		customFieldsSaveMap.put("data", "/dataImportList");
 		if (file != null && file.getSize() > 0) {
 			try {
 				List<DataImport> dataImportList = null;
@@ -361,8 +368,8 @@ public class DataImportController {
 				String deptIdAndChildIds = (String)httpSession.getAttribute("DeptIdAndChildIds");
 
 				if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
-					//model.addAttribute("infomsg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
-					customFieldsSaveMap.put("infomsg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
+					//model.addAttribute("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
+					customFieldsSaveMap.put("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
 					return customFieldsSaveMap;
 				}
 				for(int i=0; i<dataImportList.size(); i++){
@@ -370,46 +377,47 @@ public class DataImportController {
 					dataImport = dataImportList.get(i);
 					int rownumber = i+3;
 					if(dataImport.getTaskTypeName() == null || "".equals(dataImport.getTaskTypeName())){
-						//model.addAttribute("infomsg", "第"+rownumber+"行：任务类型不可空!");
+						//model.addAttribute("msg", "第"+rownumber+"行：任务类型不可空!");
 						//return "info.view";
-						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：任务类型不可空!");
+						customFieldsSaveMap.put("msg", "第"+rownumber+"行：任务类型不可空!");
 						return customFieldsSaveMap;
 					}else if(!taskType.equals(dataImport.getTaskTypeName())){
-						//model.addAttribute("infomsg", "导入任务类型请保持一致!");
+						//model.addAttribute("msg", "导入任务类型请保持一致!");
 						//return "info.view";
-						customFieldsSaveMap.put("infomsg", "导入任务类型请保持一致!");
+						customFieldsSaveMap.put("msg", "导入任务类型请保持一致!");
 						return customFieldsSaveMap;
 					}
 					if(dataImport.getDeptMeshName() == null || "".equals(dataImport.getDeptMeshName())){
-						//model.addAttribute("infomsg", "第"+rownumber+"行：名称不可空!");
+						//model.addAttribute("msg", "第"+rownumber+"行：名称不可空!");
 						//return "info.view";
-						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：名称不可空!");
+						customFieldsSaveMap.put("msg", "第"+rownumber+"行：名称不可空!");
 						return customFieldsSaveMap;
 					}
 					if(dataImport.getDeptAreaName() == null || "".equals(dataImport.getDeptAreaName())){
-						//model.addAttribute("infomsg", "第"+rownumber+"行：包区名称不可空!");
+						//model.addAttribute("msg", "第"+rownumber+"行：包区名称不可空!");
 						//return "info.view";
-						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：包区名称不可空!");
+						customFieldsSaveMap.put("msg", "第"+rownumber+"行：包区名称不可空!");
 						return customFieldsSaveMap;
 					}
 					if(dataImport.getBusinessCode() == null || "".equals(dataImport.getBusinessCode())){
-						//model.addAttribute("infomsg", "第"+rownumber+"行：业务号码不可空!");
+						//model.addAttribute("msg", "第"+rownumber+"行：业务号码不可空!");
 						//return "info.view";
-						customFieldsSaveMap.put("infomsg", "第"+rownumber+"行：业务号码不可空!");
+						customFieldsSaveMap.put("msg", "第"+rownumber+"行：业务号码不可空!");
 						return customFieldsSaveMap;
 					}
 				}
 				if(!checkTaskType(taskType)){
-					//model.addAttribute("infomsg", "任务类型不存在，请检查您的任务类型!");
+					//model.addAttribute("msg", "任务类型不存在，请检查您的任务类型!");
 					//return "info.view";
-					customFieldsSaveMap.put("infomsg", "任务类型不存在，请检查您的任务类型!");
+					customFieldsSaveMap.put("msg", "任务类型不存在，请检查您的任务类型!");
 					return customFieldsSaveMap;
 				}
 				dataImportService.insertGroup(dataImportList);
-				//model.addAttribute("infourl", "/data/dataImportList.html");
-				//model.addAttribute("infomsg", "本次成功导入数据："+dataImportList.size()+"条!");
-				customFieldsSaveMap.put("infourl", "/dataImportList");
-				customFieldsSaveMap.put("infomsg", "本次成功导入数据："+dataImportList.size()+"条!");
+				//model.addAttribute("data", "/data/dataImportList.html");
+				//model.addAttribute("msg", "本次成功导入数据："+dataImportList.size()+"条!");
+				customFieldsSaveMap.put("data", "/dataImportList");
+				customFieldsSaveMap.put("code", 0);
+				customFieldsSaveMap.put("msg", "本次成功导入数据："+dataImportList.size()+"条!");
 			} catch (Exception e) {
 				e.printStackTrace();
     			logger.error(e.getMessage(), e);
@@ -439,7 +447,7 @@ public class DataImportController {
 
 		Map<String,Object> readExcelXlsMap = new HashMap<String,Object>();
 		readExcelXlsMap.put("returnCode","FAIL");
-		readExcelXlsMap.put("infomsg","操作失败！");
+		readExcelXlsMap.put("msg","操作失败！");
 		List<DataImport> list = null;
 		try {
 			// 创建一个list 用来存储读取的内容
@@ -461,7 +469,7 @@ public class DataImportController {
                 eventId = TIME+userID+createRandomCode(10);
             }else{
                 System.out.println("读取Excel.xls内容,session获取userID为空！");
-				readExcelXlsMap.put("infomsg","读取Excel.xls内容,session获取userID为空！");
+				readExcelXlsMap.put("msg","读取Excel.xls内容,session获取userID为空！");
                 return readExcelXlsMap;
             }
 			// 主键
@@ -482,7 +490,7 @@ public class DataImportController {
                 HSSFRow row = sheet.getRow(0);
                 String cell = row.getCell(i).toString();
                 if(!StringUtils.isNumeric(cell)){
-					readExcelXlsMap.put("infomsg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
+					readExcelXlsMap.put("msg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
 					return readExcelXlsMap;
                     //throw new NumberFormatException("已经处理的数字格式化异常！！内容为： "+"第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
                 }
@@ -704,7 +712,7 @@ public class DataImportController {
 		}
 		readExcelXlsMap.put("list",list);
 		readExcelXlsMap.put("returnCode","SUCCESS");
-		readExcelXlsMap.put("infomsg","操作成功！");
+		readExcelXlsMap.put("msg","操作成功！");
 		return readExcelXlsMap;
 	}
 	
@@ -716,7 +724,7 @@ public class DataImportController {
 
 		Map<String,Object> readExcelXlsxMap = new HashMap<String,Object>();
 		readExcelXlsxMap.put("returnCode","FAIL");
-		readExcelXlsxMap.put("infomsg","操作失败！");
+		readExcelXlsxMap.put("msg","操作失败！");
 		List<DataImport> list = null;
 		try {
 			// 创建一个list 用来存储读取的内容
@@ -738,7 +746,7 @@ public class DataImportController {
 				eventId = TIME+userID+createRandomCode(10);
 			}else{
 				System.out.println("读取Excel.xlsx内容,session获取userID为空！");
-				readExcelXlsxMap.put("infomsg","读取Excel.xlsx内容,session获取userID为空！");
+				readExcelXlsxMap.put("msg","读取Excel.xlsx内容,session获取userID为空！");
 				return readExcelXlsxMap;
 			}
 			// 主键
@@ -759,7 +767,7 @@ public class DataImportController {
                 XSSFRow row = sheet.getRow(0);
                 String cell = row.getCell(i) == null? "": row.getCell(i).toString();
                 if(cell==null || cell.trim().isEmpty() || !StringUtils.isNumeric(cell)){
-					readExcelXlsxMap.put("infomsg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
+					readExcelXlsxMap.put("msg", "第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
 					return readExcelXlsxMap;
                     //throw new NumberFormatException("已经处理的数字格式化异常！！内容为： "+"第1行，第"+(i+1)+"列必须为数字，但实际值是："+cell+ "，请修正！");
                 }
@@ -816,7 +824,7 @@ public class DataImportController {
                 XSSFRow row = sheet.getRow(i);
                 // 列编码大于0 获取单元格内容 存入DataImport实体类
                 if(row==null){
-					readExcelXlsxMap.put("infomsg", "第"+(i+1)+"行，整行为空，请修正！");
+					readExcelXlsxMap.put("msg", "第"+(i+1)+"行，整行为空，请修正！");
                     return readExcelXlsxMap;
 					//throw new NumberFormatException("已经处理的EXCEL数据导入异常！！内容为： "+"第"+(i+1)+"行，整行为空，请修正！");
                 }
@@ -988,7 +996,7 @@ public class DataImportController {
 		}
 		readExcelXlsxMap.put("list",list);
 		readExcelXlsxMap.put("returnCode","SUCCESS");
-		readExcelXlsxMap.put("infomsg","操作成功！");
+		readExcelXlsxMap.put("msg","操作成功！");
 		return readExcelXlsxMap;
 	}
 	
