@@ -73,7 +73,7 @@
 	  pbx_cdrs 
     WHERE 1=1
     <if test="cdrId != null and cdrId != ''" >
-	AND cdr_id = #{cdrId,jdbcType=VARCHAR},
+	AND cdr_id = #{cdrId,jdbcType=VARCHAR}
     </if>
     <if test="number != null and number != ''" >
         AND first_caller LIKE '%${number}%' AND first_callee LIKE '%${number}%' 
@@ -90,7 +90,6 @@
     <if test="hangupCauseEn != null and hangupCauseEn != ''" >
         AND hangup_cause LIKE '%${hangupCauseEn}%'
     </if>
-
     <if test="isRecord1 == '1'" >
         AND (recordid1 = '' or ISNULL(recordid1))
     </if>
@@ -104,10 +103,10 @@
         AND (recordid2 != '' or !ISNULL(recordid2))
     </if>
     <if test="createTimeFrom != null"  >
-        AND (Date(created_time) &gt;= Date('#{createTimeFrom,jdbcType=TIMESTAMP}')
+        AND Date(created_time) &gt;= #{createTimeFrom,jdbcType=DATE}
     </if>
     <if test="createTimeTo != null"  >
-        AND Date(created_time) &lt;= Date('#{createTimeTo,jdbcType=TIMESTAMP}')
+        AND Date(created_time) &lt;= #{createTimeTo,jdbcType=DATE}
     </if>
     <if test="totalTimeFrom != null"  >
         AND total_time &gt;= #{totalTimeFrom,jdbcType=INTEGER}

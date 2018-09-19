@@ -17,8 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+ 
 
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Song on 2017/10/16.
@@ -40,7 +42,7 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
         List<PbxCdrs> informationList = null;
         try {
             informationList = pbxCdrsMapper.selectByPrimary(pbxCdrsCriteria);
-            System.out.println("informationList::::" + informationList.size());
+            //System.out.println("informationList::::" + informationList.size());
             PageResultBean_New<List<PbxCdrs>> pageResultBean_new = new PageResultBean_New(pageInfo);
             pageResultBean_new.setList(informationList);
             return pageResultBean_new;

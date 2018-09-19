@@ -2,10 +2,13 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.UccNotice;
+import cn.cucsi.bsd.ucc.data.domain.UccNoticeFile;
+import cn.cucsi.bsd.ucc.service.UccNoticeFileService;
 import cn.cucsi.bsd.ucc.service.UccNoticeService;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,17 +23,34 @@ import java.util.List;
 public class UccNoticeController {
     @Autowired
     UccNoticeService uccNoticeService;
-
+    @Autowired
+    private UccNoticeFileService uccNoticeFileService;
     @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "GET")
     @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean<List<UccNotice>> findAll(@ModelAttribute UccNoticeCriteria search) {
-        return new PageResultBean(this.uccNoticeService.findAll(search));
+    public PageResultBean_New<List<UccNotice>> findAll(@ModelAttribute UccNoticeCriteria search) {
+        //return new PageResultBean_New(this.uccNoticeService.findAll(search));
+        List<UccNotice> list = this.uccNoticeService.findAll(search);
+        //for (UccNotice uccNotice:list)
+        for(Integer i = 0 ;i< list.size();i++ )
+        {
+            List<UccNoticeFile> noticeFileList = uccNoticeFileService.findFileList(list.get(i).getNoticeId());
+            UccNotice uccNotic = list.get(i);
+            uccNotic.setUccNoticeFiles(noticeFileList);
+            list.set(i,uccNotic);
+        }
+        return new PageResultBean_New(list);
+        
     }
 
+    
+    
     @ApiOperation(value = "根据noticeId查询UccNotice", notes = "根据noticeId查询UccNotice")
     @RequestMapping(value = "/{noticeId}", method= RequestMethod.GET)
     public ResultBean<UccNotice> findOne(@PathVariable String noticeId){
-        return new ResultBean<>(this.uccNoticeService.findOne(noticeId));
+        UccNotice uccNotice = this.uccNoticeService.findOne(noticeId);
+        List<UccNoticeFile> noticeFileList = uccNoticeFileService.findFileList(uccNotice.getNoticeId());
+        uccNotice.setUccNoticeFiles(noticeFileList);
+        return new ResultBean<>(uccNotice);
     }
 
     @ApiOperation(value = "根据noticeId删除UccNotice", notes = "根据noticeId删除UccNotice")
@@ -42,6 +62,8 @@ public class UccNoticeController {
     @ApiOperation(value = "创建UccNotice", notes = "创建UccNotice")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccNotice uccNotice) {
+        Date dateTime = new Date();
+        uccNotice.setCreatedTime(dateTime);
         boolean result = this.uccNoticeService.save(uccNotice) != null;
         return new ResultBean<>(result);
     }
@@ -49,6 +71,8 @@ public class UccNoticeController {
     @ApiOperation(value = "修改UccNotice", notes = "修改UccNotice")
     @RequestMapping(value = "/{noticeId}", method =  RequestMethod.PUT)
     public ResultBean<UccNotice> save(@PathVariable String noticeId, @RequestBody UccNotice uccNotice){
+        Date dateTime = new Date();
+        uccNotice.setUpdatedTime(dateTime);
         return new ResultBean<>(this.uccNoticeService.save(uccNotice));
     }
 

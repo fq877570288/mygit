@@ -38,10 +38,21 @@ public class UccNoticeServiceImpl implements UccNoticeService{
     private UccNoticeTraceMapper uccNoticeTraceMapper;
 
     @Override
-    public Page<UccNotice> findAll(UccNoticeCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "startDate");
-        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
-        return uccNoticeRepository.findAll(UccNoticeSpecs.createSpec(criteria), pageable);
+    public List<UccNotice>findAll(UccNoticeCriteria criteria) {
+        
+        com.github.pagehelper.Page pageInfo = PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
+        List<UccNotice> informationList = null;
+        try {
+            criteria.setNoticeType("1");//(0:公告 1：通知),APP默认查看通知
+            informationList = uccNoticeMapper.findAll(criteria);
+            //PageResultBean_New<List<UccNotice>> pageResultBean_new = new PageResultBean_New(pageInfo);
+            //pageResultBean_new.setList(informationList);
+            return informationList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("根据查询条件获取通知列表--APP用发生异常！");
+            return null;
+        }
     }
 
     @Override

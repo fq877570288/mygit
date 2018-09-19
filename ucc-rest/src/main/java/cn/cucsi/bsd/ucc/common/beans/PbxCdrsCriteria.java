@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 
 
-public class PbxCdrsCriteria extends BasicPageCriteria{
+public class PbxCdrsCriteria extends BasicPageCriteriaForBean{
     private String firstCaller;
     
     private String callerJobNumber;
