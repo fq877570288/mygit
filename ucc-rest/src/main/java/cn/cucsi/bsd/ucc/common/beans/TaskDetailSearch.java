@@ -20,7 +20,7 @@ public class TaskDetailSearch  extends Paging {
     private String taskStatus; // 流转操作
 	private String taskStatusList; // 流转操作
     
-    private Long userId;
+    private String userId;
     
     private String taskCode; //任务编码
     
@@ -225,11 +225,11 @@ public class TaskDetailSearch  extends Paging {
 		this.taskStatus = taskStatus;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

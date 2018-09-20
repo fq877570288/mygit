@@ -150,7 +150,8 @@ public class TaskServiceImpl implements TaskService {
 
                     //撤回任务时执行插入任务流转表
                     try {
-                        taskTransferMapper.insert(taskTransfer);
+						taskTransferMapper.deleteByTaskDetailId(taskDetailId);
+						taskTransferMapper.insert(taskTransfer);
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.out.println("撤回任务时执行插入任务流转表发生错误！");
@@ -376,9 +377,11 @@ public class TaskServiceImpl implements TaskService {
 		try {
 			//待办任务数量
 			int pendingTaskCounts = taskDetailMapper.selectPendingTaskCounts(ongoingTaskCriteria);
+			System.out.println("待办任务数量 pendingTaskCounts:::" + pendingTaskCounts);
 
 			//在办任务数量
 			int toGoTaskCounts = taskDetailMapper.selectToGoTaskCounts(ongoingTaskCriteria);
+			System.out.println("在办任务数量 toGoTaskCounts:::" + toGoTaskCounts);
 
 			//本月办结任务数量
             Map<String, Object> cmap=new HashMap<String, Object>();
@@ -388,6 +391,7 @@ public class TaskServiceImpl implements TaskService {
             cmap.put("dateEnd", dateStr+" 23:59:59");
             cmap.put("userId", ongoingTaskCriteria.getUserId());
 			int completedTaskCounts = taskDetailMapper.selectCompletedTaskCounts(cmap);
+			System.out.println("本月办结任务数量 completedTaskCounts:::" + completedTaskCounts);
 
 			retData.put("pendingTaskCounts",pendingTaskCounts+"");
 			retData.put("toGoTaskCounts",toGoTaskCounts+"");

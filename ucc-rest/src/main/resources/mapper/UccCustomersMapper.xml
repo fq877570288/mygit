@@ -572,4 +572,59 @@
       updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
     where cust_id = #{custId,jdbcType=VARCHAR}
   </update>
+
+  <!-- 根据业务号码 查询客户表 -->
+  <select id="selectByBusinessCodes" resultMap="BaseResultMap"
+          parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from ucc_customers where businesscode in ( ${businessCode}
+    )
+  </select>
+
+  <!-- 根据业务号码 删除客户表数据 -->
+  <delete id="deleteByBusinessCodes" parameterType="java.util.Map">
+    delete from ucc_customers
+    where businesscode in ( ${businessCode} )
+  </delete>
+
+  <!-- 批量插入 -->
+  <insert id="insertGroup" parameterType="map">
+    insert into ucc_customers (
+      cust_id, address1, address2,
+      address3, address4, birthday,
+      businesscode, changephone1, changephone2,
+      changephone3, companyname, companynature,
+      contacts, created_nick_name, created_time,
+      created_user_id, created_user_name, cust_code,
+      cust_name, defult_phone, domain_id,
+      email, fax, idcard,
+      industrytype, installedaddress, memo,
+      msg_resource, phone, phone2,
+      phone3, ponlogo, product_type,
+      pull_black_reason, qq, rate,
+      sex, status, tariffname,
+      type, updated_nick_name, updated_time,
+      updated_user_id, updated_user_name
+    )
+    values
+    <foreach collection="list" item="record" index="index"
+             separator=",">
+      (#{record.custId,jdbcType=VARCHAR}, #{record.address1,jdbcType=INTEGER}, #{record.address2,jdbcType=INTEGER},
+      #{record.address3,jdbcType=INTEGER}, #{record.address4,jdbcType=VARCHAR}, #{record.birthday,jdbcType=TIMESTAMP},
+      #{record.businesscode,jdbcType=VARCHAR}, #{record.changephone1,jdbcType=VARCHAR}, #{record.changephone2,jdbcType=VARCHAR},
+      #{record.changephone3,jdbcType=VARCHAR}, #{record.companyname,jdbcType=VARCHAR}, #{record.companynature,jdbcType=INTEGER},
+      #{record.contacts,jdbcType=VARCHAR}, #{record.createdNickName,jdbcType=VARCHAR}, #{record.createdTime,jdbcType=TIMESTAMP},
+      #{record.createdUserId,jdbcType=VARCHAR}, #{record.createdUserName,jdbcType=VARCHAR}, #{record.custCode,jdbcType=VARCHAR},
+      #{record.custName,jdbcType=VARCHAR}, #{record.defultPhone,jdbcType=VARCHAR}, #{record.domainId,jdbcType=VARCHAR},
+      #{record.email,jdbcType=VARCHAR}, #{record.fax,jdbcType=VARCHAR}, #{record.idcard,jdbcType=VARCHAR},
+      #{record.industrytype,jdbcType=INTEGER}, #{record.installedaddress,jdbcType=VARCHAR}, #{record.memo,jdbcType=VARCHAR},
+      #{record.msgResource,jdbcType=INTEGER}, #{record.phone,jdbcType=VARCHAR}, #{record.phone2,jdbcType=VARCHAR},
+      #{record.phone3,jdbcType=VARCHAR}, #{record.ponlogo,jdbcType=VARCHAR}, #{record.productType,jdbcType=VARCHAR},
+      #{record.pullBlackReason,jdbcType=VARCHAR}, #{record.qq,jdbcType=VARCHAR}, #{record.rate,jdbcType=VARCHAR},
+      #{record.sex,jdbcType=INTEGER}, #{record.status,jdbcType=VARCHAR}, #{record.tariffname,jdbcType=VARCHAR},
+      #{record.type,jdbcType=INTEGER}, #{record.updatedNickName,jdbcType=VARCHAR}, #{record.updatedTime,jdbcType=TIMESTAMP},
+      #{record.updatedUserId,jdbcType=VARCHAR}, #{record.updatedUserName,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
 </mapper>

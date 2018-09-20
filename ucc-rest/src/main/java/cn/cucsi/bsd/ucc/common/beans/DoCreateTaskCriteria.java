@@ -11,16 +11,16 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class DoCreateTaskCriteria {
 
-    @ApiModelProperty(value = "任务操作类型",required = true)
+    @ApiModelProperty(value = "任务操作类型",required = false)
     private String createMode;
 
-    @ApiModelProperty(value = "新任务批次",required = true)
+    @ApiModelProperty(value = "新任务批次",required = false)
     private String barchs;
 
-    @ApiModelProperty(value = "用户ID",required = true)
+    @ApiModelProperty(value = "用户ID",required = false)
     private String userId;
 
-    @ApiModelProperty(value = "旧任务批次",required = true)
+    @ApiModelProperty(value = "旧任务批次",required = false)
     private String oldTaskBatch;
 
     public String getCreateMode() {

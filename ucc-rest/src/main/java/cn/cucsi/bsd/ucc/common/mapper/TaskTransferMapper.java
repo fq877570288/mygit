@@ -15,6 +15,8 @@ public interface TaskTransferMapper {
 
     int deleteByPrimaryKey(String taskTransferId);
 
+    int deleteByTaskDetailId(String taskDetailId);
+
     int insert(TaskTransfer record);
 
     int insertSelective(TaskTransfer record);

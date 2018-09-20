@@ -2,98 +2,144 @@ package cn.cucsi.bsd.ucc.data.domain;
 
 import java.util.Date;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /****
  * 数据导入表
  * add by wangxiaoyu
  * 2018-09-11
  */
+@ApiModel
 public class DataImport {
-	
+
+    @ApiModelProperty(value = "主键",required = false)
     private String dataImportId; //主键
 
+    @ApiModelProperty(value = "导入批次",required = false)
     private String importBatch; //导入批次
 
+    @ApiModelProperty(value = "导入人主键",required = false)
     private String importPersonId; //导入人主键
 
+    @ApiModelProperty(value = "导入时间",required = false)
     private Date importTime; //导入时间
 
+    @ApiModelProperty(value = "业务号码",required = false)
     private String businessCode; //业务号码
 
+    @ApiModelProperty(value = "任务类型名称",required = false)
     private String taskTypeName; //任务类型名称
 
+    @ApiModelProperty(value = "网给名称",required = false)
     private String deptMeshName; //网给名称
 
+    @ApiModelProperty(value = "包区名称",required = false)
     private String deptAreaName; //包区名称
 
+    @ApiModelProperty(value = "代理商名称",required = false)
     private String deptAgencyName; //代理商名称
 
+    @ApiModelProperty(value = "产品类型",required = false)
     private String productType; //产品类型
 
+    @ApiModelProperty(value = "联系电话",required = false)
     private String phoneNumber3; //联系电话
 
+    @ApiModelProperty(value = "速率",required = false)
     private String velocity; //速率
 
+    @ApiModelProperty(value = "自定义字段1",required = false)
     private String customfields1; //自定义字段1
 
+    @ApiModelProperty(value = "自定义字段2",required = false)
     private String customfields2;
 
+    @ApiModelProperty(value = "自定义字段3",required = false)
     private String customfields3;
 
+    @ApiModelProperty(value = "自定义字段4",required = false)
     private String customfields4;
 
+    @ApiModelProperty(value = "自定义字段5",required = false)
     private String customfields5;
 
+    @ApiModelProperty(value = "自定义字段6",required = false)
     private String customfields6;
 
+    @ApiModelProperty(value = "自定义字段7",required = false)
     private String customfields7;
 
+    @ApiModelProperty(value = "自定义字段8",required = false)
     private String customfields8;
 
+    @ApiModelProperty(value = "自定义字段9",required = false)
     private String customfields9;
 
+    @ApiModelProperty(value = "自定义字段10",required = false)
     private String customfields10;
 
+    @ApiModelProperty(value = "自定义字段11",required = false)
     private String customfields11;
 
+    @ApiModelProperty(value = "自定义字段12",required = false)
     private String customfields12;
 
+    @ApiModelProperty(value = "自定义字段13",required = false)
     private String customfields13;
 
+    @ApiModelProperty(value = "自定义字段14",required = false)
     private String customfields14;
 
+    @ApiModelProperty(value = "自定义字段15",required = false)
     private String customfields15;
 
+    @ApiModelProperty(value = "责任体",required = false)
     private String responsible; //责任体
 
+    @ApiModelProperty(value = "网别",required = false)
     private String netStop; //网别
 
+    @ApiModelProperty(value = "套餐名称",required = false)
     private String packageName; //套餐名称
 
+    @ApiModelProperty(value = "合约名称",required = false)
     private String contractName; //合约名称
 
+    @ApiModelProperty(value = "合约开始时间",required = false)
     private String contractStartTime; //合约开始时间
 
+    @ApiModelProperty(value = "合约结束时间",required = false)
     private String contractEndTime; //合约结束时间
 
+    @ApiModelProperty(value = "激活时间",required = false)
     private String activationTime; //激活时间
 
+    @ApiModelProperty(value = "发展部门",required = false)
     private String developmentDept; //发展部门
-    
+
+    @ApiModelProperty(value = "联系电话1",required = false)
     private String phoneNumber1; //联系电话1
-    
+
+    @ApiModelProperty(value = "联系电话2",required = false)
     private String phoneNumber2; //联系电话2
-    
+
+    @ApiModelProperty(value = "联系人",required = false)
     private String contacts; //联系人
-    
+
+    @ApiModelProperty(value = "用户名称",required = false)
     private String userName; //用户名称
-    
+
+    @ApiModelProperty(value = "资费名称",required = false)
     private String tariffName; //资费名称
-    
+
+    @ApiModelProperty(value = "装机地址",required = false)
     private String installedAddress; //装机地址
-    
+
+    @ApiModelProperty(value = "状态",required = false)
     private String status; //状态
-    
+
+    @ApiModelProperty(value = "PON标识",required = false)
     private String ponLogo; //PON标识
     
     
