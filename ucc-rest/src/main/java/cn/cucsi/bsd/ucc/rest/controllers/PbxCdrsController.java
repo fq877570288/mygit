@@ -40,8 +40,9 @@ public class PbxCdrsController {
         
     @ApiOperation(value="根据查询条件获取通话详单表", notes="根据查询条件获取通话详单表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
-    public PageResultBean_New<List<PbxCdrs>> findAll(@RequestBody PbxCdrsCriteria pbxCdrsCriteria){
-        return new PageResultBean_New(this.PbxCdrsService.findAll(pbxCdrsCriteria));
+    public PageResultBean<List<PbxCdrs>> findAll(@RequestBody PbxCdrsCriteria pbxCdrsCriteria){
+        return new PageResultBean(this.PbxCdrsService.findAll(pbxCdrsCriteria));
+        //return new PageResultBean(this.PbxExtsService.findAll(search));
     }
     @ApiOperation(value = "根据cdrId查询PbxCdrs", notes = "根据cdrId查询PbxCdrs")
     @RequestMapping(value = "/{cdrId}", method= RequestMethod.GET)
@@ -66,7 +67,7 @@ public class PbxCdrsController {
         return new ResultBean<>(result);
     }
     @ApiOperation(value = "根据cdrId获取录音文件", notes = "根据cdrId获取录音文件")
-    @RequestMapping(value = "/getRecording/{cdrId}")
+    @RequestMapping(value = "/{cdrId}/record",method= RequestMethod.POST)
     public void getRecording(HttpServletResponse rsp, @PathVariable String cdrId){
         String recordid1 = this.PbxCdrsService.findOne(cdrId).getRecordid1();
         if(recordid1.isEmpty())
@@ -110,9 +111,9 @@ public class PbxCdrsController {
         }
     }
     
-    @ApiOperation(value = "根据cdrId获取录音文件", notes = "根据cdrId获取录音文件")
-    @RequestMapping(value = "/exportCdrs")
-    public void exportCdrs(HttpServletResponse rsp,@RequestBody PbxCdrsCriteria pbxCdrsCriteria, String sheetName) throws Exception {
+    @ApiOperation(value = "根据查询条件获取导出文件", notes = "根据查询条件获取导出文件")
+    @RequestMapping(value = "/findAllExport",method= RequestMethod.POST)
+    public void exportCdrs(HttpServletResponse rsp,@RequestBody PbxCdrsCriteria pbxCdrsCriteria) throws Exception {
         ExportUtil export = new ExportUtil(rsp,"通话记录", "通话记录1", PbxCdrsExcelCriteria.class);	//实例化一个jxlExport
         List<PbxCdrs> list = this.PbxCdrsService.findAllExcel(pbxCdrsCriteria);
         PbxCdrsExcelCriteria bean = null;
