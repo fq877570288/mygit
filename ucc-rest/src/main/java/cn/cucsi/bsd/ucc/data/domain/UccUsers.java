@@ -148,6 +148,8 @@ public class UccUsers {
     private Collection<PbxExts> ext;
     @JsonView(JSONView.UccUserWithTeams.class)
     private Collection<UccTeams> teams;
+    @JsonView(JSONView.UccUserWithSkillGroup.class)
+    private Collection<UccSkillGroup> skillGroup;
 
 
     @ManyToMany
@@ -209,6 +211,21 @@ public class UccUsers {
 
     public void setExt(Collection<PbxExts> ext) {
         this.ext = ext;
+    }
+
+    @ManyToMany
+    @JoinTable(name="skill_group_user",
+            joinColumns=
+            @JoinColumn(name="user_id", referencedColumnName="user_id"),
+            inverseJoinColumns=
+            @JoinColumn(name="skill_group_id", referencedColumnName="skill_group_id")
+    )
+    public Collection<UccSkillGroup> getSkillGroup() {
+        return skillGroup;
+    }
+
+    public void setSkillGroup(Collection<UccSkillGroup> skillGroup) {
+        this.skillGroup = skillGroup;
     }
 
     @Id
