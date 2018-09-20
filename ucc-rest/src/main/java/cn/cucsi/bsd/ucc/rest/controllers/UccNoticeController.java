@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.UccNotice;
 import cn.cucsi.bsd.ucc.data.domain.UccNoticeFile;
 import cn.cucsi.bsd.ucc.service.UccNoticeFileService;
@@ -8,11 +9,13 @@ import cn.cucsi.bsd.ucc.service.UccNoticeService;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.io.IOException;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by tianyuwei on 2017/10/16.
@@ -25,6 +28,8 @@ public class UccNoticeController {
     UccNoticeService uccNoticeService;
     @Autowired
     private UccNoticeFileService uccNoticeFileService;
+    @Autowired
+    private UccNoticeFile uccNoticeFile;
     @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "GET")
     @RequestMapping(value = "/findAll", method = RequestMethod.GET)
     public PageResultBean_New<List<UccNotice>> findAll(@ModelAttribute UccNoticeCriteria search) {
@@ -61,10 +66,28 @@ public class UccNoticeController {
 
     @ApiOperation(value = "创建UccNotice", notes = "创建UccNotice")
     @RequestMapping(value = "", method =  RequestMethod.POST)
-    public ResultBean<Boolean> create(@RequestBody UccNotice uccNotice) {
+    public ResultBean<Boolean> create(UccNotice uccNotice, @RequestParam("files") MultipartFile[] files) {
         Date dateTime = new Date();
         uccNotice.setCreatedTime(dateTime);
         boolean result = this.uccNoticeService.save(uccNotice) != null;
+        for(MultipartFile file : files)
+        {
+           byte[] fileBox = null;
+           if (file != null && file.getSize() > 0) {
+               UUIDGenerator generator = new UUIDGenerator();
+               String taskTransferUuid = generator.generate();
+               uccNoticeFile.setFileName(file.getOriginalFilename());
+               uccNoticeFile.setNoticeFileId(taskTransferUuid);
+               uccNoticeFile.setCreatedTime(dateTime);
+               try {
+                   fileBox = file.getBytes();
+                   this.uccNoticeFileService.save(fileBox, uccNoticeFile);
+               } catch (IOException e) {
+                   e.printStackTrace();
+               }
+           }
+        }
+        
         return new ResultBean<>(result);
     }
 
