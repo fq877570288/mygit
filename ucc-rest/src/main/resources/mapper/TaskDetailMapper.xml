@@ -931,4 +931,70 @@
     <include refid="Sql_AllocationWhere" />
   </select>
 
+  <select id="selectBySearchCount" resultType="int"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      count(d.TASK_DETAIL_ID)
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+      LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+      LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+    WHERE
+    1 = 1
+    <include refid="Sql_AllocationWhere" />
+    <if test="importBatch != null and importBatch != ''">
+      and d.IMPORT_BATCH = #{importBatch}
+    </if>
+  </select>
+
+  <select id="selectBySearch" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      TASK_DETAIL_ID,
+      BUSINESS_CODE,
+      TASK_TYPE_ID,
+      DEPT_MESH_ID,
+      DEPT_AREA_ID,
+      DEVELOPMENT_DEPT,
+      TASK_CODE,
+      p1.dept_name DEPT_MESH_NAME,
+      p2.dept_name DEPT_AREA_NAME,
+      p3.dept_name DEVELOPMENT_DEPT_NAME,
+      TASK_STATUS
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+      LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+      LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+    <if test="importBatch != null and importBatch != ''">
+      and d.IMPORT_BATCH = #{importBatch}
+    </if>
+    order by d.TASK_CODE DESC
+    <if test="begin != null and showLines != null and showLines != 0">
+      limit #{begin},#{showLines}
+    </if>
+  </select>
+
+  <select id="selectTaskDetailIdBySearch" resultType="string"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      TASK_DETAIL_ID
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+      LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+      LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+    <if test="importBatch != null and importBatch != ''">
+      and d.IMPORT_BATCH = #{importBatch}
+    </if>
+    order by d.TASK_CODE DESC
+  </select>
+
 </mapper>

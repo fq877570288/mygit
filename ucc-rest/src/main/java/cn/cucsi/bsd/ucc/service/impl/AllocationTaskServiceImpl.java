@@ -276,26 +276,29 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 	public List<TaskDetail> selectAllocationBySearch(TaskDetailSearch search) throws Exception {
 		searchDeal(search);
 		// 分页查询
-		//search.setup(taskDetailMapper.selectBySearchCount(search), Paging.SHOW_LINES);
-		//return taskDetailMapper.selectBySearch(search);
-		return null;//临时
+		search.setup(taskDetailMapper.selectBySearchCount(search), search.getShowLines());
+		return taskDetailMapper.selectBySearch(search);
 	}
 	
 	@Override
 	@Transactional("txManager")
 	public List<String> selectTaskDetailIdBySearch(TaskDetailSearch search) throws Exception{
-
-		searchDeal(search);
-		//return taskDetailMapper.selectTaskDetailIdBySearch(search);
-		return null;//临时
+		try {
+			searchDeal(search);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("searchDeal方法执行异常");
+		}
+		return taskDetailMapper.selectTaskDetailIdBySearch(search);
 	}
 	
 	private void searchDeal(TaskDetailSearch search) throws Exception{
 		if(search.getImportBatch() !=null){
 			search.setImportBatch(search.getImportBatch().trim());
 		}
-		/*// 部门
-		List<UccDepts> UccDeptsList = UccDeptsService.selectByUserId(search.getUserId());
+		// 部门
+		//List<UccDepts> UccDeptsList = UccDeptsService.selectByUserId(search.getUserId());
+		List<UccDepts> UccDeptsList = null;//临时
 
 		// 增加权限控制  登录人是中心权限 查询流转操作为0的数据  登录人是网格或包区权限查询流转操作为1的数据
 		if(UccDeptsList != null && UccDeptsList.size() > 0){
@@ -307,6 +310,6 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 				search.setTaskStatusList("'0', '1'");
 			}
 		}
-		search.setRoperateDeptId(UccDeptsList.get(0).getDeptId().toString());*/
+		search.setRoperateDeptId(UccDeptsList.get(0).getDeptId().toString());
 	}
 }
