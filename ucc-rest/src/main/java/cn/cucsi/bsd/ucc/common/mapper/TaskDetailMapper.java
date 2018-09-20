@@ -81,4 +81,11 @@ public interface TaskDetailMapper {
     List<TaskDetail> selectByWhere(Map<String, Object> whereMap) throws Exception;
 
     List<TaskDetail> selectImportBatchsBySearch(TaskDetailSearch search) throws Exception;
+
+    int selectBySearchCount(TaskDetailSearch search) throws Exception;
+
+    // 分页查询
+    List<TaskDetail> selectBySearch(TaskDetailSearch search) throws Exception;
+
+    List<String> selectTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
 }
