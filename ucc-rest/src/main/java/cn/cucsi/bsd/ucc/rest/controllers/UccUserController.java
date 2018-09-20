@@ -104,6 +104,7 @@ public class UccUserController  {
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers) {
         uccUsers.setCreatedTime(new Date());
+        this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
     }
@@ -115,6 +116,7 @@ public class UccUserController  {
         UccUsers targetUser = this.uccUserService.findOne(uccUsers.getUserId());
         UpdateUtil.copyNullProperties(targetUser,uccUsers);
         uccUsers.setUpdatedTime(new Date());
+        this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
     }

@@ -76,60 +76,6 @@ public class UccUserServiceImpl implements UccUserService{
             userId = uccUsers.getUserId();
         }
 
-        //清空对应的部门关联信息后添加新的对应信息
-        if(uccUsers.getUserDepts() != null){
-            UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
-            userDeptCriteria.setUserId(userId);
-            userDeptCriteria.setPage(0);
-            userDeptCriteria.setSize(999);
-            Page<UserDept> list = userDeptService.findAll(userDeptCriteria);
-            if(list.getContent() != null && list.getContent().size() > 0){
-                List<UserDept> userDepts = list.getContent();
-                for(int i = 0; i < userDepts.size(); i++){
-                    UserDeptPK userDeptPK = new UserDeptPK();
-                    userDeptPK.setUserId(userId);
-                    userDeptPK.setDeptId(userDepts.get(i).getDeptId());
-                    userDeptService.delete(userDeptPK);
-                }
-            }
-            Collection<UserDept> depts = uccUsers.getUserDepts();
-            java.util.Iterator dept = depts.iterator();
-
-            while(dept.hasNext()){
-                UserDept ud = (UserDept) dept.next();
-                ud.setUserId(userId);
-//                ud.setCreatedTime(currTime);
-//                ud.setUpdatedTime(currTime);
-//                ud.setUpdatedPerson(uccUsers.getUpdatedPerson());
-
-                userDeptService.save(ud);
-            }
-        }
-
-        //清空角色保存新的角色信息
-        if(uccUsers.getUserRoles() != null){
-            UserRoleCriteria userRoleCriteria = new UserRoleCriteria();
-            userRoleCriteria.setUserId(userId);
-            List<UserRole> list = userRoleService.findAll(userRoleCriteria);
-            for(int i = 0; i < list.size(); i++){
-                UserRolePK userRolePK = new UserRolePK();
-                userRolePK.setUserId(userId);
-                userRolePK.setRoleId(list.get(i).getRoleId());
-                userRoleService.delete(userRolePK);
-            }
-
-            Collection<UserRole> roles = uccUsers.getUserRoles();
-            java.util.Iterator role = roles.iterator();
-            while(role.hasNext()){
-                UserRole ur = (UserRole) role.next();
-                ur.setUserId(userId);
-//                ur.setCreatedTime(currTime);
-//                ur.setUpdatedTime(currTime);
-//                ur.setUpdatedPerson(uccUsers.getUpdatedPerson());
-
-                userRoleService.save(ur);
-            }
-        }
 
         //添加或修改分机号码关联信息
         if(uccUsers.getUserExt() != null){
@@ -211,5 +157,39 @@ public class UccUserServiceImpl implements UccUserService{
         resultBean.setData(uccUsers);
         resultBean.setReturnMsg("登录成功！");
         return resultBean;
+    }
+    @Override
+    public void saveMiddleTable(UccUsers uccUsers){
+        String userId = uccUsers.getUserId();
+        //清空对应的部门关联信息后添加新的对应信息
+        if(uccUsers.getUserDepts() != null){
+            Collection<UserDept> depts = uccUsers.getUserDepts();
+            java.util.Iterator dept = depts.iterator();
+
+            while(dept.hasNext()){
+                UserDept ud = (UserDept) dept.next();
+                ud.setUserId(userId);
+//                ud.setCreatedTime(currTime);
+//                ud.setUpdatedTime(currTime);
+//                ud.setUpdatedPerson(uccUsers.getUpdatedPerson());
+
+                userDeptService.save(ud);
+            }
+        }
+
+        //清空角色保存新的角色信息
+        if(uccUsers.getUserRoles() != null){
+            Collection<UserRole> roles = uccUsers.getUserRoles();
+            java.util.Iterator role = roles.iterator();
+            while(role.hasNext()){
+                UserRole ur = (UserRole) role.next();
+                ur.setUserId(userId);
+//                ur.setCreatedTime(currTime);
+//                ur.setUpdatedTime(currTime);
+//                ur.setUpdatedPerson(uccUsers.getUpdatedPerson());
+
+                userRoleService.save(ur);
+            }
+        }
     }
 }
