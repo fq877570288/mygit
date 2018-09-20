@@ -52,7 +52,11 @@ public class PbxCdrsController {
     @ApiOperation(value = "根据cdrId删除PbxCdrs", notes = "根据cdrId删除PbxCdrs")
     @RequestMapping(value = "/{cdrId}", method= RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String cdrId){
-        return new ResultBean<>(this.PbxCdrsService.delete(cdrId));
+        for(String strid : cdrId.split(","))
+        {
+            this.PbxCdrsService.delete(strid);
+        }
+        return new ResultBean(true);
     }
     @ApiOperation(value = "创建PbxCdrs", notes = "创建PbxCdrs")
     @RequestMapping(value = "", method =  RequestMethod.POST)
