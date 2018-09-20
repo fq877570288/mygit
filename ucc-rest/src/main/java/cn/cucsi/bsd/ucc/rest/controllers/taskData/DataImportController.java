@@ -213,6 +213,7 @@ public class DataImportController {
                 dataImportMap.put("cfieldAll", cfieldAll);
             }
 			dataImportMap.put("dataCustomfieldJson", dataCustomfieldJson);
+			dataImportMap.put("dataImportCriteria",dataImportCriteria);
 			dataImportMap.put("msg","操作成功！");
 			dataImportMap.put("code",0);
 			return dataImportMap;
