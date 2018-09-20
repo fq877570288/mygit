@@ -1,6 +1,8 @@
 package cn.cucsi.bsd.ucc.common.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -9,6 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * add by wangxiaoyu
  * 2018-08-27
  */
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @ApiModel
 public class OngoingTaskCriteria{
 
