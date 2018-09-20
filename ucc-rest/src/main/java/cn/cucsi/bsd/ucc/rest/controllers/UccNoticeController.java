@@ -72,30 +72,34 @@ public class UccNoticeController {
         UUIDGenerator generatorNot = new UUIDGenerator();
         String taskTransferUuidNot = generatorNot.generate();
         uccNotice.setNoticeId(taskTransferUuidNot);
-        boolean result = this.uccNoticeService.save(uccNotice) != null;
-        for(MultipartFile file : files)
+        UccNotice uccNoticere = this.uccNoticeService.save(uccNotice);
+        if(uccNoticere != null)
         {
-           byte[] fileBox = null;
-           if (file != null && file.getSize() > 0) {
-               UUIDGenerator generator = new UUIDGenerator();
-               String taskTransferUuid = generator.generate();
-               UccNoticeFile uccNoticeFile = new UccNoticeFile();
-               uccNoticeFile.setFileName(file.getOriginalFilename());
-               uccNoticeFile.setNoticeFileId(taskTransferUuid);
-               uccNoticeFile.setCreatedTime(dateTime);
-               uccNoticeFile.setCreatedUserId(uccNotice.getCreatedUserId());
-               uccNoticeFile.setCreatedUserName(uccNotice.getCreatedUserName());
-               uccNoticeFile.setNoticeId(taskTransferUuidNot);
-               try {
-                   fileBox = file.getBytes();
-                   this.uccNoticeFileService.save(fileBox, uccNoticeFile);
-               } catch (IOException e) {
-                   e.printStackTrace();
+            for(MultipartFile file : files)
+            {
+               byte[] fileBox = null;
+               if (file != null && file.getSize() > 0) {                   
+                   UccNoticeFile uccNoticeFile = new UccNoticeFile();
+                   uccNoticeFile.setNoticeId(uccNoticere.getNoticeId());
+                   uccNoticeFile.setFileName(file.getOriginalFilename());
+                   UUIDGenerator generator = new UUIDGenerator();
+                   String taskTransferUuid = generator.generate();
+                   uccNoticeFile.setNoticeFileId(taskTransferUuid);
+                   uccNoticeFile.setCreatedTime(dateTime);
+                   uccNoticeFile.setCreatedUserId(uccNotice.getCreatedUserId());
+                   uccNoticeFile.setCreatedUserName(uccNotice.getCreatedUserName());
+                   try {
+                       fileBox = file.getBytes();
+                       this.uccNoticeFileService.save(fileBox, uccNoticeFile);
+                   } catch (IOException e) {
+                       e.printStackTrace();
+                   
+                   }
                }
-           }
+            }
         }
         
-        return new ResultBean<>(result);
+        return new ResultBean<>(uccNoticere != null);
     }
 
     @ApiOperation(value = "修改UccNotice", notes = "修改UccNotice")

@@ -66,7 +66,6 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
                 e.printStackTrace();
             }
         }
-
                 
         return uccNoticeFileRepository.save(uccNoticeFile);
     }
