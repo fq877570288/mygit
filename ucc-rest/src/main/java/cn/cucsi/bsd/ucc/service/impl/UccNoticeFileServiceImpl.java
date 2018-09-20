@@ -51,14 +51,15 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
     @Override
     public UccNoticeFile save(byte[] fileBox,UccNoticeFile uccNoticeFile) {
         SystemConfig systemConfig  = systemConfigService.findOne("noticeFilePath");
+        UccNoticeFile uccNoticeFilere = uccNoticeFileRepository.save(uccNoticeFile);
         if(fileBox!=null && fileBox.length>0){
-            String filePath = systemConfig.getValue() + "\\" + uccNoticeFile.getNoticeFileId() + "\\";
+            String filePath = systemConfig.getValue() + "\\" + uccNoticeFilere.getNoticeFileId() + "\\";
             File targetFile = new File(filePath);
             if(!targetFile.exists()){
                 targetFile.mkdirs();
             }
             try {
-                FileOutputStream out = new FileOutputStream(filePath  + uccNoticeFile.getFileName());
+                FileOutputStream out = new FileOutputStream(filePath  + uccNoticeFilere.getFileName());
                 out.write(fileBox);
                 out.flush();
                 out.close();
@@ -67,7 +68,7 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
             }
         }
                 
-        return uccNoticeFileRepository.save(uccNoticeFile);
+        return uccNoticeFilere;
     }
     @Override
     public UccNoticeFile save(UccNoticeFile uccNoticeFile) {

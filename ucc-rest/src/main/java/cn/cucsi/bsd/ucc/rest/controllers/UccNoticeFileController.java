@@ -97,19 +97,24 @@ public class UccNoticeFileController {
         return new ResultBean<>(this.uccNoticeFileService.save(uccNoticeFile));
     }
     @ApiOperation(value = "根据noticeFileId、fileName获取相应附件", notes = "根据noticeFileId、fileName获取相应附件")
-    @RequestMapping(value = "/getFlie{noticeFileId}{fileName}")
-    public void getFlie(HttpServletResponse rsp, @PathVariable String noticeFileId, @PathVariable String fileName) {
+    @RequestMapping(value = "/{noticeFileId}/download")
+    public void getFlie(HttpServletResponse rsp, @PathVariable String noticeFileId) {
         SystemConfig systemConfig  = systemConfigService.findOne("noticeFilePath");
         String filePath = systemConfig.getValue() + "\\" + noticeFileId + "\\";
-        File file = new File(filePath + fileName);
+        
+        UccNoticeFile uccNoticeFile = this.uccNoticeFileService.findOne(noticeFileId);
+        System.out.println(filePath + uccNoticeFile.getFileName());
+        File file = new File(filePath + uccNoticeFile.getFileName());
         InputStream inputStream = null;
         try {
-            rsp.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+            rsp.setContentType(uccNoticeFile.getContentType());
+            rsp.setHeader("Content-Disposition", "attachment; filename=" + uccNoticeFile.getFileName());
             //读取文件到ouputStream
             inputStream = new FileInputStream(file);
             int tempbyte;
             byte[] musicFile = new byte[1024];
             OutputStream os = rsp.getOutputStream();
+            
             while ((tempbyte = inputStream.read(musicFile)) != -1) {
                 os.write(musicFile, 0, tempbyte);
             }
