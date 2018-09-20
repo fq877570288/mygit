@@ -15,6 +15,8 @@ public interface PbxCdrsMapper {
 
     //根据条件查询通话记录列表（移动端查询通话记录） by wangxiaoyu 2018-09-04
     List<PbxCdrs> showListByTel(PbxCdrsForAPPCriteria pbxCdrsForAPPCriteria);
-    //根据条件查询通话记录列表（web端查询通话记录） by wangxiaoyu 2018-09-04
+    //根据条件查询通话记录列表（web端查询通话记录） by zhaolei 2018-09-04
     List<PbxCdrs> selectByPrimary(PbxCdrsCriteria pbxCdrsCriteria);
+    //根据条件查询通话记录列表（web端查询通话记录） by zhoalie 2018-09-04
+    List<PbxCdrs> selectByPrimaryExcel(PbxCdrsCriteria pbxCdrsCriteria);  
 }
