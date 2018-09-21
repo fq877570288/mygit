@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import cn.cucsi.bsd.ucc.data.specs.UccNoticeTraceSpecs;
+import java.util.Date;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,6 +35,9 @@ public class UccNoticeTraceServiceImpl  implements UccNoticeTraceService{
 
     @Override
     public UccNoticeTrace save(UccNoticeTrace uccNoticeTrace) {
+        Date dateTime = new Date();
+        uccNoticeTrace.setCreatedTime(dateTime);
+        uccNoticeTrace.setOperateTime(dateTime);
         return uccNoticeTraceRepository.save(uccNoticeTrace);
     }
 
