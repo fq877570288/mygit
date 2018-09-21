@@ -997,4 +997,21 @@
     order by d.TASK_CODE DESC
   </select>
 
+  <!-- 任务组织机构修改 -->
+  <update id="editTaskDept" parameterType="java.util.Map">
+    update OC_TASK_DETAIL
+    <set>
+      <if test="meshID != null and meshID != ''">
+        DEPT_MESH_ID = #{meshID},
+      </if>
+      <if test="areaID != null and areaID != ''">
+        DEPT_AREA_ID = #{areaID},
+      </if>
+      <if test="developmentID != null and developmentID != ''">
+        DEVELOPMENT_DEPT = #{developmentID},
+      </if>
+    </set>
+    where TASK_DETAIL_ID in ( ${taskDetailIds} )
+  </update>
+
 </mapper>

@@ -235,12 +235,9 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 	public void editTaskDept(String meshID, String areaID, String developmentID, String taskDetailIds)
 			throws Exception {
 
-		/*taskDetailIds = "'" + taskDetailIds.replace(",", "','") + "'";
-		
+		taskDetailIds = "'" + taskDetailIds.replace(",", "','") + "'";
 		Map<String, Object> taskDetailMap = new HashMap<String, Object>();
-		
 		taskDetailMap.put("taskDetailIds", taskDetailIds);
-
 		if(meshID != null && !meshID.isEmpty() && !"-1".equals(meshID)){
 			taskDetailMap.put("meshID", meshID);
 		}
@@ -250,25 +247,9 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 		if(developmentID != null && !developmentID.isEmpty() && !"-1".equals(developmentID)){
 			taskDetailMap.put("developmentID", developmentID);
 		}
-
 		if(taskDetailMap.entrySet().size() > 1){
 			taskDetailMapper.editTaskDept(taskDetailMap);
 		}
-
-//		if(meshID != null && !meshID.isEmpty() && !"-1".equals(meshID)){
-//			taskDetailMap.put("meshID", meshID);
-//			taskDetailMap.put("areaID", areaID);
-//			taskDetailMap.put("developmentID", developmentID);
-//			taskDetailMapper.editTaskDept(taskDetailMap);
-//		}else if(("-1".equals(meshID)) && (areaID != null && !areaID.isEmpty() && !"-1".equals(areaID))){
-//			taskDetailMap.put("areaID", areaID);
-//			taskDetailMap.put("developmentID", developmentID);
-//			taskDetailMapper.editTaskDept(taskDetailMap);
-//		}else if("-1".equals(meshID) && "-1".equals(areaID) && (developmentID != null && !developmentID.isEmpty() && !"-1".equals(developmentID))){
-//			taskDetailMap.put("areaID", areaID);
-//			taskDetailMap.put("developmentID", developmentID);
-//			taskDetailMapper.editTaskDept(taskDetailMap);
-//		}*/
 	}
 
 	@Override
@@ -297,19 +278,17 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 			search.setImportBatch(search.getImportBatch().trim());
 		}
 		// 部门
-		//List<UccDepts> UccDeptsList = UccDeptsService.selectByUserId(search.getUserId());
-		List<UccDepts> UccDeptsList = null;//临时
+		List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(search.getUserId());
 
 		// 增加权限控制  登录人是中心权限 查询流转操作为0的数据  登录人是网格或包区权限查询流转操作为1的数据
-		if(UccDeptsList != null && UccDeptsList.size() > 0){
-			if(UccDeptsList.get(0).getDeptLevel() <= 1){
+		if(uccDeptsList != null && uccDeptsList.size() > 0){
+			if(uccDeptsList.get(0).getDeptLevel() <= 1){
 				search.setTaskStatus("0");
 				search.setImportPersonId(search.getUserId().toString());
 			}else {
-//				search.setTaskStatus("1");
 				search.setTaskStatusList("'0', '1'");
 			}
 		}
-		search.setRoperateDeptId(UccDeptsList.get(0).getDeptId().toString());
+		search.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
 	}
 }

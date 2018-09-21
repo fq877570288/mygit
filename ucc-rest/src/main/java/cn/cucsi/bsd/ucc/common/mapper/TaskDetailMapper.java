@@ -88,4 +88,6 @@ public interface TaskDetailMapper {
     List<TaskDetail> selectBySearch(TaskDetailSearch search) throws Exception;
 
     List<String> selectTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
+
+    void editTaskDept(Map<String, Object> taskDetailMap) throws Exception;
 }
