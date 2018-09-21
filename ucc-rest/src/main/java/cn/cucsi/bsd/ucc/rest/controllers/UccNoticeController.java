@@ -31,8 +31,10 @@ public class UccNoticeController {
          
     
     @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
-    public PageResultBean_New<List<UccNotice>> findAll(@ModelAttribute UccNoticeCriteria search) {
+    @RequestMapping(value = "/findAll", method = RequestMethod.POST)
+    public PageResultBean<List<UccNotice>> findAll(@RequestBody UccNoticeCriteria search) {
+        return new PageResultBean(this.uccNoticeService.findAll(search));
+/*
         //return new PageResultBean_New(this.uccNoticeService.findAll(search));
         List<UccNotice> list = this.uccNoticeService.findAll(search);
         //for (UccNotice uccNotice:list)
@@ -44,7 +46,7 @@ public class UccNoticeController {
             list.set(i,uccNotic);
         }
         return new PageResultBean_New(list);
-        
+        */
     }
 
     
@@ -69,9 +71,6 @@ public class UccNoticeController {
     public ResultBean<Boolean> create(UccNotice uccNotice, @RequestParam("files") MultipartFile[] files) {
         Date dateTime = new Date();
         uccNotice.setCreatedTime(dateTime);
-        UUIDGenerator generatorNot = new UUIDGenerator();
-        String taskTransferUuidNot = generatorNot.generate();
-        uccNotice.setNoticeId(taskTransferUuidNot);
         UccNotice uccNoticere = this.uccNoticeService.save(uccNotice);
         if(uccNoticere != null)
         {
@@ -82,9 +81,6 @@ public class UccNoticeController {
                    UccNoticeFile uccNoticeFile = new UccNoticeFile();
                    uccNoticeFile.setNoticeId(uccNoticere.getNoticeId());
                    uccNoticeFile.setFileName(file.getOriginalFilename());
-                   UUIDGenerator generator = new UUIDGenerator();
-                   String taskTransferUuid = generator.generate();
-                   uccNoticeFile.setNoticeFileId(taskTransferUuid);
                    uccNoticeFile.setCreatedTime(dateTime);
                    uccNoticeFile.setCreatedUserId(uccNotice.getCreatedUserId());
                    uccNoticeFile.setCreatedUserName(uccNotice.getCreatedUserName());

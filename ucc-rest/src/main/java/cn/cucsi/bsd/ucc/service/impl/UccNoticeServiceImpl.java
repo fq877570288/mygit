@@ -37,7 +37,8 @@ public class UccNoticeServiceImpl implements UccNoticeService{
     @Autowired
     private UccNoticeTraceMapper uccNoticeTraceMapper;
 
-    @Override
+    
+    /*
     public List<UccNotice>findAll(UccNoticeCriteria criteria) {
         
         com.github.pagehelper.Page pageInfo = PageHelper.startPage(criteria.getPageNum(), criteria.getPageSize());
@@ -54,7 +55,14 @@ public class UccNoticeServiceImpl implements UccNoticeService{
             return null;
         }
     }
-
+*/
+    @Override
+    public Page<UccNotice> findAll(UccNoticeCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
+        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
+        return uccNoticeRepository.findAll(UccNoticeSpecs.createSpec(criteria), pageable);
+    }
+    
     @Override
     public UccNotice findOne(String noticeId) {
         return uccNoticeRepository.findOne(noticeId);

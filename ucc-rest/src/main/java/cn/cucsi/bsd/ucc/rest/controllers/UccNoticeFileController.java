@@ -3,7 +3,6 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccNoticeFileCriteria;
-import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.SystemConfig;
 import cn.cucsi.bsd.ucc.data.domain.UccNoticeFile;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
@@ -74,10 +73,7 @@ public class UccNoticeFileController {
     public ResultBean<UccNoticeFile> create(@RequestBody UccNoticeFile uccNoticeFile,@RequestParam("file") MultipartFile file) {
         byte[] fileBox = null;
         if (file != null && file.getSize() > 0) {
-            UUIDGenerator generator = new UUIDGenerator();
-            String taskTransferUuid = generator.generate();
             uccNoticeFile.setFileName(file.getOriginalFilename());
-            uccNoticeFile.setNoticeFileId(taskTransferUuid);
             Date dateTime = new Date();
             uccNoticeFile.setCreatedTime(dateTime);
             try {
