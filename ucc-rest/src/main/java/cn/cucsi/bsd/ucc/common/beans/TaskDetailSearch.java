@@ -3,7 +3,6 @@ package cn.cucsi.bsd.ucc.common.beans;
 import cn.cucsi.bsd.ucc.data.domain.Paging;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.util.List;
 
 @ApiModel

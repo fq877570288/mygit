@@ -116,33 +116,22 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 
             // 更新任务状态、任务截止日期
             for(TaskTransfer transfer : taskTransferList){
-
                 TaskDetail taskDetail = new TaskDetail();
-
                 taskDetail.setTaskDetailId(transfer.getTaskDetailId());
-
                 taskDetail.setStatus(transfer.getTransferStatus());
-
                 taskDetail.setRoperateDeptId(transfer.getRoperateDeptId());
-
                 taskDetail.setEndDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate));
-
-                //taskDetailMapper.updateTaskByTaskDetail(taskDetail);//完事再解开
+                taskDetailMapper.updateTaskByTaskDetail(taskDetail);
             }
-
             // 修改数据导入批次表
             Map<String, Object> barchsMap = new HashMap<String, Object>();
-
             barchsMap.put("importBarchs", barchs);
-
             barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGA);
-
             importBatchMapper.updateFlagByBatch(barchsMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-	
 	
 	private void updateCrm() throws Exception {
 		try {
