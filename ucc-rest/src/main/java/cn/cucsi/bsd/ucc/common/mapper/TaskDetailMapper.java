@@ -90,4 +90,12 @@ public interface TaskDetailMapper {
     List<String> selectTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
 
     void editTaskDept(Map<String, Object> taskDetailMap) throws Exception;
+
+    int selectwaitBySearchCount(TaskDetailSearch search) throws Exception;
+
+    List<TaskDetail> selectwaitBySearch(TaskDetailSearch search) throws Exception;
+
+    List<String> selectWaitTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
+
+    int updateTaskByTaskDetail(TaskDetail taskDetail) throws Exception;
 }

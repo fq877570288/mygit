@@ -32,7 +32,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import javax.servlet.http.HttpSession;
 
 /****
@@ -369,11 +368,11 @@ public class DataImportController {
 				String taskType = "";
 				String deptIdAndChildIds = (String)httpSession.getAttribute("DeptIdAndChildIds");
 
-				if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
+				/*if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
 					//model.addAttribute("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
 					customFieldsSaveMap.put("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
 					return customFieldsSaveMap;
-				}
+				}*/
 				for(int i=0; i<dataImportList.size(); i++){
 					taskType = dataImportList.get(0).getTaskTypeName();
 					dataImport = dataImportList.get(i);
@@ -741,7 +740,9 @@ public class DataImportController {
 			String TIME = new String(df.format(date));
 
 			//String userID = Auth.getLoginUser(session).getId().toString();
-			String userID = (String)session.getAttribute("userID");
+			//String userID = (String)session.getAttribute("userID");//这块是临时写死
+			String userID = "1";//这块是临时写死
+
 			String eventId = "";
 			if(!MyUtils.isBlank(userID)){
 			// 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码

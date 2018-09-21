@@ -1014,4 +1014,64 @@
     where TASK_DETAIL_ID in ( ${taskDetailIds} )
   </update>
 
+  <!-- 待办任务列表 -->
+  <select id="selectwaitBySearchCount" resultType="int"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      count(d.TASK_DETAIL_ID)
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+  </select>
+
+  <select id="selectwaitBySearch" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      d.TASK_DETAIL_ID,
+      d.BUSINESS_CODE,
+      d.TASK_TYPE_ID,
+      d.DEPT_MESH_ID,
+      d.DEPT_AREA_ID,
+      d.DEVELOPMENT_DEPT,
+      d.TASK_CODE,
+      c.cust_name AS USER_NAME,
+      d.DEFULT_PHONE,
+      d.TASK_STATUS
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+    order by d.TASK_CODE DESC
+    <if test="begin != null and showLines != null and showLines != 0">
+      limit #{begin},#{showLines}
+    </if>
+  </select>
+
+  <select id="selectWaitTaskDetailIdBySearch" resultType="string"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      d.TASK_DETAIL_ID
+      FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+  </select>
+
+  <update id="updateTaskByTaskDetail" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskDetail">
+    update OC_TASK_DETAIL
+    <set>
+      TASK_STATUS=#{status},
+      END_DATE=#{endDate},
+      ROPERATE_DEPT_ID=#{roperateDeptId}
+    </set>
+    where TASK_DETAIL_ID=#{taskDetailId}
+  </update>
+
 </mapper>

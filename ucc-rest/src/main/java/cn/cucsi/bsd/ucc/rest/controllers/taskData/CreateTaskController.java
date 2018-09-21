@@ -8,7 +8,6 @@ import cn.cucsi.bsd.ucc.common.beans.AutoSearchTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.CreateTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.DoCreateTaskCriteria;
-import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
 import cn.cucsi.bsd.ucc.data.domain.Task;
 import cn.cucsi.bsd.ucc.service.CreateTaskService;
@@ -81,11 +80,11 @@ public class CreateTaskController {
 		String userId = doCreateTaskCriteria.getUserId()==null?"":doCreateTaskCriteria.getUserId();
 		String oldTaskBatch = doCreateTaskCriteria.getOldTaskBatch()==null?"":doCreateTaskCriteria.getOldTaskBatch();
 		try {
-			if(MyUtils.isBlank(createMode)||MyUtils.isBlank(barchs)||MyUtils.isBlank(userId)||MyUtils.isBlank(oldTaskBatch)){
+			/*if(MyUtils.isBlank(createMode)||MyUtils.isBlank(barchs)||MyUtils.isBlank(userId)){
 				message = "入参不能为空！";
 				json = mapper.writeValueAsString(message);
 				return json;
-			}
+			}*/
 			if(Task.CREATENEW.equals(createMode)){
 				// 新建任务
 				createTaskService.createNewTask(barchs, userId, null);

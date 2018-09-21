@@ -9,7 +9,6 @@ import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.service.AllocationTaskService;
 import cn.cucsi.bsd.ucc.service.ImportBatchService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.base.Joiner;
@@ -169,9 +168,9 @@ public class AllocationTaskController {
 		Integer taskNumberEnd = allocationSearch.getTaskNumberEnd()==null?0:allocationSearch.getTaskNumberEnd();
 		List<String> idList = allocationSearch.getTaskDetailIdListForEditDeptList();
 
-		ObjectMapper mapper = new ObjectMapper();
+		/*ObjectMapper mapper = new ObjectMapper();
 		String json = null;
-		String message = "数据调拨失败！";
+		String message = "数据调拨失败！";*/
 		try {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
 				//List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForEditDeptList");
