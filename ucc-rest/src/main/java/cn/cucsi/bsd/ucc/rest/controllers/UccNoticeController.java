@@ -30,23 +30,28 @@ public class UccNoticeController {
     private UccNoticeFileService uccNoticeFileService;
          
     
-    @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "GET")
+    @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     public PageResultBean<List<UccNotice>> findAll(@RequestBody UccNoticeCriteria search) {
         return new PageResultBean(this.uccNoticeService.findAll(search));
-/*
-        //return new PageResultBean_New(this.uccNoticeService.findAll(search));
-        List<UccNotice> list = this.uccNoticeService.findAll(search);
-        //for (UccNotice uccNotice:list)
-        for(Integer i = 0 ;i< list.size();i++ )
-        {
-            List<UccNoticeFile> noticeFileList = uccNoticeFileService.findFileList(list.get(i).getNoticeId());
-            UccNotice uccNotic = list.get(i);
-            uccNotic.setUccNoticeFiles(noticeFileList);
-            list.set(i,uccNotic);
+        /*
+        PageResultBean<List<UccUsers>> list = new PageResultBean(this.teamUsersService.findAll(criteria));
+        List<UccUsers> uccUsersList = list.getData();
+        List<UccUsers> resultUccUsersList = new ArrayList<>();
+        Integer totalElements = 0;
+        for (UccUsers uccUsers : uccUsersList) {
+            if(uccUsers.getTeamUsers().size()!=0){
+                totalElements+=1;
+                resultUccUsersList.add(uccUsers);
+            }
         }
-        return new PageResultBean_New(list);
+        list.setTotalElements(totalElements);
+        list.setData(resultUccUsersList);
+        return list;
+        
+        this.uccNoticeService.findAll(search)
         */
+
     }
 
     
@@ -54,10 +59,7 @@ public class UccNoticeController {
     @ApiOperation(value = "根据noticeId查询UccNotice", notes = "根据noticeId查询UccNotice")
     @RequestMapping(value = "/{noticeId}", method= RequestMethod.GET)
     public ResultBean<UccNotice> findOne(@PathVariable String noticeId){
-        UccNotice uccNotice = this.uccNoticeService.findOne(noticeId);
-        List<UccNoticeFile> noticeFileList = uccNoticeFileService.findFileList(uccNotice.getNoticeId());
-        uccNotice.setUccNoticeFiles(noticeFileList);
-        return new ResultBean<>(uccNotice);
+        return new ResultBean<>(this.uccNoticeService.findOne(noticeId));
     }
 
     @ApiOperation(value = "根据noticeId删除UccNotice", notes = "根据noticeId删除UccNotice")

@@ -12,7 +12,6 @@ import java.util.List;
 public interface UccNoticeService {
     //List<UccNotice> findAll(UccNoticeCriteria criteria);
     Page<UccNotice> findAll(UccNoticeCriteria criteria);
-
     UccNotice findOne(String noticeId);
     UccNotice save(UccNotice uccNotice);
     Boolean delete(String noticeId);

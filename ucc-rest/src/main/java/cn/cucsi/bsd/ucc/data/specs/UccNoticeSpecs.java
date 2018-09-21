@@ -73,9 +73,9 @@ public class UccNoticeSpecs {
     
 
     public static Specification<UccNotice> createSpec(final UccNoticeCriteria criteria) {
+
         Specification<UccNotice> spec = null;
         if(criteria==null) return spec;
-
         Specifications specs = where(spec);
 
         if(!Strings.isNullOrEmpty(criteria.getNoticeCode())){
@@ -97,6 +97,7 @@ public class UccNoticeSpecs {
         if(null != criteria.getNoticeTimeTo()){
             specs = specs.and(uccNoticeEndDateEqual(criteria.getNoticeTimeTo()));
         }
+        System.out.println("2222");
         return specs;
     }
 }

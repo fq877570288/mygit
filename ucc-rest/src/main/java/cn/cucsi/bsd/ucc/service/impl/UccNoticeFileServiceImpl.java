@@ -31,14 +31,19 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
     private UccNoticeFileMapper uccNoticeFileMapper;
     @Autowired
     private SystemConfigService systemConfigService;
-    
+     
     @Override
     public Page<UccNoticeFile> findAll(UccNoticeFileCriteria criteria) {
         Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccNoticeFileRepository.findAll(UccNoticeFileSpecs.createSpec(criteria), pageable);
     }
-
+    @Override
+    public List<UccNoticeFile> findAllOne(UccNoticeFileCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
+        //Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
+        return uccNoticeFileRepository.findAll(UccNoticeFileSpecs.createSpec(criteria),sort);
+    }
     @Override
     public UccNoticeFile findOne(String noticeFileId) {
         return uccNoticeFileRepository.findOne(noticeFileId);
