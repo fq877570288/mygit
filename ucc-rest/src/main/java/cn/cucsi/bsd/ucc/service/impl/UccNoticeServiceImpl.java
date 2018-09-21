@@ -58,8 +58,10 @@ public class UccNoticeServiceImpl implements UccNoticeService{
 */
     @Override
     public Page<UccNotice> findAll(UccNoticeCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
+                System.out.println("2222");
+
         return uccNoticeRepository.findAll(UccNoticeSpecs.createSpec(criteria), pageable);
     }
     

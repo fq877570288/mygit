@@ -46,7 +46,14 @@ public class UccNoticeFileSpecs {
             }
         };
     }
-
+    public static Specification<UccNoticeFile> uccNoticNoticeIdEqual(final String noticeId) {
+        return new Specification<UccNoticeFile>() {
+            @Override
+            public Predicate toPredicate(Root<UccNoticeFile> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.<String>get("noticeId"), noticeId);
+            }
+        };
+    }
     public static Specification<UccNoticeFile> createSpec(final UccNoticeFileCriteria criteria) {
         Specification<UccNoticeFile> spec = null;
         if(criteria==null) return spec;
@@ -55,6 +62,9 @@ public class UccNoticeFileSpecs {
 
         if(!Strings.isNullOrEmpty(criteria.getFileName())){
             specs = specs.and(uccNoticeFileFileNameLike(criteria.getFileName()));
+        }
+        if(!Strings.isNullOrEmpty(criteria.getNoticeId())){
+            specs = specs.and(uccNoticNoticeIdEqual(criteria.getNoticeId()));
         }
 
         if(null != criteria.getUploadTimeFrom()){

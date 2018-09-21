@@ -12,11 +12,18 @@ import io.swagger.annotations.ApiModel;
 @ApiModel
 public class UccNoticeFileCriteria extends BasicCriteria {
     String fileName;
+    String noticeId;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     Date uploadTimeFrom;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     Date uploadTimeTo;
 
+    public String getNoticeId() {
+        return noticeId;
+    }
+    public void setNoticeId(String noticeId) {
+        this.noticeId = noticeId;
+    }
     public String getFileName() {
         return fileName;
     }
