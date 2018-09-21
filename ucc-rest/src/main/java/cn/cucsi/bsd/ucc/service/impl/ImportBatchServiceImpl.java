@@ -74,8 +74,10 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 		List<TaskDetail> taskDetailList = null;
 		try {
 			String userId = allocationTaskCriteria.getUserId()==null?"":allocationTaskCriteria.getUserId();
+			System.out.println("分配任务列表查询测试 userId:::" + userId);
 			search.setUserId(userId);
 			String deptIdAndChildId = allocationTaskCriteria.getDeptIdAndChildIds()==null?"":allocationTaskCriteria.getDeptIdAndChildIds();
+			System.out.println("分配任务列表查询测试 deptIdAndChildId:::" + deptIdAndChildId);
 
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
                 String [] deptIdAndChildIds = deptIdAndChildId.split(",");
@@ -105,7 +107,7 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 				}else {
                     search.setAllLines(0);
                 }
-            }
+            }//
 			String importBatchs = "";
 			if(taskDetailList != null && taskDetailList.size() > 0){
                 for(TaskDetail taskDetail : taskDetailList){
@@ -116,6 +118,7 @@ public class ImportBatchServiceImpl implements ImportBatchService {
                 importBatchs = "'" + importBatchs.substring(0, importBatchs.lastIndexOf(","));
                 importBatch.setImportBatchs(importBatchs);
             }
+
 			return importBatchMapper.selectAllByBatchFlag(importBatch);
 		} catch (Exception e) {
 			e.printStackTrace();

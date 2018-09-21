@@ -49,6 +49,7 @@ public class AllocationTaskController {
 		PageResultBean_New<List<ImportBatch>> pageResultBean_new = null;
 		try {
 			importBatchlist = importBatchervice.selectAllocationAllByBatchFlag(importBatch,allocationTaskCriteria);
+			System.out.println("importBatchlist:::" + importBatchlist.size());
 			//model.addAttribute("importBatchlist", importBatchlist);
 			pageResultBean_new = new PageResultBean_New(pageInfo);
 			pageResultBean_new.setList(importBatchlist);
