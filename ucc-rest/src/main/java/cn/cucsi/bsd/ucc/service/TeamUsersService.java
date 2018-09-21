@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 
 public interface TeamUsersService {
     Page<UccUsers> findAll(UccUserCriteria search);
+    Page<UccUsers> addFindAll(UccUserCriteria search);
     UccUsers findOne(String userId);
     TeamUsers save(TeamUsers teamUsers);
     Boolean delete(String userId);
