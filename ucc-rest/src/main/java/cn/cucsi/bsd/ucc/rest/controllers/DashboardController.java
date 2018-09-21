@@ -4,6 +4,7 @@ import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.data.domain.PbxExtGroups;
 import cn.cucsi.bsd.ucc.service.ExtGroupExtsService;
+import com.google.gson.JsonObject;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,6 +37,26 @@ public class DashboardController {
             System.out.println("根据domainId查询查询机组、坐席员、分机号集合失败！");
             e.printStackTrace();
             return new PageResultBean_New<List<PbxExtGroups>>();
+        }
+    }
+    @ApiOperation(value = "坐席总数、今日人工、今日IVR、示忙、示闲", notes = "坐席总数、今日人工、今日IVR、示忙、示闲")
+    @RequestMapping(value = "/allNumbers", method =  RequestMethod.GET)
+    public String allNumbers(String domainId){
+        JsonObject j = new JsonObject();
+        try {
+            j.addProperty("return_msg","success");
+            j.addProperty("return_code","success");
+            j.addProperty("seatTotal",666);//坐席总数
+            j.addProperty("manTotal",666);//今日人工
+            j.addProperty("ivrTotal",666);//今日IVR
+            j.addProperty("callingQueueTotal",0);//人工通话中
+            j.addProperty("callingIvrTotal",0);//IVR通话中
+            return j.toString();
+        }catch (Exception e){
+            System.out.println("根据domainId坐席总数、今日人工、今日IVR、示忙、示闲失败！");
+            j.addProperty("return_msg","error");
+            j.addProperty("return_code","error");
+            return j.toString();
         }
     }
 }
