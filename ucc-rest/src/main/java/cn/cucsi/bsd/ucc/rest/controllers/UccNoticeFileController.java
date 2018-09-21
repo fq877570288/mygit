@@ -86,7 +86,7 @@ public class UccNoticeFileController {
     }
 
     @ApiOperation(value = "修改UccNoticeFile", notes = "修改UccNoticeFile")
-    @RequestMapping(value = "/{noticeFileId}",method =  RequestMethod.PUT)
+    @RequestMapping(value = "/{noticeFileId}",method =  RequestMethod.POST)
     public ResultBean<UccNoticeFile> save(@PathVariable String noticeFileId, @RequestBody UccNoticeFile uccNoticeFile){
         Date dateTime = new Date();
         uccNoticeFile.setUpdatedTime(dateTime);

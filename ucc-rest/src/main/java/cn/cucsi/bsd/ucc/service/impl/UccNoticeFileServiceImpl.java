@@ -82,7 +82,24 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
 
     @Override
     public Boolean delete(String noticeFileId) {
+        SystemConfig systemConfig  = systemConfigService.findOne("noticeFilePath");
+        String filePath = systemConfig.getValue() + "\\" + noticeFileId;
+        File dir=new File(filePath);//路径
+        Boolean bol= deleteDir(dir);
         uccNoticeFileRepository.delete(noticeFileId);
         return true;
+    }
+    private static Boolean deleteDir(File dir) {
+      if (dir.isDirectory()) {
+          String[] children = dir.list();
+          for (int i=0; i<children.length; i++) {
+              Boolean success = deleteDir(new File(dir, children[i]));
+              if (!success) {
+                  return false;
+              }
+          }
+      }
+      // 目录此时为空，可以删除
+      return dir.delete();
     }
 }

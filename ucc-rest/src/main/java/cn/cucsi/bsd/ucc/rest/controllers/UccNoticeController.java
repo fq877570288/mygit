@@ -33,29 +33,8 @@ public class UccNoticeController {
     @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     public PageResultBean<List<UccNotice>> findAll(@RequestBody UccNoticeCriteria search) {
-        return new PageResultBean(this.uccNoticeService.findAll(search));
-        /*
-        PageResultBean<List<UccUsers>> list = new PageResultBean(this.teamUsersService.findAll(criteria));
-        List<UccUsers> uccUsersList = list.getData();
-        List<UccUsers> resultUccUsersList = new ArrayList<>();
-        Integer totalElements = 0;
-        for (UccUsers uccUsers : uccUsersList) {
-            if(uccUsers.getTeamUsers().size()!=0){
-                totalElements+=1;
-                resultUccUsersList.add(uccUsers);
-            }
-        }
-        list.setTotalElements(totalElements);
-        list.setData(resultUccUsersList);
-        return list;
-        
-        this.uccNoticeService.findAll(search)
-        */
-
+                return new PageResultBean(this.uccNoticeService.findAll(search));
     }
-
-    
-    
     @ApiOperation(value = "根据noticeId查询UccNotice", notes = "根据noticeId查询UccNotice")
     @RequestMapping(value = "/{noticeId}", method= RequestMethod.GET)
     public ResultBean<UccNotice> findOne(@PathVariable String noticeId){
@@ -65,6 +44,13 @@ public class UccNoticeController {
     @ApiOperation(value = "根据noticeId删除UccNotice", notes = "根据noticeId删除UccNotice")
     @RequestMapping(value = "/{noticeId}", method= RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String noticeId){
+        UccNoticeFileCriteria uccNoticeFileCriteria = new UccNoticeFileCriteria();
+        uccNoticeFileCriteria.setNoticeId(noticeId);
+        List<UccNoticeFile> uccNoticeFiles = uccNoticeFileService.findAllOne(uccNoticeFileCriteria);
+        for(UccNoticeFile uccNoticeFile : uccNoticeFiles)
+        {
+            Boolean bol = uccNoticeFileService.delete(uccNoticeFile.getNoticeFileId());
+        }
         return new ResultBean<>(this.uccNoticeService.delete(noticeId));
     }
 
@@ -102,10 +88,34 @@ public class UccNoticeController {
     }
 
     @ApiOperation(value = "修改UccNotice", notes = "修改UccNotice")
-    @RequestMapping(value = "/{noticeId}", method =  RequestMethod.PUT)
-    public ResultBean<UccNotice> save(@PathVariable String noticeId, @RequestBody UccNotice uccNotice){
+    @RequestMapping(value = "/{noticeId}", method =  RequestMethod.POST)
+    public ResultBean<UccNotice> save(@PathVariable String[] delFiledId,UccNotice uccNotice, @RequestParam("files") MultipartFile[] files){
         Date dateTime = new Date();
         uccNotice.setUpdatedTime(dateTime);
+        for(String noticeFileId:delFiledId)
+        {
+            uccNoticeFileService.delete(noticeFileId);
+        }
+        for(MultipartFile file : files)
+        {
+           byte[] fileBox = null;
+           if (file != null && file.getSize() > 0) {                   
+               UccNoticeFile uccNoticeFile = new UccNoticeFile();
+               uccNoticeFile.setNoticeId(uccNotice.getNoticeId());
+               uccNoticeFile.setFileName(file.getOriginalFilename());
+               uccNoticeFile.setCreatedTime(dateTime);
+               uccNoticeFile.setCreatedUserId(uccNotice.getUpdatedUserId());
+               uccNoticeFile.setCreatedUserName(uccNotice.getUpdatedUserName());
+               uccNoticeFile.setContentType(file.getContentType());
+               try {
+                   fileBox = file.getBytes();
+                   this.uccNoticeFileService.save(fileBox, uccNoticeFile);
+               } catch (IOException e) {
+                   e.printStackTrace();
+
+               }
+           }
+        }
         return new ResultBean<>(this.uccNoticeService.save(uccNotice));
     }
 
