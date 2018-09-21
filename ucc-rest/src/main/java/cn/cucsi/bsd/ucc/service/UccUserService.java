@@ -22,4 +22,6 @@ public interface UccUserService {
      * 2018-09-10
      */
     ResultBean_New<UccUsers> userLoginForAPP(UserLoginForAPPCriteria userLoginForAPPCriteria);
+
+    void saveMiddleTable(UccUsers uccUsers);
 }

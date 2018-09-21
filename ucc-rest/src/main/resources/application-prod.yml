@@ -11,3 +11,7 @@ spring:
             url: http://10.64.8.133:8888/admin
 
 management.security.enabled: false
+
+ucc.zk:
+  hostPort: 10.64.8.133:2181
+  sessionTimeout: 10000

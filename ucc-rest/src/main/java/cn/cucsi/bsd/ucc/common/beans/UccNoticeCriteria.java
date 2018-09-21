@@ -8,7 +8,7 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @ApiModel
-public class UccNoticeCriteria extends BasicPageCriteriaForBean {
+public class UccNoticeCriteria extends BasicCriteria {
     private String noticeCode;
     private String noticeTitle;
     private String noticeType;

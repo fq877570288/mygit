@@ -31,7 +31,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 
 /****
@@ -129,7 +129,7 @@ public class DataImportController {
 		String userId = dataImportCriteria.getUserId()==null?"":dataImportCriteria.getUserId();
 		try {
 			dataImportCriteria.setImportPersonId(userId);
-			dataImportCriteria.setup(dataImportService.selectBySearchCount(dataImportCriteria), Paging.SHOW_LINES);
+			dataImportCriteria.setup(dataImportService.selectBySearchCount(dataImportCriteria), dataImportCriteria.getShowLines());
 			list = dataImportService.selectBySearch(dataImportCriteria);
             System.out.println("数据导入列表 list.size():::" + list.size());
 			//model.addAttribute("list", list);
@@ -213,6 +213,7 @@ public class DataImportController {
                 dataImportMap.put("cfieldAll", cfieldAll);
             }
 			dataImportMap.put("dataCustomfieldJson", dataCustomfieldJson);
+			dataImportMap.put("dataImportCriteria",dataImportCriteria);
 			dataImportMap.put("msg","操作成功！");
 			dataImportMap.put("code",0);
 			return dataImportMap;
@@ -328,7 +329,7 @@ public class DataImportController {
 	 */
 	@ApiOperation(value="导入", notes="导入")
 	@RequestMapping(value="/upload",method= RequestMethod.POST)
-	public Map<String,Object> uploadFile(@RequestParam("file") CommonsMultipartFile file,HttpSession httpSession) {
+	public Map<String,Object> uploadFile(@RequestParam("files") MultipartFile file, HttpSession httpSession) {
 
 		Map<String,Object> customFieldsSaveMap = new HashMap<String,Object>();
 		//model.addAttribute("msg", "上传失败!");
@@ -367,11 +368,11 @@ public class DataImportController {
 				String taskType = "";
 				String deptIdAndChildIds = (String)httpSession.getAttribute("DeptIdAndChildIds");
 
-				if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
+				/*if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
 					//model.addAttribute("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
 					customFieldsSaveMap.put("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
 					return customFieldsSaveMap;
-				}
+				}*/
 				for(int i=0; i<dataImportList.size(); i++){
 					taskType = dataImportList.get(0).getTaskTypeName();
 					dataImport = dataImportList.get(i);
@@ -739,7 +740,9 @@ public class DataImportController {
 			String TIME = new String(df.format(date));
 
 			//String userID = Auth.getLoginUser(session).getId().toString();
-			String userID = (String)session.getAttribute("userID");
+			//String userID = (String)session.getAttribute("userID");//这块是临时写死
+			String userID = "1";//这块是临时写死
+
 			String eventId = "";
 			if(!MyUtils.isBlank(userID)){
 			// 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码

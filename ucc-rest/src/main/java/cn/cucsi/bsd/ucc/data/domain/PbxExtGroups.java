@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "pbx_ext_groups", schema = "ucc", catalog = "")
@@ -56,9 +57,16 @@ public class PbxExtGroups {
 //    private UccUsers uccUsersByUpdatePerson;
     @JsonView(JSONView.Summary.class)
     private String status = "1"; //1在用，0删除，默认是1
+    @Transient
+    private List<PbxExts> extsList;
+    @Transient
+    public List<PbxExts> getExtsList() {
+        return extsList;
+    }
 
-
-
+    public void setExtsList(List<PbxExts> extsList) {
+        this.extsList = extsList;
+    }
 
     @Id
     @Column(name = "group_id", nullable = false, length = 32)
@@ -261,4 +269,5 @@ public class PbxExtGroups {
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
     }
+
 }

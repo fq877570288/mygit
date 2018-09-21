@@ -116,33 +116,23 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 
             // 更新任务状态、任务截止日期
             for(TaskTransfer transfer : taskTransferList){
-
                 TaskDetail taskDetail = new TaskDetail();
-
                 taskDetail.setTaskDetailId(transfer.getTaskDetailId());
-
                 taskDetail.setStatus(transfer.getTransferStatus());
-
                 taskDetail.setRoperateDeptId(transfer.getRoperateDeptId());
-
                 taskDetail.setEndDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate));
-
-                //taskDetailMapper.updateTaskByTaskDetail(taskDetail);//完事再解开
+                taskDetailMapper.updateTaskByTaskDetail(taskDetail);
             }
-
             // 修改数据导入批次表
             Map<String, Object> barchsMap = new HashMap<String, Object>();
-
             barchsMap.put("importBarchs", barchs);
-
             barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGA);
-
-            importBatchMapper.updateFlagByBatch(barchsMap);
+            int ii = importBatchMapper.updateFlagByBatch(barchsMap);
+			System.out.println("分派任务 修改数据导入批次表返回结果:::" + ii);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-	
 	
 	private void updateCrm() throws Exception {
 		try {
@@ -235,12 +225,9 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 	public void editTaskDept(String meshID, String areaID, String developmentID, String taskDetailIds)
 			throws Exception {
 
-		/*taskDetailIds = "'" + taskDetailIds.replace(",", "','") + "'";
-		
+		taskDetailIds = "'" + taskDetailIds.replace(",", "','") + "'";
 		Map<String, Object> taskDetailMap = new HashMap<String, Object>();
-		
 		taskDetailMap.put("taskDetailIds", taskDetailIds);
-
 		if(meshID != null && !meshID.isEmpty() && !"-1".equals(meshID)){
 			taskDetailMap.put("meshID", meshID);
 		}
@@ -250,25 +237,9 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 		if(developmentID != null && !developmentID.isEmpty() && !"-1".equals(developmentID)){
 			taskDetailMap.put("developmentID", developmentID);
 		}
-
 		if(taskDetailMap.entrySet().size() > 1){
 			taskDetailMapper.editTaskDept(taskDetailMap);
 		}
-
-//		if(meshID != null && !meshID.isEmpty() && !"-1".equals(meshID)){
-//			taskDetailMap.put("meshID", meshID);
-//			taskDetailMap.put("areaID", areaID);
-//			taskDetailMap.put("developmentID", developmentID);
-//			taskDetailMapper.editTaskDept(taskDetailMap);
-//		}else if(("-1".equals(meshID)) && (areaID != null && !areaID.isEmpty() && !"-1".equals(areaID))){
-//			taskDetailMap.put("areaID", areaID);
-//			taskDetailMap.put("developmentID", developmentID);
-//			taskDetailMapper.editTaskDept(taskDetailMap);
-//		}else if("-1".equals(meshID) && "-1".equals(areaID) && (developmentID != null && !developmentID.isEmpty() && !"-1".equals(developmentID))){
-//			taskDetailMap.put("areaID", areaID);
-//			taskDetailMap.put("developmentID", developmentID);
-//			taskDetailMapper.editTaskDept(taskDetailMap);
-//		}*/
 	}
 
 	@Override
@@ -276,37 +247,38 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 	public List<TaskDetail> selectAllocationBySearch(TaskDetailSearch search) throws Exception {
 		searchDeal(search);
 		// 分页查询
-		//search.setup(taskDetailMapper.selectBySearchCount(search), Paging.SHOW_LINES);
-		//return taskDetailMapper.selectBySearch(search);
-		return null;//临时
+		search.setup(taskDetailMapper.selectBySearchCount(search), search.getShowLines());
+		return taskDetailMapper.selectBySearch(search);
 	}
 	
 	@Override
 	@Transactional("txManager")
 	public List<String> selectTaskDetailIdBySearch(TaskDetailSearch search) throws Exception{
-
-		searchDeal(search);
-		//return taskDetailMapper.selectTaskDetailIdBySearch(search);
-		return null;//临时
+		try {
+			searchDeal(search);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("searchDeal方法执行异常");
+		}
+		return taskDetailMapper.selectTaskDetailIdBySearch(search);
 	}
 	
 	private void searchDeal(TaskDetailSearch search) throws Exception{
 		if(search.getImportBatch() !=null){
 			search.setImportBatch(search.getImportBatch().trim());
 		}
-		/*// 部门
-		List<UccDepts> UccDeptsList = UccDeptsService.selectByUserId(search.getUserId());
+		// 部门
+		List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(search.getUserId());
 
 		// 增加权限控制  登录人是中心权限 查询流转操作为0的数据  登录人是网格或包区权限查询流转操作为1的数据
-		if(UccDeptsList != null && UccDeptsList.size() > 0){
-			if(UccDeptsList.get(0).getDeptLevel() <= 1){
+		if(uccDeptsList != null && uccDeptsList.size() > 0){
+			if(uccDeptsList.get(0).getDeptLevel() <= 1){
 				search.setTaskStatus("0");
 				search.setImportPersonId(search.getUserId().toString());
 			}else {
-//				search.setTaskStatus("1");
 				search.setTaskStatusList("'0', '1'");
 			}
 		}
-		search.setRoperateDeptId(UccDeptsList.get(0).getDeptId().toString());*/
+		search.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
 	}
 }

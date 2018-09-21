@@ -13,7 +13,8 @@ public class JSONView {
     public interface UccUserWithDept extends Summary {}
     public interface UccUserWithExt extends Summary {}
     public interface UccUserWithTeams extends Summary {}
-    public interface UccUserWithDeptAndRoleAndExt extends UccUserWithRole,UccUserWithDept,UccUserWithExt,UccUserWithTeams  {}
+    public interface UccUserWithSkillGroup extends  Summary{}
+    public interface UccUserWithDeptAndRoleAndExt extends UccUserWithRole,UccUserWithDept,UccUserWithExt,UccUserWithTeams,UccUserWithSkillGroup  {}
 
     public interface DomainWithUser extends Summary {}
 
@@ -28,6 +29,5 @@ public class JSONView {
     public  interface PbxIvrsWithDomainAndUser extends  PbxIvrsWithUser,PbxIvrsWithDomain {}
 
     public interface PbxPbxExtGroupsWithUser extends Summary {}
-
 
 }

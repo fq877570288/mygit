@@ -36,6 +36,5 @@ public interface TaskTransferMapper {
      */
     List<TaskTransfer> selectCallNotesByDetailIds(@Param("taskDetailList") List<TaskDetail> taskDetailList);
 
-    //下面这个方法暂时没写sql
     int insertGroup(Map<String, Object> taskMap) throws Exception;
 }

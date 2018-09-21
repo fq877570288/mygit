@@ -3,7 +3,6 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccNoticeFileCriteria;
-import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.SystemConfig;
 import cn.cucsi.bsd.ucc.data.domain.UccNoticeFile;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
@@ -74,10 +73,7 @@ public class UccNoticeFileController {
     public ResultBean<UccNoticeFile> create(@RequestBody UccNoticeFile uccNoticeFile,@RequestParam("file") MultipartFile file) {
         byte[] fileBox = null;
         if (file != null && file.getSize() > 0) {
-            UUIDGenerator generator = new UUIDGenerator();
-            String taskTransferUuid = generator.generate();
             uccNoticeFile.setFileName(file.getOriginalFilename());
-            uccNoticeFile.setNoticeFileId(taskTransferUuid);
             Date dateTime = new Date();
             uccNoticeFile.setCreatedTime(dateTime);
             try {
@@ -90,26 +86,31 @@ public class UccNoticeFileController {
     }
 
     @ApiOperation(value = "修改UccNoticeFile", notes = "修改UccNoticeFile")
-    @RequestMapping(value = "/{noticeFileId}",method =  RequestMethod.PUT)
+    @RequestMapping(value = "/{noticeFileId}",method =  RequestMethod.POST)
     public ResultBean<UccNoticeFile> save(@PathVariable String noticeFileId, @RequestBody UccNoticeFile uccNoticeFile){
         Date dateTime = new Date();
         uccNoticeFile.setUpdatedTime(dateTime);
         return new ResultBean<>(this.uccNoticeFileService.save(uccNoticeFile));
     }
     @ApiOperation(value = "根据noticeFileId、fileName获取相应附件", notes = "根据noticeFileId、fileName获取相应附件")
-    @RequestMapping(value = "/getFlie{noticeFileId}{fileName}")
-    public void getFlie(HttpServletResponse rsp, @PathVariable String noticeFileId, @PathVariable String fileName) {
+    @RequestMapping(value = "/{noticeFileId}/download")
+    public void getFlie(HttpServletResponse rsp, @PathVariable String noticeFileId) {
         SystemConfig systemConfig  = systemConfigService.findOne("noticeFilePath");
         String filePath = systemConfig.getValue() + "\\" + noticeFileId + "\\";
-        File file = new File(filePath + fileName);
+        
+        UccNoticeFile uccNoticeFile = this.uccNoticeFileService.findOne(noticeFileId);
+        System.out.println(filePath + uccNoticeFile.getFileName());
+        File file = new File(filePath + uccNoticeFile.getFileName());
         InputStream inputStream = null;
         try {
-            rsp.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+            rsp.setContentType(uccNoticeFile.getContentType());
+            rsp.setHeader("Content-Disposition", "attachment; filename=" + uccNoticeFile.getFileName());
             //读取文件到ouputStream
             inputStream = new FileInputStream(file);
             int tempbyte;
             byte[] musicFile = new byte[1024];
             OutputStream os = rsp.getOutputStream();
+            
             while ((tempbyte = inputStream.read(musicFile)) != -1) {
                 os.write(musicFile, 0, tempbyte);
             }

@@ -30,7 +30,7 @@ import java.util.List;
 public class UccDeptsController {
 
     @Autowired
-    UccDeptsService uccDeptsService;
+    private UccDeptsService uccDeptsService;
 
     @ApiOperation(value="根据查询条件获取部门列表（不分页了查全部）", notes="根据查询条件获取部门列表（不分页了查全部）", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)

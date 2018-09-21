@@ -250,12 +250,20 @@
   <insert id="insertGroup" parameterType="map">
     insert into ucc_depts (dept_id, dept_name,
     dept_pid, dept_level, dept_create_time,
-    dept_create_user_id, dept_desc, dept_admin)
+    created_user_id, dept_desc, dept_admin)
     values
     <foreach collection="list" item="record" index="index" separator=",">
       (#{record.deptId,jdbcType=VARCHAR}, #{record.deptName,jdbcType=VARCHAR},
       #{record.deptPid,jdbcType=VARCHAR}, #{record.deptLevel,jdbcType=INTEGER}, #{record.deptCreateTime,jdbcType=TIMESTAMP},
-      #{record.deptCreateUserId,jdbcType=VARCHAR}, #{record.deptDesc,jdbcType=VARCHAR}, #{record.deptAdmin,jdbcType=VARCHAR})
+      #{record.createdUserId,jdbcType=VARCHAR}, #{record.deptDesc,jdbcType=VARCHAR}, #{record.deptAdmin,jdbcType=VARCHAR})
     </foreach>
   </insert>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT
+	  a.*, b.user_name dept_admin_name
+    FROM
+	  ucc_depts a
+    LEFT JOIN ucc_users b ON a.dept_admin = b.user_id
+  </select>
 </mapper>

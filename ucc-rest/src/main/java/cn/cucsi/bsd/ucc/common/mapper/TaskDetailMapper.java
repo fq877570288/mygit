@@ -70,7 +70,6 @@ public interface TaskDetailMapper {
      */
     int selectCompletedTaskCounts(Map<String, Object> map);
 
-    //下面两个方法暂时没写sql
     int insertGroup(Map<String, Object> taskMap) throws Exception;
 
     void deleteBYBatch(Map<String, Object> taskDetailMap) throws Exception;
@@ -81,4 +80,21 @@ public interface TaskDetailMapper {
     List<TaskDetail> selectByWhere(Map<String, Object> whereMap) throws Exception;
 
     List<TaskDetail> selectImportBatchsBySearch(TaskDetailSearch search) throws Exception;
+
+    int selectBySearchCount(TaskDetailSearch search) throws Exception;
+
+    // 分页查询
+    List<TaskDetail> selectBySearch(TaskDetailSearch search) throws Exception;
+
+    List<String> selectTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
+
+    void editTaskDept(Map<String, Object> taskDetailMap) throws Exception;
+
+    int selectwaitBySearchCount(TaskDetailSearch search) throws Exception;
+
+    List<TaskDetail> selectwaitBySearch(TaskDetailSearch search) throws Exception;
+
+    List<String> selectWaitTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
+
+    int updateTaskByTaskDetail(TaskDetail taskDetail) throws Exception;
 }

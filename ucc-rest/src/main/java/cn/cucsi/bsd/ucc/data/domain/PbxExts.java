@@ -56,6 +56,46 @@ public class PbxExts {
     @JsonIgnore
     private UserExt userExt;
 
+    @Transient
+    private String username;
+    @Transient
+    private String userNickName;
+    @Transient
+    private String extGroupId;
+    @Transient
+    private String extGroupName;
+    @Transient
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    @Transient
+    public String getUserNickName() {
+        return userNickName;
+    }
+
+    public void setUserNickName(String userNickName) {
+        this.userNickName = userNickName;
+    }
+    @Transient
+    public String getExtGroupId() {
+        return extGroupId;
+    }
+
+    public void setExtGroupId(String extGroupId) {
+        this.extGroupId = extGroupId;
+    }
+    @Transient
+    public String getExtGroupName() {
+        return extGroupName;
+    }
+
+    public void setExtGroupName(String extGroupName) {
+        this.extGroupName = extGroupName;
+    }
 
     private String extGroupsByExtId;
 

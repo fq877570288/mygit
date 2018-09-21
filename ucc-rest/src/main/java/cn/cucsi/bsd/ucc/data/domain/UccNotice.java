@@ -51,9 +51,8 @@ public class UccNotice {
     private UccUsers uccUser;
     @JsonIgnore
     private UccDomain uccDomain;
-    @JsonIgnore
+    
     private Collection<UccNoticeFile> uccNoticeFiles;
-    @JsonIgnore
     private Collection<UccNoticeTrace> uccNoticeTraces;
 
     @Id

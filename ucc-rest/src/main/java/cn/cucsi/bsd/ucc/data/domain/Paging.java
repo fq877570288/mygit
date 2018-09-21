@@ -9,7 +9,7 @@ public class Paging {
 	
 	protected int end;// �?般用不到 用showLines代替
 	
-	protected int showLines;// 每页显示多少�?
+	protected int showLines = 10;// 每页显示多少�?
 
 	protected int yeShu;// 应该显示几页
 

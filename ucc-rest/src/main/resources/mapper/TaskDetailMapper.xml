@@ -931,4 +931,230 @@
     <include refid="Sql_AllocationWhere" />
   </select>
 
+  <select id="selectBySearchCount" resultType="int"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      count(d.TASK_DETAIL_ID)
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+      LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+      LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+    WHERE
+    1 = 1
+    <include refid="Sql_AllocationWhere" />
+    <if test="importBatch != null and importBatch != ''">
+      and d.IMPORT_BATCH = #{importBatch}
+    </if>
+  </select>
+
+  <select id="selectBySearch" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      TASK_DETAIL_ID,
+      BUSINESS_CODE,
+      TASK_TYPE_ID,
+      DEPT_MESH_ID,
+      DEPT_AREA_ID,
+      DEVELOPMENT_DEPT,
+      TASK_CODE,
+      p1.dept_name DEPT_MESH_NAME,
+      p2.dept_name DEPT_AREA_NAME,
+      p3.dept_name DEVELOPMENT_DEPT_NAME,
+      TASK_STATUS
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+      LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+      LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+    <if test="importBatch != null and importBatch != ''">
+      and d.IMPORT_BATCH = #{importBatch}
+    </if>
+    order by d.TASK_CODE DESC
+    <if test="begin != null and showLines != null and showLines != 0">
+      limit #{begin},#{showLines}
+    </if>
+  </select>
+
+  <select id="selectTaskDetailIdBySearch" resultType="string"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      TASK_DETAIL_ID
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+      LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+      LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+    <if test="importBatch != null and importBatch != ''">
+      and d.IMPORT_BATCH = #{importBatch}
+    </if>
+    order by d.TASK_CODE DESC
+  </select>
+
+  <!-- 任务组织机构修改 -->
+  <update id="editTaskDept" parameterType="java.util.Map">
+    update OC_TASK_DETAIL
+    <set>
+      <if test="meshID != null and meshID != ''">
+        DEPT_MESH_ID = #{meshID},
+      </if>
+      <if test="areaID != null and areaID != ''">
+        DEPT_AREA_ID = #{areaID},
+      </if>
+      <if test="developmentID != null and developmentID != ''">
+        DEVELOPMENT_DEPT = #{developmentID},
+      </if>
+    </set>
+    where TASK_DETAIL_ID in ( ${taskDetailIds} )
+  </update>
+
+  <!-- 待办任务列表 -->
+  <select id="selectwaitBySearchCount" resultType="int"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      count(d.TASK_DETAIL_ID)
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+  </select>
+
+  <select id="selectwaitBySearch" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      d.TASK_DETAIL_ID,
+      d.BUSINESS_CODE,
+      d.TASK_TYPE_ID,
+      d.DEPT_MESH_ID,
+      d.DEPT_AREA_ID,
+      d.DEVELOPMENT_DEPT,
+      d.TASK_CODE,
+      c.cust_name AS USER_NAME,
+      d.DEFULT_PHONE,
+      d.TASK_STATUS
+    FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+    order by d.TASK_CODE DESC
+    <if test="begin != null and showLines != null and showLines != 0">
+      limit #{begin},#{showLines}
+    </if>
+  </select>
+
+  <select id="selectWaitTaskDetailIdBySearch" resultType="string"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      d.TASK_DETAIL_ID
+      FROM
+      OC_TASK_DETAIL d
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+    WHERE
+      1 = 1
+    <include refid="Sql_AllocationWhere" />
+  </select>
+
+  <update id="updateTaskByTaskDetail" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskDetail">
+    update OC_TASK_DETAIL
+    <set>
+      TASK_STATUS=#{status},
+      END_DATE=#{endDate},
+      ROPERATE_DEPT_ID=#{roperateDeptId}
+    </set>
+    where TASK_DETAIL_ID=#{taskDetailId}
+  </update>
+
+  <!-- 批量插入 -->
+  <insert id="insertGroup" parameterType="map">
+    insert into OC_TASK_DETAIL (TASK_DETAIL_ID, BUSINESS_CODE,
+    TASK_TYPE_ID, DEPT_MESH_ID,
+    DEPT_AREA_ID, DEPT_AGENCY_ID, TASK_CODE,
+    PRODUCT_TYPE, PHONE_NUMBER, RATE,
+    CUSTOMFIELDS1, CUSTOMFIELDS2,
+    CUSTOMFIELDS3,
+    CUSTOMFIELDS4, CUSTOMFIELDS5, CUSTOMFIELDS6,
+    CUSTOMFIELDS7, CUSTOMFIELDS8, CUSTOMFIELDS9,
+    CUSTOMFIELDS10,
+    CUSTOMFIELDS11, CUSTOMFIELDS12,
+    CUSTOMFIELDS13, CUSTOMFIELDS14,
+    CUSTOMFIELDS15,
+    RESPONSIBLE, NET_STOP, PACKAGE_NAME,
+    CONTRACT_NAME,
+    CONTRACT_START_TIME, CONTRACT_END_TIME,
+    ACTIVATION_TIME,
+    DEVELOPMENT_DEPT,
+    IMPORT_BATCH, IMPORT_PERSON_ID, IMPORT_TIME,
+    CONTACTS,
+    STATUS, INSTALLED_ADDRESS, PON_LOGO, TARIFF_NAME,
+    PHONE_NUMBER2,
+    PHONE_NUMBER3,
+    TASK_STATUS, ROPERATE_DEPT_ID,
+    DEFULT_PHONE, USER_NAME, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID)
+    values
+    <foreach collection="list" item="record" index="index"
+             separator=",">
+      (#{record.taskDetailId,jdbcType=VARCHAR},
+      #{record.businessCode,jdbcType=VARCHAR},
+      #{record.taskTypeId,jdbcType=VARCHAR},
+      #{record.deptMeshId,jdbcType=VARCHAR},
+      #{record.deptAreaId,jdbcType=VARCHAR},
+      #{record.deptAgencyId,jdbcType=VARCHAR},
+      #{record.taskCode,jdbcType=VARCHAR},
+      #{record.productType,jdbcType=VARCHAR},
+      #{record.phoneNumber,jdbcType=VARCHAR},
+      #{record.rate,jdbcType=VARCHAR},
+      #{record.customfields1,jdbcType=VARCHAR},
+      #{record.customfields2,jdbcType=VARCHAR},
+      #{record.customfields3,jdbcType=VARCHAR},
+      #{record.customfields4,jdbcType=VARCHAR},
+      #{record.customfields5,jdbcType=VARCHAR},
+      #{record.customfields6,jdbcType=VARCHAR},
+      #{record.customfields7,jdbcType=VARCHAR},
+      #{record.customfields8,jdbcType=VARCHAR},
+      #{record.customfields9,jdbcType=VARCHAR},
+      #{record.customfields10,jdbcType=VARCHAR},
+      #{record.customfields11,jdbcType=VARCHAR},
+      #{record.customfields12,jdbcType=VARCHAR},
+      #{record.customfields13,jdbcType=VARCHAR},
+      #{record.customfields14,jdbcType=VARCHAR},
+      #{record.customfields15,jdbcType=VARCHAR},
+      #{record.responsible,jdbcType=VARCHAR},
+      #{record.netStop,jdbcType=VARCHAR},
+      #{record.packageName,jdbcType=VARCHAR},
+      #{record.contractName,jdbcType=VARCHAR},
+      #{record.contractStartTime,jdbcType=VARCHAR},
+      #{record.contractEndTime,jdbcType=VARCHAR},
+      #{record.activationTime,jdbcType=VARCHAR},
+      #{record.developmentDept,jdbcType=VARCHAR},
+      #{record.importBatch,jdbcType=VARCHAR},
+      #{record.importPersonId,jdbcType=VARCHAR},
+      #{record.importTime,jdbcType=TIMESTAMP},
+      #{record.contacts,jdbcType=VARCHAR},
+      #{record.status,jdbcType=VARCHAR},
+      #{record.installedAddress,jdbcType=VARCHAR},
+      #{record.ponLogo,jdbcType=VARCHAR},
+      #{record.tariffName,jdbcType=VARCHAR},
+      #{record.phoneNumber2,jdbcType=VARCHAR},
+      #{record.phoneNumber3,jdbcType=VARCHAR},
+      #{record.taskStatus,jdbcType=VARCHAR},
+      #{record.roperateDeptId,jdbcType=VARCHAR},
+      #{record.defultPhone,jdbcType=VARCHAR},
+      #{record.userName,jdbcType=VARCHAR},
+      #{record.initDevelopment,jdbcType=VARCHAR},
+      #{record.initMeshId,jdbcType=VARCHAR},
+      #{record.initAreaId,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+
 </mapper>

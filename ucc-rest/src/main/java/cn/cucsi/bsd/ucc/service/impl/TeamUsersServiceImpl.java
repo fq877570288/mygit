@@ -33,6 +33,13 @@ public class TeamUsersServiceImpl implements TeamUsersService{
     }
 
     @Override
+    public Page<UccUsers> addFindAll(UccUserCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
+        Pageable pageable = new PageRequest(0, 999999, sort);
+        return uccUserRepository.findAll(TeamUsersSpecs.createSpec(criteria), pageable);
+    }
+
+    @Override
     public UccUsers findOne(String userId) {
         return this.uccUserRepository.findOne(userId);
     }

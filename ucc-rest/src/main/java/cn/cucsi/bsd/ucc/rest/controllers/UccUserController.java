@@ -6,6 +6,7 @@ import cn.cucsi.bsd.ucc.data.domain.PbxExts;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.data.domain.UpdateUtil;
 import cn.cucsi.bsd.ucc.service.PbxExtsService;
+import cn.cucsi.bsd.ucc.service.TeamUsersService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -32,6 +33,8 @@ public class UccUserController  {
     private UccUserService uccUserService;
     @Autowired
     private PbxExtsService PbxExtsService;
+    @Autowired
+    private TeamUsersService teamUsersService;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
@@ -48,6 +51,29 @@ public class UccUserController  {
             criteria.setExtId(extId);
         }
         PageResultBean<List<UccUsers>> list = new PageResultBean(this.uccUserService.findAll(criteria));
+        return list;
+    }
+
+    @ApiOperation(value="根据类型查询所有用户列表", notes="根据类型查询所有用户列表", httpMethod = "GET")
+    @RequestMapping(value = "/findAllByType/{type}", method= RequestMethod.GET)
+    @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
+    public PageResultBean<List<UccUsers>> findAllByType(@PathVariable String type){
+        PageResultBean<List<UccUsers>> list = new PageResultBean<>();
+        if("team".equals(type)){
+            UccUserCriteria criteria = new UccUserCriteria();
+            list = new PageResultBean(this.teamUsersService.addFindAll(criteria));
+            List<UccUsers> uccUsersList = list.getData();
+            Integer totalElements = 0;
+            List<UccUsers> resultUccUsersList = new ArrayList<>();
+            for (UccUsers uccUsers : uccUsersList) {
+                if(uccUsers.getTeamUsers().size()==0){
+                    totalElements+=1;
+                    resultUccUsersList.add(uccUsers);
+                }
+            }
+            list.setTotalElements(totalElements);
+            list.setData(resultUccUsersList);
+        }
         return list;
     }
 
@@ -104,6 +130,7 @@ public class UccUserController  {
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers) {
         uccUsers.setCreatedTime(new Date());
+        this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
     }
@@ -115,6 +142,7 @@ public class UccUserController  {
         UccUsers targetUser = this.uccUserService.findOne(uccUsers.getUserId());
         UpdateUtil.copyNullProperties(targetUser,uccUsers);
         uccUsers.setUpdatedTime(new Date());
+        this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
     }

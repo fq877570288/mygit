@@ -555,13 +555,13 @@
 			and a.TASK_TYPE_NAME = #{taskTypeName} 
 		</if>
 		<if test="deptMeshName != null and deptMeshName != ''">
-			and a.DEPT_MESH_NAME LIKE CONCAT(CONCAT('%', #{deptMeshName}), '%') 
+			and a.DEPT_MESH_NAME LIKE '%${deptMeshName}%'
 		</if>
 		<if test="deptAreaName != null and deptAreaName != ''">
-			and a.DEPT_AREA_NAME LIKE CONCAT(CONCAT('%', #{deptAreaName}), '%') 
+			and a.DEPT_AREA_NAME LIKE  '%${deptAreaName}%'
 		</if>
 		<if test="developmentDept != null and developmentDept != ''">
-			and a.DEVELOPMENT_DEPT LIKE CONCAT(CONCAT('%', #{developmentDept}), '%') 
+			and a.DEVELOPMENT_DEPT LIKE '%${developmentDept}%'
 		</if>
 		<if test="importPersonId != null and importPersonId != ''">
 			and a.IMPORT_PERSON_ID = #{importPersonId} 
@@ -576,7 +576,9 @@
 	<select id="selectBySearch" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.DataImportCriteria">
 		select
           <include refid="Base_Column_List" />
-		from OC_DATA_IMPORT a where 1=1
+		from OC_DATA_IMPORT a
+        where 1=1
+          <include refid="Sql_Where" />
 		order by a.IMPORT_TIME DESC
 		  <if test="begin != null and showLines != null and showLines != 0">
 			  limit #{begin},#{showLines}

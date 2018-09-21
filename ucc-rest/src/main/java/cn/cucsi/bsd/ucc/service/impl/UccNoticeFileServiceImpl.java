@@ -31,14 +31,19 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
     private UccNoticeFileMapper uccNoticeFileMapper;
     @Autowired
     private SystemConfigService systemConfigService;
-    
+     
     @Override
     public Page<UccNoticeFile> findAll(UccNoticeFileCriteria criteria) {
         Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccNoticeFileRepository.findAll(UccNoticeFileSpecs.createSpec(criteria), pageable);
     }
-
+    @Override
+    public List<UccNoticeFile> findAllOne(UccNoticeFileCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
+        //Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
+        return uccNoticeFileRepository.findAll(UccNoticeFileSpecs.createSpec(criteria),sort);
+    }
     @Override
     public UccNoticeFile findOne(String noticeFileId) {
         return uccNoticeFileRepository.findOne(noticeFileId);
@@ -51,14 +56,15 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
     @Override
     public UccNoticeFile save(byte[] fileBox,UccNoticeFile uccNoticeFile) {
         SystemConfig systemConfig  = systemConfigService.findOne("noticeFilePath");
+        UccNoticeFile uccNoticeFilere = uccNoticeFileRepository.save(uccNoticeFile);
         if(fileBox!=null && fileBox.length>0){
-            String filePath = systemConfig.getValue() + "\\" + uccNoticeFile.getNoticeFileId() + "\\";
+            String filePath = systemConfig.getValue() + "\\" + uccNoticeFilere.getNoticeFileId() + "\\";
             File targetFile = new File(filePath);
             if(!targetFile.exists()){
                 targetFile.mkdirs();
             }
             try {
-                FileOutputStream out = new FileOutputStream(filePath  + uccNoticeFile.getFileName());
+                FileOutputStream out = new FileOutputStream(filePath  + uccNoticeFilere.getFileName());
                 out.write(fileBox);
                 out.flush();
                 out.close();
@@ -66,9 +72,8 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
                 e.printStackTrace();
             }
         }
-
                 
-        return uccNoticeFileRepository.save(uccNoticeFile);
+        return uccNoticeFilere;
     }
     @Override
     public UccNoticeFile save(UccNoticeFile uccNoticeFile) {
@@ -77,7 +82,24 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
 
     @Override
     public Boolean delete(String noticeFileId) {
+        SystemConfig systemConfig  = systemConfigService.findOne("noticeFilePath");
+        String filePath = systemConfig.getValue() + "\\" + noticeFileId;
+        File dir=new File(filePath);//路径
+        Boolean bol= deleteDir(dir);
         uccNoticeFileRepository.delete(noticeFileId);
         return true;
+    }
+    private static Boolean deleteDir(File dir) {
+      if (dir.isDirectory()) {
+          String[] children = dir.list();
+          for (int i=0; i<children.length; i++) {
+              Boolean success = deleteDir(new File(dir, children[i]));
+              if (!success) {
+                  return false;
+              }
+          }
+      }
+      // 目录此时为空，可以删除
+      return dir.delete();
     }
 }

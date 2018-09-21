@@ -8,12 +8,10 @@ import cn.cucsi.bsd.ucc.common.beans.AutoSearchTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.CreateTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.DoCreateTaskCriteria;
-import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
 import cn.cucsi.bsd.ucc.data.domain.Task;
 import cn.cucsi.bsd.ucc.service.CreateTaskService;
 import cn.cucsi.bsd.ucc.service.ImportBatchService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
@@ -70,22 +68,18 @@ public class CreateTaskController {
 	 */
 	@ApiOperation(value="创建任务", notes="创建任务")
 	@RequestMapping(value="/doCreateTask",method= RequestMethod.POST)
-	public String customfieldsSave(@RequestBody DoCreateTaskCriteria doCreateTaskCriteria) {
+	public Map<String,Object>  customfieldsSave(@RequestBody DoCreateTaskCriteria doCreateTaskCriteria) {
 
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-		String message = "创建任务失败！";
+		Map<String,Object> customfieldsSaveMap = new HashMap<String,Object>();
+		customfieldsSaveMap.put("msg", "创建任务失败!");
+		customfieldsSaveMap.put("code", -1);
 
 		String createMode = doCreateTaskCriteria.getCreateMode()==null?"":doCreateTaskCriteria.getCreateMode();
 		String barchs = doCreateTaskCriteria.getBarchs()==null?"":doCreateTaskCriteria.getBarchs();
 		String userId = doCreateTaskCriteria.getUserId()==null?"":doCreateTaskCriteria.getUserId();
 		String oldTaskBatch = doCreateTaskCriteria.getOldTaskBatch()==null?"":doCreateTaskCriteria.getOldTaskBatch();
 		try {
-			if(MyUtils.isBlank(createMode)||MyUtils.isBlank(barchs)||MyUtils.isBlank(userId)||MyUtils.isBlank(oldTaskBatch)){
-				message = "入参不能为空！";
-				json = mapper.writeValueAsString(message);
-				return json;
-			}
+			System.out.println("创建任务测试 createMode:::" + createMode);
 			if(Task.CREATENEW.equals(createMode)){
 				// 新建任务
 				createTaskService.createNewTask(barchs, userId, null);
@@ -93,14 +87,18 @@ public class CreateTaskController {
 				//替换现有任务
 				createTaskService.createOldTask(barchs, userId, oldTaskBatch);
 			}
-			message = "任务生成完成，请到[分派任务]页面进行任务分派操作！";
-			json = mapper.writeValueAsString(message);
+			/*message = "任务生成完成，请到[分派任务]页面进行任务分派操作！";
+			json = mapper.writeValueAsString(message);*/
+			customfieldsSaveMap.put("msg", "任务生成完成，请到[分派任务]页面进行任务分派操作！");
+			customfieldsSaveMap.put("code", 0);
+			return customfieldsSaveMap;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			System.out.println("生成任务时发生异常！");
+			return customfieldsSaveMap;
 		}
-		return json;
 	}
 	
 	/****

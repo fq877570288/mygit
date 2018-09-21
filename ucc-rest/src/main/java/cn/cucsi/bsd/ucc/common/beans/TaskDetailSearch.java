@@ -1,68 +1,104 @@
 package cn.cucsi.bsd.ucc.common.beans;
 
 import cn.cucsi.bsd.ucc.data.domain.Paging;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
+@ApiModel
 public class TaskDetailSearch  extends Paging {
-	
+
+	@ApiModelProperty(value = "业务号码",required = false)
 	private String businessCode; //业务号码
 
+	@ApiModelProperty(value = "任务类型名称",required = false)
     private String taskTypeName; //任务类型名称
 
+	@ApiModelProperty(value = "网给名称",required = false)
     private String deptMeshName; //网给名称
 
+	@ApiModelProperty(value = "包区名称",required = false)
     private String deptAreaName; //包区名称
-    
+
+	@ApiModelProperty(value = "发展部门",required = false)
     private String developmentDeptName; //发展部门
-    
+
+	@ApiModelProperty(value = "受理部门",required = false)
     private String roperateDeptId; // 受理部门
-    
+
+	@ApiModelProperty(value = "流转操作",required = false)
     private String taskStatus; // 流转操作
+
+	@ApiModelProperty(value = "？",required = false)
 	private String taskStatusList; // 流转操作
-    
-    private String userId;
-    
+
+	@ApiModelProperty(value = "用户ID",required = false)
+    private String userId;//用户ID
+
+	@ApiModelProperty(value = "任务编码",required = false)
     private String taskCode; //任务编码
-    
+
+	@ApiModelProperty(value = "任务主键",required = false)
     private String taskDetailId; //任务主键
 
+	@ApiModelProperty(value = "？",required = false)
 	private String taskDetailIds;
+
+	@ApiModelProperty(value = "？",required = false)
 	private List<String> taskDetailIdInList;
-    
+
+	@ApiModelProperty(value = "联系人姓名",required = false)
     private String userName; //联系人姓名
-    
+
+	@ApiModelProperty(value = "任务类型ID",required = false)
     private String taskTypeId; //任务类型ID
-    
+
+	@ApiModelProperty(value = "联系电话",required = false)
     private String defultPhone; //联系电话
-    
+
+	@ApiModelProperty(value = "资费名称",required = false)
     private String tariffName; //资费名称
-    
+
+	@ApiModelProperty(value = "客户状态",required = false)
     private String status; //客户状态
-    
+
+	@ApiModelProperty(value = "接入方式",required = false)
     private String ponLogo; //接入方式
-    
+
+	@ApiModelProperty(value = "部门等级",required = false)
     private String deptLevel; //部门等级
-    
+
+	@ApiModelProperty(value = "开始时间",required = false)
     private String beginTime;
-    
+
+	@ApiModelProperty(value = "结束时间",required = false)
     private String endTime;
-    
+
+	@ApiModelProperty(value = "导入人ID",required = false)
     private String importPersonId;
-    
+
+	@ApiModelProperty(value = "操作员",required = false)
     private String operatorId; //操作员
-    
+
+	@ApiModelProperty(value = "导入批次",required = false)
     private String importBatch; //导入批次
-    
+
+	@ApiModelProperty(value = "本月是否有外呼记录",required = false)
     private String outCallRecord;//本月是否有外呼记录
 
+	@ApiModelProperty(value = "部门ID以及自部门ID字符串，逗号分隔",required = false)
 	private String deptIdAndChildIds; //部门ID以及自部门ID字符串，逗号分隔
 
+	@ApiModelProperty(value = "？",required = false)
 	private String endDateBeforeNow;
 
+	@ApiModelProperty(value = "？",required = false)
 	private String completeMode;
 
+	@ApiModelProperty(value = "？",required = false)
 	private Integer taskNumberStart;
 
+	@ApiModelProperty(value = "？",required = false)
 	private Integer taskNumberEnd;
 
 	public Integer getTaskNumberStart() {

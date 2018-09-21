@@ -262,4 +262,19 @@
     delete from OC_TASK_TRANSFER
     where TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
   </delete>
+
+  <!-- 批量插入 -->
+  <insert id="insertGroup" parameterType="map">
+    insert into OC_TASK_TRANSFER (TASK_TRANSFER_ID, TASK_DETAIL_ID, TRANSFER_STATUS, ROPERATE_PERSON_ID,
+    ROPERATE_DEPT_ID, CALL_MEMO, CALL_RESULT,
+    TRANSFE_ROPERATE, TRANSFER_TIME, CDR_ID,
+    BACK_MEMO, OPERATOR_ID, OPERATOR_DEPT,domain_id)
+    values
+    <foreach collection="list" item="record" index="index" separator=",">
+      (#{record.taskTransferId,jdbcType=VARCHAR}, #{record.taskDetailId,jdbcType=VARCHAR}, #{record.transferStatus,jdbcType=VARCHAR}, #{record.roperatePersonId,jdbcType=VARCHAR},
+      #{record.roperateDeptId,jdbcType=VARCHAR}, #{record.callMemo,jdbcType=VARCHAR}, #{record.callResult,jdbcType=VARCHAR},
+      #{record.transfeRoperate,jdbcType=VARCHAR}, #{record.transferTime,jdbcType=TIMESTAMP}, #{record.cdrId,jdbcType=VARCHAR},
+      #{record.backMemo,jdbcType=VARCHAR}, #{record.operatorId,jdbcType=VARCHAR}, #{record.operatorDept,jdbcType=VARCHAR},#{record.domainId,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
 </mapper>
