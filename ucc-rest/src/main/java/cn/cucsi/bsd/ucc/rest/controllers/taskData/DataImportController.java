@@ -369,11 +369,11 @@ public class DataImportController {
 				String taskType = "";
 				String deptIdAndChildIds = (String)httpSession.getAttribute("DeptIdAndChildIds");
 
-//				if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
-//					//model.addAttribute("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
-//					customFieldsSaveMap.put("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
-//					return customFieldsSaveMap;
-//				}
+				if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
+					//model.addAttribute("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
+					customFieldsSaveMap.put("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
+					return customFieldsSaveMap;
+				}
 				for(int i=0; i<dataImportList.size(); i++){
 					taskType = dataImportList.get(0).getTaskTypeName();
 					dataImport = dataImportList.get(i);
@@ -741,8 +741,7 @@ public class DataImportController {
 			String TIME = new String(df.format(date));
 
 			//String userID = Auth.getLoginUser(session).getId().toString();
-			String userID ="1";
-			//String userID = (String)session.getAttribute("userID");
+			String userID = (String)session.getAttribute("userID");
 			String eventId = "";
 			if(!MyUtils.isBlank(userID)){
 			// 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
