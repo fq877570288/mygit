@@ -127,7 +127,8 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
             Map<String, Object> barchsMap = new HashMap<String, Object>();
             barchsMap.put("importBarchs", barchs);
             barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGA);
-            importBatchMapper.updateFlagByBatch(barchsMap);
+            int ii = importBatchMapper.updateFlagByBatch(barchsMap);
+			System.out.println("分派任务 修改数据导入批次表返回结果:::" + ii);
         } catch (Exception e) {
             e.printStackTrace();
         }

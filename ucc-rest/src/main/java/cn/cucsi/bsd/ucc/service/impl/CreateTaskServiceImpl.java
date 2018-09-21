@@ -53,11 +53,14 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 			String importBarchs = "'" + barchs.replaceAll(",", "','") + "'";
 			Map<String, Object> barchsMap = new HashMap<String, Object>();
 			barchsMap.put("importBarchs", importBarchs);
+			System.out.println("创建任务测试 importBarchs:::" + importBarchs);
 			// 获取导入数据
 			List<DataImport> dataImportList = dataImportMapperForBatch.selectByBarchs(barchsMap);
+			System.out.println("创建任务测试 dataImportList:::" + dataImportList.size());
 			// 部门
 			String userDeptID = "";
 			List<UccDepts> userDeptList = uccDeptsService.selectByUserId(userId);
+			System.out.println("创建任务测试 userDeptList:::" + userDeptList.size());
 			if(!MyUtils.isBlank(userDeptList)){
 				for(UccDepts uccDepts : userDeptList){
 					userDeptID = uccDepts.getDeptId();
@@ -84,8 +87,9 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 			List<UccDepts> UccDeptsNewList = new ArrayList<UccDepts>();
 			Map<String, UccDepts> UccDeptsNewMap = new HashMap<String, UccDepts>();
 			UccDepts uccDepts = null;
-			Long MeshID = null;
-			Long AreaID = null;
+
+			String meshDeptId = "";
+			String areaDeptId = "";
 			Long DevelopmentID = null;
 			Long maxDeptIDTemp = null;
 
@@ -100,6 +104,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					String taskDetailUuid = generator.generate();
 					// 任务类型
 					TaskType taskType = businessService.selectByNameInCache(dataImport.getTaskTypeName());
+					System.out.println("创建任务测试 taskType:::" + taskType);
 					// 部门
 					// 判断数据库中是否存在该部门
 					UccDepts deptMesh = uccDeptsService.selectByNameInCache(dataImport.getDeptMeshName());
@@ -111,12 +116,14 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					UccDepts areaNew = UccDeptsNewMap.get(dataImport.getDeptAreaName());
 					UccDepts developmentNew = UccDeptsNewMap.get(dataImport.getDevelopmentDept());
 
+
 					if(deptMesh == null && meshNew == null){
 						// 网格
+//						UUIDGenerator generator = new UUIDGenerator();
+						meshDeptId = generator.generate();
+
 						uccDepts = new UccDepts();
-						maxDeptIDTemp =  Long.parseLong(maxDeptID);
-						MeshID = ++maxDeptIDTemp;
-						uccDepts.setDeptId(MeshID+"");
+						uccDepts.setDeptId(meshDeptId);
 						uccDepts.setDeptLevel(2); // 网格2级部门
 						uccDepts.setDeptCreateTime(date);
 						uccDepts.setCreatedUserId(userId);
@@ -126,42 +133,43 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 
 						UccDeptsNewMap.put(dataImport.getDeptMeshName(), uccDepts);
 					}
+
+
 					if(deptArea == null && areaNew == null){
-						meshNew = UccDeptsNewMap.get(dataImport.getDeptMeshName());
-						String pid = deptMesh == null ? meshNew.getDeptId() : deptMesh.getDeptId();
+
+						areaDeptId = generator.generate();
 						// 包区
 						uccDepts = new UccDepts();
-						maxDeptIDTemp = Long.parseLong(maxDeptID);
-						AreaID = ++maxDeptIDTemp;
-						uccDepts.setDeptId(AreaID+"");
+						uccDepts.setDeptId(areaDeptId);
 						uccDepts.setDeptLevel(3); // 包区3级部门
 						uccDepts.setDeptCreateTime(date);
 						uccDepts.setCreatedUserId(userId);
 						uccDepts.setDeptAdmin(userId);
-						uccDepts.setDeptPid(pid);
+						uccDepts.setDeptPid(meshDeptId);
 						uccDepts.setDeptName(dataImport.getDeptAreaName());
 
 						UccDeptsNewMap.put(dataImport.getDeptAreaName(), uccDepts);
 					}
+
 					if(dataImport.getDevelopmentDept() != null && !"".equals(dataImport.getDevelopmentDept())){
 						if(developmentNew == null && deptDevelopment == null){
 							areaNew = UccDeptsNewMap.get(dataImport.getDeptAreaName());
 							String pid = deptArea == null ? areaNew.getDeptId() : deptArea.getDeptId();
 							// 发展部门
 							uccDepts = new UccDepts();
-							maxDeptIDTemp =  Long.parseLong(maxDeptID);
-							DevelopmentID = ++maxDeptIDTemp;
-							uccDepts.setDeptId(DevelopmentID+"");
+
+							uccDepts.setDeptId(generator.generate());
 							uccDepts.setDeptLevel(4); // 发展部门4级部门
                             uccDepts.setDeptCreateTime(date);
 							uccDepts.setCreatedUserId(userId);
 							uccDepts.setDeptAdmin(userId);
-							uccDepts.setDeptPid(pid);
+							uccDepts.setDeptPid(areaDeptId);
 							uccDepts.setDeptName(dataImport.getDevelopmentDept());
 
 							UccDeptsNewMap.put(dataImport.getDeptAreaName(), uccDepts);
 						}
 					}
+
 					String dlpId = "";
 					if(DevelopmentID != null){
 						dlpId = DevelopmentID.toString();
@@ -178,8 +186,8 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskDetail.setImportTime(dataImport.getImportTime());
 					taskDetail.setBusinessCode(dataImport.getBusinessCode()); // 业务编码
 					taskDetail.setTaskTypeId(taskType.getTaskTypeId()); //任务类型
-					taskDetail.setDeptMeshId(deptMesh == null ? MeshID.toString() : deptMesh.getDeptId().toString()); //网格
-					taskDetail.setDeptAreaId(deptArea == null ? AreaID.toString() : deptArea.getDeptId().toString()); //包区
+					taskDetail.setDeptMeshId(deptMesh == null ? meshDeptId.toString() : deptMesh.getDeptId().toString()); //网格
+					taskDetail.setDeptAreaId(deptArea == null ? areaDeptId.toString() : deptArea.getDeptId().toString()); //包区
 					taskDetail.setTaskCode(taskCode); //任务编码
 					taskDetail.setProductType(dataImport.getProductType()); //产品类型
 					taskDetail.setPhoneNumber(dataImport.getPhoneNumber1());
@@ -218,8 +226,8 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskDetail.setRoperateDeptId(userDeptID.toString());
 					taskDetail.setUserName(dataImport.getUserName());
 					taskDetail.setDefultPhone(dataImport.getPhoneNumber1()); //默认显示号码
-					taskDetail.setInitMeshId(deptMesh == null ? MeshID.toString() : deptMesh.getDeptId().toString()); //网格(初始)
-					taskDetail.setInitAreaId(deptArea == null ? AreaID.toString() : deptArea.getDeptId().toString()); //包区(初始)
+					taskDetail.setInitMeshId(deptMesh == null ? meshDeptId.toString() : deptMesh.getDeptId().toString()); //网格(初始)
+					taskDetail.setInitAreaId(deptArea == null ? areaDeptId.toString() : deptArea.getDeptId().toString()); //包区(初始)
 					taskDetail.setInitDevelopment(deptDevelopment == null ? dlpId : deptDevelopment.getDeptId().toString()); //发展部门(初始)
 
 					taskDetailList.add(taskDetail);
@@ -253,12 +261,14 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 				// 插入任务明细表
 				Map<String, Object> taskDetailmap = new HashMap<String, Object>();
 				taskDetailmap.put("list", taskDetailList);
-				taskDetailMapperForBatch.insertGroup(taskDetailmap);
+				int aa = taskDetailMapperForBatch.insertGroup(taskDetailmap);
+				System.out.println("创建任务测试 插入任务明细表返回:::" + aa);
 
 				// 插入任务流转表
 				Map<String, Object> taskTransfermap = new HashMap<String, Object>();
 				taskTransfermap.put("list", taskTransferList);
-				taskTransferMapperForBatch.insertGroup(taskTransfermap);
+				int bb = taskTransferMapperForBatch.insertGroup(taskTransfermap);
+				System.out.println("创建任务测试 插入任务流转表:::" + bb);
 
 				// 插入新导入的部门数据
 				if(UccDeptsNewMap != null && UccDeptsNewMap.size() > 0){
@@ -269,19 +279,21 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					}
 					Map<String, Object> deptNewmap = new HashMap<String, Object>();
 					deptNewmap.put("list", UccDeptsNewList);
-					uccDeptsService.insertGroup(deptNewmap);
+					int cc = uccDeptsService.insertGroup(deptNewmap);
+					System.out.println("创建任务测试 插入新导入的部门数据返回:::" + cc);
 				}
 				// 修改数据导入批次表
 				if(oldTaskBatch == null || "".equals(oldTaskBatch)){
 					barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGY);
-					importBatchMapperForBatch.updateFlagByBatch(barchsMap);
+					int ii = importBatchMapperForBatch.updateFlagByBatch(barchsMap);
+					System.out.println("新建任务 修改数据导入批次表返回结果:::" + ii);
 				}
 				// 删除数据导入表
 				dataImportMapperForBatch.deleteByBatch(barchsMap);
 				sqlSession.commit();
 				sqlSession.clearCache();
 			}
-		}catch(Throwable t){
+		}catch(Exception t){
 			logger.error(t.getMessage(), t);
 			t.printStackTrace();
 			sqlSession.rollback();
