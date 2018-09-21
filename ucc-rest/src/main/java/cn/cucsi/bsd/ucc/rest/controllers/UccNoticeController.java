@@ -88,6 +88,7 @@ public class UccNoticeController {
                    uccNoticeFile.setCreatedTime(dateTime);
                    uccNoticeFile.setCreatedUserId(uccNotice.getCreatedUserId());
                    uccNoticeFile.setCreatedUserName(uccNotice.getCreatedUserName());
+                   uccNoticeFile.setContentType(file.getContentType());
                    try {
                        fileBox = file.getBytes();
                        this.uccNoticeFileService.save(fileBox, uccNoticeFile);

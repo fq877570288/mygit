@@ -18,6 +18,7 @@ public class UccNoticeFile {
     private Date uploadTime;
     private Integer fileOrder;
     private String noticeId;
+    private String contentType;
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
     private String createdUserId;
@@ -200,5 +201,13 @@ public class UccNoticeFile {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+    @Basic
+    @Column(name = "content_type", nullable = true, length = 50)
+    public String getContentType() {
+        return contentType;
+    }
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }
