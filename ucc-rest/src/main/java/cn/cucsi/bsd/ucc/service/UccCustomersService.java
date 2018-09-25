@@ -31,7 +31,7 @@ public interface UccCustomersService {
      * add by wangxiaoyu
      * 2018-08-31
      */
-    int custmIsBlack(String businessCode,String domainId);
+    int custmIsBlack(String businesscode,String domainId);
     /***
      * 根据条件查询黑名单列表
      * add by zss
@@ -44,5 +44,7 @@ public interface UccCustomersService {
      * 2018-09-13
      */
     UccCustomers update(UccCustomers uccCustomers);
+
+    UccCustomers selectByBusinessCode(String businesscode,String domainId) throws Exception;
 }
 

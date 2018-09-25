@@ -73,8 +73,8 @@ public class UccCustomersServiceImpl implements UccCustomersService{
      * 2018-08-31
      */
     @Override
-    public int custmIsBlack(String businessCode,String domainId){
-        return this.uccCustomersRepository.checkCustmIsBlack(businessCode,domainId);
+    public int custmIsBlack(String businesscode,String domainId){
+        return this.uccCustomersRepository.checkCustmIsBlack(businesscode,domainId);
     }
 
     /***
@@ -99,4 +99,10 @@ public class UccCustomersServiceImpl implements UccCustomersService{
         uccCustomersMapper.updateByPrimaryKeySelective(uccCustomers);
         return uccCustomers;
     }
+
+    @Override
+    public UccCustomers selectByBusinessCode(String businesscode,String domainId) throws Exception {
+        return uccCustomersMapper.selectUccCustomersByCode(businesscode,domainId);
+    }
+
 }

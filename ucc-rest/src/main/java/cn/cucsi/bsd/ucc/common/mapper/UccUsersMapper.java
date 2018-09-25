@@ -70,4 +70,6 @@ public interface UccUsersMapper {
     void cusfsSave(Map<String, Object> map);
 
     UccUsers selectByExtNum(Integer extNum);
+
+    UccUsers selectByPrimaryKey2(String userId);
 }

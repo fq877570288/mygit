@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.common.mapper;
 
+import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccCustomers;
 import org.apache.ibatis.annotations.Mapper;
@@ -10,6 +11,7 @@ import java.util.Map;
 @Mapper
 @Repository
 public interface UccCustomersMapper {
+
     int deleteByPrimaryKey(String custId);
 
     int insert(UccCustomers record);
@@ -27,4 +29,18 @@ public interface UccCustomersMapper {
     int deleteByBusinessCodes(Map<String, String> businesscodeMap) throws Exception;
 
     int insertGroup(Map<String, Object> taskMap) throws Exception;
+
+    int selectOngoingBySearchCount(TaskDetailSearch search) throws Exception;
+
+    List<UccCustomers> selectOngoingBySearch(TaskDetailSearch search) throws Exception;
+
+    int updateDefultPhone(UccCustomers uccCustomers) throws Exception;
+
+    int updateChangePhone(UccCustomers uccCustomers) throws Exception;
+
+    String custmIsBlack(String businesscode,String domainId) throws Exception;
+
+    List<UccCustomers> selectNextTaskBySearch(TaskDetailSearch search) throws Exception;
+
+    UccCustomers selectUccCustomersByCode(String businesscode,String domainId) throws Exception;
 }

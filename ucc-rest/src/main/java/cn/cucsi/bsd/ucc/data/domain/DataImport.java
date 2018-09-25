@@ -141,8 +141,10 @@ public class DataImport {
 
     @ApiModelProperty(value = "PON标识",required = false)
     private String ponLogo; //PON标识
-    
-    
+
+    @ApiModelProperty(value = "租户ID",required = false)
+    private String domainId;//租户ID
+
     public static final String DATAIMPORTID = "dataImportId";
     public static final String IMPORTBATCH = "importBatch";
     public static final String IMPORTPERSONID = "importPersonId";
@@ -536,5 +538,13 @@ public class DataImport {
 
     public void setDevelopmentDept(String developmentDept) {
         this.developmentDept = developmentDept == null ? null : developmentDept.trim();
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }

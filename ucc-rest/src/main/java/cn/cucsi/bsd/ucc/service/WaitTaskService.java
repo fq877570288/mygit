@@ -1,6 +1,8 @@
 package cn.cucsi.bsd.ucc.service;
 
 import java.util.List;
+import java.util.Map;
+
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
@@ -25,5 +27,5 @@ public interface WaitTaskService {
 	/***
 	 * 任务接收
 	 */
-	void taskReceive(String userId, String taskDetailIds) throws Exception;
+	Map<String,Object> taskReceive(String userId, String taskDetailIds) throws Exception;
 }

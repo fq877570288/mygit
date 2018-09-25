@@ -13,6 +13,7 @@ import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.BusinessService;
 import cn.cucsi.bsd.ucc.service.CreateTaskService;
 import cn.cucsi.bsd.ucc.service.UccDeptsService;
+import cn.cucsi.bsd.ucc.service.UccUserService;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -39,10 +40,19 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 	private BusinessService businessService;
 	@Autowired
 	private SqlSessionFactory sqlSessionFactory;
-	
+	@Autowired
+	private UccUserService uccUserService;
+
+	/***
+	 * 新建任务
+	 */
 	@Override
 //	@Transactional("txManager")
-	public void createNewTask(String barchs, String userId, String oldTaskBatch) throws Exception {
+	public Map<String,Object> createNewTask(String barchs, String userId, String oldTaskBatch) throws Exception {
+
+		Map<String,Object> createTaskMap = new HashMap<String,Object>();
+		createTaskMap.put("msg", "新建任务失败!");
+		createTaskMap.put("code", "-1");
 
 		SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
 		DataImportMapper dataImportMapperForBatch = sqlSession.getMapper(DataImportMapper.class);
@@ -56,7 +66,11 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 			System.out.println("创建任务测试 importBarchs:::" + importBarchs);
 			// 获取导入数据
 			List<DataImport> dataImportList = dataImportMapperForBatch.selectByBarchs(barchsMap);
-			System.out.println("创建任务测试 dataImportList:::" + dataImportList.size());
+			System.out.println("创建任务测试--按批次查询获取导入数据 dataImportList:::" + dataImportList.size());
+			if(MyUtils.isBlank(dataImportList)){
+				createTaskMap.put("msg", "创建任务时,按批次查询获取导入数据为空!");
+				return createTaskMap;
+			}
 			// 部门
 			String userDeptID = "";
 			List<UccDepts> userDeptList = uccDeptsService.selectByUserId(userId);
@@ -65,9 +79,12 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 				for(UccDepts uccDepts : userDeptList){
 					userDeptID = uccDepts.getDeptId();
 				}
+			}else{
+				createTaskMap.put("msg", "创建任务时,根据userId查询部门信息为空!");
+				return createTaskMap;
 			}
-			// 部门ID最大值
-			String maxDeptID = uccDeptsService.selectMaxDeptID();
+			// 部门ID最大值(当时是参照哈分项目，id是自增的，该项目id为uuid 所以没用了)
+			//String maxDeptID = uccDeptsService.selectMaxDeptID();
 			// 主键
 			UUIDGenerator generator = new UUIDGenerator();
 			Map<String, Object> taskMap = new HashMap<String, Object>();
@@ -93,6 +110,16 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 			Long DevelopmentID = null;
 			Long maxDeptIDTemp = null;
 
+			UccUsers uccUsers = uccUserService.findOne(userId);
+			if(MyUtils.isBlank(uccUsers)){
+				createTaskMap.put("msg", "根据userId:::"+userId+"查询用户信息为空!");
+				return createTaskMap;
+			}
+			String domainId = uccUsers.getDomainId()==null?"":uccUsers.getDomainId();
+			if(MyUtils.isBlank(domainId)){
+				createTaskMap.put("msg", "用户userId:::"+userId+"查询租户为空!");
+				return createTaskMap;
+			}
 			// 组织数据
 			if(dataImportList != null && dataImportList.size() > 0){
 				for(int i=0; i<dataImportList.size(); i++){
@@ -103,8 +130,15 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					// 任务明细表主键
 					String taskDetailUuid = generator.generate();
 					// 任务类型
-					TaskType taskType = businessService.selectByNameInCache(dataImport.getTaskTypeName());
-					System.out.println("创建任务测试 taskType:::" + taskType);
+					TaskType taskType = null;
+					try {
+						taskType = businessService.selectByNameInCache(dataImport.getTaskTypeName());
+						System.out.println("创建任务测试 taskType:::" + taskType);
+					} catch (Exception e) {
+						e.printStackTrace();
+						createTaskMap.put("msg", "第"+i+"条创建任务时,查询任务类型时发生异常!");
+						return createTaskMap;
+					}
 					// 部门
 					// 判断数据库中是否存在该部门
 					UccDepts deptMesh = uccDeptsService.selectByNameInCache(dataImport.getDeptMeshName());
@@ -115,7 +149,6 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					UccDepts meshNew = UccDeptsNewMap.get(dataImport.getDeptMeshName());
 					UccDepts areaNew = UccDeptsNewMap.get(dataImport.getDeptAreaName());
 					UccDepts developmentNew = UccDeptsNewMap.get(dataImport.getDevelopmentDept());
-
 
 					if(deptMesh == null && meshNew == null){
 						// 网格
@@ -130,11 +163,10 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 						uccDepts.setDeptAdmin(userId);
 						uccDepts.setDeptPid(userDeptID);
 						uccDepts.setDeptName(dataImport.getDeptMeshName());
+						uccDepts.setDomainId(domainId);
 
 						UccDeptsNewMap.put(dataImport.getDeptMeshName(), uccDepts);
 					}
-
-
 					if(deptArea == null && areaNew == null){
 
 						areaDeptId = generator.generate();
@@ -147,10 +179,10 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 						uccDepts.setDeptAdmin(userId);
 						uccDepts.setDeptPid(meshDeptId);
 						uccDepts.setDeptName(dataImport.getDeptAreaName());
+						uccDepts.setDomainId(domainId);
 
 						UccDeptsNewMap.put(dataImport.getDeptAreaName(), uccDepts);
 					}
-
 					if(dataImport.getDevelopmentDept() != null && !"".equals(dataImport.getDevelopmentDept())){
 						if(developmentNew == null && deptDevelopment == null){
 							areaNew = UccDeptsNewMap.get(dataImport.getDeptAreaName());
@@ -165,11 +197,11 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 							uccDepts.setDeptAdmin(userId);
 							uccDepts.setDeptPid(areaDeptId);
 							uccDepts.setDeptName(dataImport.getDevelopmentDept());
+							uccDepts.setDomainId(domainId);
 
 							UccDeptsNewMap.put(dataImport.getDeptAreaName(), uccDepts);
 						}
 					}
-
 					String dlpId = "";
 					if(DevelopmentID != null){
 						dlpId = DevelopmentID.toString();
@@ -180,6 +212,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					}else {
 						taskDetail.setImportBatch(dataImport.getImportBatch());
 					}
+
 					// 任务编码
 					taskCode = taskDetail.getImportBatch() + i;
 					taskDetail.setImportPersonId(dataImport.getImportPersonId());
@@ -229,6 +262,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskDetail.setInitMeshId(deptMesh == null ? meshDeptId.toString() : deptMesh.getDeptId().toString()); //网格(初始)
 					taskDetail.setInitAreaId(deptArea == null ? areaDeptId.toString() : deptArea.getDeptId().toString()); //包区(初始)
 					taskDetail.setInitDevelopment(deptDevelopment == null ? dlpId : deptDevelopment.getDeptId().toString()); //发展部门(初始)
+					taskDetail.setDomainId(domainId);
 
 					taskDetailList.add(taskDetail);
 
@@ -244,6 +278,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskTransfer.setRoperatePersonId(userId);//受理员
 					taskTransfer.setOperatorDept(userDeptID.toString());
 					taskTransfer.setRoperateDeptId(userDeptID.toString());
+					taskTransfer.setDomainId(domainId);
 
 					taskTransferList.add(taskTransfer);
 				}
@@ -254,21 +289,29 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskList.add((Task) entry.getValue());
 				}
 				// 插入任务表
-	//			Map<String, Object> taskmap = new HashMap<String, Object>();
-	//			taskmap.put("list", taskList);
-	//			taskMappert.insertGroup(taskmap);
+				//Map<String, Object> taskmap = new HashMap<String, Object>();
+				//taskmap.put("list", taskList);
+				//taskMappert.insertGroup(taskmap);
 
 				// 插入任务明细表
 				Map<String, Object> taskDetailmap = new HashMap<String, Object>();
 				taskDetailmap.put("list", taskDetailList);
 				int aa = taskDetailMapperForBatch.insertGroup(taskDetailmap);
 				System.out.println("创建任务测试 插入任务明细表返回:::" + aa);
+				if(aa<=0){
+					createTaskMap.put("msg", "创建任务时,插入任务明细表发生异常!");
+					return createTaskMap;
+				}
 
 				// 插入任务流转表
 				Map<String, Object> taskTransfermap = new HashMap<String, Object>();
 				taskTransfermap.put("list", taskTransferList);
 				int bb = taskTransferMapperForBatch.insertGroup(taskTransfermap);
 				System.out.println("创建任务测试 插入任务流转表:::" + bb);
+				if(bb<=0){
+					createTaskMap.put("msg", "创建任务时,插入任务流转表发生异常!");
+					return createTaskMap;
+				}
 
 				// 插入新导入的部门数据
 				if(UccDeptsNewMap != null && UccDeptsNewMap.size() > 0){
@@ -279,49 +322,99 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					}
 					Map<String, Object> deptNewmap = new HashMap<String, Object>();
 					deptNewmap.put("list", UccDeptsNewList);
-					int cc = uccDeptsService.insertGroup(deptNewmap);
-					System.out.println("创建任务测试 插入新导入的部门数据返回:::" + cc);
+					try {
+						int cc = uccDeptsService.insertGroup(deptNewmap);
+						System.out.println("创建任务测试 插入新导入的部门数据返回:::" + cc);
+					} catch (Exception e) {
+						e.printStackTrace();
+						createTaskMap.put("msg", "创建任务时,插入新导入的部门数据时发生异常!");
+						return createTaskMap;
+					}
 				}
 				// 修改数据导入批次表
 				if(oldTaskBatch == null || "".equals(oldTaskBatch)){
 					barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGY);
-					int ii = importBatchMapperForBatch.updateFlagByBatch(barchsMap);
-					System.out.println("新建任务 修改数据导入批次表返回结果:::" + ii);
+					try {
+						int ii = importBatchMapperForBatch.updateFlagByBatch(barchsMap);
+						System.out.println("新建任务 修改数据导入批次表返回结果:::" + ii);
+					} catch (Exception e) {
+						e.printStackTrace();
+						createTaskMap.put("msg", "创建任务时,修改数据导入批次表时发生异常!");
+						return createTaskMap;
+					}
 				}
 				// 删除数据导入表
-				dataImportMapperForBatch.deleteByBatch(barchsMap);
+				try {
+					dataImportMapperForBatch.deleteByBatch(barchsMap);
+				} catch (Exception e) {
+					e.printStackTrace();
+					createTaskMap.put("msg", "创建任务时,删除数据导入表时发生异常!");
+					return createTaskMap;
+				}
 				sqlSession.commit();
 				sqlSession.clearCache();
+				createTaskMap.put("code", "0");
+				createTaskMap.put("msg", "新建任务操作成功！");
 			}
 		}catch(Exception t){
 			logger.error(t.getMessage(), t);
 			t.printStackTrace();
 			sqlSession.rollback();
+			createTaskMap.put("code", "-1");
 		}finally{
 			sqlSession.close();
 		}
+		return createTaskMap;
 	}
 
 	/***
 	 * 替换现有任务
 	 */
 	@Override
-	@Transactional("txManager")
-	public void createOldTask(String barchs, String userId, String oldTaskBatch) throws Exception {
-		
-		// 根据批次删除 除在办或办结之外的任务
-		Map<String, Object> oldTaskBatchMap = new HashMap<String, Object>();
-		oldTaskBatchMap.put("oldTaskBatch", oldTaskBatch);
-		taskDetailMapper.deleteBYBatch(oldTaskBatchMap);
+	@Transactional
+	public Map<String,Object> createOldTask(String barchs, String userId, String oldTaskBatch) throws Exception {
 
-		// 删除导入批次表中barchs批次数据
-		Map<String, Object> barchsMap = new HashMap<String, Object>();
-		String importBarchs = "'" + barchs.replaceAll(",", "','") + "'";
-		barchsMap.put("importBarchs", importBarchs);
-		importBatchMapper.deleteBYBatchs(barchsMap);
-		
-		// 创建任务
-		createNewTask(barchs, userId, oldTaskBatch);
+		Map<String,Object> createOldTaskMap = new HashMap<String,Object>();
+		createOldTaskMap.put("msg", "替换现有任务失败!");
+		createOldTaskMap.put("code", "-1");
+		try {
+			// 根据批次删除 除在办或办结之外的任务
+			Map<String, Object> oldTaskBatchMap = new HashMap<String, Object>();
+			oldTaskBatchMap.put("oldTaskBatch", oldTaskBatch);
+			try {
+				taskDetailMapper.deleteBYBatch(oldTaskBatchMap);
+			} catch (Exception e) {
+				e.printStackTrace();
+				createOldTaskMap.put("msg", "替换现有任务，根据批次删除 除在办或办结之外的任务时发生异常!");
+				return createOldTaskMap;
+			}
+			// 删除导入批次表中barchs批次数据
+			Map<String, Object> barchsMap = new HashMap<String, Object>();
+			String importBarchs = "'" + barchs.replaceAll(",", "','") + "'";
+			barchsMap.put("importBarchs", importBarchs);
+			try {
+				importBatchMapper.deleteBYBatchs(barchsMap);
+			} catch (Exception e) {
+				e.printStackTrace();
+				createOldTaskMap.put("msg", "替换现有任务，删除导入批次表中barchs批次数据时发生异常!");
+				return createOldTaskMap;
+			}
+			// 创建任务
+			try {
+				createNewTask(barchs, userId, oldTaskBatch);
+			} catch (Exception e) {
+				e.printStackTrace();
+				createOldTaskMap.put("msg", "替换现有任务，调用创建任务方法时发生异常!");
+				return createOldTaskMap;
+			}
+			createOldTaskMap.put("code", "0");
+			createOldTaskMap.put("msg", "替换现有任务操作成功！");
+			return createOldTaskMap;
+		} catch (Exception e) {
+			e.printStackTrace();
+			createOldTaskMap.put("msg", "替换现有任务时发生异常!");
+			return createOldTaskMap;
+		}
 	}
 
 	@Override

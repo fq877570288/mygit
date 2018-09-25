@@ -4,6 +4,7 @@ import cn.cucsi.bsd.ucc.common.beans.OngoingTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.ShowTaskDetailCriteria;
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
+import cn.cucsi.bsd.ucc.data.domain.TaskRecord;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -48,6 +49,13 @@ public interface TaskDetailMapper {
      * 2018-08-30
      */
     List<TaskDetail> selectDetailByCriteria(ShowTaskDetailCriteria showTaskDetailCriteria);
+
+    /***
+     * 根据businessCode、domainId查询外呼任务列表--web端用
+     * add by wangxiaoyu
+     * 2018-09-24
+     */
+    List<TaskDetail> selectDetailByCode(Map<String, Object> whereMap) throws Exception;
 
     /***
      * 根据查询条件获取待办任务数量
@@ -97,4 +105,6 @@ public interface TaskDetailMapper {
     List<String> selectWaitTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
 
     int updateTaskByTaskDetail(TaskDetail taskDetail) throws Exception;
+
+    int deleteWithListId(List<TaskRecord> list) throws Exception;
 }

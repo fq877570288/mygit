@@ -578,14 +578,18 @@
           parameterType="java.util.Map">
     select
     <include refid="Base_Column_List" />
-    from ucc_customers where businesscode in ( ${businessCode}
-    )
+    from ucc_customers
+    where 1=1
+    and businesscode in ( ${businesscode} )
+    and domain_id = #{domainId,jdbcType=VARCHAR}
   </select>
 
   <!-- 根据业务号码 删除客户表数据 -->
   <delete id="deleteByBusinessCodes" parameterType="java.util.Map">
     delete from ucc_customers
-    where businesscode in ( ${businessCode} )
+    where 1=1
+    and businesscode in ( ${businesscode} )
+    and domain_id = #{domainId,jdbcType=VARCHAR}
   </delete>
 
   <!-- 批量插入 -->
@@ -627,4 +631,165 @@
       #{record.updatedUserId,jdbcType=VARCHAR}, #{record.updatedUserName,jdbcType=VARCHAR})
     </foreach>
   </insert>
+
+  <sql id="Sql_WhereTask">
+    <if test="businesscode != null and businesscode != ''">
+      and c.businesscode LIKE '%${businesscode}%'
+    </if>
+    <if test="ponLogo != null and ponLogo != ''">
+      and c.ponlogo = #{ponLogo}
+    </if>
+    <if test="status != null and status != ''">
+      and c.status LIKE '%${status}%'
+    </if>
+    <if test="userName != null and userName != ''">
+      and c.cust_name LIKE '%${userName}%'
+    </if>
+    <if test="tariffName != null and tariffName != ''">
+      and c.tariffname LIKE '%${tariffName}%'
+    </if>
+    <if test="defultPhone != null and defultPhone != ''">
+      and c.DEFULT_PHONE LIKE '%${defultPhone}%'
+    </if>
+    <if test="outCallRecord == 1">
+      and exists (select 1 from pbx_cdrs cdrs where t.cdr_id = cdrs.cdrid and cdrs.call_time &gt; 5 and month(created_time)=month(sysdate()) )
+    </if>
+    <if test="outCallRecord!=null and outCallRecord !='' and outCallRecord == 0">
+      and not exists (select 1 from pbx_cdrs cdrs where t.cdr_id = cdrs.cdrid and cdrs.call_time &gt; 5 and month(created_time)=month(sysdate()) )
+    </if>
+  </sql>
+
+  <!-- 在办任务列表 -->
+  <select id="selectOngoingBySearchCount" resultType="int"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT
+      count(DISTINCT concat(c.cust_id, tt.TASK_TYPE_ID))
+    FROM
+      ucc_customers c
+    INNER JOIN OC_TASK_DETAIL d ON c.businesscode = d.BUSINESS_CODE
+    INNER JOIN OC_TASK_TRANSFER t ON t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
+    AND t.TRANSFER_STATUS = d.TASK_STATUS
+    INNER JOIN OC_TASK_TYPE tt ON d.TASK_TYPE_ID = tt.TASK_TYPE_ID
+    WHERE 1=1
+    and t.TRANSFER_STATUS IN ('2', '3')
+    AND d.domain_id = c.domain_id
+    <if test="roperateDeptId != null and roperateDeptId != ''">
+      and d.ROPERATE_DEPT_ID = #{roperateDeptId}
+    </if>
+    <if test="operatorId != null and operatorId != ''">
+      and t.OPERATOR_ID = #{operatorId}
+    </if>
+    <if test="taskTypeId !=null and taskTypeId != ''">
+      and d.TASK_TYPE_ID = #{taskTypeId}
+    </if>
+    <include refid="Sql_WhereTask" />
+  </select>
+
+  <select id="selectOngoingBySearch" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    SELECT DISTINCT
+      tt.TASK_TYPE_ID,
+      tt.TASK_TYPE_NAME,
+      c.businesscode businesscode,
+      c.cust_name cust_name,
+      c. STATUS STATUS,
+      c.installedaddress installedaddress,
+      c.ponlogo ponlogo,
+      c.tariffname tariffname,
+      c.DEFULT_PHONE DEFULT_PHONE
+    FROM
+      ucc_customers c
+    INNER JOIN OC_TASK_DETAIL d ON c.businesscode = d.BUSINESS_CODE
+    INNER JOIN OC_TASK_TRANSFER t ON t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
+    AND t.TRANSFER_STATUS = d.TASK_STATUS
+    INNER JOIN OC_TASK_TYPE tt ON d.TASK_TYPE_ID = tt.TASK_TYPE_ID
+    WHERE
+     1 = 1
+    AND t.TRANSFER_STATUS IN ('2', '3')
+    AND d.domain_id = c.domain_id
+    <if test="roperateDeptId != null and roperateDeptId != ''">
+      and d.ROPERATE_DEPT_ID = #{roperateDeptId}
+    </if>
+    <if test="operatorId != null and operatorId != ''">
+      and t.OPERATOR_ID = #{operatorId}
+    </if>
+    <if test="taskTypeId !=null and taskTypeId != ''">
+      and d.TASK_TYPE_ID = #{taskTypeId}
+    </if>
+    <include refid="Sql_WhereTask" />
+    <if test="begin != null and showLines != null and showLines != 0">
+      limit #{begin},#{showLines}
+    </if>
+  </select>
+
+  <update id="updateDefultPhone" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers">
+    update ucc_customers
+    set DEFULT_PHONE = #{defultPhone,jdbcType=VARCHAR}
+    where businesscode = #{businesscode,jdbcType=VARCHAR} and  domain_id = #{domainId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 根据businessCode、domainId更新变更号码 -->
+  <update id="updateChangePhone" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers">
+    update ucc_customers
+    set
+    <if test="changephone1 != '-1'">
+      changephone1 = #{changephone1,jdbcType=VARCHAR}
+    </if>
+    <if test="changephone2 != '-1'">
+      changephone2 = #{changephone2,jdbcType=VARCHAR}
+    </if>
+    <if test="changephone3 != '-1'">
+      changephone3 = #{changephone3,jdbcType=VARCHAR}
+    </if>
+    <if test="defultPhone != null and defultPhone != ''">
+      , DEFULT_PHONE = #{defultPhone,jdbcType=VARCHAR}
+    </if>
+    where businesscode = #{businesscode,jdbcType=VARCHAR} and domain_id = #{domainId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 查看客户进入黑名单原因 -->
+  <select id="custmIsBlack" resultType="java.lang.String" parameterType="java.lang.String">
+    SELECT a.PULL_BLACK_REASON pullBlackReason
+      FROM ucc_customers a
+    WHERE a.type = 7
+      AND a.businesscode = #{businesscode,jdbcType=VARCHAR}
+      AND a.domain_id = #{domainId,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 查询下一个外呼任务 BY businesscode -->
+  <select id="selectNextTaskBySearch" resultMap="BaseResultMap"
+          parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+    select
+    c.businesscode businesscode
+    from ucc_customers c
+    inner join OC_TASK_DETAIL d on c.businesscode = d.BUSINESS_CODE and c.domain_id = d.domain_id
+    inner join OC_TASK_TRANSFER t on t.TASK_DETAIL_ID = d.TASK_DETAIL_ID and t.TRANSFER_STATUS = d.TASK_STATUS
+    <where>
+      <if test="roperateDeptId != null and roperateDeptId != ''">
+        and d.ROPERATE_DEPT_ID = #{roperateDeptId}
+      </if>
+      <if test="taskStatus != null and taskStatus != ''">
+        and t.TRANSFER_STATUS = #{taskStatus}
+      </if>
+      <if test="taskTypeId != null and taskTypeId != ''">
+        and d.TASK_TYPE_ID = #{taskTypeId}
+      </if>
+      <!-- 注意：这是不等于 -->
+      <if test="businesscode != null and businesscode != ''">
+        and d.BUSINESS_CODE != #{businesscode}
+      </if>
+    </where>
+    <if test="showLines != null and showLines !=0">
+      limit #{showLines}
+    </if>
+  </select>
+
+  <!-- 根据业务号码、租户ID 查询客户表 -->
+  <select id="selectUccCustomersByCode" resultMap="BaseResultMap"
+          parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from ucc_customers as uc where uc.businesscode in (${businesscode}
+    )
+  </select>
 </mapper>

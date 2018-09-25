@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import java.util.Date;
 
@@ -73,6 +72,42 @@ public class UccCustomers {
     private Date updatedTime;
     @JsonIgnore
     private UccDomain uccDomain;
+
+    //脱敏
+    private String desensitizePhone;
+
+    private String desensitizePhone2;
+
+    private String desensitizePhone3;
+
+    private String desensitizeChangePhone1;
+
+    private String desensitizeChangePhone2;
+
+    private String desensitizeChangePhone3;
+
+    private String desensitizeDefultPhone;
+
+    //加密
+    private String encryptPhone;
+
+    private String encryptPhone2;
+
+    private String encryptPhone3;
+
+    private String encryptChangePhone1;
+
+    private String encryptChangePhone2;
+
+    private String encryptChangePhone3;
+
+    private String encryptDefultPhone;
+
+    private String encryptBusinessCode;
+
+    private String taskTypeId;
+
+    private String taskTypeName;
 
     @Id
     @Column(name = "cust_id", nullable = false, length = 32)
@@ -626,4 +661,139 @@ public class UccCustomers {
         this.domainName = domainName;
     }
 
+    public String getEncryptBusinessCode() {
+        return encryptBusinessCode;
+    }
+
+    public void setEncryptBusinessCode(String encryptBusinessCode) {
+        this.encryptBusinessCode = encryptBusinessCode;
+    }
+
+    public String getDesensitizePhone() {
+        return desensitizePhone;
+    }
+
+    public void setDesensitizePhone(String desensitizePhone) {
+        this.desensitizePhone = desensitizePhone;
+    }
+
+    public String getDesensitizePhone2() {
+        return desensitizePhone2;
+    }
+
+    public void setDesensitizePhone2(String desensitizePhone2) {
+        this.desensitizePhone2 = desensitizePhone2;
+    }
+
+    public String getDesensitizePhone3() {
+        return desensitizePhone3;
+    }
+
+    public void setDesensitizePhone3(String desensitizePhone3) {
+        this.desensitizePhone3 = desensitizePhone3;
+    }
+
+    public String getDesensitizeChangePhone1() {
+        return desensitizeChangePhone1;
+    }
+
+    public void setDesensitizeChangePhone1(String desensitizeChangePhone1) {
+        this.desensitizeChangePhone1 = desensitizeChangePhone1;
+    }
+
+    public String getDesensitizeChangePhone2() {
+        return desensitizeChangePhone2;
+    }
+
+    public void setDesensitizeChangePhone2(String desensitizeChangePhone2) {
+        this.desensitizeChangePhone2 = desensitizeChangePhone2;
+    }
+
+    public String getDesensitizeChangePhone3() {
+        return desensitizeChangePhone3;
+    }
+
+    public void setDesensitizeChangePhone3(String desensitizeChangePhone3) {
+        this.desensitizeChangePhone3 = desensitizeChangePhone3;
+    }
+
+    public String getDesensitizeDefultPhone() {
+        return desensitizeDefultPhone;
+    }
+
+    public void setDesensitizeDefultPhone(String desensitizeDefultPhone) {
+        this.desensitizeDefultPhone = desensitizeDefultPhone;
+    }
+
+    public String getEncryptPhone() {
+        return encryptPhone;
+    }
+
+    public void setEncryptPhone(String encryptPhone) {
+        this.encryptPhone = encryptPhone;
+    }
+
+    public String getEncryptPhone2() {
+        return encryptPhone2;
+    }
+
+    public void setEncryptPhone2(String encryptPhone2) {
+        this.encryptPhone2 = encryptPhone2;
+    }
+
+    public String getEncryptPhone3() {
+        return encryptPhone3;
+    }
+
+    public void setEncryptPhone3(String encryptPhone3) {
+        this.encryptPhone3 = encryptPhone3;
+    }
+
+    public String getEncryptChangePhone1() {
+        return encryptChangePhone1;
+    }
+
+    public void setEncryptChangePhone1(String encryptChangePhone1) {
+        this.encryptChangePhone1 = encryptChangePhone1;
+    }
+
+    public String getEncryptChangePhone2() {
+        return encryptChangePhone2;
+    }
+
+    public void setEncryptChangePhone2(String encryptChangePhone2) {
+        this.encryptChangePhone2 = encryptChangePhone2;
+    }
+
+    public String getEncryptChangePhone3() {
+        return encryptChangePhone3;
+    }
+
+    public void setEncryptChangePhone3(String encryptChangePhone3) {
+        this.encryptChangePhone3 = encryptChangePhone3;
+    }
+
+    public String getEncryptDefultPhone() {
+        return encryptDefultPhone;
+    }
+
+    public void setEncryptDefultPhone(String encryptDefultPhone) {
+        this.encryptDefultPhone = encryptDefultPhone;
+    }
+
+    public String getTaskTypeId() {
+        return taskTypeId;
+    }
+
+    public void setTaskTypeId(String taskTypeId) {
+        this.taskTypeId = taskTypeId;
+    }
+
+    public String getTaskTypeName() {
+        return taskTypeName;
+    }
+
+    public void setTaskTypeName(String taskTypeName) {
+        this.taskTypeName = taskTypeName;
+    }
 }

@@ -35,7 +35,7 @@ public class WaitTaskController {
 		List<String> taskDetailIdList = null;
 		Map<String,Object> waitTaskListMap = new HashMap<String,Object>();
 		waitTaskListMap.put("msg","操作失败！");
-		waitTaskListMap.put("code",-1);
+		waitTaskListMap.put("code","-1");
 		try {
 			//session.setAttribute("taskDetailIdListForWait", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
@@ -47,7 +47,7 @@ public class WaitTaskController {
 			waitTaskListMap.put("taskDetailIdListForWait", taskDetailIdList);
 			waitTaskListMap.put("taskDetailSearch",taskDetailSearch);
 			waitTaskListMap.put("msg","操作成功！");
-			waitTaskListMap.put("code",0);
+			waitTaskListMap.put("code","0");
 			return waitTaskListMap;
 		} catch (Exception e) {
 			//session.setAttribute("taskDetailIdListForWait", null);
@@ -67,14 +67,14 @@ public class WaitTaskController {
 
 		Map<String,Object> taskBacktMap = new HashMap<String,Object>();
 		taskBacktMap.put("msg","操作失败！");
-		taskBacktMap.put("code",-1);
+		taskBacktMap.put("code","-1");
 
 		TaskTransfer taskTransfer = new TaskTransfer();
 		try {
 			taskTransfer.setTaskDetailId(taskDetail.getTaskDetailId());
 			taskBacktMap.put("taskTransfer", taskTransfer);
 			taskBacktMap.put("msg","操作成功！");
-			taskBacktMap.put("code",0);
+			taskBacktMap.put("code","0");
 			return taskBacktMap;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,12 +91,12 @@ public class WaitTaskController {
 
 		Map<String,Object> taskBackSubmitMap = new HashMap<String,Object>();
 		taskBackSubmitMap.put("msg","操作失败！");
-		taskBackSubmitMap.put("code",-1);
+		taskBackSubmitMap.put("code","-1");
 		taskBackSubmitMap.put("infourl", "/waitTaskList");
 		try {
 			waitTaskService.taskBack(taskTransfer, userId);
 			taskBackSubmitMap.put("msg","操作成功！");
-			taskBackSubmitMap.put("code",0);
+			taskBackSubmitMap.put("code","0");
 			return taskBackSubmitMap;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class WaitTaskController {
 
 		Map<String,Object> taskReceiveMap = new HashMap<String,Object>();
 		taskReceiveMap.put("msg","操作失败！");
-		taskReceiveMap.put("code",-1);
+		taskReceiveMap.put("code","-1");
 
 		String userId = taskReceiveCriteria.getUserId()==null?"":taskReceiveCriteria.getUserId();
 		String taskDetailIds = taskReceiveCriteria.getTaskDetailIds()==null?"":taskReceiveCriteria.getTaskDetailIds();
@@ -122,6 +122,7 @@ public class WaitTaskController {
 		/*ObjectMapper mapper = new ObjectMapper();
 		String json = null;
 		String message = "操作失败！";*/
+		Map<String,Object> doTaskReceiveMap = new HashMap<String,Object>();
 		try {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
 				//List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForWait");
@@ -135,17 +136,25 @@ public class WaitTaskController {
 						idsStr = idsStr.substring(0, idsStr.length()-1);
 					}
 					if(!idsStr.isEmpty()){
-						waitTaskService.taskReceive(userId, idsStr);
+						doTaskReceiveMap = waitTaskService.taskReceive(userId, idsStr);
+						if(doTaskReceiveMap.get("code").equals("-1")){
+							taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
+							return taskReceiveMap;
+						}
 					}
 				}
 			}else{
-				waitTaskService.taskReceive(userId, taskDetailIds);
+				doTaskReceiveMap = waitTaskService.taskReceive(userId, taskDetailIds);
+				if(doTaskReceiveMap.get("code").equals("-1")){
+					taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
+					return taskReceiveMap;
+				}
 			}
 			/*session.setAttribute("taskDetailIdListForWait", null);
 			message = "操作成功！";
 			json = mapper.writeValueAsString(message);*/
 			taskReceiveMap.put("msg","操作成功！");
-			taskReceiveMap.put("code",0);
+			taskReceiveMap.put("code","0");
 			taskReceiveMap.put("taskDetailIdListForWait", null);
 			return taskReceiveMap;
 		} catch (Exception e) {

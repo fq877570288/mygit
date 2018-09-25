@@ -49,6 +49,7 @@
       #{cdrId,jdbcType=VARCHAR}, #{backMemo,jdbcType=VARCHAR}, #{operatorId,jdbcType=VARCHAR}, 
       #{operatorDept,jdbcType=VARCHAR},#{domainId,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskTransfer" >
     insert into OC_TASK_TRANSFER
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -277,4 +278,76 @@
       #{record.backMemo,jdbcType=VARCHAR}, #{record.operatorId,jdbcType=VARCHAR}, #{record.operatorDept,jdbcType=VARCHAR},#{record.domainId,jdbcType=VARCHAR})
     </foreach>
   </insert>
+
+  <select id="selectTransferByTaskDetailId" resultMap="BaseResultMap"
+          parameterType="java.lang.String">
+    select
+      t.TASK_TRANSFER_ID TASK_TRANSFER_ID,
+      t.TASK_DETAIL_ID TASK_DETAIL_ID,
+      t.TRANSFER_STATUS TRANSFER_STATUS,
+      t.ROPERATE_PERSON_ID ROPERATE_PERSON_ID,
+      t.ROPERATE_DEPT_ID ROPERATE_DEPT_ID,
+      t.CALL_MEMO CALL_MEMO,
+      t.CALL_RESULT CALL_RESULT,
+      t.TRANSFE_ROPERATE TRANSFE_ROPERATE,
+      t.TRANSFER_TIME TRANSFER_TIME,
+      t.CDR_ID CDR_ID,
+      t.BACK_MEMO BACK_MEMO,
+      t.OPERATOR_ID OPERATOR_ID,
+      t.OPERATOR_DEPT OPERATOR_DEPT,
+      c.destination_number destination_number,
+      c.total_time total_time,
+      c.call_time call_time,
+      c.created_time created_time,
+      c.answered_time answered_time,
+      c.hangup_time hangup_time,
+      c.recordid1 recordid1,
+      c.recordid2 recordid2,
+      c.qc qc,
+      c.hangup_cause hangup_cause,
+      p1.dept_name RECEIVE_DEPT_NAME
+    from OC_TASK_TRANSFER t
+    left join pbx_cdrs c on t.CDR_ID = c.cdr_id
+    left join OC_TASK_DETAIL d on d.TASK_DETAIL_ID = t.TASK_DETAIL_ID
+    left join ucc_depts p1 on d.DEPT_MESH_ID = p1.dept_id
+    where t.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+    order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC
+  </select>
+
+  <!-- 批量删除 -->
+  <delete id="deleteWithListId" parameterType="java.util.List">
+    DELETE FROM OC_TASK_TRANSFER
+    where TASK_TRANSFER_ID in
+    <foreach collection="list" index="index" item="item" open="("
+             separator="," close=")">
+      #{item.taskTransferRecordId}
+    </foreach>
+  </delete>
+
+  <!-- 根据部门ID查询流转中新建任务  -->
+  <select id="selectCallNotesByDetailIdsForWEB" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+      t.TASK_TRANSFER_ID TASK_TRANSFER_ID,
+      t.TASK_DETAIL_ID TASK_DETAIL_ID,
+      t.TRANSFER_STATUS TRANSFER_STATUS,
+      t.ROPERATE_PERSON_ID ROPERATE_PERSON_ID,
+      t.ROPERATE_DEPT_ID ROPERATE_DEPT_ID,
+      t.CALL_MEMO CALL_MEMO,
+      t.CALL_RESULT CALL_RESULT,
+      t.TRANSFE_ROPERATE TRANSFE_ROPERATE,
+      t.TRANSFER_TIME TRANSFER_TIME,
+      t.CDR_ID CDR_ID,
+      t.BACK_MEMO BACK_MEMO,
+      t.OPERATOR_ID OPERATOR_ID,
+      t.OPERATOR_DEPT OPERATOR_DEPT,
+      c.destination_number destination_number,
+      c.call_time call_time,
+      d.TASK_CODE TASK_CODE
+    from OC_TASK_TRANSFER t
+    left join pbx_cdrs c on t.CDR_ID = c.cdr_id
+    left join OC_TASK_DETAIL d on t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
+    where t.TASK_DETAIL_ID in ( ${taskDetailIds} )
+    and t.CDR_ID is not null
+    order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC
+  </select>
 </mapper>

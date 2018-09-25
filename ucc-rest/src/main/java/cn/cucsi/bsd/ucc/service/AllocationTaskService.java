@@ -1,6 +1,8 @@
 package cn.cucsi.bsd.ucc.service;
 
 import java.util.List;
+import java.util.Map;
+
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 
@@ -9,7 +11,7 @@ public interface AllocationTaskService {
 	/***
 	 * 默认分派
 	 */
-    void allocationTask(String userId, String alloc, String barchs, String endDate) throws Exception;
+	Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate) throws Exception;
 
     /***
 	 * 修改任务组织结构

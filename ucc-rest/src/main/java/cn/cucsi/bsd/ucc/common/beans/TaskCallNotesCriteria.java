@@ -12,13 +12,13 @@ import io.swagger.annotations.ApiModelProperty;
 public class TaskCallNotesCriteria extends BasicPageCriteria{
 
     @ApiModelProperty(value = "业务编码",required = true)
-    private String businessCode;// 业务编码
+    private String businesscode;// 业务编码
 
-    public String getBusinessCode() {
-        return businessCode;
+    public String getBusinesscode() {
+        return businesscode;
     }
 
-    public void setBusinessCode(String businessCode) {
-        this.businessCode = businessCode;
+    public void setBusinesscode(String businesscode) {
+        this.businesscode = businesscode;
     }
 }
