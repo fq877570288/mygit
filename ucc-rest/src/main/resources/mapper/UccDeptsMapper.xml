@@ -250,12 +250,12 @@
   <insert id="insertGroup" parameterType="map">
     insert into ucc_depts (dept_id, dept_name,
     dept_pid, dept_level, dept_create_time,
-    created_user_id, dept_desc, dept_admin)
+    created_user_id, dept_desc, dept_admin,domain_id)
     values
     <foreach collection="list" item="record" index="index" separator=",">
       (#{record.deptId,jdbcType=VARCHAR}, #{record.deptName,jdbcType=VARCHAR},
       #{record.deptPid,jdbcType=VARCHAR}, #{record.deptLevel,jdbcType=INTEGER}, #{record.deptCreateTime,jdbcType=TIMESTAMP},
-      #{record.createdUserId,jdbcType=VARCHAR}, #{record.deptDesc,jdbcType=VARCHAR}, #{record.deptAdmin,jdbcType=VARCHAR})
+      #{record.createdUserId,jdbcType=VARCHAR}, #{record.deptDesc,jdbcType=VARCHAR}, #{record.deptAdmin,jdbcType=VARCHAR},#{record.domainId,jdbcType=VARCHAR})
     </foreach>
   </insert>
 

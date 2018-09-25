@@ -7,6 +7,7 @@ import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UccUserService {
     Page<UccUsers> findAll(UccUserCriteria search);
@@ -24,4 +25,8 @@ public interface UccUserService {
     ResultBean_New<UccUsers> userLoginForAPP(UserLoginForAPPCriteria userLoginForAPPCriteria);
 
     void saveMiddleTable(UccUsers uccUsers);
+
+    void cusfsSave(Map<String, Object> map) throws Exception;
+
+    UccUsers selectByPrimaryKey(String userId) throws Exception;
 }

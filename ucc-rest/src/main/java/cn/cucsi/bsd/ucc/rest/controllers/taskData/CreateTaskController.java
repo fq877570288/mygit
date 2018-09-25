@@ -35,7 +35,7 @@ public class CreateTaskController {
 	/***
 	 * 生成任务 导入数据批次列表(列表展示用)
 	 * add by wangxiaoyu
-	 * 2018-09-13
+	 * 2018-09-24
 	 */
 	@ApiOperation(value="生成任务", notes="生成任务")
 	@RequestMapping(value = "/createTaskList", method= RequestMethod.POST)
@@ -47,8 +47,8 @@ public class CreateTaskController {
 		ImportBatch importBatch = new ImportBatch();
 		String userId = createTaskCriteria.getUserId()==null?"":createTaskCriteria.getUserId();
 		importBatch.setImportPersonId(userId);
-		importBatch.setBatchFlag("0");
-		try {
+		importBatch.setBatchFlag("0");//批次标识 0：导入数据，1：已生成任务，2：已分派任务
+            try {
 			importBatchlist = importBatchervice.selectAllByBatchFlag(importBatch);
 			//model.addAttribute("list", list);
 			PageResultBean_New<List<ImportBatch>> pageResultBean_new = new PageResultBean_New(pageInfo);
@@ -68,11 +68,14 @@ public class CreateTaskController {
 	 */
 	@ApiOperation(value="创建任务", notes="创建任务")
 	@RequestMapping(value="/doCreateTask",method= RequestMethod.POST)
-	public Map<String,Object>  customfieldsSave(@RequestBody DoCreateTaskCriteria doCreateTaskCriteria) {
+	public Map<String,Object> customfieldsSave(@RequestBody DoCreateTaskCriteria doCreateTaskCriteria) {
 
 		Map<String,Object> customfieldsSaveMap = new HashMap<String,Object>();
+		Map<String,Object> createTaskMap = new HashMap<String,Object>();
 		customfieldsSaveMap.put("msg", "创建任务失败!");
-		customfieldsSaveMap.put("code", -1);
+		customfieldsSaveMap.put("code", "-1");
+        createTaskMap.put("msg", "新建任务失败!");
+        createTaskMap.put("code", "-1");
 
 		String createMode = doCreateTaskCriteria.getCreateMode()==null?"":doCreateTaskCriteria.getCreateMode();
 		String barchs = doCreateTaskCriteria.getBarchs()==null?"":doCreateTaskCriteria.getBarchs();
@@ -80,17 +83,26 @@ public class CreateTaskController {
 		String oldTaskBatch = doCreateTaskCriteria.getOldTaskBatch()==null?"":doCreateTaskCriteria.getOldTaskBatch();
 		try {
 			System.out.println("创建任务测试 createMode:::" + createMode);
+			System.out.println("创建任务测试 userId:::" + userId);
 			if(Task.CREATENEW.equals(createMode)){
 				// 新建任务
-				createTaskService.createNewTask(barchs, userId, null);
+                createTaskMap = createTaskService.createNewTask(barchs, userId, null);
+                if(createTaskMap.get("code").equals("-1")){
+                    customfieldsSaveMap.put("msg",createTaskMap.get("msg"));
+                    return customfieldsSaveMap;
+                }
 			}else if(Task.CREATEOLD.equals(createMode)){
 				//替换现有任务
-				createTaskService.createOldTask(barchs, userId, oldTaskBatch);
+                createTaskMap = createTaskService.createOldTask(barchs, userId, oldTaskBatch);
+                if(createTaskMap.get("code").equals("-1")){
+                    customfieldsSaveMap.put("msg",createTaskMap.get("msg"));
+                    return customfieldsSaveMap;
+                }
 			}
 			/*message = "任务生成完成，请到[分派任务]页面进行任务分派操作！";
 			json = mapper.writeValueAsString(message);*/
 			customfieldsSaveMap.put("msg", "任务生成完成，请到[分派任务]页面进行任务分派操作！");
-			customfieldsSaveMap.put("code", 0);
+			customfieldsSaveMap.put("code", "0");
 			return customfieldsSaveMap;
 
 		} catch (Exception e) {

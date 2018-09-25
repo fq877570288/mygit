@@ -1024,6 +1024,7 @@
       LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
     WHERE
       1 = 1
+      and d.domain_id = c.domain_id
     <include refid="Sql_AllocationWhere" />
   </select>
 
@@ -1045,6 +1046,7 @@
       LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
     WHERE
       1 = 1
+    and d.domain_id = c.domain_id
     <include refid="Sql_AllocationWhere" />
     order by d.TASK_CODE DESC
     <if test="begin != null and showLines != null and showLines != 0">
@@ -1061,6 +1063,7 @@
       LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
     WHERE
       1 = 1
+    and d.domain_id = c.domain_id
     <include refid="Sql_AllocationWhere" />
   </select>
 
@@ -1099,7 +1102,7 @@
     PHONE_NUMBER2,
     PHONE_NUMBER3,
     TASK_STATUS, ROPERATE_DEPT_ID,
-    DEFULT_PHONE, USER_NAME, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID)
+    DEFULT_PHONE, USER_NAME, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID,domain_id)
     values
     <foreach collection="list" item="record" index="index"
              separator=",">
@@ -1152,9 +1155,29 @@
       #{record.userName,jdbcType=VARCHAR},
       #{record.initDevelopment,jdbcType=VARCHAR},
       #{record.initMeshId,jdbcType=VARCHAR},
-      #{record.initAreaId,jdbcType=VARCHAR})
+      #{record.initAreaId,jdbcType=VARCHAR},
+      #{record.domainId,jdbcType=VARCHAR})
     </foreach>
   </insert>
 
+  <!-- 查询外呼任务列表 web用-->
+  <select id="selectDetailByCode" resultMap="BaseResultMap"
+          parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from OC_TASK_DETAIL d
+    where 1=1
+    and d.TASK_STATUS in ('2','3')
+    <include refid="Sql_Where" />
+    order by d.TASK_CODE DESC
+  </select>
 
+  <!-- 批量删除 -->
+  <delete id="deleteWithListId" parameterType="java.util.List">
+    DELETE FROM OC_TASK_DETAIL where TASK_DETAIL_ID in
+    <foreach collection="list" index="index" item="item" open="("
+             separator="," close=")">
+      #{item.taskRecordId}
+    </foreach>
+  </delete>
 </mapper>

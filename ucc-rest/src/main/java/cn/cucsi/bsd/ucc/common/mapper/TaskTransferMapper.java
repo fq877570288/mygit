@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.common.mapper;
 
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
+import cn.cucsi.bsd.ucc.data.domain.TaskTransferRecord;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -36,5 +37,16 @@ public interface TaskTransferMapper {
      */
     List<TaskTransfer> selectCallNotesByDetailIds(@Param("taskDetailList") List<TaskDetail> taskDetailList);
 
+    /***
+     * 根据任务明细主键查询呼出记录--WEB端用
+     * add by wangxiaoyu
+     * 2018-09-25
+     */
+    List<TaskTransfer> selectCallNotesByDetailIdsForWEB(Map<String, Object> map) throws Exception;
+
     int insertGroup(Map<String, Object> taskMap) throws Exception;
+
+    List<TaskTransfer> selectTransferByTaskDetailId(String taskDetailId) throws Exception;
+
+    int deleteWithListId(List<TaskTransferRecord> list) throws Exception;
 }

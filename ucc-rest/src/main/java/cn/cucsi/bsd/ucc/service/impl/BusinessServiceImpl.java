@@ -67,7 +67,7 @@ public class BusinessServiceImpl implements BusinessService {
 	}
 
 	@Override
-	@Transactional("txManager")
+	@Transactional
 	public int deleteByGroup(String[] ids) throws Exception {
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();

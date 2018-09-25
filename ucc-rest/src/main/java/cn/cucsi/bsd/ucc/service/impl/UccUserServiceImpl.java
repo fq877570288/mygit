@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UccUserServiceImpl implements UccUserService{
@@ -191,5 +192,15 @@ public class UccUserServiceImpl implements UccUserService{
                 userRoleService.save(ur);
             }
         }
+    }
+
+    @Override
+    public void cusfsSave(Map<String, Object> map) throws Exception {
+        uccUsersMapper.cusfsSave(map);
+    }
+
+    @Override
+    public UccUsers selectByPrimaryKey(String userId) throws Exception {
+        return uccUsersMapper.selectByPrimaryKey(userId);
     }
 }

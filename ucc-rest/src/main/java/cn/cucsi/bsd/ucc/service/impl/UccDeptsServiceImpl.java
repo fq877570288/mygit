@@ -69,7 +69,7 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
-    @Transactional("txManager")
+    @Transactional
     public int deleteByPrimaryKey(String deptId) throws Exception {
         uccDeptsMapper.clearUsersDeptsByDeptId(deptId);
         return uccDeptsMapper.deleteByPrimaryKey(deptId);
@@ -196,7 +196,7 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
-    @Transactional("txManager")
+    @Transactional
     public int insertUserDepts(String userId, String[] depts) throws Exception {
         HashMap<String, Object> map = new HashMap<String,Object>();
         map.put("userId", userId);

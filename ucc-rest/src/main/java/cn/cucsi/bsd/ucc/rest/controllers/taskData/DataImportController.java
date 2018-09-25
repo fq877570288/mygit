@@ -113,7 +113,7 @@ public class DataImportController {
 
 		Map<String,Object> dataImportMap = new HashMap<String,Object>();
 		dataImportMap.put("msg","操作失败！");
-		dataImportMap.put("code",-1);
+		dataImportMap.put("code","-1");
 
 		List<DataImport> list;
 		List<DataCustomfield> dataCustomfieldList = null;
@@ -215,14 +215,14 @@ public class DataImportController {
 			dataImportMap.put("dataCustomfieldJson", dataCustomfieldJson);
 			dataImportMap.put("dataImportCriteria",dataImportCriteria);
 			dataImportMap.put("msg","操作成功！");
-			dataImportMap.put("code",0);
+			dataImportMap.put("code","0");
 			return dataImportMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			System.out.println("数据导入列表时发生异常！");
 			dataImportMap.put("msg","操作失败！");
-			dataImportMap.put("code",-1);
+			dataImportMap.put("code","-1");
 			return dataImportMap;
 		}
 	}
@@ -275,7 +275,7 @@ public class DataImportController {
         Map<String,Object> deleteByBatchMap = new HashMap<String,Object>();
 		//model.addAttribute("msg", "删除失败!");
         deleteByBatchMap.put("msg", "删除失败!");
-        deleteByBatchMap.put("code", -1);
+        deleteByBatchMap.put("code", "-1");
 		//model.addAttribute("data", "/data/dataImportList.html");
         deleteByBatchMap.put("data", "/dataImportList");
 		if (taskBatchCode != null && taskBatchCode.length() > 0) {
@@ -285,7 +285,7 @@ public class DataImportController {
                 deleteByBatchMap.put("data", "/dataImportList");
 				//model.addAttribute("msg", "删除成功!");
                 deleteByBatchMap.put("msg", "删除成功!");
-				deleteByBatchMap.put("code", 1);
+				deleteByBatchMap.put("code", "0");
 			} catch (Exception e) {
 				e.printStackTrace();
     			logger.error(e.getMessage(), e);
@@ -308,6 +308,8 @@ public class DataImportController {
 		String customfieldNames = customFieldsSaveCriteria.getCustomfieldNames()==null?"":customFieldsSaveCriteria.getCustomfieldNames();
 		String userId = customFieldsSaveCriteria.getUserId()==null?"":customFieldsSaveCriteria.getUserId();
 		Map<String,Object> customFieldsSaveMap = new HashMap<String,Object>();
+		customFieldsSaveMap.put("msg","操作失败！");
+		customFieldsSaveMap.put("code","-1");
 		try {
 			int retcode = userCustomFieldService.saveUserCustomField(customfieldNames, userId);
 			if(retcode<0){
@@ -315,11 +317,13 @@ public class DataImportController {
 			}
 			List<DataCustomfield> dataCustomfieldList = dataCustomfieldService.selectImportByUserID(userId);
 			customFieldsSaveMap.put("DataCustomfields", dataCustomfieldList);
-			customFieldsSaveMap.put("message","保存成功！");
+			customFieldsSaveMap.put("msg","自定义显示字段保存成功！");
+			customFieldsSaveMap.put("code","0");
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
-			customFieldsSaveMap.put("message","自定义显示字段操作失败！");
+			customFieldsSaveMap.put("msg","自定义显示字段操作发生异常！");
+			customFieldsSaveMap.put("code","-1");
 		}
 		return customFieldsSaveMap;
 	}
@@ -335,7 +339,7 @@ public class DataImportController {
 		//model.addAttribute("msg", "上传失败!");
 		//model.addAttribute("data", "/data/dataImportList.html");
 		customFieldsSaveMap.put("msg", "上传失败!");
-		customFieldsSaveMap.put("code", -1);
+		customFieldsSaveMap.put("code", "-1");
 		customFieldsSaveMap.put("data", "/dataImportList");
 		if (file != null && file.getSize() > 0) {
 			try {
@@ -417,7 +421,7 @@ public class DataImportController {
 				//model.addAttribute("data", "/data/dataImportList.html");
 				//model.addAttribute("msg", "本次成功导入数据："+dataImportList.size()+"条!");
 				customFieldsSaveMap.put("data", "/dataImportList");
-				customFieldsSaveMap.put("code", 0);
+				customFieldsSaveMap.put("code", "0");
 				customFieldsSaveMap.put("msg", "本次成功导入数据："+dataImportList.size()+"条!");
 			} catch (Exception e) {
 				e.printStackTrace();

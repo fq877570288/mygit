@@ -552,4 +552,24 @@
 
   </select>
 
+  <!--  修改用户自定义显示字段 -->
+  <update id="cusfsSave" parameterType="java.util.Map">
+    update ucc_users
+    set
+    customfieldNames = #{customfieldNames,jdbcType=VARCHAR}
+    where id =
+    #{userId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByPrimaryKey2" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+	  a.*, d.ext_num
+    FROM
+        ucc_users a
+    LEFT JOIN user_ext as ue on ue.user_id = a.user_id
+    LEFT JOIN pbx_exts d ON d.ext_id =  ue.ext_id and d.domain_id = a.domain_id
+    WHERE
+    a.user_id = #{id,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

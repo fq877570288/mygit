@@ -82,8 +82,13 @@ public class AllocationTaskController {
 		//初始化赋值
 		resultBean.setReturnMsg("任务分派失败！");
 		resultBean.setReturnCode(ResultBean_New.FAIL);
+		Map<String,Object> allocationTaskMap = new HashMap<String,Object>();
 		try {
-			allocationTaskService.allocationTask(userId, alloc, barchs, endDate);
+			allocationTaskMap = allocationTaskService.allocationTask(userId, alloc, barchs, endDate);
+			if(allocationTaskMap.get("code").equals("-1")){
+				resultBean.setReturnMsg((String)allocationTaskMap.get("msg"));
+				return resultBean;
+			}
 			resultBean.setReturnMsg("任务分派完成！");
 			resultBean.setReturnCode(ResultBean_New.SUCCESS);
 		} catch (Exception e) {
@@ -104,7 +109,7 @@ public class AllocationTaskController {
 
 		Map<String,Object> editDeptListMap = new HashMap<String,Object>();
 		editDeptListMap.put("msg","操作失败！");
-		editDeptListMap.put("code",-1);
+		editDeptListMap.put("code","-1");
 
 		List<TaskDetail> list = null;
 		List<String> taskDetailIdList = null;
@@ -137,7 +142,7 @@ public class AllocationTaskController {
 			editDeptListMap.put("userId", taskDetailSearch.getUserId());
 			editDeptListMap.put("taskDetailSearch",taskDetailSearch);
 			editDeptListMap.put("msg","操作成功！");
-			editDeptListMap.put("code",0);
+			editDeptListMap.put("code","0");
 			return editDeptListMap;
 		} catch (Exception e) {
 			//session.setAttribute("taskDetailIdListForEditDeptList", null);
@@ -159,7 +164,7 @@ public class AllocationTaskController {
 
 		Map<String,Object> editDeptListMap = new HashMap<String,Object>();
 		editDeptListMap.put("msg","操作失败！");
-		editDeptListMap.put("code",-1);
+		editDeptListMap.put("code","-1");
 
 		String meshID = allocationSearch.getMeshID()==null?"":allocationSearch.getMeshID();
 		String areaID = allocationSearch.getAreaID()==null?"":allocationSearch.getAreaID();
@@ -203,7 +208,7 @@ public class AllocationTaskController {
 			editDeptListMap.put("taskNumberStart", taskNumberStart);
 			editDeptListMap.put("taskNumberEnd", taskNumberEnd);
 			editDeptListMap.put("msg", "数据调拨完成！");
-			editDeptListMap.put("code",0);
+			editDeptListMap.put("code","0");
 		} catch (Exception e) {
 			//session.setAttribute("taskDetailIdListForEditDeptList", null);
 			editDeptListMap.put("taskDetailIdListForEditDeptList", null);

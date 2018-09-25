@@ -14,6 +14,7 @@ import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.AllocationTaskService;
 import cn.cucsi.bsd.ucc.service.UccDeptsService;
+import cn.cucsi.bsd.ucc.service.UccUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,21 +32,48 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 	private UccDeptsService uccDeptsService;
 	@Autowired
 	private ImportBatchMapper importBatchMapper;
+	@Autowired
+	private UccUserService uccUserService;
 
 	@Override
-	@Transactional("txManager")
-	public void allocationTask(String userId, String alloc, String barchs, String endDate) throws Exception {
+	@Transactional
+	public Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate) throws Exception {
+
+		Map<String,Object> allocationTaskMap = new HashMap<String,Object>();
+		allocationTaskMap.put("msg", "新建任务失败!");
+		allocationTaskMap.put("code", "-1");
+
 		// 根据用户ID获取部门主键
 		String userDeptID = "";
         try {
             List<UccDepts> UccDeptsList = uccDeptsService.selectByUserId(userId);
+            if(MyUtils.isBlank(UccDeptsList)){
+				allocationTaskMap.put("msg", "分派任务时 根据用户ID获取部门主键失败!");
+				return allocationTaskMap;
+			}
             for(UccDepts uccDepts : UccDeptsList){
                 userDeptID = uccDepts.getDeptId();
             }
+			UccUsers uccUsers = uccUserService.findOne(userId);
+			if(MyUtils.isBlank(uccUsers)){
+				allocationTaskMap.put("msg", "分派任务时 根据userId:::"+userId+"查询用户信息为空!");
+				return allocationTaskMap;
+			}
+			String domainId = uccUsers.getDomainId()==null?"":uccUsers.getDomainId();
+			if(MyUtils.isBlank(domainId)){
+				allocationTaskMap.put("msg", "分派任务时 用户userId:::"+userId+"查询租户ID为空!");
+				return allocationTaskMap;
+			}
             // 更新客户表信息
             if(UccDeptsList.get(0).getDeptLevel() <= 1){
-                updateCrm();
-            }
+				try {
+					updateCrm(domainId);
+				} catch (Exception e) {
+					e.printStackTrace();
+					allocationTaskMap.put("msg", "分派任务时 更新客户表信息失败!");
+					return allocationTaskMap;
+				}
+			}
             // 查询待分配任务
             Map<String, Object> whereMap = new HashMap<String, Object>();
 
@@ -59,12 +87,14 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
             whereMap.put("roperateDeptId", userDeptID.toString());
             whereMap.put("barchs", barchs);
             List<TaskDetail> taskDetailList = taskDetailMapper.selectByWhere(whereMap);
+			System.out.println("分派任务时 taskDetailList:::" + taskDetailList.size());
             // 主键
             UUIDGenerator generator = new UUIDGenerator();
             // 流转时间
             Timestamp transferTime = new Timestamp(System.currentTimeMillis());
             List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
             TaskTransfer taskTransfer = null;
+
             if(!MyUtils.isBlank(taskDetailList)){
                 for(TaskDetail taskDetail : taskDetailList){
                     taskTransfer = new TaskTransfer();
@@ -78,6 +108,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
                     taskTransfer.setRoperatePersonId(userId);//受理员
                     taskTransfer.setRoperateDeptId(userDeptID.toString());//受理部门
                     taskTransfer.setOperatorDept(userDeptID.toString());
+					taskTransfer.setDomainId(domainId);
                     if(Task.ALLOCDEFULT.equals(alloc)){
                         // 默认分派
                         if(taskDetail.getDevelopmentDept() != null && !"".equals(taskDetail.getDevelopmentDept())
@@ -112,29 +143,47 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
             // 插入任务流转表
             Map<String, Object> taskTransfermap = new HashMap<String, Object>();
             taskTransfermap.put("list", taskTransferList);
-            taskTransferMapper.insertGroup(taskTransfermap);
-
-            // 更新任务状态、任务截止日期
-            for(TaskTransfer transfer : taskTransferList){
-                TaskDetail taskDetail = new TaskDetail();
-                taskDetail.setTaskDetailId(transfer.getTaskDetailId());
-                taskDetail.setStatus(transfer.getTransferStatus());
-                taskDetail.setRoperateDeptId(transfer.getRoperateDeptId());
-                taskDetail.setEndDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate));
-                taskDetailMapper.updateTaskByTaskDetail(taskDetail);
-            }
+			try {
+				taskTransferMapper.insertGroup(taskTransfermap);
+			} catch (Exception e) {
+				e.printStackTrace();
+				allocationTaskMap.put("msg", "分派任务时 插入任务流转表时发生异常!");
+				return allocationTaskMap;
+			}
+			if(!MyUtils.isBlank(taskTransferList)){
+				// 更新任务状态、任务截止日期
+				for(TaskTransfer transfer : taskTransferList){
+					TaskDetail taskDetail = new TaskDetail();
+					taskDetail.setTaskDetailId(transfer.getTaskDetailId());
+					taskDetail.setStatus(transfer.getTransferStatus());
+					taskDetail.setRoperateDeptId(transfer.getRoperateDeptId());
+					taskDetail.setEndDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate));
+					taskDetailMapper.updateTaskByTaskDetail(taskDetail);
+				}
+			}
             // 修改数据导入批次表
             Map<String, Object> barchsMap = new HashMap<String, Object>();
             barchsMap.put("importBarchs", barchs);
             barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGA);
-            int ii = importBatchMapper.updateFlagByBatch(barchsMap);
-			System.out.println("分派任务 修改数据导入批次表返回结果:::" + ii);
-        } catch (Exception e) {
+			try {
+				int ii = importBatchMapper.updateFlagByBatch(barchsMap);
+				System.out.println("分派任务 修改数据导入批次表返回结果:::" + ii);
+			} catch (Exception e) {
+				e.printStackTrace();
+				allocationTaskMap.put("msg", "分派任务 修改数据导入批次表时发生异常!");
+				return allocationTaskMap;
+			}
+		} catch (Exception e) {
             e.printStackTrace();
+			allocationTaskMap.put("msg", "分派任务时发生异常!");
+			return allocationTaskMap;
         }
+		allocationTaskMap.put("code", "0");
+		allocationTaskMap.put("msg", "分派任务操作成功!");
+		return allocationTaskMap;
     }
 	
-	private void updateCrm() throws Exception {
+	private void updateCrm(String domainId) throws Exception {
 		try {
 			// 查询任务表 客户信息
 			List<TaskDetail> taskDetailList = taskDetailMapper.getCustomerInfo();
@@ -149,6 +198,8 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 				businessCodes = businessCodes.substring(0, businessCodes.lastIndexOf(","));
 				businesscodeMap.put("businessCode", businessCodes);
 			}
+			businesscodeMap.put("domainId", domainId);
+
 			// 根据业务号码 查询客户表
 			List<UccCustomers> customerList = uccCustomersMapper.selectByBusinessCodes(businesscodeMap);
 			Map<String, UccCustomers> cusMap = new HashMap<String, UccCustomers>();
@@ -160,11 +211,13 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 				}
 			}
 			UccCustomers cus = null;
+			UUIDGenerator generator = new UUIDGenerator();
 			if(!MyUtils.isBlank(taskDetailList)){
 				for(TaskDetail taskDetail : taskDetailList){
 					cus = cusMap.get(taskDetail.getBusinessCode());
 					if(cus == null){
 						cus = new UccCustomers();
+						cus.setCustId(generator.generate());
 						cus.setBusinesscode(taskDetail.getBusinessCode());
 						cus.setTariffname(taskDetail.getTariffName());
 						cus.setStatus(taskDetail.getStatus());
@@ -179,6 +232,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 						cus.setProductType(taskDetail.getProductType());
 						cus.setRate(taskDetail.getRate());
 						cus.setType(0);
+						cus.setDomainId(domainId);
 						cusMap.put(taskDetail.getBusinessCode(), cus);
 					}else {
 						// 客户姓名变更时删除变更号码
@@ -201,6 +255,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 						cus.setProductType(taskDetail.getProductType());
 						cus.setRate(taskDetail.getRate());
 						cus.setType(0);
+						cus.setDomainId(domainId);
 					}
 				}
 			}
@@ -243,7 +298,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 	}
 
 	@Override
-	@Transactional("txManager")
+	@Transactional
 	public List<TaskDetail> selectAllocationBySearch(TaskDetailSearch search) throws Exception {
 		searchDeal(search);
 		// 分页查询
@@ -252,7 +307,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 	}
 	
 	@Override
-	@Transactional("txManager")
+	@Transactional
 	public List<String> selectTaskDetailIdBySearch(TaskDetailSearch search) throws Exception{
 		try {
 			searchDeal(search);
