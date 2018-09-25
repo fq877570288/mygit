@@ -67,8 +67,11 @@ public class PbxCdrs {
     private String updatedNickName;
 
 
-    @JsonIgnore
+    
     private Collection<PbxCdrDigit> pbxCdrDigits;
+    private PbxRecords pbxRecords1;
+    private PbxRecords pbxRecords2;
+    private BaseHangupCause baseHangupCause;
     @JsonIgnore
     private UccDomain uccDomain;
 
@@ -397,7 +400,7 @@ public class PbxCdrs {
     public void setPbxCdrDigits(Collection<PbxCdrDigit> pbxCdrDigits) {
         this.pbxCdrDigits = pbxCdrDigits;
     }
-
+    
     @ManyToOne
     @JoinColumn(name = "domain_id", referencedColumnName = "domain_id", nullable = false, updatable = false, insertable = false)
     public cn.cucsi.bsd.ucc.data.domain.UccDomain getUccDomain() {
@@ -407,8 +410,34 @@ public class PbxCdrs {
     public void setUccDomain(cn.cucsi.bsd.ucc.data.domain.UccDomain uccDomain) {
         this.uccDomain = uccDomain;
     }
+    @ManyToOne
+    @JoinColumn(name = "recordid2", referencedColumnName = "record_id", nullable = false, updatable = false, insertable = false)
+    public cn.cucsi.bsd.ucc.data.domain.PbxRecords getPbxRecords2() {
+        return pbxRecords2;
+    }
 
+    public void setPbxRecords2(cn.cucsi.bsd.ucc.data.domain.PbxRecords pbxRecords2) {
+        this.pbxRecords2 = pbxRecords2;
+    }
+    @ManyToOne
+    @JoinColumn(name = "recordid1", referencedColumnName = "record_id", nullable = false, updatable = false, insertable = false)
+    public cn.cucsi.bsd.ucc.data.domain.PbxRecords getPbxRecords1() {
+        return pbxRecords1;
+    }
 
+    public void setPbxRecords1(cn.cucsi.bsd.ucc.data.domain.PbxRecords pbxRecords1) {
+        this.pbxRecords1 = pbxRecords1;
+    }
+    @ManyToOne
+    @JoinColumn(name = "hangup_cause", referencedColumnName = "cause_en", nullable = false, updatable = false, insertable = false)
+    public cn.cucsi.bsd.ucc.data.domain.BaseHangupCause getBaseHangupCause() {
+        return baseHangupCause;
+    }
+
+    public void setBaseHangupCause(cn.cucsi.bsd.ucc.data.domain.BaseHangupCause baseHangupCause) {
+        this.baseHangupCause = baseHangupCause;
+    }
+    
 
     @Basic
     @Column(nullable = true)
