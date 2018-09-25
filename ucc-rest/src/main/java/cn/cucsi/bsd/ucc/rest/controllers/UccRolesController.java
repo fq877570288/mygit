@@ -48,7 +48,7 @@ public class UccRolesController {
 
     @ApiOperation(value = "创建UccRoles", notes = "创建UccRoles")
     @RequestMapping(value = "", method =  RequestMethod.POST)
-    public ResultBean<Boolean> create(@RequestBody  UccRoles uccRoles,String permissions) {
+    public ResultBean<Boolean> create(@RequestBody UccRoles uccRoles) {
         Date dateTime = new Date();
         uccRoles.setCreatedTime(dateTime);
         UccRoles queues = this.uccRolesService.save(uccRoles);
@@ -56,7 +56,7 @@ public class UccRolesController {
 
 
         if(result){
-            String[] permissionsIds = permissions.split(",");
+            String[] permissionsIds = uccRoles.getPermissions();
             result = false ;
             for (String permissionsId:permissionsIds) {
                 RolesPermissions  rolesPermissions = new RolesPermissions();
@@ -75,13 +75,13 @@ public class UccRolesController {
 
     @ApiOperation(value = "修改UccRoles", notes = "修改UccRoles")
     @RequestMapping(value = "/{roleId}",method = RequestMethod.PUT)
-    public ResultBean<Boolean> save(@PathVariable String roleId,@RequestBody UccRoles uccRoles,String permissions){
+    public ResultBean<Boolean> save(@PathVariable String roleId,@RequestBody UccRoles uccRoles){
         Date dateTime = new Date();
         uccRoles.setUpdatedTime(dateTime);
         UccRoles queues = this.uccRolesService.save(uccRoles);
         boolean result =queues != null;
         if(result){
-            String[] permissionsIds = permissions.split(",");
+            String[] permissionsIds = uccRoles.getPermissions();
             result = false ;
             for (String permissionsId:permissionsIds) {
                 RolesPermissions  rolesPermissions = new RolesPermissions();

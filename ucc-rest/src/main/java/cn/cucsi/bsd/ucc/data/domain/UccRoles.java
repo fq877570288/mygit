@@ -46,6 +46,8 @@ public class UccRoles {
     @JsonIgnore
     private Collection<RolesPermissions> rolesPermissions;
 
+    private String[] permissions;//添加和修改接收的权限数组
+
     @JsonView(JSONView.UccRolesWithUccPermissions.class)
     private Collection<UccPermissions> uccPermissions;
     @JsonIgnore
@@ -252,5 +254,14 @@ public class UccRoles {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    @Transient
+    public String[] getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String[] permissions) {
+        this.permissions = permissions;
     }
 }
