@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @Api(tags={"待办任务操作接口"})
 @RestController
 @RequestMapping(value = "/waitTaskControl")
@@ -29,7 +31,7 @@ public class WaitTaskController {
 	 */
 	@ApiOperation(value="待办任务列表查询", notes="待办任务列表查询")
 	@RequestMapping(value = "/waitTaskList", method= RequestMethod.POST)
-	public Map<String,Object> waitTaskList(@RequestBody TaskDetailSearch taskDetailSearch){
+	public Map<String,Object> waitTaskList(@RequestBody TaskDetailSearch taskDetailSearch,HttpSession session){
 		
 		List<TaskDetail> list;
 		List<String> taskDetailIdList = null;
@@ -37,21 +39,21 @@ public class WaitTaskController {
 		waitTaskListMap.put("msg","操作失败！");
 		waitTaskListMap.put("code","-1");
 		try {
-			//session.setAttribute("taskDetailIdListForWait", null);
+			session.setAttribute("taskDetailIdListForWait", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
 			list = waitTaskService.selectWaitBySearch(taskDetailSearch);//待办任务列表查询
 			taskDetailIdList = waitTaskService.selectWaitTaskDetailIdBySearch(taskDetailSearch);
-			//session.setAttribute("taskDetailIdListForWait", taskDetailIdList);
+			session.setAttribute("taskDetailIdListForWait", taskDetailIdList);
 			//model.addAttribute("list", list);
 			waitTaskListMap.put("list", list);
-			waitTaskListMap.put("taskDetailIdListForWait", taskDetailIdList);
+			//waitTaskListMap.put("taskDetailIdListForWait", taskDetailIdList);
 			waitTaskListMap.put("taskDetailSearch",taskDetailSearch);
 			waitTaskListMap.put("msg","操作成功！");
 			waitTaskListMap.put("code","0");
 			return waitTaskListMap;
 		} catch (Exception e) {
-			//session.setAttribute("taskDetailIdListForWait", null);
-			waitTaskListMap.put("taskDetailIdListForWait", null);
+			session.setAttribute("taskDetailIdListForWait", null);
+			//waitTaskListMap.put("taskDetailIdListForWait", null);
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			return waitTaskListMap;
@@ -94,7 +96,11 @@ public class WaitTaskController {
 		taskBackSubmitMap.put("code","-1");
 		taskBackSubmitMap.put("infourl", "/waitTaskList");
 		try {
-			waitTaskService.taskBack(taskTransfer, userId);
+            Map<String,Object> taskBackMap = waitTaskService.taskBack(taskTransfer, userId);
+            if(taskBackMap.get("code").equals("-1")){
+                taskBackSubmitMap.put("msg",taskBackMap.get("msg"));
+                return taskBackSubmitMap;
+            }
 			taskBackSubmitMap.put("msg","操作成功！");
 			taskBackSubmitMap.put("code","0");
 			return taskBackSubmitMap;
@@ -110,7 +116,7 @@ public class WaitTaskController {
 	 */
 	@ApiOperation(value="任务接收", notes="任务接收")
 	@RequestMapping(value = "/taskReceive", method= RequestMethod.POST)
-	public Map<String,Object> taskReceive(@RequestBody TaskReceiveCriteria taskReceiveCriteria) {
+	public Map<String,Object> taskReceive(@RequestBody TaskReceiveCriteria taskReceiveCriteria,HttpSession session) {
 
 		Map<String,Object> taskReceiveMap = new HashMap<String,Object>();
 		taskReceiveMap.put("msg","操作失败！");
@@ -118,14 +124,14 @@ public class WaitTaskController {
 
 		String userId = taskReceiveCriteria.getUserId()==null?"":taskReceiveCriteria.getUserId();
 		String taskDetailIds = taskReceiveCriteria.getTaskDetailIds()==null?"":taskReceiveCriteria.getTaskDetailIds();
-		List<String> idList = taskReceiveCriteria.getTaskDetailIdListForWait();
+		//List<String> idList = taskReceiveCriteria.getTaskDetailIdListForWait();
 		/*ObjectMapper mapper = new ObjectMapper();
 		String json = null;
 		String message = "操作失败！";*/
 		Map<String,Object> doTaskReceiveMap = new HashMap<String,Object>();
 		try {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
-				//List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForWait");
+				List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForWait");
 				if(!MyUtils.isBlank(idList)){
 					StringBuilder sb = new StringBuilder();
 					for(String id: idList){
@@ -150,16 +156,14 @@ public class WaitTaskController {
 					return taskReceiveMap;
 				}
 			}
-			/*session.setAttribute("taskDetailIdListForWait", null);
-			message = "操作成功！";
+			session.setAttribute("taskDetailIdListForWait", null);
+			/*message = "操作成功！";
 			json = mapper.writeValueAsString(message);*/
 			taskReceiveMap.put("msg","操作成功！");
 			taskReceiveMap.put("code","0");
-			taskReceiveMap.put("taskDetailIdListForWait", null);
 			return taskReceiveMap;
 		} catch (Exception e) {
-			//session.setAttribute("taskDetailIdListForWait", null);
-			taskReceiveMap.put("taskDetailIdListForWait", null);
+			session.setAttribute("taskDetailIdListForWait", null);
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			return taskReceiveMap;

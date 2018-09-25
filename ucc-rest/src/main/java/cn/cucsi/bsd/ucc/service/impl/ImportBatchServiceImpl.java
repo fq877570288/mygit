@@ -107,7 +107,7 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 				}else {
                     search.setAllLines(0);
                 }
-            }//
+            }
 			String importBatchs = "";
 			if(taskDetailList != null && taskDetailList.size() > 0){
                 for(TaskDetail taskDetail : taskDetailList){

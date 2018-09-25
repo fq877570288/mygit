@@ -68,15 +68,29 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 	
 	@Override
 	@Transactional
-	public void taskBack(TaskTransfer taskTransfer, String userID) throws Exception {
-		// 主键
-		UUIDGenerator generator = new UUIDGenerator();
-		// 流转时间
-		Timestamp transferTime = new Timestamp(System.currentTimeMillis());
-		String taskTransferUuid = generator.generate();
-		try {
+	public Map<String,Object> taskBack(TaskTransfer taskTransfer, String userId) throws Exception {
+
+        Map<String,Object> taskBackMap = new HashMap<String,Object>();
+        taskBackMap.put("msg", "任务回退失败!");
+        taskBackMap.put("code", "-1");
+        try {
+            // 主键
+            UUIDGenerator generator = new UUIDGenerator();
+            // 流转时间
+            Timestamp transferTime = new Timestamp(System.currentTimeMillis());
+            String taskTransferUuid = generator.generate();
+            UccUsers uccUsers = uccUserService.findOne(userId);
+            if(MyUtils.isBlank(uccUsers)){
+                taskBackMap.put("msg", "任务回退时 根据userId:::"+userId+"查询用户信息为空!");
+                return taskBackMap;
+            }
+            String domainId = uccUsers.getDomainId()==null?"":uccUsers.getDomainId();
+            if(MyUtils.isBlank(domainId)){
+                taskBackMap.put("msg", "任务回退时 用户userId:::"+userId+"查询租户ID为空!");
+                return taskBackMap;
+            }
 			// 部门
-			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userID);
+			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 			String backDept = uccDeptsList.get(0).getDeptPid().toString();
 
 			taskTransfer.setRoperateDeptId(backDept);
@@ -84,13 +98,19 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 			taskTransfer.setTransferStatus("5"); //流转状态   0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
 			taskTransfer.setTransfeRoperate(TaskTransfer.BACK); //流转操作  0:创建、1：分派、2：接收、3：回退
 			taskTransfer.setTransferTime(transferTime); //流转时间
-			taskTransfer.setOperatorId(userID.toString()); //操作员
+			taskTransfer.setOperatorId(userId); //操作员
 			taskTransfer.setOperatorDept(uccDeptsList.get(0).getDeptId().toString());
+            taskTransfer.setDomainId(domainId);
 
 			taskTransferMapper.insert(taskTransfer);
 			taskDetailMapper.updateTaskStatus(taskTransfer);
+
+            taskBackMap.put("code", "0");
+            taskBackMap.put("msg", "任务回退操作成功!");
+            return taskBackMap;
 		} catch (Exception e) {
 			e.printStackTrace();
+            return taskBackMap;
 		}
 	}
 

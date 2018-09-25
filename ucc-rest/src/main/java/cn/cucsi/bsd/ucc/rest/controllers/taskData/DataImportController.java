@@ -109,7 +109,7 @@ public class DataImportController {
 	 */
 	@ApiOperation(value="数据导入列表", notes="数据导入列表")
 	@RequestMapping(value = "/dataImportList", method= RequestMethod.POST)
-	public Map<String,Object> dataImportList(@RequestBody DataImportCriteria dataImportCriteria){
+	public Map<String,Object> dataImportList(@RequestBody DataImportCriteria dataImportCriteria,HttpSession session){
 
 		Map<String,Object> dataImportMap = new HashMap<String,Object>();
 		dataImportMap.put("msg","操作失败！");
@@ -184,8 +184,8 @@ public class DataImportController {
                 //model.addAttribute("dataImportJson", dataImportJson);
                 dataImportMap.put("dataImportJson", dataImportJson);
             }
-			//dataCustomfieldList = (List<DataCustomfield>) session.getAttribute("DataCustomfields");
-			dataCustomfieldList = dataImportCriteria.getDataCustomfields();
+			dataCustomfieldList = (List<DataCustomfield>)session.getAttribute("DataCustomfields");
+			//dataCustomfieldList = dataImportCriteria.getDataCustomfields();
 
 			if(!MyUtils.isBlank(dataCustomfieldList)){
 				for(DataCustomfield dataCustomfield : dataCustomfieldList){
@@ -451,8 +451,9 @@ public class DataImportController {
 	public static Map<String,Object> readExcelXls(InputStream stream, HttpSession session) throws BiffException, IOException {
 
 		Map<String,Object> readExcelXlsMap = new HashMap<String,Object>();
-		readExcelXlsMap.put("returnCode","FAIL");
-		readExcelXlsMap.put("msg","操作失败！");
+		readExcelXlsMap.put("code", "-1");
+		readExcelXlsMap.put("msg", "上传失败!");
+
 		List<DataImport> list = null;
 		try {
 			// 创建一个list 用来存储读取的内容
@@ -710,15 +711,14 @@ public class DataImportController {
                 dataImport.setDataImportId(uuid);
                 list.add(dataImport);
             }
-		} catch (IOException e) {
+			readExcelXlsMap.put("list",list);
+			readExcelXlsMap.put("code","0");
+			readExcelXlsMap.put("msg","上传成功！");
+			return readExcelXlsMap;
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			return readExcelXlsMap;
 		}
-		readExcelXlsMap.put("list",list);
-		readExcelXlsMap.put("returnCode","SUCCESS");
-		readExcelXlsMap.put("msg","操作成功！");
-		return readExcelXlsMap;
 	}
 	
 	/****
@@ -728,8 +728,8 @@ public class DataImportController {
 	public static Map<String,Object> readExcelXlsx(InputStream stream, HttpSession session) throws BiffException, IOException {
 
 		Map<String,Object> readExcelXlsxMap = new HashMap<String,Object>();
-		readExcelXlsxMap.put("returnCode","FAIL");
-		readExcelXlsxMap.put("msg","操作失败！");
+		readExcelXlsxMap.put("code","-1");
+		readExcelXlsxMap.put("msg","上传失败！");
 		List<DataImport> list = null;
 		try {
 			// 创建一个list 用来存储读取的内容
@@ -996,15 +996,14 @@ public class DataImportController {
 
                 list.add(dataImport);
             }
-		} catch (IOException e) {
+			readExcelXlsxMap.put("list",list);
+			readExcelXlsxMap.put("code","0");
+			readExcelXlsxMap.put("msg","上传成功！");
+			return readExcelXlsxMap;
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			return readExcelXlsxMap;
 		}
-		readExcelXlsxMap.put("list",list);
-		readExcelXlsxMap.put("returnCode","SUCCESS");
-		readExcelXlsxMap.put("msg","操作成功！");
-		return readExcelXlsxMap;
 	}
 	
 	public static String createRandomCode(int ln) {

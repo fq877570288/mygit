@@ -41,10 +41,10 @@ public class TaskDetailSearch  extends Paging {
 	@ApiModelProperty(value = "任务主键",required = false)
     private String taskDetailId; //任务主键
 
-	@ApiModelProperty(value = "？",required = false)
+	@ApiModelProperty(value = "任务主键(多个)",required = false)
 	private String taskDetailIds;
 
-	@ApiModelProperty(value = "？",required = false)
+	@ApiModelProperty(value = "任务主键集合",required = false)
 	private List<String> taskDetailIdInList;
 
 	@ApiModelProperty(value = "联系人姓名",required = false)
@@ -89,16 +89,16 @@ public class TaskDetailSearch  extends Paging {
 	@ApiModelProperty(value = "部门ID以及自部门ID字符串，逗号分隔",required = false)
 	private String deptIdAndChildIds; //部门ID以及自部门ID字符串，逗号分隔
 
-	@ApiModelProperty(value = "？",required = false)
+	@ApiModelProperty(value = "",required = false)
 	private String endDateBeforeNow;
 
-	@ApiModelProperty(value = "？",required = false)
+	@ApiModelProperty(value = "",required = false)
 	private String completeMode;
 
-	@ApiModelProperty(value = "？",required = false)
+	@ApiModelProperty(value = "",required = false)
 	private Integer taskNumberStart;
 
-	@ApiModelProperty(value = "？",required = false)
+	@ApiModelProperty(value = "",required = false)
 	private Integer taskNumberEnd;
 
 	public Integer getTaskNumberStart() {
@@ -348,4 +348,6 @@ public class TaskDetailSearch  extends Paging {
 	public void setTaskStatusList(String taskStatusList) {
 		this.taskStatusList = taskStatusList;
 	}
+
+
 }

@@ -108,7 +108,6 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 			String meshDeptId = "";
 			String areaDeptId = "";
 			Long DevelopmentID = null;
-			Long maxDeptIDTemp = null;
 
 			UccUsers uccUsers = uccUserService.findOne(userId);
 			if(MyUtils.isBlank(uccUsers)){

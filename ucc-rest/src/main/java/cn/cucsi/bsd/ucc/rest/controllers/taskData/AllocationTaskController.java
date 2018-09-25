@@ -18,6 +18,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @Api(tags={"任务分配、数据调拨操作接口"})
 @RestController
 @RequestMapping(value = "/taskDataControl")
@@ -105,7 +107,7 @@ public class AllocationTaskController {
 	 */
 	@ApiOperation(value="数据调拨--条件搜索查询", notes="数据调拨--条件搜索查询")
 	@RequestMapping(value = "/editDeptList",method = RequestMethod.POST)
-	public Map<String,Object> editDeptList(@RequestBody TaskDetailSearch taskDetailSearch){
+	public Map<String,Object> editDeptList(@RequestBody TaskDetailSearch taskDetailSearch,HttpSession session){
 
 		Map<String,Object> editDeptListMap = new HashMap<String,Object>();
 		editDeptListMap.put("msg","操作失败！");
@@ -114,26 +116,24 @@ public class AllocationTaskController {
 		List<TaskDetail> list = null;
 		List<String> taskDetailIdList = null;
 		try {
-			//session.setAttribute("taskDetailIdListForEditDeptList", null);
+			session.setAttribute("taskDetailIdListForEditDeptList", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
-			//String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
 
-			String deptIdAndChildId = taskDetailSearch.getDeptIdAndChildIds()==null?"":taskDetailSearch.getDeptIdAndChildIds();
+			//String deptIdAndChildId = taskDetailSearch.getDeptIdAndChildIds()==null?"":taskDetailSearch.getDeptIdAndChildIds();
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
 				String [] deptIdAndChildIds = deptIdAndChildId.split(",");
 				if(deptIdAndChildIds.length > 1){
 					list = allocationTaskService.selectAllocationBySearch(taskDetailSearch);
 					taskDetailIdList = this.allocationTaskService.selectTaskDetailIdBySearch(taskDetailSearch);
-					//session.setAttribute("taskDetailIdListForEditDeptList", taskDetailIdList);
-					editDeptListMap.put("taskDetailIdListForEditDeptList", taskDetailIdList);
+					session.setAttribute("taskDetailIdListForEditDeptList", taskDetailIdList);
+					//editDeptListMap.put("taskDetailIdListForEditDeptList", taskDetailIdList);
 				}else {
-					//session.setAttribute("taskDetailIdListForEditDeptList", null);
-					editDeptListMap.put("taskDetailIdListForEditDeptList", null);
+					session.setAttribute("taskDetailIdListForEditDeptList", null);
 					taskDetailSearch.setAllLines(0);
 				}
 			}else{
-				//session.setAttribute("taskDetailIdListForEditDeptList", null);
-				editDeptListMap.put("taskDetailIdListForEditDeptList", null);
+				session.setAttribute("taskDetailIdListForEditDeptList", null);
 			}
 			//model.addAttribute("list", list);
 			editDeptListMap.put("list", list);
@@ -143,10 +143,10 @@ public class AllocationTaskController {
 			editDeptListMap.put("taskDetailSearch",taskDetailSearch);
 			editDeptListMap.put("msg","操作成功！");
 			editDeptListMap.put("code","0");
+
 			return editDeptListMap;
 		} catch (Exception e) {
-			//session.setAttribute("taskDetailIdListForEditDeptList", null);
-			editDeptListMap.put("taskDetailIdListForEditDeptList", null);
+			session.setAttribute("taskDetailIdListForEditDeptList", null);
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			return editDeptListMap;
@@ -160,7 +160,7 @@ public class AllocationTaskController {
 	 */
 	@ApiOperation(value="数据调拨--任务组织机构修改", notes="数据调拨--任务组织机构修改")
 	@RequestMapping(value = "/editTaskDept",method = RequestMethod.POST)
-	public Map<String,Object> editTaskDept(@RequestBody AllocationSearch allocationSearch) {
+	public Map<String,Object> editTaskDept(@RequestBody AllocationSearch allocationSearch,HttpSession session) {
 
 		Map<String,Object> editDeptListMap = new HashMap<String,Object>();
 		editDeptListMap.put("msg","操作失败！");
@@ -172,14 +172,14 @@ public class AllocationTaskController {
 		String taskDetailIds = allocationSearch.getTaskDetailIds()==null?"":allocationSearch.getTaskDetailIds();
 		Integer taskNumberStart = allocationSearch.getTaskNumberStart()==null?0:allocationSearch.getTaskNumberStart();
 		Integer taskNumberEnd = allocationSearch.getTaskNumberEnd()==null?0:allocationSearch.getTaskNumberEnd();
-		List<String> idList = allocationSearch.getTaskDetailIdListForEditDeptList();
+		//List<String> idList = allocationSearch.getTaskDetailIdListForEditDeptList();
 
 		/*ObjectMapper mapper = new ObjectMapper();
 		String json = null;
 		String message = "数据调拨失败！";*/
 		try {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
-				//List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForEditDeptList");
+				List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForEditDeptList");
 				if(!MyUtils.isBlank(idList)){
 					Integer _taskNumberStart = 1;
 					Integer _taskNumberEnd = idList.size();
@@ -197,8 +197,7 @@ public class AllocationTaskController {
 			}else{
 				allocationTaskService.editTaskDept(meshID, areaID, developmentID, taskDetailIds);
 			}
-			//session.setAttribute("taskDetailIdListForEditDeptList", null);
-			editDeptListMap.put("taskDetailIdListForEditDeptList", null);
+			session.setAttribute("taskDetailIdListForEditDeptList", null);
 
 			//message = "数据调拨完成！";
 			//json = mapper.writeValueAsString(message);
@@ -210,8 +209,7 @@ public class AllocationTaskController {
 			editDeptListMap.put("msg", "数据调拨完成！");
 			editDeptListMap.put("code","0");
 		} catch (Exception e) {
-			//session.setAttribute("taskDetailIdListForEditDeptList", null);
-			editDeptListMap.put("taskDetailIdListForEditDeptList", null);
+			session.setAttribute("taskDetailIdListForEditDeptList", null);
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		}

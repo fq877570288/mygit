@@ -208,6 +208,7 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 						taskTransferRecord.setRecordOperatorDept(deptId);
 						taskTransferRecord.setRoperatePersonId(userId);
 						taskTransferRecord.setRoperateDeptId(deptId);
+						taskTransferRecord.setDomainId(domainId);
 				    	
 						taskTransferRecordList.add(taskTransferRecord);
 			    	}
@@ -230,6 +231,7 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 					taskTransferRecord.setRecordOperatorDept(deptId);
 					taskTransferRecord.setRoperatePersonId(userId);
 					taskTransferRecord.setRoperateDeptId(deptId);
+					taskTransferRecord.setDomainId(domainId);
 			    	
 					taskTransferRecordList.add(taskTransferRecord);
 			    }else {
@@ -247,6 +249,7 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 				    taskTransfer.setCallResult(cinfos[1]);
 				    taskTransfer.setCallMemo(cinfos[2]);
 				    taskTransfer.setCdrId(cdrId);
+					taskTransfer.setDomainId(domainId);
 			    	
 				    taskTransferList.add(taskTransfer);
 			    }
