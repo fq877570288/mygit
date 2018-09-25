@@ -31,6 +31,22 @@ public class SystemConfig {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedTime;
 
+    private String ccClients;
+    private String ccServers;
+
+    private String recordPath;
+    private String recordSaveType;
+
+    private String noticeFilePath;
+
+    private String delMusic;
+
+    private String delTask;
+
+    private String templateSMS;
+
+    private String externalHearURL;
+
     @Id
     @Column(name = "name", nullable = false, length = 100)
     public String getName() {
@@ -144,5 +160,77 @@ public class SystemConfig {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public String getCcClients() {
+        return ccClients;
+    }
+
+    public void setCcClients(String ccClients) {
+        this.ccClients = ccClients;
+    }
+
+    public String getCcServers() {
+        return ccServers;
+    }
+
+    public void setCcServers(String ccServers) {
+        this.ccServers = ccServers;
+    }
+
+    public String getRecordPath() {
+        return recordPath;
+    }
+
+    public void setRecordPath(String recordPath) {
+        this.recordPath = recordPath;
+    }
+
+    public String getRecordSaveType() {
+        return recordSaveType;
+    }
+
+    public void setRecordSaveType(String recordSaveType) {
+        this.recordSaveType = recordSaveType;
+    }
+
+    public String getNoticeFilePath() {
+        return noticeFilePath;
+    }
+
+    public void setNoticeFilePath(String noticeFilePath) {
+        this.noticeFilePath = noticeFilePath;
+    }
+
+    public String getDelMusic() {
+        return delMusic;
+    }
+
+    public void setDelMusic(String delMusic) {
+        this.delMusic = delMusic;
+    }
+
+    public String getDelTask() {
+        return delTask;
+    }
+
+    public void setDelTask(String delTask) {
+        this.delTask = delTask;
+    }
+
+    public String getTemplateSMS() {
+        return templateSMS;
+    }
+
+    public void setTemplateSMS(String templateSMS) {
+        this.templateSMS = templateSMS;
+    }
+
+    public String getExternalHearURL() {
+        return externalHearURL;
+    }
+
+    public void setExternalHearURL(String externalHearURL) {
+        this.externalHearURL = externalHearURL;
     }
 }
