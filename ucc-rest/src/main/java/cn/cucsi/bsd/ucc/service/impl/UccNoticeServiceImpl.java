@@ -159,5 +159,15 @@ public class UccNoticeServiceImpl implements UccNoticeService{
         resultBean.setReturnCode(ResultBean_New.SUCCESS);
         return resultBean;
     }
+    //zss
+    @Override
+    public int selectByFlagCount(String userId) {
+        return uccNoticeMapper.selectByFlagCount(userId);
+    }
+    //zss
+    @Override
+    public int selectByFlagTypeCount(String userId) {
+        return uccNoticeMapper.selectByFlagTypeCount(userId);
+    }
 
 }

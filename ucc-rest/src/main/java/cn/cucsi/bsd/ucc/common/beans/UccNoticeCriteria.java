@@ -18,6 +18,18 @@ public class UccNoticeCriteria extends BasicCriteria {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date noticeTimeTo;
 
+    //应移植需求增加 start zss
+    private String flag; //通知跟踪状态，0表示未读，1表示已读
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    //应移植需求增加 end zss
     public void setUserId(String userId) {
         this.userId = userId;
     }

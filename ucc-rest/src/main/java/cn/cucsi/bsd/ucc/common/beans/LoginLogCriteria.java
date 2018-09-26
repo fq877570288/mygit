@@ -10,6 +10,18 @@ public class LoginLogCriteria extends BasicCriteria{
     private String loginIp;
     private String loginArea;
 
+    //应移植需求增加 zss start
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    //应移植需求增加 zss end
     public String getLoginIp() {
         return loginIp;
     }

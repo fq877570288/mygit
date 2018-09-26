@@ -50,4 +50,40 @@ public interface TaskService {
 	 * 2018-09-01
 	 */
 	ResultBean_New<JSONObject> showTaskCountsByUserId(OngoingTaskCriteria ongoingTaskCriteria);
+	/***
+	 *  待办任务总量 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
+	int selectWaitAllCount(String deptIds);
+	/***
+	 *  今日新增待办任务量 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
+	int selectWaitTodayCount(String deptIds);
+	/****
+	 * 在办任务总量 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
+	int selectOngoingAllCount(String deptIds);
+	/****
+	 * 办理过但是没办完的任务数量 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
+	int selectOngoingNoCount(String deptIds);
+	/****
+	 * 7日内办结任务数量 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
+	int selectCompleteByDaysCount(String deptIds);
+	/****
+	 * 今日办结任务数量
+	 *  add by zss
+	 *  2018-09-26
+	 */
+	int selectCompleteTodayCount(String deptIds);
 }

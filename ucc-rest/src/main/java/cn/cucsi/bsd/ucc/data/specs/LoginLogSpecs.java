@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.data.specs;
 
 import cn.cucsi.bsd.ucc.common.beans.LoginLogCriteria;
 import cn.cucsi.bsd.ucc.data.domain.LoginLog;
+import cn.cucsi.bsd.ucc.data.domain.UccCustomers;
 import com.google.common.base.Strings;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -35,7 +36,14 @@ public class LoginLogSpecs {
             }
         };
     }
-
+    public static Specification<LoginLog> logCriteriaUserIdEqual(final String userId) {
+        return new Specification<LoginLog>() {
+            @Override
+            public Predicate toPredicate(Root<LoginLog> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("userId"), userId);
+            }
+        };
+    }
     public static Specification<LoginLog> createSpec(final LoginLogCriteria loginLogCriteria) {
         Specification<LoginLog> spec = null;
         if (loginLogCriteria == null) return spec;
@@ -47,7 +55,9 @@ public class LoginLogSpecs {
         if(!Strings.isNullOrEmpty(loginLogCriteria.getLoginArea())){
             specs = specs.and(logCriteriaLike(loginLogCriteria.getLoginArea()));
         }
-
+        if(!Strings.isNullOrEmpty(loginLogCriteria.getUserId())){
+            specs = specs.and(logCriteriaUserIdEqual(loginLogCriteria.getUserId()));
+        }
         return specs;
     }
 

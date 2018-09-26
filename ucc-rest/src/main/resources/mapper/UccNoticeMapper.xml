@@ -81,5 +81,16 @@
         AND user_id= #{userId,jdbcType=VARCHAR}
     </if>
   </select>
-  
+  <!-- zss 未读消息 (移植自outcall) -->
+  <select id="selectByFlagCount" resultType="int" parameterType="Long">
+    select count(*)
+    from ucc_notice a LEFT JOIN
+    (select * from ucc_notice_trace  where user_id =#{userId} ) c on c.notice_id = a.notice_id  where c.flag is null
+  </select>
+  <!-- zss (移植自outcall) -->
+  <select id="selectByFlagTypeCount" resultType="int" parameterType="Long">
+    select count(*)
+    from ucc_notice a LEFT JOIN
+    (select * from ucc_notice_trace  where user_id =#{userId} ) c on c.notice_id = a.notice_id  where c.flag is null and a.notice_type='1'
+  </select>
 </mapper>
