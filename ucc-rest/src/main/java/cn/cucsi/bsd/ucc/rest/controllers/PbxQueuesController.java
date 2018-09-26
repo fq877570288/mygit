@@ -1,6 +1,8 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.untils.PbxReload;
+import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.PbxQueueNumbersService;
 import cn.cucsi.bsd.ucc.service.PbxQueuesService;
@@ -24,6 +26,9 @@ public class PbxQueuesController {
 
     @Autowired
     private PbxQueueNumbersService pbxQueueNumbersService;
+
+    @Autowired
+    private ZooKeeperUtils zk;
 
     @ApiOperation(value="根据查询条件获取队列列表", notes="根据查询条件获取队列列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
@@ -49,14 +54,18 @@ public class PbxQueuesController {
         List<PbxQueueNumbers> pbxQueueNumbersList=  this.pbxQueueNumbersService.findAll(criteria);
 
         for (PbxQueueNumbers pbxQueueNumbers:pbxQueueNumbersList) {
-
             PbxQueueNumbersPK pk = new PbxQueueNumbersPK();
             pk.setQueueId(pbxQueueNumbers.getQueueId());
             pk.setExtId(pbxQueueNumbers.getExtId());
             this.pbxQueueNumbersService.delete(pk);
-
         }
-        return new ResultBean<>(this.PbxQueuesService.delete(queueId));
+        boolean result = this.PbxQueuesService.delete(queueId);
+        if(result){
+            PbxQueues pbxQueues = new PbxQueues();
+            pbxQueues.setQueueId(queueId);
+            PbxReload.reloadQueueAsync(pbxQueues, "delete", zk);
+        }
+        return new ResultBean<>(result);
 
     }
     @ApiOperation(value = "创建PbxQueues", notes = "创建PbxQueues")
@@ -68,7 +77,7 @@ public class PbxQueuesController {
         boolean result =queues != null;
 
         if(result){
-
+            PbxReload.reloadQueueAsync(queues, "create", zk);
             result = false ;
             for (String extId:extGroupExts
                     ) {
@@ -91,6 +100,7 @@ public class PbxQueuesController {
         PbxQueues queues = this.PbxQueuesService.save(PbxQueues);
         boolean result = queues != null;
         if(result){
+            PbxReload.reloadQueueAsync(PbxQueues,"update", zk);
             PbxQueueNumbersCriteria criteria = new PbxQueueNumbersCriteria();
             criteria.setQueueId(queues.getQueueId());
             List<PbxQueueNumbers> pbxQueueNumbersList=  this.pbxQueueNumbersService.findAll(criteria);

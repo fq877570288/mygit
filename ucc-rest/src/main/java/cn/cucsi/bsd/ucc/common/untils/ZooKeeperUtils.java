@@ -36,10 +36,16 @@ public class ZooKeeperUtils {
 	}
 	
 	public void setData(String node, String data) throws Exception {
+		if (null==client.exists(node, false)) {
+			client.create(node, data.getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		}
 		client.setData(node, data.getBytes(), -1);
 	}
 	
 	public void setData(String node, byte[] data) throws Exception {
+		if (null==client.exists(node, false)) {
+			client.create(node, data, Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+		}
 		client.setData(node, data, -1);
 	}
 

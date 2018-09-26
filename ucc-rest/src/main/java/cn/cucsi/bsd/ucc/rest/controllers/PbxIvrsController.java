@@ -4,7 +4,10 @@ import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.PbxIvrsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.untils.PbxReload;
+import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.PbxIvrs;
+import cn.cucsi.bsd.ucc.data.domain.PbxQueues;
 import cn.cucsi.bsd.ucc.service.PbxIvrsService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +25,8 @@ public class PbxIvrsController {
 
     @Autowired
     private PbxIvrsService PbxIvrsService;
+    @Autowired
+    private ZooKeeperUtils zk;
 
     @ApiOperation(value = "根据查询条件获取IVR列表", notes = "根据查询条件获取IVR列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
@@ -46,21 +51,32 @@ public class PbxIvrsController {
     @ApiOperation(value = "根据ivrId删除PbxIvrs", notes = "根据ivrId删除PbxIvrs")
     @RequestMapping(value = "/{ivrId}", method = RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String ivrId) {
-        return new ResultBean<>(this.PbxIvrsService.delete(ivrId));
+        boolean result = this.PbxIvrsService.delete(ivrId);
+        if(result){
+            PbxIvrs pbxIvrs = new PbxIvrs();
+            pbxIvrs.setIvrId(ivrId);
+            PbxReload.reloadIvrAsync(pbxIvrs, "delete", zk);
+        }
+        return new ResultBean<>(result);
     }
 
     @ApiOperation(value = "创建PbxIvrs", notes = "创建PbxIvrs")
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody PbxIvrs PbxIvrs) {
         boolean result = this.PbxIvrsService.save(PbxIvrs) != null;
+        if(result){
+            PbxReload.reloadIvrAsync(PbxIvrs, "create", zk);
+        }
         return new ResultBean<>(result);
     }
 
     @ApiOperation(value = "修改PbxIvrs", notes = "修改PbxIvrs")
     @RequestMapping(value = "/{ivrId}", method = RequestMethod.PUT)
     public ResultBean<Boolean> save(@PathVariable String ivrId, @RequestBody PbxIvrs PbxIvrs) {
-
         boolean result = this.PbxIvrsService.save(PbxIvrs) != null;
+        if(result){
+            PbxReload.reloadIvrAsync(PbxIvrs, "update", zk);
+        }
         return new ResultBean<>(result);
     }
 

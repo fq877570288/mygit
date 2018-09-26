@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.PbxCallTransferCriteria;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.PbxCallTransfer;
 import cn.cucsi.bsd.ucc.service.PbxCallTransferService;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +21,9 @@ public class PbxCallTransferController {
 
     @Autowired
     private PbxCallTransferService pbxCallTransferService;
+    @Autowired
+    private ZooKeeperUtils zk;
+
     @ApiOperation(value="根据查询条件获取呼转表", notes="根据查询条件获取呼转表", httpMethod = "GET")
     @RequestMapping(value = "/findAll", method= RequestMethod.GET)
     public PageResultBean<List<PbxCallTransfer>> findAll(@ModelAttribute PbxCallTransferCriteria pbxCallTransferCriteria){
