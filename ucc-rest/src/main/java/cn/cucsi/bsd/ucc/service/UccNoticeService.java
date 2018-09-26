@@ -33,4 +33,7 @@ public interface UccNoticeService {
      * 2018-09-07
      */
     ResultBean_New<UccNotice> showNoticeDetailByNoticeId(ShowNoticeDetailCriteria showNoticeDetailCriteria);
+    //zss
+    int selectByFlagCount(String userId);
+    int selectByFlagTypeCount(String userId);
 }

@@ -408,4 +408,67 @@ public class TaskServiceImpl implements TaskService {
 		resultBean.setReturnCode(ResultBean_New.SUCCESS);
 		return resultBean;
 	}
+	//zss
+	@Override
+	public int selectWaitAllCount(String deptIds) {
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		String dateStr = sdf.format(new Date());
+		cmap.put("dateStart", dateStr+" 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+		return taskDetailMapper.selectWaitAllCount(cmap);
+	}
+	//zss
+	@Override
+	public int selectWaitTodayCount(String deptIds){
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		String dateStr = sdf.format(new Date());
+		cmap.put("dateStart", dateStr+" 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+		return taskDetailMapper.selectWaitTodayCount(cmap);
+	}
+	//zss
+	@Override
+	public int selectOngoingAllCount(String deptIds){
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		String dateStr = sdf.format(new Date());
+		cmap.put("dateStart", dateStr+" 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+		return taskDetailMapper.selectOngoingAllCount(cmap);
+	}
+	//zss
+	@Override
+	public int selectOngoingNoCount(String deptIds){
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		String dateStr = sdf.format(new Date());
+		cmap.put("dateStart", dateStr+" 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+		return taskDetailMapper.selectOngoingNoCount(cmap);
+	}
+	//zss
+	@Override
+	public int selectCompleteByDaysCount(String deptIds){
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		Date now = new Date();
+		String dateStr = sdf.format(now);
+
+		cmap.put("dateStart", sdfyyyyMM.format(now)+"-01 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+		return taskDetailMapper.selectCompleteByDaysCount(cmap);
+	}
+	//zss
+	@Override
+	public int selectCompleteTodayCount(String deptIds){
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		String dateStr = sdf.format(new Date());
+		cmap.put("dateStart", dateStr+" 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+		return taskDetailMapper.selectCompleteTodayCount(cmap);
+	}
+
 }

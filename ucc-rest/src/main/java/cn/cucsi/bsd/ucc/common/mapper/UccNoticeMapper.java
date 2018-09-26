@@ -28,4 +28,8 @@ public interface UccNoticeMapper {
     List<UccNotice> selectByUserId(NoticeShowListCriteria noticeShowListCriteria);
     
     List<UccNotice> findAll(UccNoticeCriteria criteria);
+    //zss
+    int selectByFlagCount(String userId);
+    //zss
+    int selectByFlagTypeCount(String userId);
 }

@@ -97,4 +97,16 @@ public interface TaskDetailMapper {
     List<String> selectWaitTaskDetailIdBySearch(TaskDetailSearch search) throws Exception;
 
     int updateTaskByTaskDetail(TaskDetail taskDetail) throws Exception;
+    //zss
+    int selectWaitAllCount(Map<String, Object> map);
+    //zss
+    int selectWaitTodayCount(Map<String, Object> map);
+    //zss
+    int selectOngoingAllCount(Map<String, Object> map);
+    //zss
+    int selectOngoingNoCount(Map<String, Object> map);
+    //zss
+    int selectCompleteByDaysCount(Map<String, Object> map);
+    //zss
+    int selectCompleteTodayCount(Map<String, Object> map);
 }
