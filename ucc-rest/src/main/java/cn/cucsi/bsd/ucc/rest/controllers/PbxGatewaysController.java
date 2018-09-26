@@ -1,6 +1,8 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.untils.PbxReload;
+import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.PbxGateways;
 import cn.cucsi.bsd.ucc.data.domain.PbxGwCalleeRewriteRules;
 import cn.cucsi.bsd.ucc.data.domain.PbxGwNumbers;
@@ -29,6 +31,8 @@ public class PbxGatewaysController {
     private PbxGwCalleeRewriteRulesService PbxGwCalleeRewriteRulesService;
     @Autowired
     private cn.cucsi.bsd.ucc.service.PbxGwNumbersService PbxGwNumbersService;
+    @Autowired
+    private ZooKeeperUtils zk;
     @ApiOperation(value="根据查询条件获取网关信息表", notes="根据查询条件获取网关信息表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
     public PageResultBean<List<PbxGateways>> findAll(@RequestBody PbxGatewaysCriteria search){
@@ -59,6 +63,9 @@ public class PbxGatewaysController {
         PbxGateways gateway = this.PbxGatewaysService.findOne(gwId);
         gateway.setStatus(0);
         this.PbxGatewaysService.save(gateway);
+        PbxGateways pbxGateways = new PbxGateways();
+        pbxGateways.setGwId(gwId);
+        PbxReload.reloadGw(pbxGateways, "delete", zk);
         return new ResultBean<>(true);
     }
     @ApiOperation(value = "创建PbxGateways", notes = "创建PbxGateways")
@@ -86,6 +93,7 @@ public class PbxGatewaysController {
                 PbxGwCalleeRewriteRulesService.save(pbxGwCalleeRewriteRule);
             }
         }
+        PbxReload.reloadGwAsync(PbxGateways, "create", zk);
         return new ResultBean<>(true);
     }
     @ApiOperation(value = "修改PbxGateways", notes = "修改PbxGateways")
@@ -127,6 +135,7 @@ public class PbxGatewaysController {
                 PbxGwNumbersService.save(gwNumbers);
             }
         }
+        PbxReload.reloadGwAsync(PbxGateways, "update", zk);
         return new ResultBean<>(true);
     }
 
