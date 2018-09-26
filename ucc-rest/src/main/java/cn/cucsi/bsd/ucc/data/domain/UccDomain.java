@@ -95,8 +95,6 @@ public class UccDomain {
     @JsonIgnore
     private Collection<UccNotice> uccNotices;
     @JsonIgnore
-    private Collection<UccPermissions> uccPermissions;
-    @JsonIgnore
     private Collection<UccRoles> uccRoles;
     @JsonIgnore
     private Collection<UccSkillGroup> uccSkillGroups;
@@ -432,15 +430,6 @@ public class UccDomain {
 
     public void setUccNotices(Collection<UccNotice> uccNotices) {
         this.uccNotices = uccNotices;
-    }
-
-    @OneToMany(mappedBy = "uccDomain")
-    public Collection<UccPermissions> getUccPermissions() {
-        return uccPermissions;
-    }
-
-    public void setUccPermissions(Collection<UccPermissions> uccPermissions) {
-        this.uccPermissions = uccPermissions;
     }
 
     @OneToMany(mappedBy = "uccDomain")

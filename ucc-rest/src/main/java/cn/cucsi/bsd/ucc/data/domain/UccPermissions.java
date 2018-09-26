@@ -30,8 +30,7 @@ public class UccPermissions {
     @JsonView(JSONView.Summary.class)
     private String mpid;
 
-    @JsonView(JSONView.Summary.class)
-    private String domainId;
+
 
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
@@ -53,8 +52,7 @@ public class UccPermissions {
     private Date updatedTime;
     @JsonIgnore
     private Collection<RolesPermissions> rolesPermissions;
-    @JsonIgnore
-    private UccDomain uccDomain;
+
     @Transient
     private List<UccPermissions> uccPermissions;
 
@@ -125,15 +123,6 @@ public class UccPermissions {
         this.mpid = mpid;
     }
 
-    @Basic
-    @Column(name = "domain_id", nullable = false, length = 32)
-    public String getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(String domainId) {
-        this.domainId = domainId;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -147,7 +136,6 @@ public class UccPermissions {
             return false;
         if (permissionGroup != null ? !permissionGroup.equals(that.permissionGroup) : that.permissionGroup != null)
             return false;
-        if (domainId != null ? !domainId.equals(that.domainId) : that.domainId != null) return false;
 
         return true;
     }
@@ -157,7 +145,6 @@ public class UccPermissions {
         int result = permissionId != null ? permissionId.hashCode() : 0;
         result = 31 * result + (permissionName != null ? permissionName.hashCode() : 0);
         result = 31 * result + (permissionGroup != null ? permissionGroup.hashCode() : 0);
-        result = 31 * result + (domainId != null ? domainId.hashCode() : 0);
         return result;
     }
 
@@ -168,16 +155,6 @@ public class UccPermissions {
 
     public void setRolesPermissions(Collection<RolesPermissions> rolesPermissions) {
         this.rolesPermissions = rolesPermissions;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "domain_id", referencedColumnName = "domain_id", nullable = false, updatable = false, insertable = false)
-    public cn.cucsi.bsd.ucc.data.domain.UccDomain getUccDomain() {
-        return uccDomain;
-    }
-
-    public void setUccDomain(cn.cucsi.bsd.ucc.data.domain.UccDomain uccDomain) {
-        this.uccDomain = uccDomain;
     }
 
     @Basic
