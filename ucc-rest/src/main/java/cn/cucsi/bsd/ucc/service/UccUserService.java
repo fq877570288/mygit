@@ -1,9 +1,7 @@
 package cn.cucsi.bsd.ucc.service;
 
-import cn.cucsi.bsd.ucc.common.beans.ResultBean_New;
-import cn.cucsi.bsd.ucc.common.beans.UserLoginForAPPCriteria;
+import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
-import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -29,4 +27,6 @@ public interface UccUserService {
     void cusfsSave(Map<String, Object> map) throws Exception;
 
     UccUsers selectByPrimaryKey(String userId) throws Exception;
+
+    ResultBean_New<List<UccUserByDept>> userListByDept(List<UserDeptCriteria> userDeptCriterias);
 }

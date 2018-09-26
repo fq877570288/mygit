@@ -6,9 +6,11 @@ package cn.cucsi.bsd.ucc.common.beans;
 import io.swagger.annotations.ApiModel;
 
 @ApiModel
-public class UserDeptCriteria extends  BasicCriteria {
+public class UserDeptCriteria extends BasicCriteria {
     private String deptId;
     private String userId;
+    private String domainId;
+    private String deptName;
 
     public String getDeptId() {
         return deptId;
@@ -24,5 +26,21 @@ public class UserDeptCriteria extends  BasicCriteria {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }

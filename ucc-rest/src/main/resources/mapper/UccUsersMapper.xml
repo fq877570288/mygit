@@ -572,4 +572,16 @@
     a.user_id = #{id,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByDept" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UserDeptCriteria">
+    SELECT
+    u.user_id,u.nick_name,u.user_name
+    FROM
+    ucc_users u
+    INNER JOIN user_dept d ON u.user_id = d.user_id
+    WHERE
+    d.dept_id = #{deptId,jdbcType=VARCHAR}
+    AND u.domain_id= #{domainId,jdbcType=VARCHAR}
+  </select>
+
+
 </mapper>

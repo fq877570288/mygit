@@ -20,10 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UccUserServiceImpl implements UccUserService{
@@ -202,5 +199,43 @@ public class UccUserServiceImpl implements UccUserService{
     @Override
     public UccUsers selectByPrimaryKey(String userId) throws Exception {
         return uccUsersMapper.selectByPrimaryKey(userId);
+    }
+
+
+    /**
+     * 根据部门信息查询用户列表
+     * @param userDeptCriterias
+     * @return
+     */
+    public ResultBean_New<List<UccUserByDept>> userListByDept(List<UserDeptCriteria> userDeptCriterias){
+        ResultBean_New<List<UccUserByDept>> resultBean = new ResultBean_New<>();
+
+        if(userDeptCriterias != null && userDeptCriterias.size() > 0){
+            List<UccUserByDept> uccUserByDeptList = new ArrayList<>();
+            for(int size = 0; size < userDeptCriterias.size(); size++){
+                UserDeptCriteria userDeptCriteria = userDeptCriterias.get(size);
+
+                UccUserByDept uccUserByDept = new UccUserByDept();
+                uccUserByDept.setDeptId(userDeptCriteria.getDeptId());
+                uccUserByDept.setDeptName(userDeptCriteria.getDeptName());
+                List<UccUsers> uccUsers = uccUsersMapper.selectByDept(userDeptCriteria);
+
+                if(uccUsers != null && uccUsers.size() > 0){
+                    List<UccUsers> users = new ArrayList<>();
+                    for(int i = 0; i < uccUsers.size(); i++){
+                        UccUsers user = new UccUsers();
+                        user.setUserId(uccUsers.get(i).getUserId());
+                        user.setUserName(uccUsers.get(i).getUserName());
+                        user.setNickName(uccUsers.get(i).getNickName());
+                        users.add(user);
+                    }
+                    uccUserByDept.setUsers(users);
+                }
+                uccUserByDeptList.add(uccUserByDept);
+            }
+            resultBean.setData(uccUserByDeptList);
+        }
+
+        return resultBean;
     }
 }

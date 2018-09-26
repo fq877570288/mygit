@@ -159,4 +159,16 @@ public class UccUserController  {
         return uccUserService.userLoginForAPP(userLoginForAPPCriteria);
     }
 
+    @RequestMapping(value = "/findAllByDept", method= RequestMethod.GET)
+    public ResultBean_New<List<UccUserByDept>> userListByDept(){
+        UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
+        userDeptCriteria.setDeptId("4028e38165ea6d7f0165ea951c290000");
+        userDeptCriteria.setDomainId("domain1");
+        userDeptCriteria.setDeptName("部门666");
+        List<UserDeptCriteria>  userDeptCriterias = new ArrayList<>();
+        userDeptCriterias.add(userDeptCriteria);
+
+        return uccUserService.userListByDept(userDeptCriterias);
+    }
+
 }

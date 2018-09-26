@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.common.mapper;
 
 import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
+import cn.cucsi.bsd.ucc.common.beans.UserDeptCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UserLoginForAPPCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import org.apache.ibatis.annotations.Mapper;
@@ -72,4 +73,7 @@ public interface UccUsersMapper {
     UccUsers selectByExtNum(Integer extNum);
 
     UccUsers selectByPrimaryKey2(String userId);
+
+    // 根据部门查询所有用户列表
+    List<UccUsers> selectByDept(UserDeptCriteria search);
 }
