@@ -64,9 +64,9 @@ public class ExportUtil {
 		/**
 		 * 设置Respone 以及Excel表名
 		 */
-		rsp.setContentType("text/plain;charset=utf-8");
+		rsp.setContentType("application/vnd.ms-excel;charset=utf-8");
                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		rsp.setHeader("Content-disposition", "attachment;filename=" + df.format(new Date()) + ".xls");
+		rsp.setHeader("Content-Disposition", "attachment;filename=" + TableName + df.format(new Date()) + ".xls");
 
 		/**
 		 * 初始化
