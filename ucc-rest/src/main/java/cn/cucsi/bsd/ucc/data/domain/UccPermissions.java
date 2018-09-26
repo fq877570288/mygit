@@ -54,6 +54,7 @@ public class UccPermissions {
     private Collection<RolesPermissions> rolesPermissions;
 
     @Transient
+    @JsonView(JSONView.Summary.class)
     private List<UccPermissions> uccPermissions;
 
     @Id
