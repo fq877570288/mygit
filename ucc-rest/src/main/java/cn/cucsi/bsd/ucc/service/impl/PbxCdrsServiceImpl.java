@@ -49,15 +49,9 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
     }
     @Override
     public List<PbxCdrs> findAllExcel(PbxCdrsCriteria pbxCdrsCriteria) {
-        List<PbxCdrs> informationList = null;
-        try {
-            informationList = pbxCdrsMapper.selectByPrimaryExcel(pbxCdrsCriteria);
-            return informationList;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("根据条件查询通话记录列表发生异常！");
-            return null;
-        }
+        //Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
+        //Pageable pageable = new PageRequest(pbxCdrsCriteria.getPage(), pbxCdrsCriteria.getSize(), sort);
+        return pbxCdrsRepository.findAll(PbxCdrsSpecs.createSpec(pbxCdrsCriteria));
     }
     @Override
     public PbxCdrs findOne(String cdrId) {
