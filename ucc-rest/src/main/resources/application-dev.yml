@@ -1,10 +1,10 @@
 spring:
     datasource:
         name: ucc-db
-        url: jdbc:mysql://10.64.8.166:3306/ucc?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true
+        url: jdbc:p6spy:mysql://10.64.8.166:3306/ucc?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull&amp;transformedBitIsBoolean=true
         username: udata
         password: 123456
-        driver-class-name: org.mariadb.jdbc.Driver
+        driver-class-name: com.p6spy.engine.spy.P6SpyDriver
         initialSize: 5
         minIdle: 5
         maxActive: 20
