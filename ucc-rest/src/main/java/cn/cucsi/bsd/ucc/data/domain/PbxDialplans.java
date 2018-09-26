@@ -65,6 +65,8 @@ public class PbxDialplans {
 
     @Id
     @Column(name = "dialplan_id", nullable = false, length = 80)
+    @GenericGenerator(name="idGenerator", strategy="uuid")
+    @GeneratedValue(generator="idGenerator")
     public String getDialplanId() {
         return dialplanId;
     }

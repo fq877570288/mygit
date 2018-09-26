@@ -20,7 +20,7 @@ public class PbxReload {
 			zk.setData("/pbxreload", mapper.writeValueAsBytes(map));
 			return true;
 		} catch (Exception e) {
-			
+			System.out.println("reloadExt中Zookeeper添加节点异常-----"+e);
 		}
 		return false;
 	}

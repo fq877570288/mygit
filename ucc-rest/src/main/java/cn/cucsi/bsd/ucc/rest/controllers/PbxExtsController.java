@@ -3,6 +3,8 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.PbxExtsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.untils.PbxReload;
+import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.PbxExtGroups;
 import cn.cucsi.bsd.ucc.data.domain.PbxExts;
 import cn.cucsi.bsd.ucc.service.PbxExtGroupsService;
@@ -23,6 +25,8 @@ public class PbxExtsController {
 
     @Autowired
     private PbxExtsService PbxExtsService;
+    @Autowired
+    private ZooKeeperUtils zk;
 
     @ApiOperation(value = "根据查询条件获取分机表", notes = "根据查询条件获取分机表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST)
@@ -57,7 +61,13 @@ public class PbxExtsController {
     @ApiOperation(value = "根据extId删除PbxExts", notes = "根据extId删除PbxExts")
     @RequestMapping(value = "/{extId}", method = RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String extId) {
-        return new ResultBean<>(this.PbxExtsService.delete(extId));
+        boolean result = this.PbxExtsService.delete(extId);
+        if(result){
+            PbxExts pbxExts = new PbxExts();
+            pbxExts.setExtId(extId);
+            PbxReload.reloadExtAsync(pbxExts, "delete", zk);
+        }
+        return new ResultBean<>(result);
     }
 
     @ApiOperation(value = "批量新增PbxExts", notes = "批量新增PbxExts")
@@ -72,6 +82,9 @@ public class PbxExtsController {
     @RequestMapping(value = "/createOne", method = RequestMethod.POST)
     public ResultBean<Boolean> createOne(@RequestBody PbxExts PbxExts, String extGroupExts) {
         boolean result = this.PbxExtsService.saveOne(PbxExts, extGroupExts) != null;
+        if(result){
+            PbxReload.reloadExtAsync(PbxExts, "create", zk);
+        }
         return new ResultBean<>(result);
     }
 
@@ -81,6 +94,9 @@ public class PbxExtsController {
             , Integer extNumCount, String cover) {
 
         boolean result = this.PbxExtsService.saveMany(PbxExts, extGroupExts, extNumStart, extNumCount, cover) != null;
+        if(result){
+            PbxReload.reloadExtAsync(PbxExts, "update", zk);
+        }
         return new ResultBean<>(result);
     }
 
