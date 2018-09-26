@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface UccUserService {
+
     Page<UccUsers> findAll(UccUserCriteria search);
     UccUsers findOne(String userId);
     UccUsers save(UccUsers uccUsers);
@@ -29,4 +30,6 @@ public interface UccUserService {
     void cusfsSave(Map<String, Object> map) throws Exception;
 
     UccUsers selectByPrimaryKey(String userId) throws Exception;
+
+    List<String> selectSameDeptUserIdByUserId(String userId) throws Exception;
 }

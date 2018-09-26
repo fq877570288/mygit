@@ -8,6 +8,7 @@ import cn.cucsi.bsd.ucc.common.beans.TaskReceiveCriteria;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
+import cn.cucsi.bsd.ucc.service.UccUserService;
 import cn.cucsi.bsd.ucc.service.WaitTaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +26,8 @@ public class WaitTaskController {
 
 	@Autowired
 	private WaitTaskService waitTaskService;
+	@Autowired
+	private UccUserService uccUserService;
 
 	/***
 	 * 待办任务列表查询
@@ -123,42 +126,78 @@ public class WaitTaskController {
 		taskReceiveMap.put("code","-1");
 
 		String userId = taskReceiveCriteria.getUserId()==null?"":taskReceiveCriteria.getUserId();
-		String taskDetailIds = taskReceiveCriteria.getTaskDetailIds()==null?"":taskReceiveCriteria.getTaskDetailIds();
-		//List<String> idList = taskReceiveCriteria.getTaskDetailIdListForWait();
-		/*ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-		String message = "操作失败！";*/
+		String domainId = taskReceiveCriteria.getDomainId()==null?"":taskReceiveCriteria.getDomainId();
+		List<String> userIdList = taskReceiveCriteria.getUserIdList();
+		List<String> taskDetailIdsList = taskReceiveCriteria.getTaskDetailIdsList();
+
 		Map<String,Object> doTaskReceiveMap = new HashMap<String,Object>();
 		try {
-			if(taskDetailIds==null || taskDetailIds.isEmpty()){
-				List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForWait");
-				if(!MyUtils.isBlank(idList)){
-					StringBuilder sb = new StringBuilder();
-					for(String id: idList){
-						sb = sb.append(id).append(",");
+			if(!MyUtils.isBlank(taskDetailIdsList)){
+				if(!MyUtils.isBlank(userIdList)){
+					//如果所传用户ID列表不为空，则把任务平均分配给这些用户
+					List<List<String>> splitedTaskList = MyUtils.averageAssign(taskDetailIdsList,userIdList.size());
+					List<String> splitedTaskListbatch = null;
+
+					for (int i = 0; i < splitedTaskList.size(); i++) {
+						splitedTaskListbatch = splitedTaskList.get(i);
+						if(!MyUtils.isBlank(splitedTaskListbatch)){
+							StringBuilder stringBuilder = new StringBuilder();
+							for(String taskId: splitedTaskListbatch){
+								stringBuilder = stringBuilder.append(taskId).append(",");
+							}
+							String taskIdsStr = stringBuilder.toString();
+							if(taskIdsStr.endsWith(",")){
+								taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
+							}
+							for (int j = 0; j < userIdList.size(); j++) {
+								userId = userIdList.get(j);
+								doTaskReceiveMap = waitTaskService.taskReceive(userId, taskIdsStr,domainId);
+								if(doTaskReceiveMap.get("code").equals("-1")){
+									taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
+									return taskReceiveMap;
+								}
+							}
+						}
 					}
-					String idsStr = sb.toString();
-					if(idsStr.endsWith(",")){
-						idsStr = idsStr.substring(0, idsStr.length()-1);
-					}
-					if(!idsStr.isEmpty()){
-						doTaskReceiveMap = waitTaskService.taskReceive(userId, idsStr);
-						if(doTaskReceiveMap.get("code").equals("-1")){
-							taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
-							return taskReceiveMap;
+				}else{
+					//如果所传用户ID列表为空，则先查询该用户下同部门的所有用户ID，然后再平均分配任务
+					List<String> userIdList2 = uccUserService.selectSameDeptUserIdByUserId(userId);
+					if(!MyUtils.isBlank(userIdList2)){
+						//把任务平均分配给这些用户
+						List<List<String>> splitedTaskList2 = MyUtils.averageAssign(taskDetailIdsList,userIdList2.size());
+						List<String> splitedTaskListbatch2 = null;
+
+						if(!MyUtils.isBlank(splitedTaskList2)){
+							for (int i = 0; i < splitedTaskList2.size(); i++) {
+								splitedTaskListbatch2 = splitedTaskList2.get(i);
+								if(!MyUtils.isBlank(splitedTaskListbatch2)){
+									StringBuilder stringBuilder2 = new StringBuilder();
+									for(String taskId: splitedTaskListbatch2){
+										stringBuilder2 = stringBuilder2.append(taskId).append(",");
+									}
+									String taskIdsStr = stringBuilder2.toString();
+									if(taskIdsStr.endsWith(",")){
+										taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
+									}
+									for (int j = 0; j < userIdList2.size(); j++) {
+										userId = userIdList2.get(j);
+										doTaskReceiveMap = waitTaskService.taskReceive(userId, taskIdsStr,domainId);
+										if(doTaskReceiveMap.get("code").equals("-1")){
+											taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
+											return taskReceiveMap;
+										}
+									}
+								}
+							}
 						}
 					}
 				}
 			}else{
-				doTaskReceiveMap = waitTaskService.taskReceive(userId, taskDetailIds);
-				if(doTaskReceiveMap.get("code").equals("-1")){
-					taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
-					return taskReceiveMap;
-				}
+				session.setAttribute("taskDetailIdListForWait", null);
+				taskReceiveMap.put("msg","入参：：：taskDetailIdsList不能为空！");
+				return taskReceiveMap;
 			}
 			session.setAttribute("taskDetailIdListForWait", null);
-			/*message = "操作成功！";
-			json = mapper.writeValueAsString(message);*/
 			taskReceiveMap.put("msg","操作成功！");
 			taskReceiveMap.put("code","0");
 			return taskReceiveMap;

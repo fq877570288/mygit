@@ -4,9 +4,7 @@ import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
-import cn.cucsi.bsd.ucc.data.repo.UccDeptsRepository;
 import cn.cucsi.bsd.ucc.data.repo.UccUserRepository;
-import cn.cucsi.bsd.ucc.data.repo.UserDeptRepository;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import cn.cucsi.bsd.ucc.data.specs.UccUserSpecs;
 import cn.cucsi.bsd.ucc.service.UserDeptService;
@@ -19,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -202,5 +199,10 @@ public class UccUserServiceImpl implements UccUserService{
     @Override
     public UccUsers selectByPrimaryKey(String userId) throws Exception {
         return uccUsersMapper.selectByPrimaryKey(userId);
+    }
+
+    @Override
+    public List<String> selectSameDeptUserIdByUserId(String userId) throws Exception {
+        return uccUsersMapper.selectSameDeptUserIdByUserId(userId);
     }
 }

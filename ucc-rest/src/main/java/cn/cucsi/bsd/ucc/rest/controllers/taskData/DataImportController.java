@@ -9,6 +9,7 @@ import java.util.*;
 import cn.cucsi.bsd.ucc.common.beans.AutoSearchTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.CustomFieldsSaveCriteria;
 import cn.cucsi.bsd.ucc.common.beans.DataImportCriteria;
+import cn.cucsi.bsd.ucc.common.untils.Auth;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.*;
@@ -450,6 +451,16 @@ public class DataImportController {
 	 */
 	public static Map<String,Object> readExcelXls(InputStream stream, HttpSession session) throws BiffException, IOException {
 
+		String domainId = (String)session.getAttribute("domainId");
+		String userID = Auth.getLoginUser(session).getUserId().toString();
+		//这块是临时写死
+		if(MyUtils.isBlank(domainId)){
+			domainId = "ff80808165c0f40d0165c68b94df0000";
+		}
+		if(MyUtils.isBlank(userID)){
+			userID = "1";
+		}
+
 		Map<String,Object> readExcelXlsMap = new HashMap<String,Object>();
 		readExcelXlsMap.put("code", "-1");
 		readExcelXlsMap.put("msg", "上传失败!");
@@ -467,8 +478,6 @@ public class DataImportController {
 			Date date = new Date();
 			String TIME = new String(df.format(date));
 
-			//String userID = Auth.getLoginUser(session).getId().toString();
-			String userID = (String)session.getAttribute("userID");
 			String eventId = "";
 			if(!MyUtils.isBlank(userID)){
                 // 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
@@ -548,6 +557,7 @@ public class DataImportController {
 			// 行数(表头的目录不需要，从3开始)
 			for (int i = 2; i <= rowcount; i++) {
                 dataImport = new DataImport();
+				dataImport.setDomainId(domainId);
                 // 行
                 HSSFRow row = sheet.getRow(i);
                 // 列编码大于0 获取单元格内容 存入DataImport实体类
@@ -727,6 +737,15 @@ public class DataImportController {
 	 */
 	public static Map<String,Object> readExcelXlsx(InputStream stream, HttpSession session) throws BiffException, IOException {
 
+		String domainId = (String)session.getAttribute("domainId");
+		String userID = Auth.getLoginUser(session).getUserId().toString();
+		//这块是临时写死
+		if(MyUtils.isBlank(domainId)){
+			domainId = "ff80808165c0f40d0165c68b94df0000";
+		}
+		if(MyUtils.isBlank(userID)){
+			userID = "1";
+		}
 		Map<String,Object> readExcelXlsxMap = new HashMap<String,Object>();
 		readExcelXlsxMap.put("code","-1");
 		readExcelXlsxMap.put("msg","上传失败！");
@@ -742,10 +761,6 @@ public class DataImportController {
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 			Date date = new Date();
 			String TIME = new String(df.format(date));
-
-			//String userID = Auth.getLoginUser(session).getId().toString();
-			//String userID = (String)session.getAttribute("userID");//这块是临时写死
-			String userID = "1";//这块是临时写死
 
 			String eventId = "";
 			if(!MyUtils.isBlank(userID)){
@@ -827,6 +842,7 @@ public class DataImportController {
 			// 行数(表头的目录不需要，从3开始)
 			for (int i = 2; i <= rowcount; i++) {
                 dataImport = new DataImport();
+				dataImport.setDomainId(domainId);
                 // 行
                 XSSFRow row = sheet.getRow(i);
                 // 列编码大于0 获取单元格内容 存入DataImport实体类

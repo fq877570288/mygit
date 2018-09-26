@@ -876,8 +876,11 @@
 
   <!-- 分派任务列表 -->
   <sql id="Sql_AllocationWhere">
+    <if test="domainId != null and domainId != ''">
+      and d.domain_id = #{domainId}
+    </if>
     <if test="businessCode != null and businessCode != ''">
-      and d.BUSINESS_CODE LIKE '%${businessCode}%'
+      and d.BUSINESS_CODE = #{businessCode}
     </if>
     <if test="deptMeshName != null and deptMeshName != ''">
       and p1.dept_name LIKE '%${deptMeshName}%'
@@ -901,7 +904,7 @@
       and d.TASK_TYPE_ID = #{taskTypeId}
     </if>
     <if test="taskCode != null and taskCode != ''">
-      and d.TASK_CODE LIKE '%${taskCode}%'
+      and d.TASK_CODE = #{taskCode}
     </if>
     <if test="defultPhone != null and defultPhone != ''">
       and d.DEFULT_PHONE LIKE '%${defultPhone}%'

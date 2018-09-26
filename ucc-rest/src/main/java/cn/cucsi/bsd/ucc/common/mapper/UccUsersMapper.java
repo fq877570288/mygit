@@ -72,4 +72,6 @@ public interface UccUsersMapper {
     UccUsers selectByExtNum(Integer extNum);
 
     UccUsers selectByPrimaryKey2(String userId);
+
+    List<String> selectSameDeptUserIdByUserId(String userId);
 }

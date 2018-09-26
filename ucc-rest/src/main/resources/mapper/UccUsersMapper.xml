@@ -572,4 +572,15 @@
     a.user_id = #{id,jdbcType=VARCHAR}
   </select>
 
+  <!--  根据UserID查询本部门下的所有用户ID by wangxiaoyu -->
+  <select id="selectSameDeptUserIdByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT
+	  a.user_id
+    FROM
+        ucc_users a
+        LEFT JOIN user_dept b ON a.user_id = b.user_id
+        LEFT JOIN ucc_depts c ON c.dept_id = b.dept_id
+    WHERE a.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
 </mapper>
