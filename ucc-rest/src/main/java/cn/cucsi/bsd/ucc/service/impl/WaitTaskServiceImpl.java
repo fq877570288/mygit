@@ -38,13 +38,17 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 		try {
 			// 部门
 			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-
-			taskDetailSearch.setTaskStatus("1");
-			taskDetailSearch.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
-
-			// 分页查询
-			taskDetailSearch.setup(taskDetailMapper.selectwaitBySearchCount(taskDetailSearch),taskDetailSearch.getShowLines());
-			return taskDetailMapper.selectwaitBySearch(taskDetailSearch);
+			if(!MyUtils.isBlank(uccDeptsList)){
+				taskDetailSearch.setTaskStatus("1");
+				taskDetailSearch.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
+				System.out.println("部门id:::" + uccDeptsList.get(0).getDeptId().toString());
+				// 分页查询
+				taskDetailSearch.setup(taskDetailMapper.selectwaitBySearchCount(taskDetailSearch),taskDetailSearch.getShowLines());
+				return taskDetailMapper.selectwaitBySearch(taskDetailSearch);
+			}else{
+				System.out.println("根据用户ID查询不到部门信息！");
+				return null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("待办任务列表查询时发生异常！");
@@ -116,7 +120,7 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 
 	@Override
 	@Transactional
-	public Map<String,Object> taskReceive(String userId, String taskDetailIds) throws Exception {
+	public Map<String,Object> taskReceive(String userId, String taskDetailIds,String domainId) throws Exception {
 
 		Map<String,Object> doTaskReceiveMap = new HashMap<String,Object>();
 		doTaskReceiveMap.put("msg", "任务接收操作失败!");
@@ -136,16 +140,7 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 			// 部门
 			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 			String deptID = uccDeptsList.get(0).getDeptId().toString();
-			UccUsers uccUsers = uccUserService.findOne(userId);
-			if(MyUtils.isBlank(uccUsers)){
-                doTaskReceiveMap.put("msg", "任务接收时 根据userId:::"+userId+"查询用户信息为空!");
-                return doTaskReceiveMap;
-            }
-			String domainId = uccUsers.getDomainId()==null?"":uccUsers.getDomainId();
-			if(MyUtils.isBlank(domainId)){
-                doTaskReceiveMap.put("msg", "任务接收时 用户userId:::"+userId+"查询租户ID为空!");
-                return doTaskReceiveMap;
-            }
+
 			for(String id : detailIds){
                 taskTransfer = new TaskTransfer();
                 String taskTransferUuid = generator.generate();

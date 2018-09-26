@@ -2,7 +2,6 @@ package cn.cucsi.bsd.ucc.common.beans;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.util.List;
 
 /***
@@ -13,17 +12,17 @@ import java.util.List;
 @ApiModel
 public class TaskReceiveCriteria {
 
-    @ApiModelProperty(value = "用户ID",required = true)
+    @ApiModelProperty(value = "用户ID",required = false)
     private String userId;
+
+    @ApiModelProperty(value = "用户ID列表",required = false)
+    private List<String> userIdList;
 
     @ApiModelProperty(value = "租户ID",required = true)
     private String domainId;
 
-    @ApiModelProperty(value = "任务ID",required = true)
-    private String  taskDetailIds;
-
-    @ApiModelProperty(value = "任务ID",required = false)
-    private List<String> taskDetailIdListForWait;
+    @ApiModelProperty(value = "任务ID列表",required = false)
+    private List<String> taskDetailIdsList;
 
     public String getUserId() {
         return userId;
@@ -33,27 +32,27 @@ public class TaskReceiveCriteria {
         this.userId = userId;
     }
 
-    public String getTaskDetailIds() {
-        return taskDetailIds;
-    }
-
-    public void setTaskDetailIds(String taskDetailIds) {
-        this.taskDetailIds = taskDetailIds;
-    }
-
-    public List<String> getTaskDetailIdListForWait() {
-        return taskDetailIdListForWait;
-    }
-
-    public void setTaskDetailIdListForWait(List<String> taskDetailIdListForWait) {
-        this.taskDetailIdListForWait = taskDetailIdListForWait;
-    }
-
     public String getDomainId() {
         return domainId;
     }
 
     public void setDomainId(String domainId) {
         this.domainId = domainId;
+    }
+
+    public List<String> getUserIdList() {
+        return userIdList;
+    }
+
+    public void setUserIdList(List<String> userIdList) {
+        this.userIdList = userIdList;
+    }
+
+    public List<String> getTaskDetailIdsList() {
+        return taskDetailIdsList;
+    }
+
+    public void setTaskDetailIdsList(List<String> taskDetailIdsList) {
+        this.taskDetailIdsList = taskDetailIdsList;
     }
 }

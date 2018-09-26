@@ -1,5 +1,7 @@
 package cn.cucsi.bsd.ucc.common.untils;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -248,11 +250,34 @@ public class MyUtils extends org.apache.commons.lang.StringUtils{
         return DateTimes;
     }
 
-    /*public static void main(String[] args) {
-        long aa = 544;
-        System.out.println(MyUtils.formatDateTime(544));
+    /**
+     * 将一个list均分成n个list,主要通过偏移量来实现的
+     * add by wangxiaoyu
+     * 2018-09-26
+     */
+    public static <T> List<List<T>> averageAssign(List<T> source, int n) {
+        List<List<T>> result = new ArrayList<List<T>>();
+        int remaider = source.size() % n;  //(先计算出余数)
+        int number = source.size() / n;  //然后是商
+        int offset = 0;//偏移量
+        for (int i = 0; i < n; i++) {
+            List<T> value = null;
+            if (remaider > 0) {
+                value = source.subList(i * number + offset, (i + 1) * number + offset + 1);
+                remaider--;
+                offset++;
+            } else {
+                value = source.subList(i * number + offset, (i + 1) * number + offset);
+            }
+            result.add(value);
+        }
+        return result;
+    }
 
+   /*public static void main(String[] args) {
+        List<String> ls = Arrays.asList("1,2,3,4,5,6,7,8,9,1,2,4,5,6,7,7,6,6,6,6,6,66".split(","));
+        List<List<String>> ll = MyUtils.averageAssign(ls,1);
+
+        System.out.println(ll);
     }*/
-
-
 }

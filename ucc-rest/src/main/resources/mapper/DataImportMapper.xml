@@ -45,6 +45,7 @@
     <result column="PON_LOGO" property="ponLogo" jdbcType="VARCHAR" />
     <result column="PHONE_NUMBER2" property="phoneNumber2" jdbcType="VARCHAR" />
     <result column="PHONE_NUMBER1" property="phoneNumber1" jdbcType="VARCHAR" />
+    <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     DATA_IMPORT_ID, IMPORT_BATCH, IMPORT_PERSON_ID, IMPORT_TIME, BUSINESS_CODE, TASK_TYPE_NAME, 
@@ -54,7 +55,7 @@
     CUSTOMFIELDS13, CUSTOMFIELDS14, CUSTOMFIELDS15, RESPONSIBLE, NET_STOP, PACKAGE_NAME, 
     CONTRACT_NAME, CONTRACT_START_TIME, CONTRACT_END_TIME, ACTIVATION_TIME, DEVELOPMENT_DEPT,
     PHONE_NUMBER2, PHONE_NUMBER1, CONTACTS, USER_NAME, TARIFF_NAME, INSTALLED_ADDRESS, STATUS, 
-    PON_LOGO
+    PON_LOGO,domain_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -80,7 +81,7 @@
       CONTRACT_START_TIME, CONTRACT_END_TIME, ACTIVATION_TIME, 
       DEVELOPMENT_DEPT,
       PHONE_NUMBER2, PHONE_NUMBER1, CONTACTS, USER_NAME, TARIFF_NAME, INSTALLED_ADDRESS, STATUS, 
-      PON_LOGO)
+      PON_LOGO,domain_id)
     values (#{dataImportId,jdbcType=VARCHAR}, 
       #{importBatch,jdbcType=VARCHAR}, #{importPersonId,jdbcType=VARCHAR}, #{importTime,jdbcType=TIMESTAMP}, 
       #{businessCode,jdbcType=VARCHAR}, #{taskTypeName,jdbcType=VARCHAR}, #{deptMeshName,jdbcType=VARCHAR}, 
@@ -95,7 +96,7 @@
       #{contractStartTime,jdbcType=VARCHAR}, #{contractEndTime,jdbcType=VARCHAR}, #{activationTime,jdbcType=VARCHAR}, 
       #{developmentDept,jdbcType=VARCHAR}, #{phoneNumber2,jdbcType=VARCHAR}, #{phoneNumber1,jdbcType=VARCHAR}, 
       #{contacts,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{tariffName,jdbcType=VARCHAR}, 
-      #{installedAddress,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{ponLogo,jdbcType=VARCHAR})
+      #{installedAddress,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{ponLogo,jdbcType=VARCHAR}, #{domainId,jdbcType=VARCHAR})
   </insert>
   
   <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.DataImport" >
@@ -230,6 +231,9 @@
       <if test="ponLogo != null" >
         PON_LOGO,
       </if>
+      <if test="domainId != null" >
+        domain_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="dataImportId != null" >
@@ -361,6 +365,9 @@
       <if test="ponLogo != null" >
         #{ponLogo,jdbcType=VARCHAR},
       </if>
+      <if test="domainId != null" >
+        #{domainId,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.DataImport" >
@@ -468,6 +475,9 @@
       <if test="developmentDept != null" >
         DEVELOPMENT_DEPT = #{developmentDept,jdbcType=VARCHAR},
       </if>
+      <if test="domainId != null" >
+        domain_id = #{domainId,jdbcType=VARCHAR},
+      </if>
     </set>
     where DATA_IMPORT_ID = #{dataImportId,jdbcType=VARCHAR}
   </update>
@@ -506,7 +516,8 @@
       CONTRACT_START_TIME = #{contractStartTime,jdbcType=VARCHAR},
       CONTRACT_END_TIME = #{contractEndTime,jdbcType=VARCHAR},
       ACTIVATION_TIME = #{activationTime,jdbcType=VARCHAR},
-      DEVELOPMENT_DEPT = #{developmentDept,jdbcType=VARCHAR}
+      DEVELOPMENT_DEPT = #{developmentDept,jdbcType=VARCHAR},
+      domain_id = #{domainId,jdbcType=VARCHAR}
     where DATA_IMPORT_ID = #{dataImportId,jdbcType=VARCHAR}
   </update>
   
@@ -526,7 +537,7 @@
       CONTRACT_START_TIME, CONTRACT_END_TIME, ACTIVATION_TIME, 
       DEVELOPMENT_DEPT,
       PHONE_NUMBER2, PHONE_NUMBER1, CONTACTS, USER_NAME, TARIFF_NAME, INSTALLED_ADDRESS, STATUS, 
-      PON_LOGO)
+      PON_LOGO,domain_id)
 	   values 
 		<foreach collection="list" item="record" index="index" separator=",">
 		(#{record.dataImportId,jdbcType=VARCHAR}, #{record.importBatch,jdbcType=VARCHAR}, #{record.importPersonId,jdbcType=VARCHAR}, #{record.importTime,jdbcType=TIMESTAMP}, 
@@ -542,7 +553,7 @@
 		 #{record.contractStartTime,jdbcType=VARCHAR}, #{record.contractEndTime,jdbcType=VARCHAR}, #{record.activationTime,jdbcType=VARCHAR}, 
 		 #{record.developmentDept,jdbcType=VARCHAR}, #{record.phoneNumber2,jdbcType=VARCHAR}, #{record.phoneNumber1,jdbcType=VARCHAR}, 
 		 #{record.contacts,jdbcType=VARCHAR}, #{record.userName,jdbcType=VARCHAR}, #{record.tariffName,jdbcType=VARCHAR}, 
-		 #{record.installedAddress,jdbcType=VARCHAR}, #{record.status,jdbcType=VARCHAR}, #{record.ponLogo,jdbcType=VARCHAR})
+		 #{record.installedAddress,jdbcType=VARCHAR}, #{record.status,jdbcType=VARCHAR}, #{record.ponLogo,jdbcType=VARCHAR}, #{record.domainId,jdbcType=VARCHAR})
 		</foreach>
 	</insert>
   
@@ -553,6 +564,9 @@
 		</if>
 		<if test="taskTypeName != null and taskTypeName != ''">
 			and a.TASK_TYPE_NAME = #{taskTypeName} 
+		</if>
+		<if test="domainId != null and domainId != ''">
+			and a.domain_id = #{domainId}
 		</if>
 		<if test="deptMeshName != null and deptMeshName != ''">
 			and a.DEPT_MESH_NAME LIKE '%${deptMeshName}%'

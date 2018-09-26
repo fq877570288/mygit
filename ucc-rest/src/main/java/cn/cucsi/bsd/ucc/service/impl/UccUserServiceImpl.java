@@ -4,9 +4,7 @@ import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
-import cn.cucsi.bsd.ucc.data.repo.UccDeptsRepository;
 import cn.cucsi.bsd.ucc.data.repo.UccUserRepository;
-import cn.cucsi.bsd.ucc.data.repo.UserDeptRepository;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import cn.cucsi.bsd.ucc.data.specs.UccUserSpecs;
 import cn.cucsi.bsd.ucc.service.UserDeptService;
@@ -21,6 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UccUserServiceImpl implements UccUserService{
@@ -202,17 +205,18 @@ public class UccUserServiceImpl implements UccUserService{
     }
 
 
+
     /**
      * 根据部门信息查询用户列表
      * @param userDeptCriterias
      * @return
      */
-    public ResultBean_New<List<UccUserByDept>> userListByDept(List<UserDeptCriteria> userDeptCriterias){
+    public ResultBean_New<List<UccUserByDept>> userListByDept(List<UserDeptCriteria> userDeptCriterias) {
         ResultBean_New<List<UccUserByDept>> resultBean = new ResultBean_New<>();
 
-        if(userDeptCriterias != null && userDeptCriterias.size() > 0){
+        if (userDeptCriterias != null && userDeptCriterias.size() > 0) {
             List<UccUserByDept> uccUserByDeptList = new ArrayList<>();
-            for(int size = 0; size < userDeptCriterias.size(); size++){
+            for (int size = 0; size < userDeptCriterias.size(); size++) {
                 UserDeptCriteria userDeptCriteria = userDeptCriterias.get(size);
 
                 UccUserByDept uccUserByDept = new UccUserByDept();
@@ -220,9 +224,9 @@ public class UccUserServiceImpl implements UccUserService{
                 uccUserByDept.setDeptName(userDeptCriteria.getDeptName());
                 List<UccUsers> uccUsers = uccUsersMapper.selectByDept(userDeptCriteria);
 
-                if(uccUsers != null && uccUsers.size() > 0){
+                if (uccUsers != null && uccUsers.size() > 0) {
                     List<UccUsers> users = new ArrayList<>();
-                    for(int i = 0; i < uccUsers.size(); i++){
+                    for (int i = 0; i < uccUsers.size(); i++) {
                         UccUsers user = new UccUsers();
                         user.setUserId(uccUsers.get(i).getUserId());
                         user.setUserName(uccUsers.get(i).getUserName());
@@ -237,5 +241,11 @@ public class UccUserServiceImpl implements UccUserService{
         }
 
         return resultBean;
+    }
+
+    @Override
+    public List<String> selectSameDeptUserIdByUserId(String userId) throws Exception {
+        return uccUsersMapper.selectSameDeptUserIdByUserId(userId);
+
     }
 }

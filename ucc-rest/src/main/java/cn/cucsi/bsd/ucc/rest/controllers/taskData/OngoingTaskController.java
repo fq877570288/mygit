@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
 
+import cn.cucsi.bsd.ucc.common.beans.SaveAndGoonDetailCriteria;
 import cn.cucsi.bsd.ucc.common.beans.SaveDetailCriteria;
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.common.beans.TaskOutCallCriteria;
@@ -234,8 +235,12 @@ public class OngoingTaskController {
 		saveDetailMap.put("msg","保存失败！");
 		saveDetailMap.put("code","-1");
 		try {
-			ongoingTaskService.saveDetail(callinfo, userId, cdrId,domainId);
-			saveDetailMap.put("msg","保存成功！");
+            Map<String,Object> doSaveDetailMap = ongoingTaskService.saveDetail(callinfo, userId, cdrId,domainId);
+            if(doSaveDetailMap.get("code").equals("-1")){
+                saveDetailMap.put("msg",doSaveDetailMap.get("msg"));
+                return saveDetailMap;
+            }
+            saveDetailMap.put("msg","保存成功！");
 			saveDetailMap.put("code","0");
 			return saveDetailMap;
 
@@ -249,26 +254,39 @@ public class OngoingTaskController {
 	/**
 	 * 保存并继续
 	 */
-	/*@ApiOperation(value="保存并继续", notes="保存并继续")
-	@RequestMapping(value = "/ongoing/saveAndGoonDetail", method= RequestMethod.POST)
-	public String saveAndGoonDetail(HttpSession session, String callinfo, String userId, String taskTypeId, String cdrId, String businessCode) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
+    @ApiOperation(value="保存并继续", notes="保存并继续")
+    @RequestMapping(value = "/ongoing/saveAndGoonDetail", method= RequestMethod.POST)
+	public Map<String,Object> saveAndGoonDetail(@RequestBody SaveAndGoonDetailCriteria saveAndGoonDetailCriteria, HttpSession session) {
+
+        Map<String,Object> saveDetailMap = new HashMap<String,Object>();
+        saveDetailMap.put("msg","保存并继续操作失败！");
+        saveDetailMap.put("code","-1");
+
+        String callinfo = saveAndGoonDetailCriteria.getCallinfo()==null?"":saveAndGoonDetailCriteria.getCallinfo();
+        String userId = saveAndGoonDetailCriteria.getUserId()==null?"":saveAndGoonDetailCriteria.getUserId();
+        String taskTypeId = saveAndGoonDetailCriteria.getTaskTypeId()==null?"":saveAndGoonDetailCriteria.getTaskTypeId();
+        String cdrId = saveAndGoonDetailCriteria.getCdrId()==null?"":saveAndGoonDetailCriteria.getCdrId();
+        String businessCode = saveAndGoonDetailCriteria.getBusinessCode()==null?"":saveAndGoonDetailCriteria.getBusinessCode();
+        String domainId = saveAndGoonDetailCriteria.getDomainId()==null?"":saveAndGoonDetailCriteria.getDomainId();
+
 		String businesscode = "";
 		session.setAttribute("selectTaskTypeId", taskTypeId);
 		try {
-			businesscode = ongoingTaskService.saveAndGoonDetail(callinfo, userId, taskTypeId, cdrId, businessCode);
+			businesscode = ongoingTaskService.saveAndGoonDetail(callinfo, userId, taskTypeId, cdrId, businessCode,domainId);
 			if(businesscode != null && !"".equals(businesscode)){
 				businesscode = AESUtil.encrypt(businesscode, this.aesPwd);
-				json = mapper.writeValueAsString(businesscode);
+                saveDetailMap.put("businesscode",businesscode);
 			}
+            saveDetailMap.put("msg","操作成功！");
+            saveDetailMap.put("code","0");
+
+            return saveDetailMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+            return saveDetailMap;
 		}
-		return json;
-	}*/
+	}
 	
 	/***
 	 * 保存变更号码

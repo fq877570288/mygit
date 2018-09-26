@@ -27,5 +27,5 @@ public interface WaitTaskService {
 	/***
 	 * 任务接收
 	 */
-	Map<String,Object> taskReceive(String userId, String taskDetailIds) throws Exception;
+	Map<String,Object> taskReceive(String userId, String taskDetailIds,String domainId) throws Exception;
 }

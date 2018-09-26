@@ -39,7 +39,7 @@ public interface OngoingTaskService {
 	/***
 	 * 保存任务明细
 	 */
-	void saveDetail(String callinfo, String userId, String cdrId,String domainId) throws Exception;
+	Map<String,Object> saveDetail(String callinfo, String userId, String cdrId,String domainId) throws Exception;
 
 
 	/***
