@@ -234,7 +234,7 @@ public class PbxCdrsSpecs {
         }
         if(!Strings.isNullOrEmpty(PbxCdrsCriteria.getExtsNum())){
             specs = specs.and(firstCalleeLike(PbxCdrsCriteria.getExtsNum()));
-            specs = specs.and(firstCallerLike(PbxCdrsCriteria.getExtsNum()));
+            specs = specs.or(firstCallerLike(PbxCdrsCriteria.getExtsNum()));
         }
         if(!Strings.isNullOrEmpty(PbxCdrsCriteria.getAftergwId())){
             specs = specs.and(aftergwEqual(PbxCdrsCriteria.getAftergwId()));
