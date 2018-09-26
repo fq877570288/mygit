@@ -21,6 +21,7 @@ public class TaskDetail {
     private String taskDetailId;//主键
     private String businessCode;//业务编码
     private String domainId;//租户ID
+    private String taskTypeName; //任务类型名称
 
     @JsonIgnore
     private String taskTypeId;//任务类型
@@ -111,7 +112,6 @@ public class TaskDetail {
     @JsonIgnore
     private String activationTime;//激活时间
 
-    @JsonIgnore
     private String developmentDept;//发展部门
 
     @JsonIgnore
@@ -149,10 +149,8 @@ public class TaskDetail {
     @JsonIgnore
     private String roperateDeptId;//任务处理部
 
-    @JsonIgnore
     private String userName; //用户名称
 
-    @JsonIgnore
     private String defultPhone;//默认显示联系电话
 
     @JsonIgnore
@@ -640,5 +638,13 @@ public class TaskDetail {
 
     public void setDomainId(String domainId) {
         this.domainId = domainId;
+    }
+
+    public String getTaskTypeName() {
+        return taskTypeName;
+    }
+
+    public void setTaskTypeName(String taskTypeName) {
+        this.taskTypeName = taskTypeName;
     }
 }

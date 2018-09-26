@@ -5,9 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
+
+import cn.cucsi.bsd.ucc.common.beans.SaveDetailCriteria;
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.common.beans.TaskOutCallCriteria;
 import cn.cucsi.bsd.ucc.common.untils.AESUtil;
+import cn.cucsi.bsd.ucc.common.untils.Auth;
+import cn.cucsi.bsd.ucc.common.untils.ServiceHelper;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.OngoingTaskService;
 import cn.cucsi.bsd.ucc.service.UccCustomersService;
@@ -76,9 +80,9 @@ public class OngoingTaskController {
 	/***
 	 * 跳转到任务外呼页面
 	 */
-	/*@ApiOperation(value="跳转到任务外呼页面", notes="跳转到任务外呼页面")
+	@ApiOperation(value="跳转到任务外呼页面", notes="跳转到任务外呼页面")
 	@RequestMapping(value = "/taskOutCall", method= RequestMethod.POST)
-	public Map<String,Object> taskOutCall(@RequestBody TaskOutCallCriteria taskOutCallCriteria) {
+	public Map<String,Object> taskOutCall(@RequestBody TaskOutCallCriteria taskOutCallCriteria,HttpSession session) {
 
 		Map<String,Object> taskOutCallMap = new HashMap<String,Object>();
 		taskOutCallMap.put("msg","操作失败！");
@@ -88,7 +92,6 @@ public class OngoingTaskController {
 		String domainId = taskOutCallCriteria.getDomainId()==null?"": taskOutCallCriteria.getDomainId();
 		String userId = taskOutCallCriteria.getUserId()==null?"": taskOutCallCriteria.getUserId();
 
-		businessCode = AESUtil.decrypt(businessCode, this.aesPwd);
 		UccCustomers uccCustomers = null;
 		List<TaskDetail> taskDetailList = null;
 		List<TaskTransfer> taskTransferList = null;
@@ -97,6 +100,7 @@ public class OngoingTaskController {
 		String [] customfieldNames = null;
 		String customfields = "";
 		try {
+			businessCode = AESUtil.decrypt(businessCode, this.aesPwd);
 			// 根据businessCode 查询客户基本信息
 			uccCustomers = uccCustomersService.selectByBusinessCode(businessCode,domainId);
 			// 查询任务列表
@@ -122,18 +126,19 @@ public class OngoingTaskController {
 				customfields = user.getCustomfieldnames();
 			}
 			//model.addAttribute("userMobile", user.getTel());
+			taskOutCallMap.put("userMobile", user.getTel());
 			
 			// 查询短信模板
-			*//*SystemConfig systemConfig = commonService.selectSystemConfigByName("templateSMS");
+			/*SystemConfig systemConfig = commonService.selectSystemConfigByName("templateSMS");
 			if(systemConfig != null && systemConfig.getValue() != null){
 				String [] templateSMS = systemConfig.getValue().split("#");
 				model.addAttribute("templateSMSBefore", templateSMS[0]);
 				if(templateSMS.length > 2){
 					model.addAttribute("templateSMSAfter", templateSMS[2]);
 				}
-			}*//*
+			}*/
 			// 脱敏/加密处理
-			*//*if(uccCustomers != null){
+			if(uccCustomers != null){
 				boolean isDesensitize = Auth.UserFlagCanDo(session, 1507);
 				if(uccCustomers.getPhone() != null && !"".equals(uccCustomers.getPhone())){
 					if(isDesensitize){
@@ -168,41 +173,31 @@ public class OngoingTaskController {
 					}
 					uccCustomers.setEncryptDefultPhone(AESUtil.encrypt(uccCustomers.getDefultPhone(), this.aesPwd));
 				}
-				if(uccCustomers.getChangePhone1() != null && !"".equals(uccCustomers.getChangePhone1())){
+				if(uccCustomers.getChangephone1() != null && !"".equals(uccCustomers.getChangephone1())){
 					if(isDesensitize) {
-						uccCustomers.setDesensitizeChangePhone1(ServiceHelper.desensitizeMobilePhone(uccCustomers.getChangePhone1()));
+						uccCustomers.setDesensitizeChangePhone1(ServiceHelper.desensitizeMobilePhone(uccCustomers.getChangephone1()));
 					}else{
-						uccCustomers.setDesensitizeChangePhone1(uccCustomers.getChangePhone1());
+						uccCustomers.setDesensitizeChangePhone1(uccCustomers.getChangephone1());
 					}
-					uccCustomers.setEncryptChangePhone1(AESUtil.encrypt(uccCustomers.getChangePhone1(), this.aesPwd));
+					uccCustomers.setEncryptChangePhone1(AESUtil.encrypt(uccCustomers.getChangephone1(), this.aesPwd));
 				}
-				if(uccCustomers.getChangePhone2() != null && !"".equals(uccCustomers.getChangePhone2())){
+				if(uccCustomers.getChangephone2() != null && !"".equals(uccCustomers.getChangephone2())){
 					if(isDesensitize) {
-						uccCustomers.setDesensitizeChangePhone2(ServiceHelper.desensitizeMobilePhone(uccCustomers.getChangePhone2()));
+						uccCustomers.setDesensitizeChangePhone2(ServiceHelper.desensitizeMobilePhone(uccCustomers.getChangephone2()));
 					}else{
-						uccCustomers.setDesensitizeChangePhone2(uccCustomers.getChangePhone2());
+						uccCustomers.setDesensitizeChangePhone2(uccCustomers.getChangephone2());
 					}
-					uccCustomers.setEncryptChangePhone2(AESUtil.encrypt(uccCustomers.getChangePhone2(), this.aesPwd));
+					uccCustomers.setEncryptChangePhone2(AESUtil.encrypt(uccCustomers.getChangephone2(), this.aesPwd));
 				}
-				if(uccCustomers.getChangePhone3() != null && !"".equals(uccCustomers.getChangePhone3())){
+				if(uccCustomers.getChangephone3() != null && !"".equals(uccCustomers.getChangephone3())){
 					if(isDesensitize) {
-						uccCustomers.setDesensitizeChangePhone3(ServiceHelper.desensitizeMobilePhone(uccCustomers.getChangePhone3()));
+						uccCustomers.setDesensitizeChangePhone3(ServiceHelper.desensitizeMobilePhone(uccCustomers.getChangephone3()));
 					}else{
-						uccCustomers.setDesensitizeChangePhone3(uccCustomers.getChangePhone3());
+						uccCustomers.setDesensitizeChangePhone3(uccCustomers.getChangephone3());
 					}
-					uccCustomers.setEncryptChangePhone3(AESUtil.encrypt(uccCustomers.getChangePhone3(), this.aesPwd));
+					uccCustomers.setEncryptChangePhone3(AESUtil.encrypt(uccCustomers.getChangephone3(), this.aesPwd));
 				}
-			}*//*
-			*//*model.addAttribute("userId", Auth.getLoginUser(session).getId());
-			model.addAttribute("uccCustomers", uccCustomers);
-			model.addAttribute("taskDetailIds", taskDetailIds);
-			model.addAttribute("taskDetailList", taskDetailList);
-			model.addAttribute("taskTransferList", taskTransferList);
-			model.addAttribute("taskDetailCount", taskDetailCount);
-			model.addAttribute("customfieldNames", customfieldNames);
-			model.addAttribute("customfields", customfields);
-			model.addAttribute("js_list", new String[] { "page/taskTypeSelect.js", "page/taskOutCall.js", "chat/taskOutcall.js"});
-			*//*
+			}
 			taskOutCallMap.put("userMobile", user.getTel());
 			taskOutCallMap.put("uccCustomers", uccCustomers);
 			taskOutCallMap.put("taskDetailIds", taskDetailIds);
@@ -221,14 +216,19 @@ public class OngoingTaskController {
 			logger.error(e.getMessage(), e);
 			return taskOutCallMap;
 		}
-	}*/
+	}
 
 	/***
 	 * 保存任务明细
 	 */
-	/*@ApiOperation(value="保存任务明细", notes="保存任务明细")
+	@ApiOperation(value="保存任务明细", notes="保存任务明细")
 	@RequestMapping(value = "/ongoing/saveDetail", method= RequestMethod.POST)
-	public Map<String,Object> saveDetail(String callinfo, String cdrId, String userId,String domainId) {
+	public Map<String,Object> saveDetail(@RequestBody SaveDetailCriteria saveDetailCriteria) {
+
+		String callinfo = saveDetailCriteria.getCallinfo()==null?"":saveDetailCriteria.getCallinfo();
+		String cdrId = saveDetailCriteria.getCdrId()==null?"":saveDetailCriteria.getCdrId();
+		String userId = saveDetailCriteria.getUserId()==null?"":saveDetailCriteria.getUserId();
+		String domainId = saveDetailCriteria.getDomainId()==null?"":saveDetailCriteria.getDomainId();
 
 		Map<String,Object> saveDetailMap = new HashMap<String,Object>();
 		saveDetailMap.put("msg","保存失败！");
@@ -244,7 +244,7 @@ public class OngoingTaskController {
 			logger.error(e.getMessage(), e);
 			return saveDetailMap;
 		}
-	}*/
+	}
 
 	/**
 	 * 保存并继续

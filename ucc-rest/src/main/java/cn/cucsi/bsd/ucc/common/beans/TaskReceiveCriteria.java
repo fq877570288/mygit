@@ -16,6 +16,9 @@ public class TaskReceiveCriteria {
     @ApiModelProperty(value = "用户ID",required = true)
     private String userId;
 
+    @ApiModelProperty(value = "租户ID",required = true)
+    private String domainId;
+
     @ApiModelProperty(value = "任务ID",required = true)
     private String  taskDetailIds;
 
@@ -44,5 +47,13 @@ public class TaskReceiveCriteria {
 
     public void setTaskDetailIdListForWait(List<String> taskDetailIdListForWait) {
         this.taskDetailIdListForWait = taskDetailIdListForWait;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }

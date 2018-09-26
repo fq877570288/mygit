@@ -1,39 +1,41 @@
 package cn.cucsi.bsd.ucc.common.mapper;
 
+import java.util.List;
+import java.util.Map;
 import cn.cucsi.bsd.ucc.common.beans.TaskRecordSearch;
 import cn.cucsi.bsd.ucc.data.domain.TaskRecord;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-import java.util.Map;
 
 @Mapper
 @Repository
 public interface TaskRecordMapper {
 
-    int deleteByPrimaryKey(String taskRecordId);
+	int insert(TaskRecord record);
 
-    int insert(TaskRecord record);
+	List<TaskRecord> selectAll(TaskRecordSearch search);
 
-    int insertSelective(TaskRecord record);
+	int selectBySearchCount(TaskRecordSearch search);
 
-    TaskRecord selectByPrimaryKey(String taskRecordId);
+	int deleteByTime(String recordTime);
 
-    int updateByPrimaryKeySelective(TaskRecord record);
+	List<TaskRecord> selectBySearch(TaskRecordSearch search);
 
-    int updateByPrimaryKey(TaskRecord record);
+	TaskRecord selectById(String taskRecordId);
 
-    /****
-     * 批量插入
-     */
-    int insertGroup(Map<String, Object> map) throws Exception;
+	/****
+	 * 批量插入
+	 */
+	int insertGroup(Map<String, Object> map) throws Exception;
+	
+	/****
+	 * 分页查询
+	 */
+	int selectAllCount(TaskRecordSearch search) throws Exception;
 
-    /****
-     * 分页查询
-     */
-    int selectAllCount (TaskRecordSearch search) throws Exception;
-
-    /****
-     * 按时间删除归档流转表
-     */
-    int deleteTaskRecordTransferByTime(String time) throws Exception;
+	/****
+	 * 按时间删除归档流转表
+	 */
+	int deleteTaskRecordTransferByTime(String time) throws Exception;
+	
 }

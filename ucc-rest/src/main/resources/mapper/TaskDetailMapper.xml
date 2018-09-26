@@ -61,6 +61,7 @@
     <result column="CALL_MEMO" property="callMemo" jdbcType="VARCHAR" />
     <result column="CALL_RESULT" property="callResult" jdbcType="VARCHAR" />
     <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
+    <result column="TASK_TYPE_NAME" property="taskTypeName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TASK_DETAIL_ID, BUSINESS_CODE, TASK_TYPE_ID, DEPT_MESH_ID, DEPT_AREA_ID, DEPT_AGENCY_ID, 
@@ -82,7 +83,7 @@
         b.TRANSFER_STATUS
     FROM
         OC_TASK_DETAIL AS a
-    INNER JOIN ucc_customers AS c ON a.domain_id = c.domain_id AND a.BUSINESS_CODE = c.businesscode
+    LEFT JOIN ucc_customers AS c ON a.domain_id = c.domain_id AND a.BUSINESS_CODE = c.businesscode
     LEFT JOIN OC_TASK_TRANSFER AS b ON a.TASK_DETAIL_ID = b.TASK_DETAIL_ID
     where 1=1 AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
   </select>
@@ -690,14 +691,13 @@
       b.cust_id as cust_id
     FROM
       OC_TASK_DETAIL AS a
-    INNER JOIN ucc_customers AS b ON a.BUSINESS_CODE = b.businesscode and a.domain_id = b.domain_id
+    LEFT JOIN ucc_customers AS b ON a.BUSINESS_CODE = b.businesscode and a.domain_id = b.domain_id
     LEFT JOIN ucc_users AS uu ON a.USER_ID = uu.user_id
     <if test='taskCountsFlag != null and taskCountsFlag =="2" '>
     LEFT JOIN OC_TASK_TRANSFER AS t on a.TASK_DETAIL_ID = t.TASK_DETAIL_ID
     </if>
     WHERE
        1 = 1
-    AND a.domain_id = b.domain_id
     <if test="taskCode != null ">
     AND a.TASK_CODE &gt; #{taskCode,jdbcType=VARCHAR}
     </if>
@@ -879,9 +879,6 @@
     <if test="businessCode != null and businessCode != ''">
       and d.BUSINESS_CODE LIKE '%${businessCode}%'
     </if>
-    <if test="taskTypeName != null and taskTypeName != ''">
-      and d.TASK_TYPE_ID = #{taskTypeName}
-    </if>
     <if test="deptMeshName != null and deptMeshName != ''">
       and p1.dept_name LIKE '%${deptMeshName}%'
     </if>
@@ -910,7 +907,7 @@
       and d.DEFULT_PHONE LIKE '%${defultPhone}%'
     </if>
     <if test="userName != null and userName != ''">
-      and c.name LIKE '%${userName}%'
+      and c.cust_name LIKE '%${userName}%'
     </if>
     <if test="importPersonId != null and importPersonId != ''">
       and d.IMPORT_PERSON_ID = #{importPersonId}
@@ -1021,10 +1018,9 @@
       count(d.TASK_DETAIL_ID)
     FROM
       OC_TASK_DETAIL d
-      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
     WHERE
       1 = 1
-      and d.domain_id = c.domain_id
     <include refid="Sql_AllocationWhere" />
   </select>
 
@@ -1033,20 +1029,22 @@
     SELECT
       d.TASK_DETAIL_ID,
       d.BUSINESS_CODE,
-      d.TASK_TYPE_ID,
+      o.TASK_TYPE_NAME,
       d.DEPT_MESH_ID,
       d.DEPT_AREA_ID,
       d.DEVELOPMENT_DEPT,
       d.TASK_CODE,
       c.cust_name AS USER_NAME,
+      d.USER_ID,
+      d.domain_id,
       d.DEFULT_PHONE,
       d.TASK_STATUS
     FROM
       OC_TASK_DETAIL d
-      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
+      LEFT JOIN OC_TASK_TYPE as o on d.TASK_TYPE_ID = o.TASK_TYPE_ID
     WHERE
-      1 = 1
-    and d.domain_id = c.domain_id
+    1 = 1
     <include refid="Sql_AllocationWhere" />
     order by d.TASK_CODE DESC
     <if test="begin != null and showLines != null and showLines != 0">
@@ -1060,10 +1058,8 @@
       d.TASK_DETAIL_ID
       FROM
       OC_TASK_DETAIL d
-      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
-    WHERE
-      1 = 1
-    and d.domain_id = c.domain_id
+      LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
+    WHERE 1=1
     <include refid="Sql_AllocationWhere" />
   </select>
 

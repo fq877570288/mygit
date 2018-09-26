@@ -22,7 +22,7 @@ public interface WaitTaskService {
 	/***
 	 * 任务回退
 	 */
-	void taskBack(TaskTransfer taskTransfer, String userId) throws Exception;
+	Map<String,Object> taskBack(TaskTransfer taskTransfer, String userId) throws Exception;
 
 	/***
 	 * 任务接收
