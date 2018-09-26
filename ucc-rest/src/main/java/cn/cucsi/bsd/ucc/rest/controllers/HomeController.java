@@ -3,23 +3,16 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.ShellProperties;
 import org.springframework.data.domain.Page;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
-import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Calendar;
 import java.util.List;
 
@@ -86,7 +79,7 @@ public class HomeController {
      */
     //@UserFlag
     @ApiOperation(value = "主页视图Plus", notes = "主页视图Plus", httpMethod = "GET")
-    @RequestMapping(value = "/index1.html",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/index1",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     public String IndexView1(String domainId,String userId,String DeptIdAndChildIds) throws Exception {
         JSONObject j = new JSONObject();
         try {
@@ -154,7 +147,7 @@ public class HomeController {
      */
     //@UserFlag(870)
     @ApiOperation(value = "监控中心", notes = "监控中心", httpMethod = "GET")
-    @RequestMapping(value= "/monitor.html",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @RequestMapping(value= "/monitor",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     public String MonitorView(String domainId)  throws Exception {
         JSONObject j = new JSONObject();
         try {
@@ -199,7 +192,7 @@ public class HomeController {
      */
     //@UserFlag(870)
     @ApiOperation(value = "员工详情", notes = "员工详情", httpMethod = "GET")
-    @RequestMapping(value = "/monitor/userInfo.html",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/monitor/userInfo",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     public String taskDetail(String userId,String extNum) throws Exception {
         JSONObject j = new JSONObject();
         try {
@@ -226,7 +219,7 @@ public class HomeController {
      */
     //@UserFlag
     @ApiOperation(value = "用户中心", notes = "用户中心", httpMethod = "GET")
-    @RequestMapping(value = "/user/center.html",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "/user/center",method = RequestMethod.GET,produces="application/json;charset=UTF-8")
     public String userCenterView(String userId) throws Exception  {
         JSONObject j = new JSONObject();
         try {
