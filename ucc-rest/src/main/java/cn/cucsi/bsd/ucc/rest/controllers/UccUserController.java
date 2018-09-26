@@ -165,8 +165,15 @@ public class UccUserController  {
         userDeptCriteria.setDeptId("4028e38165ea6d7f0165ea951c290000");
         userDeptCriteria.setDomainId("domain1");
         userDeptCriteria.setDeptName("部门666");
+
+        UserDeptCriteria userDeptCriteria1 = new UserDeptCriteria();
+        userDeptCriteria1.setDeptId("402881e565ea2d280165ea782e3c0000");
+        userDeptCriteria1.setDomainId("domain1");
+        userDeptCriteria1.setDeptName("部门555");
+
         List<UserDeptCriteria>  userDeptCriterias = new ArrayList<>();
         userDeptCriterias.add(userDeptCriteria);
+        userDeptCriterias.add(userDeptCriteria1);
 
         return uccUserService.userListByDept(userDeptCriterias);
     }
