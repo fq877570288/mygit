@@ -244,7 +244,7 @@ public class UccUserServiceImpl implements UccUserService{
     }
 
     @Override
-    public List<String> selectSameDeptUserIdByUserId(String userId) throws Exception {
+    public List<UccUsers> selectSameDeptUserIdByUserId(String userId) throws Exception {
         return uccUsersMapper.selectSameDeptUserIdByUserId(userId);
 
     }

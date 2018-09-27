@@ -69,32 +69,47 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 		}
 	}
 
+	/***
+	 * 保存任务明细
+	 */
 	@Override
-	public void saveChangePhone(String changePhone, String fPhone, String businessCode,String domainId) throws Exception {
-		
-		UccCustomers customer = new UccCustomers();
-		
-		if("changePhone1".equals(fPhone)){
-			customer.setChangephone1(changePhone==null?"":changePhone);
-			customer.setChangephone2("-1");
-			customer.setChangephone3("-1");
-		}else if("changePhone2".equals(fPhone)){
-			customer.setChangephone2(changePhone==null?"":changePhone);
-			customer.setChangephone1("-1");
-			customer.setChangephone3("-1");
-		}else if("changePhone3".equals(fPhone)){
-			customer.setChangephone3(changePhone==null?"":changePhone);
-			customer.setChangephone2("-1");
-			customer.setChangephone1("-1");
-		}
-		customer.setBusinesscode(businessCode);
-		customer.setDefultPhone(changePhone);
-		customer.setDomainId(domainId);
-		
-		if("defultPhone".equals(fPhone)){
-			uccCustomersMapper.updateDefultPhone(customer);
-		}else {
-			uccCustomersMapper.updateChangePhone(customer);
+	public Map<String,Object> saveChangePhone(String changePhone, String fPhone, String businessCode,String domainId) throws Exception {
+
+		Map<String,Object> dosaveChangePhoneMap = new HashMap<String,Object>();
+		dosaveChangePhoneMap.put("msg", "保存任务明细失败!");
+		dosaveChangePhoneMap.put("code", "-1");
+		try {
+			UccCustomers customer = new UccCustomers();
+
+			if("changePhone1".equals(fPhone)){
+                customer.setChangephone1(changePhone==null?"":changePhone);
+                customer.setChangephone2("-1");
+                customer.setChangephone3("-1");
+            }else if("changePhone2".equals(fPhone)){
+                customer.setChangephone2(changePhone==null?"":changePhone);
+                customer.setChangephone1("-1");
+                customer.setChangephone3("-1");
+            }else if("changePhone3".equals(fPhone)){
+                customer.setChangephone3(changePhone==null?"":changePhone);
+                customer.setChangephone2("-1");
+                customer.setChangephone1("-1");
+            }
+			customer.setBusinesscode(businessCode);
+			customer.setDefultPhone(changePhone);
+			customer.setDomainId(domainId);
+
+			if("defultPhone".equals(fPhone)){
+                uccCustomersMapper.updateDefultPhone(customer);
+            }else {
+                uccCustomersMapper.updateChangePhone(customer);
+            }
+			dosaveChangePhoneMap.put("code", "0");
+			dosaveChangePhoneMap.put("msg", "保存任务明细操作成功!");
+			return dosaveChangePhoneMap;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dosaveChangePhoneMap;
 		}
 	}
 

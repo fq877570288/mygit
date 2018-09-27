@@ -162,7 +162,8 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 			try {
 				Map<String, Object> taskTransfermap = new HashMap<String, Object>();
 				taskTransfermap.put("list", taskTransferList);
-				taskTransferMapper.insertGroup(taskTransfermap);
+				int recode = taskTransferMapper.insertGroup(taskTransfermap);
+				System.out.println("插入任务流转表返回结果 recode：：：" + recode);
 			} catch (Exception e) {
 				e.printStackTrace();
 				doTaskReceiveMap.put("msg", "任务接收时 插入任务流转表发生异常!");
@@ -171,6 +172,8 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 			// 更新任务状态
 			try {
 				for(TaskTransfer transfer : taskTransferList){
+					System.out.println("更新任务状态 任务ID：：：" + transfer.getTaskDetailId());
+					System.out.println("更新任务状态 任务状态：：：" + transfer.getTransferStatus());
                     taskDetailMapper.updateTaskStatus(transfer);
                 }
 			} catch (Exception e) {
