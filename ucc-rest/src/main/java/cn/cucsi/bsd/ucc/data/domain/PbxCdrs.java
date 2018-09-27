@@ -33,9 +33,9 @@ public class PbxCdrs {
     private Integer callTime;//接通时长
     private String hangupCause; //挂机原因
     private String hangupCauseStr;
-    private Integer aftergw;
-    private Integer afterivr;
-    private Integer afterqueue;
+    private String aftergw;
+    private String afterivr;
+    private String afterqueue;
     private String recordid1;//通话或者质检
     private String recordid2;//通话或者质检
     private Integer qc;//通话质检
@@ -220,32 +220,32 @@ public class PbxCdrs {
     }
 
     @Basic
-    @Column(name = "aftergw", nullable = true)
-    public Integer getAftergw() {
+    @Column(name = "aftergw", nullable = true,length = 32)
+    public String getAftergw() {
         return aftergw;
     }
 
-    public void setAftergw(Integer aftergw) {
+    public void setAftergw(String aftergw) {
         this.aftergw = aftergw;
     }
 
     @Basic
-    @Column(name = "afterivr", nullable = true)
-    public Integer getAfterivr() {
+    @Column(name = "afterivr", nullable = true,length = 32)
+    public String getAfterivr() {
         return afterivr;
     }
 
-    public void setAfterivr(Integer afterivr) {
+    public void setAfterivr(String afterivr) {
         this.afterivr = afterivr;
     }
 
     @Basic
-    @Column(name = "afterqueue", nullable = true)
-    public Integer getAfterqueue() {
+    @Column(name = "afterqueue", nullable = true , length = 32)
+    public String getAfterqueue() {
         return afterqueue;
     }
 
-    public void setAfterqueue(Integer afterqueue) {
+    public void setAfterqueue(String afterqueue) {
         this.afterqueue = afterqueue;
     }
 
