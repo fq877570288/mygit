@@ -104,6 +104,9 @@ public class TaskDetailSearch  extends Paging {
 	@ApiModelProperty(value = "",required = false)
 	private Integer taskNumberEnd;
 
+	@ApiModelProperty(value = "业务号码",required = false)
+	private String businesscode; //业务号码 同样的businesscode竟然两个写法 我特么无语了 没时间改了 暂时默认两个吧
+
 	public Integer getTaskNumberStart() {
 		return taskNumberStart;
 	}
@@ -358,5 +361,13 @@ public class TaskDetailSearch  extends Paging {
 
 	public void setDomainId(String domainId) {
 		this.domainId = domainId;
+	}
+
+	public String getBusinesscode() {
+		return businesscode;
+	}
+
+	public void setBusinesscode(String businesscode) {
+		this.businesscode = businesscode;
 	}
 }

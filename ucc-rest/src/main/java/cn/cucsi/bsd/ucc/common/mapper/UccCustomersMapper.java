@@ -42,5 +42,7 @@ public interface UccCustomersMapper {
 
     List<UccCustomers> selectNextTaskBySearch(TaskDetailSearch search) throws Exception;
 
-    UccCustomers selectUccCustomersByCode(String businesscode,String domainId) throws Exception;
+    UccCustomers selectUccCustomersByCode(Map<String, Object> whereMap) throws Exception;
+
+    int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception;
 }

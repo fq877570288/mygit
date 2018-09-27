@@ -44,12 +44,15 @@ public class UccCustomers {
     private String status;
     private String installedaddress;
     private String ponlogo;
-    private String tariffname;
+    private String tariffname;//资费名称
     private String defultPhone;
     private String productType;
     private String rate;
     private String pullBlackReason;
     private String domainId;
+    private String deptName;
+    private String taskDetailId;
+
     //不是这张表的字段它是关联表字段
     private String domainName;
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
@@ -795,5 +798,21 @@ public class UccCustomers {
 
     public void setTaskTypeName(String taskTypeName) {
         this.taskTypeName = taskTypeName;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getTaskDetailId() {
+        return taskDetailId;
+    }
+
+    public void setTaskDetailId(String taskDetailId) {
+        this.taskDetailId = taskDetailId;
     }
 }

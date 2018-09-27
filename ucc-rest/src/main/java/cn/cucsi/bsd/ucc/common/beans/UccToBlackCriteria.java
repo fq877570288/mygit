@@ -15,8 +15,10 @@ public class UccToBlackCriteria{
     private String pullBlackReason;
     @ApiModelProperty(value = "坐席员ID",required = false)
     private String userId;
-    @ApiModelProperty(value = "客户ID",required = true)
+    @ApiModelProperty(value = "客户ID",required = false)
     private String custId;
+    @ApiModelProperty(value = "业务ID",required = false)
+    private String businessCode;
 
     public String getPullBlackReason() {
         return pullBlackReason;
@@ -40,5 +42,13 @@ public class UccToBlackCriteria{
 
     public void setCustId(String custId) {
         this.custId = custId;
+    }
+
+    public String getBusinessCode() {
+        return businessCode;
+    }
+
+    public void setBusinessCode(String businessCode) {
+        this.businessCode = businessCode;
     }
 }

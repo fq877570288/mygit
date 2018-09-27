@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
-
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.untils.AESUtil;
 import cn.cucsi.bsd.ucc.common.untils.Auth;
@@ -15,7 +14,6 @@ import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.OngoingTaskService;
 import cn.cucsi.bsd.ucc.service.UccCustomersService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
@@ -356,54 +354,68 @@ public class OngoingTaskController {
 	/***
 	 * 查询客户黑名单信息
 	 */
-	/*@ResponseBody
-	@RequestMapping(value="/task/ongoing/custmIsBlack.html",produces = "text/html;charset=UTF-8")
-	public String custmIsBlack(String businessCode) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
+	@ApiOperation(value="查询客户黑名单信息", notes="查询客户黑名单信息")
+	@RequestMapping(value = "/ongoing/custmIsBlack", method= RequestMethod.POST)
+	public Map<String,Object> custmIsBlack(@RequestBody CustmIsBlackCriteria custmIsBlackCriteria) {
+
+		String businessCode = custmIsBlackCriteria.getBusinessCode()==null?"":custmIsBlackCriteria.getBusinessCode();
+		String domainId = custmIsBlackCriteria.getDomainId()==null?"":custmIsBlackCriteria.getDomainId();
+		Map<String,Object> saveChangePhoneMap = new HashMap<String,Object>();
+		saveChangePhoneMap.put("msg","查询客户黑名单信息操作失败！");
+		saveChangePhoneMap.put("code","-1");
+
 		String message = "N";
 		try {
-			String blackreason = ongoingTaskService.custmIsBlack(businessCode);
+			String blackreason = ongoingTaskService.custmIsBlack(businessCode,domainId);
 			if(blackreason != null && !"".equals(blackreason)){
 				message = "该客户已被加入黑名单，拉黑原因：" + blackreason;
 			}
-			json = mapper.writeValueAsString(message);
+			saveChangePhoneMap.put("msg",message);
+			saveChangePhoneMap.put("code","0");
+			return saveChangePhoneMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+			saveChangePhoneMap.put("msg","查询客户黑名单信息操作失败！");
+			return saveChangePhoneMap;
 		}
-		return json;
-	}*/
+	}
 
 	/***
-	 * 拉黑客户
+	 * 拉黑客户--WEB端用
 	 */
-	/*@ResponseBody
-	@RequestMapping(value="/task/ongoing/inBlackList.html",produces = "text/html;charset=UTF-8")
-	public String inBlackList(String businessCode, String userId, String pullBlackReason) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-		String message = "操作失败！";
+	@ApiOperation(value="拉黑客户", notes="拉黑客户--WEB端用")
+	@RequestMapping(value = "ongoing/inBlackList", method= RequestMethod.POST)
+	public Map<String,Object> inBlackList(@RequestBody UccToBlackCriteria uccToBlackCriteria) {
+
+		Map<String,Object> saveChangePhoneMap = new HashMap<String,Object>();
+		saveChangePhoneMap.put("msg","拉黑客户操作失败！");
+		saveChangePhoneMap.put("code","-1");
+
+		String businessCode = uccToBlackCriteria.getBusinessCode()==null?"":uccToBlackCriteria.getBusinessCode();
+		String userId = uccToBlackCriteria.getUserId()==null?"":uccToBlackCriteria.getUserId();
+		String pullBlackReason = uccToBlackCriteria.getPullBlackReason()==null?"":uccToBlackCriteria.getPullBlackReason();
 		try {
-			Customer customer = new Customer();
-			customer.setUserId(new Long(userId));
+			UccCustomers customer = new UccCustomers();
+			customer.setUpdatedUserId(userId);//UccCustomers表里没有userId这个字段，存在updatedUserId里
 			customer.setType(7); //拉黑
 			customer.setPullBlackReason(pullBlackReason);
-			customer.setCreatetime(new Date());
-			customer.setBusinessCode(businessCode);
-			
-			customerService.inBlackListByBusinessCode(customer);
-			
-			message = "操作成功！";
-			json = mapper.writeValueAsString(message);
-			
+			customer.setCreatedTime(new Date());
+			customer.setBusinesscode(businessCode);
+
+			int retCode = uccCustomersService.inBlackListByBusinessCodeWEB(customer);
+			System.out.println("拉黑客户--WEB端 retCode:::" + retCode);
+			if(retCode>=0){
+				saveChangePhoneMap.put("msg","拉黑客户操作成功！");
+				saveChangePhoneMap.put("code","0");
+				return saveChangePhoneMap;
+			}else {
+				return saveChangePhoneMap;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+			return saveChangePhoneMap;
 		}
-		return json;
-	}*/
-	
+	}
 }
