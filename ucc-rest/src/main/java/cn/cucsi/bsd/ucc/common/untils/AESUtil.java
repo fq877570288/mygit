@@ -88,7 +88,7 @@ public class AESUtil {
     }    
 
 	public static void main(String agrs[]) {
-		String content = "test";
+		String content = "4";
 		String password = "century_eggs-012";
 		// 加密
 		String encryptStr = encrypt(content, password);

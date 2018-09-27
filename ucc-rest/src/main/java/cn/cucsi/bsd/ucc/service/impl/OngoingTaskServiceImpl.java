@@ -39,13 +39,12 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 	private TaskTransferRecordMapper taskTransferRecordMapper;
 	
 	@Override
-	@Transactional
 	public List<UccCustomers> selectOngoingBySearch(TaskDetailSearch taskDetailSearch) throws Exception {
 		try {
 			// 部门
 			List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
-			taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId().toString());
-			taskDetailSearch.setOperatorId(taskDetailSearch.getUserId().toString());
+			taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
+			taskDetailSearch.setOperatorId(taskDetailSearch.getUserId());
 			// 分页查询
 			taskDetailSearch.setup(uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch), taskDetailSearch.getShowLines());
 

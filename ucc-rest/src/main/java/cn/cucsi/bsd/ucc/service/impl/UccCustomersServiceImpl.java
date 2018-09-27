@@ -11,6 +11,7 @@ import cn.cucsi.bsd.ucc.data.repo.UccCustomersRepository;
 import cn.cucsi.bsd.ucc.data.specs.UccCustomersSpecs;
 import cn.cucsi.bsd.ucc.service.UccCustomersService;
 import com.github.pagehelper.PageHelper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UccCustomersServiceImpl implements UccCustomersService{
@@ -68,6 +71,16 @@ public class UccCustomersServiceImpl implements UccCustomersService{
     }
 
     /***
+     * 拉黑客户--WEB
+     * add by wangxiaoyu
+     * 2018-09-27
+     */
+    @Override
+    public int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception {
+        return uccCustomersMapper.inBlackListByBusinessCodeWEB(customer);
+    }
+
+    /***
      * 根据条件查询客户是否在黑名单
      * add by wangxiaoyu
      * 2018-08-31
@@ -101,8 +114,12 @@ public class UccCustomersServiceImpl implements UccCustomersService{
     }
 
     @Override
-    public UccCustomers selectByBusinessCode(String businesscode,String domainId) throws Exception {
-        return uccCustomersMapper.selectUccCustomersByCode(businesscode,domainId);
+    public UccCustomers selectByBusinessCode(String businessCode,String domainId) throws Exception {
+        Map<String, Object> whereMap = new HashMap<String, Object>();
+        whereMap.put("businessCode", businessCode);
+        whereMap.put("domainId", domainId);
+
+        return uccCustomersMapper.selectUccCustomersByCode(whereMap);
     }
 
 }

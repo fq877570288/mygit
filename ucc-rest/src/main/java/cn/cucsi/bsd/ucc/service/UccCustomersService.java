@@ -27,6 +27,13 @@ public interface UccCustomersService {
     int inBlackListByBusinessCode(UccToBlackCriteria uccToBlackCriteria) throws Exception;
 
     /***
+     * 拉黑客户--WEB
+     * add by wangxiaoyu
+     * 2018-09-27
+     */
+    int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception;
+
+    /***
      * 根据条件查询客户是否在黑名单
      * add by wangxiaoyu
      * 2018-08-31
@@ -45,6 +52,6 @@ public interface UccCustomersService {
      */
     UccCustomers update(UccCustomers uccCustomers);
 
-    UccCustomers selectByBusinessCode(String businesscode,String domainId) throws Exception;
+    UccCustomers selectByBusinessCode(String businessCode,String domainId) throws Exception;
 }
 
