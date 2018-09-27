@@ -246,11 +246,13 @@ public class UccUserController  {
         uccPermissionsAndUser.setIcon(uccPermissions.getIcon());
         uccPermissionsAndUser.setPath(uccPermissions.getRoute());
         List<UccPermissions> uccPermissionsList = uccPermissions.getUccPermissions();
-        List<UccPermissionsAndUser> uccPermissionsAndUserList = new ArrayList<>();
+        List<UccPermissionsAndUserSecound> uccPermissionsAndUserList = new ArrayList<>();
         if(uccPermissionsList!=null&&uccPermissionsList.size()!=0){
             for (UccPermissions permissions : uccPermissionsList) {
-                UccPermissionsAndUser permissionsAndUser = new UccPermissionsAndUser();
-                permissionsAndUser = copyProperties(permissions,permissionsAndUser);
+                UccPermissionsAndUserSecound permissionsAndUser = new UccPermissionsAndUserSecound();
+                permissionsAndUser.setName(uccPermissions.getPermissionName());
+                permissionsAndUser.setIcon(uccPermissions.getIcon());
+                permissionsAndUser.setPath(uccPermissions.getRoute());
                 uccPermissionsAndUserList.add(permissionsAndUser);
             }
         }
