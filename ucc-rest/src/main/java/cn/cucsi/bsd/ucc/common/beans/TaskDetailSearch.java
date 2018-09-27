@@ -32,10 +32,10 @@ public class TaskDetailSearch  extends Paging {
 	@ApiModelProperty(value = "流转操作",required = false)
     private String taskStatus; // 流转操作
 
-	@ApiModelProperty(value = "？",required = false)
+	@ApiModelProperty(value = "流转操作",required = false)
 	private String taskStatusList; // 流转操作
 
-	@ApiModelProperty(value = "用户ID",required = false)
+	@ApiModelProperty(value = "用户ID",required = true)
     private String userId;//用户ID
 
 	@ApiModelProperty(value = "任务编码",required = false)

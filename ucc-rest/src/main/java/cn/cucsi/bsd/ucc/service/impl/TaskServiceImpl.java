@@ -6,22 +6,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.mapper.TaskDetailMapper;
 import cn.cucsi.bsd.ucc.common.mapper.TaskTransferMapper;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
+import cn.cucsi.bsd.ucc.data.domain.Paging;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
+import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import cn.cucsi.bsd.ucc.data.repo.UccCustomersRepository;
 import cn.cucsi.bsd.ucc.service.TaskService;
+import cn.cucsi.bsd.ucc.service.UccDeptsService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,13 +36,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Autowired
 	private TaskDetailMapper taskDetailMapper;
-
 	@Autowired
 	private TaskTransferMapper taskTransferMapper;
-
 	@Autowired
 	private UccCustomersRepository uccCustomersRepository;
-	
+	@Autowired
+	private UccDeptsService uccDeptsService;
+
 	/***
 	 * 根据查询条件获取当前坐席任务外乎列表
 	 * add by wangxiaoyu
@@ -469,6 +470,57 @@ public class TaskServiceImpl implements TaskService {
 		cmap.put("dateEnd", dateStr+" 23:59:59");
 		cmap.put("deptIds", deptIds);
 		return taskDetailMapper.selectCompleteTodayCount(cmap);
+	}
+
+	@Override
+	public int selectBySearchCount(TaskDetailSearch search) throws Exception {
+		return taskDetailMapper.selectBySearchCount(search);
+	}
+
+	@Override
+	@Transactional
+	public List<TaskDetail> selectBySearch(TaskDetailSearch search) throws Exception {
+		// 部门
+		List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(search.getUserId());
+		search.setTaskStatus("0");
+		search.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
+		// 分页查询
+		search.setup(taskDetailMapper.selectBySearchCount(search), search.getShowLines());
+		return taskDetailMapper.selectBySearch(search);
+	}
+	@Override
+	public TaskDetail selectByPrimaryKeyForWEB(String taskDetailId) throws Exception {
+		return taskDetailMapper.selectByPrimaryKeyForWEB(taskDetailId);
+	}
+	//视图
+	@Override
+	public int queryCompleteTask(Date date, String deptIds) throws Exception {
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		String dateStr = sdf.format(date);
+		cmap.put("dateStart", dateStr+" 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+		return taskDetailMapper.queryCompleteTask(cmap);
+	}
+
+	@Override
+	public int queryECall(Date date, String deptIds) throws Exception {
+		Map<String, Object> emap=new HashMap<String, Object>();
+		String dateStr = sdf.format(date);
+		emap.put("dateStart", dateStr+" 00:00:00");
+		emap.put("dateEnd", dateStr+" 23:59:59");
+		emap.put("deptIds", deptIds);
+		return taskDetailMapper.queryECall(emap);
+	}
+
+	@Override
+	public int queryACall(Date date, String deptIds) throws Exception {
+		Map<String, Object> amap=new HashMap<String, Object>();
+		String dateStr = sdf.format(date);
+		amap.put("dateStart", dateStr+" 00:00:00");
+		amap.put("dateEnd", dateStr+" 23:59:59");
+		amap.put("deptIds", deptIds);
+		return taskDetailMapper.queryACall(amap);
 	}
 
 }

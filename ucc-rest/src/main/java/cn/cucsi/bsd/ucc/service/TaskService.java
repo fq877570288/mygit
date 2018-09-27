@@ -1,9 +1,11 @@
 package cn.cucsi.bsd.ucc.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import com.alibaba.fastjson.JSONObject;
 
@@ -86,5 +88,21 @@ public interface TaskService {
 	 *  2018-09-26
 	 */
 	int selectCompleteTodayCount(String deptIds);
+
+	/***
+	 * 分页查询
+	 */
+	int selectBySearchCount(TaskDetailSearch search) throws Exception;
+
+	List<TaskDetail> selectBySearch(TaskDetailSearch search) throws Exception;
+
+	TaskDetail selectByPrimaryKeyForWEB(String taskDetailId) throws Exception;
+
+	//视图
+	int queryCompleteTask(Date date, String deptIds) throws Exception;
+
+	int queryECall(Date date, String deptIds)  throws Exception;
+
+	int queryACall(Date date, String deptIds) throws Exception;
 
 }

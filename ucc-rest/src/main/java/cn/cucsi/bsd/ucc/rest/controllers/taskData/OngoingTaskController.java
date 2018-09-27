@@ -198,7 +198,6 @@ public class OngoingTaskController {
 			taskOutCallMap.put("userMobile", user.getTel());
 			taskOutCallMap.put("uccCustomers", uccCustomers);
 			taskOutCallMap.put("taskDetailIds", taskDetailIds);
-			taskOutCallMap.put("uccCustomers", uccCustomers);
 			taskOutCallMap.put("taskDetailList", taskDetailList);
 			taskOutCallMap.put("taskTransferList", taskTransferList);
 			taskOutCallMap.put("taskDetailCount", taskDetailCount);
@@ -383,7 +382,7 @@ public class OngoingTaskController {
 
 	/***
 	 * 拉黑客户--WEB端用
-	 */
+	 *//*
 	@ApiOperation(value="拉黑客户", notes="拉黑客户--WEB端用")
 	@RequestMapping(value = "ongoing/inBlackList", method= RequestMethod.POST)
 	public Map<String,Object> inBlackList(@RequestBody UccToBlackCriteria uccToBlackCriteria) {
@@ -417,5 +416,5 @@ public class OngoingTaskController {
 			logger.error(e.getMessage(), e);
 			return saveChangePhoneMap;
 		}
-	}
+	}*/
 }

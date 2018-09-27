@@ -31,7 +31,7 @@ public interface UccCustomersService {
      * add by wangxiaoyu
      * 2018-09-27
      */
-    int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception;
+    //int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception;
 
     /***
      * 根据条件查询客户是否在黑名单

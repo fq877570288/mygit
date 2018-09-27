@@ -63,10 +63,19 @@ public class TaskTransfer {
     private String domainId;//租户ID
 
     private String destinationNumber; //被叫
-    @JsonIgnore
     private Integer callTime;//接通时长
     private String taskCode;//任务编码
     private String callTimeStr;//通话时长（*天*小时*分*秒个格式）
+
+    private String totalTime; //通话时长
+    private Date createdTime; //开始时间
+    private Date answeredTime; //应答时间
+    private Date hangupTime; //挂机时间
+    private String recordid1; //录音
+    private String recordid2; //留言
+    private Integer qc; //通话质检
+    private String hangupCause;
+    private String receiveDeptName; //任务接收部门名称
 
     public String getTaskTransferId() {
         return taskTransferId;
@@ -227,5 +236,77 @@ public class TaskTransfer {
 
     public void setCallTimeStr(String callTimeStr) {
         this.callTimeStr = callTimeStr;
+    }
+
+    public String getTotalTime() {
+        return totalTime;
+    }
+
+    public void setTotalTime(String totalTime) {
+        this.totalTime = totalTime;
+    }
+
+    public Date getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public Date getAnsweredTime() {
+        return answeredTime;
+    }
+
+    public void setAnsweredTime(Date answeredTime) {
+        this.answeredTime = answeredTime;
+    }
+
+    public Date getHangupTime() {
+        return hangupTime;
+    }
+
+    public void setHangupTime(Date hangupTime) {
+        this.hangupTime = hangupTime;
+    }
+
+    public String getRecordid1() {
+        return recordid1;
+    }
+
+    public void setRecordid1(String recordid1) {
+        this.recordid1 = recordid1;
+    }
+
+    public String getRecordid2() {
+        return recordid2;
+    }
+
+    public void setRecordid2(String recordid2) {
+        this.recordid2 = recordid2;
+    }
+
+    public Integer getQc() {
+        return qc;
+    }
+
+    public void setQc(Integer qc) {
+        this.qc = qc;
+    }
+
+    public String getHangupCause() {
+        return hangupCause;
+    }
+
+    public void setHangupCause(String hangupCause) {
+        this.hangupCause = hangupCause;
+    }
+
+    public String getReceiveDeptName() {
+        return receiveDeptName;
+    }
+
+    public void setReceiveDeptName(String receiveDeptName) {
+        this.receiveDeptName = receiveDeptName;
     }
 }

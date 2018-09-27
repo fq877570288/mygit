@@ -49,4 +49,6 @@ public interface TaskTransferMapper {
     List<TaskTransfer> selectTransferByTaskDetailId(String taskDetailId) throws Exception;
 
     int deleteWithListId(List<TaskTransferRecord> list) throws Exception;
+
+    List<TaskTransfer> selectTransferByTaskDetailIdInList(List<String> taskDetailIdInList) throws Exception;
 }
