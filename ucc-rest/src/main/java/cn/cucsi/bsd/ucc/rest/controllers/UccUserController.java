@@ -220,7 +220,7 @@ public class UccUserController  {
                     }
                     pId.setUccPermissions(childNodeList);
                 }
-                for (UccPermissions uccPermissions : list) {
+                for (UccPermissions uccPermissions : pIdList) {
                     UccPermissionsAndUser uccPermissionsAndUser = new UccPermissionsAndUser();
                     uccPermissionsAndUser = copyProperties(uccPermissions,uccPermissionsAndUser);
                     uccPermissionsAndUserList.add(uccPermissionsAndUser);
@@ -250,9 +250,9 @@ public class UccUserController  {
         if(uccPermissionsList!=null&&uccPermissionsList.size()!=0){
             for (UccPermissions permissions : uccPermissionsList) {
                 UccPermissionsAndUserSecound permissionsAndUser = new UccPermissionsAndUserSecound();
-                permissionsAndUser.setName(uccPermissions.getPermissionName());
-                permissionsAndUser.setIcon(uccPermissions.getIcon());
-                permissionsAndUser.setPath(uccPermissions.getRoute());
+                permissionsAndUser.setName(permissions.getPermissionName());
+                permissionsAndUser.setIcon(permissions.getIcon());
+                permissionsAndUser.setPath(permissions.getRoute());
                 uccPermissionsAndUserList.add(permissionsAndUser);
             }
         }
