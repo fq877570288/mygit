@@ -11,7 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 /**
  * Created by home on 2017/10/16.
  */
@@ -22,10 +22,10 @@ public class BaseHangupCauseServiceImpl implements BaseHangupCauseService{
     BaseHangupCauseRepository baseHangupCauseRepository;
 
     @Override
-    public Page<BaseHangupCause> findAll(BaseHangupCauseCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC,"causeSort");
-        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
-        return baseHangupCauseRepository.findAll(BaseHangupCauseSpecs.createSpec(criteria),pageable);
+    public List<BaseHangupCause> findAll(BaseHangupCauseCriteria criteria) {
+        //Sort sort = new Sort(Sort.Direction.DESC,"causeSort");
+        //Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
+        return baseHangupCauseRepository.findAll(BaseHangupCauseSpecs.createSpec(criteria));
     }
 
     @Override
