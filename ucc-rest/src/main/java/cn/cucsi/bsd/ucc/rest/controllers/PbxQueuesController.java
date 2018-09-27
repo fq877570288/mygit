@@ -77,7 +77,7 @@ public class PbxQueuesController {
         boolean result =queues != null;
 
         if(result){
-            PbxReload.reloadQueueAsync(queues, "create", zk);
+
             result = false ;
             for (String extId:extGroupExts
                     ) {
@@ -86,7 +86,9 @@ public class PbxQueuesController {
                 pbxQueueNumbers.setQueueId(queues.getQueueId());
                 result =   this.pbxQueueNumbersService.save(pbxQueueNumbers)!=null;
             }
-
+            if(result){
+                PbxReload.reloadQueueAsync(queues, "create", zk);
+            }
             return new ResultBean<>(result);
         }else{
             return new ResultBean<>(result);
@@ -100,7 +102,7 @@ public class PbxQueuesController {
         PbxQueues queues = this.PbxQueuesService.save(PbxQueues);
         boolean result = queues != null;
         if(result){
-            PbxReload.reloadQueueAsync(PbxQueues,"update", zk);
+
             PbxQueueNumbersCriteria criteria = new PbxQueueNumbersCriteria();
             criteria.setQueueId(queues.getQueueId());
             List<PbxQueueNumbers> pbxQueueNumbersList=  this.pbxQueueNumbersService.findAll(criteria);
@@ -118,7 +120,9 @@ public class PbxQueuesController {
                 result = this.pbxQueueNumbersService.save(pbxQueueNumbers)!=null;
 
             }
-
+            if(result){
+                PbxReload.reloadQueueAsync(PbxQueues,"update", zk);
+            }
             return new ResultBean<>(result);
         }else{
             return new ResultBean<>(result);

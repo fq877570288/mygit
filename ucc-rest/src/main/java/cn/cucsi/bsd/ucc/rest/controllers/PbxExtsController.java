@@ -90,10 +90,8 @@ public class PbxExtsController {
 
     @ApiOperation(value = "修改PbxExts", notes = "修改PbxExts")
     @RequestMapping(value = "/{extId}", method = RequestMethod.PUT)
-    public ResultBean<Boolean> save(@RequestBody PbxExts PbxExts, @PathVariable String extId, String extGroupExts, Integer extNumStart
-            , Integer extNumCount, String cover) {
-
-        boolean result = this.PbxExtsService.saveMany(PbxExts, extGroupExts, extNumStart, extNumCount, cover) != null;
+    public ResultBean<Boolean> save(@RequestBody PbxExts PbxExts, @PathVariable String extId, String extGroupExts) {
+        boolean result = this.PbxExtsService.saveOne(PbxExts, extGroupExts) != null;
         if(result){
             PbxReload.reloadExtAsync(PbxExts, "update", zk);
         }

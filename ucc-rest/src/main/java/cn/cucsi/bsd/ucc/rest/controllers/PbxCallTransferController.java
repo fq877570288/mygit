@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.PbxCallTransferCriteria;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.untils.PbxReload;
 import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.PbxCallTransfer;
 import cn.cucsi.bsd.ucc.service.PbxCallTransferService;
@@ -37,18 +38,30 @@ public class PbxCallTransferController {
     @ApiOperation(value = "根据extId删除PbxCallTransfer", notes = "根据extId删除PbxCallTransfer")
     @RequestMapping(value = "/{extId}", method= RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String extId){
-        return new ResultBean<>(this.pbxCallTransferService.delete(extId));
+        boolean result = this.pbxCallTransferService.delete(extId);
+        if(result){
+            PbxCallTransfer pbxCallTransfer = new PbxCallTransfer();
+            pbxCallTransfer.setExtId(extId);
+            PbxReload.reloadCallTransfer(pbxCallTransfer, "delete", zk);
+        }
+        return new ResultBean<>(result);
     }
     @ApiOperation(value = "创建PbxCallTransfer", notes = "创建PbxCallTransfer")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody PbxCallTransfer pbxCallTransfer) {
         boolean result = this.pbxCallTransferService.save(pbxCallTransfer) != null;
+        if(result){
+            PbxReload.reloadCallTransfer(pbxCallTransfer, "replace", zk);
+        }
         return new ResultBean<>(result);
     }
     @ApiOperation(value = "修改PbxCallTransfer", notes = "修改PbxCallTransfer")
     @RequestMapping(value = "/{extId}", method =  RequestMethod.POST)
     public ResultBean<Boolean> save(@PathVariable String extId,@RequestBody PbxCallTransfer pbxCallTransfer) {
         boolean result = this.pbxCallTransferService.save(pbxCallTransfer) != null;
+        if(result){
+            PbxReload.reloadCallTransfer(pbxCallTransfer, "update", zk);
+        }
         return new ResultBean<>(result);
     }
 }
