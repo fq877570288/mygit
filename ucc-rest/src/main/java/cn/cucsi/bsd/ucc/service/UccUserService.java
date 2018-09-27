@@ -32,6 +32,6 @@ public interface UccUserService {
 
     ResultBean_New<List<UccUserByDept>> userListByDept(List<UserDeptCriteria> userDeptCriterias);
 
-    List<String> selectSameDeptUserIdByUserId(String userId) throws Exception;
+    List<UccUsers> selectSameDeptUserIdByUserId(String userId) throws Exception;
 
 }

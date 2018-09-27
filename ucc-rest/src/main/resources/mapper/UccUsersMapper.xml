@@ -587,7 +587,7 @@
   <!--  根据UserID查询本部门下的所有用户ID by wangxiaoyu -->
   <select id="selectSameDeptUserIdByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
     SELECT
-	  a.user_id
+	  DISTINCT a.user_id
     FROM
         ucc_users a
         LEFT JOIN user_dept b ON a.user_id = b.user_id

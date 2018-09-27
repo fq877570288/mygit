@@ -8,6 +8,7 @@ import cn.cucsi.bsd.ucc.common.beans.TaskReceiveCriteria;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
+import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import cn.cucsi.bsd.ucc.service.WaitTaskService;
 import io.swagger.annotations.Api;
@@ -49,7 +50,7 @@ public class WaitTaskController {
 			session.setAttribute("taskDetailIdListForWait", taskDetailIdList);
 			//model.addAttribute("list", list);
 			waitTaskListMap.put("list", list);
-			//waitTaskListMap.put("taskDetailIdListForWait", taskDetailIdList);
+			waitTaskListMap.put("taskDetailIdListForWait", taskDetailIdList);
 			waitTaskListMap.put("taskDetailSearch",taskDetailSearch);
 			waitTaskListMap.put("msg","操作成功！");
 			waitTaskListMap.put("code","0");
@@ -161,7 +162,7 @@ public class WaitTaskController {
 					}
 				}else{
 					//如果所传用户ID列表为空，则先查询该用户下同部门的所有用户ID，然后再平均分配任务
-					List<String> userIdList2 = uccUserService.selectSameDeptUserIdByUserId(userId);
+					List<UccUsers> userIdList2 = uccUserService.selectSameDeptUserIdByUserId(userId);
 					if(!MyUtils.isBlank(userIdList2)){
 						//把任务平均分配给这些用户
 						List<List<String>> splitedTaskList2 = MyUtils.averageAssign(taskDetailIdsList,userIdList2.size());
@@ -180,8 +181,12 @@ public class WaitTaskController {
 										taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
 									}
 									for (int j = 0; j < userIdList2.size(); j++) {
-										userId = userIdList2.get(j);
-										doTaskReceiveMap = waitTaskService.taskReceive(userId, taskIdsStr,domainId);
+										System.out.println("userIdList2:::" + userIdList2.get(j).getUserId());
+										userId = userIdList2.get(j).getUserId();
+										doTaskReceiveMap = waitTaskService.taskReceive(userId,taskIdsStr,domainId);
+										System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("code"));
+										System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("msg"));
+
 										if(doTaskReceiveMap.get("code").equals("-1")){
 											taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
 											return taskReceiveMap;

@@ -27,7 +27,7 @@ public interface OngoingTaskService {
 	/***
 	 * 根据业务编码保存变更号码
 	 */
-	void saveChangePhone(String changePhone, String fPhone, String businessCode, String domainId) throws Exception;
+	Map<String,Object> saveChangePhone(String changePhone, String fPhone, String businessCode, String domainId) throws Exception;
 
 	
 	/***

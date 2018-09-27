@@ -11,6 +11,9 @@ public class TaskDetailSearch  extends Paging {
 	@ApiModelProperty(value = "业务号码",required = false)
 	private String businessCode; //业务号码
 
+	@ApiModelProperty(value = "租户ID",required = false)
+	private String domainId; //租户ID
+
 	@ApiModelProperty(value = "任务类型名称",required = false)
     private String taskTypeName; //任务类型名称
 
@@ -349,5 +352,11 @@ public class TaskDetailSearch  extends Paging {
 		this.taskStatusList = taskStatusList;
 	}
 
+	public String getDomainId() {
+		return domainId;
+	}
 
+	public void setDomainId(String domainId) {
+		this.domainId = domainId;
+	}
 }

@@ -6,12 +6,10 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
 
-import cn.cucsi.bsd.ucc.common.beans.SaveAndGoonDetailCriteria;
-import cn.cucsi.bsd.ucc.common.beans.SaveDetailCriteria;
-import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
-import cn.cucsi.bsd.ucc.common.beans.TaskOutCallCriteria;
+import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.untils.AESUtil;
 import cn.cucsi.bsd.ucc.common.untils.Auth;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.ServiceHelper;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.OngoingTaskService;
@@ -291,23 +289,69 @@ public class OngoingTaskController {
 	/***
 	 * 保存变更号码
 	 */
-	/*@ApiOperation(value="保存变更号码", notes="保存变更号码")
+	@ApiOperation(value="保存变更号码", notes="保存变更号码")
 	@RequestMapping(value = "/ongoing/saveChangePhone", method= RequestMethod.POST)
-	public String saveChangePhone(String changePhone,String fPhone, String businessCode,String domainId) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-		String message = "保存失败！";
+	public Map<String,Object> saveChangePhone(@RequestBody SaveChangePhoneCriteria saveChangePhoneCriteria) {
+
+		Map<String,Object> saveChangePhoneMap = new HashMap<String,Object>();
+		saveChangePhoneMap.put("msg","保存变更号码操作失败！");
+		saveChangePhoneMap.put("code","-1");
+
+		String domainId = saveChangePhoneCriteria.getDomainId()==null?"":saveChangePhoneCriteria.getDomainId(); //租户ID
+		String businessCode = saveChangePhoneCriteria.getBusinessCode()==null?"":saveChangePhoneCriteria.getBusinessCode(); //业务编码
+		String changePhone = saveChangePhoneCriteria.getChangePhone()==null?"":saveChangePhoneCriteria.getChangePhone();
+		String fPhone = saveChangePhoneCriteria.getfPhone()==null?"":saveChangePhoneCriteria.getfPhone();
+
+		if(MyUtils.isBlank(domainId)||MyUtils.isBlank(businessCode)||MyUtils.isBlank(changePhone)||MyUtils.isBlank(fPhone)){
+			saveChangePhoneMap.put("msg","入参存在为空字段！");
+			return saveChangePhoneMap;
+		}
 		try {
-			ongoingTaskService.saveChangePhone(changePhone, fPhone, businessCode, domainId);
-			message = "保存完成！";
-			json = mapper.writeValueAsString(message);
+			Map<String,Object> doSaveChangePhoneMap = ongoingTaskService.saveChangePhone(changePhone, fPhone, businessCode, domainId);
+			if(doSaveChangePhoneMap.get("code").equals("-1")){
+				saveChangePhoneMap.put("msg",doSaveChangePhoneMap.get("msg"));
+				return saveChangePhoneMap;
+			}
+			saveChangePhoneMap.put("msg","操作成功！");
+			saveChangePhoneMap.put("code","0");
+
+			return saveChangePhoneMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
+			return saveChangePhoneMap;
 		}
-		return json;
-	}*/
+	}
+
+	/***
+	 * 保存用户自定义显示字段
+	 */
+	@ApiOperation(value="保存用户自定义显示字段", notes="保存用户自定义显示字段")
+	@RequestMapping(value = "/ongoing/cusfsSave", method= RequestMethod.POST)
+	public Map<String,Object> cusfsSave(@RequestBody CusfsSaveCriteria cusfsSaveCriteria) {
+
+		Map<String,Object> saveChangePhoneMap = new HashMap<String,Object>();
+		saveChangePhoneMap.put("msg","保存用户自定义显示字段操作失败！");
+		saveChangePhoneMap.put("code","-1");
+
+		String userId = cusfsSaveCriteria.getUserId()==null?"":cusfsSaveCriteria.getUserId();
+		String customfieldNames = cusfsSaveCriteria.getCustomfieldNames()==null?"":cusfsSaveCriteria.getCustomfieldNames();
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", new Long(userId));
+			map.put("customfieldNames", customfieldNames);
+			ongoingTaskService.cusfsSave(map);
+
+			saveChangePhoneMap.put("msg","保存用户自定义显示字段操作成功！");
+			saveChangePhoneMap.put("code","0");
+			return saveChangePhoneMap;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage(), e);
+			return saveChangePhoneMap;
+		}
+	}
 	
 	/***
 	 * 查询客户黑名单信息
@@ -362,32 +406,4 @@ public class OngoingTaskController {
 		return json;
 	}*/
 	
-	/***
-	 * 保存用户自定义显示字段
-	 */
-	/*@ResponseBody
-	@RequestMapping(value="/task/ongoing/cusfsSave.html",produces = "text/html;charset=UTF-8")
-	public String cusfsSave(String userId, String customfieldNames) {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		String json = null;
-		String message = "保存失败！";
-		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			
-			map.put("userId", new Long(userId));
-			map.put("customfieldNames", customfieldNames);
-			
-			ongoingTaskService.cusfsSave(map);
-			
-			message = "保存成功！";
-			json = mapper.writeValueAsString(message);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage(), e);
-		}
-		
-		return json;
-	}*/
 }

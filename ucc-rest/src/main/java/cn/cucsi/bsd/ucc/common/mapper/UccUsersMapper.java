@@ -78,6 +78,6 @@ public interface UccUsersMapper {
     // 根据部门查询所有用户列表
     List<UccUsers> selectByDept(UserDeptCriteria search);
 
-    List<String> selectSameDeptUserIdByUserId(String userId);
+    List<UccUsers> selectSameDeptUserIdByUserId(String userId);
 
 }
