@@ -1,18 +1,14 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "ucc_permissions", schema = "ucc", catalog = "")
-public class UccPermissionsAndUser {
+public class UccPermissionsAndUserSecound {
     @Transient
     private String permissionId;
     @Transient
@@ -27,9 +23,6 @@ public class UccPermissionsAndUser {
     private String path;
 
 
-    @Transient
-    @JsonView(JSONView.Summary.class)
-    private List<UccPermissionsAndUserSecound> children;
 
     @Id
     @Column(name = "permission_id", nullable = false, length = 32)
@@ -81,13 +74,5 @@ public class UccPermissionsAndUser {
         this.path = path;
     }
 
-    @Transient
-    public List<UccPermissionsAndUserSecound> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<UccPermissionsAndUserSecound> children) {
-        this.children = children;
-    }
 
 }

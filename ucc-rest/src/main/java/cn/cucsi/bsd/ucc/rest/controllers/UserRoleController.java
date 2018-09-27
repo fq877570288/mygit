@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -25,7 +27,10 @@ public class UserRoleController {
 
     @ApiOperation(value="根据查询条件获取用户角色表", notes="根据查询条件获取用户角色表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
-    public ResultBean<List<UserRole>> findAll(@RequestBody  UserRoleCriteria search){
+    public ResultBean<List<UserRole>> findAll(@RequestBody  UserRoleCriteria search, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        UccUsers uccUsers = (UccUsers) session.getAttribute("uccUsers");
+        System.out.println(uccUsers.getUserId());
         return new ResultBean(this.userRoleService.findAll(search));
     }
     @ApiOperation(value = "根据userId、roleId查询UserRole", notes = "根据userId、roleId查询UserRole")
