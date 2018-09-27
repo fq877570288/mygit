@@ -16,6 +16,8 @@ public class UccPermissionsCriteria  extends  BasicCriteria{
     private String permissionName;
     private List<String> permissionIds;
 
+    private String isLeftMenu;
+
 
     public List<String> getPermissionIds() {
         return permissionIds;
@@ -39,5 +41,13 @@ public class UccPermissionsCriteria  extends  BasicCriteria{
 
     public void setPermissionName(String permissionName) {
         this.permissionName = permissionName;
+    }
+
+    public String getIsLeftMenu() {
+        return isLeftMenu;
+    }
+
+    public void setIsLeftMenu(String isLeftMenu) {
+        this.isLeftMenu = isLeftMenu;
     }
 }

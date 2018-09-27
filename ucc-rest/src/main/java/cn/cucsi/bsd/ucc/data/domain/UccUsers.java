@@ -150,6 +150,8 @@ public class UccUsers {
     private Collection<UccTeams> teams;
     @JsonView(JSONView.UccUserWithSkillGroup.class)
     private Collection<UccSkillGroup> skillGroup;
+    @JsonView(JSONView.Summary.class)
+    private List<UccPermissionsAndUser> uccPermissions;
 
 
     @ManyToMany
@@ -830,5 +832,14 @@ public class UccUsers {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    @Transient
+    public List<UccPermissionsAndUser> getUccPermissions() {
+        return uccPermissions;
+    }
+
+    public void setUccPermissions(List<UccPermissionsAndUser> uccPermissions) {
+        this.uccPermissions = uccPermissions;
     }
 }
