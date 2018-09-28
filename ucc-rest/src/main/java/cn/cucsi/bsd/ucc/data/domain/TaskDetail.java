@@ -46,70 +46,48 @@ public class TaskDetail {
     @JsonIgnore
     private String rate;//速率
 
-    @JsonIgnore
     private String customfields1;//自定义字段1
 
-    @JsonIgnore
     private String customfields2;
 
-    @JsonIgnore
     private String customfields3;
 
-    @JsonIgnore
     private String customfields4;
 
-    @JsonIgnore
     private String customfields5;
 
-    @JsonIgnore
     private String customfields6;
 
-    @JsonIgnore
     private String customfields7;
 
-    @JsonIgnore
     private String customfields8;
 
-    @JsonIgnore
     private String customfields9;
 
-    @JsonIgnore
     private String customfields10;
 
-    @JsonIgnore
     private String customfields11;
 
-    @JsonIgnore
     private String customfields12;
 
-    @JsonIgnore
     private String customfields13;
 
-    @JsonIgnore
     private String customfields14;
 
-    @JsonIgnore
     private String customfields15;
 
-    @JsonIgnore
     private String responsible;//责任体
 
-    @JsonIgnore
     private String netStop;//网别
 
-    @JsonIgnore
     private String packageName;//套餐名称
 
-    @JsonIgnore
     private String contractName;//合约名称
 
-    @JsonIgnore
     private String contractStartTime;//合约开始时间
 
-    @JsonIgnore
     private String contractEndTime;//合约结束时间
 
-    @JsonIgnore
     private String activationTime;//激活时间
 
     private String developmentDept;//发展部门
@@ -124,25 +102,25 @@ public class TaskDetail {
     private Date importTime;//导入时间
 
     @JsonIgnore
-    private String contacts;
+    private String contacts;//联系人
 
     @JsonIgnore
-    private String status;
+    private String status;//状态
 
     @JsonIgnore
-    private String installedAddress;
+    private String installedAddress;//装机地址
 
     @JsonIgnore
-    private String ponLogo;
+    private String ponLogo;//PON标识
 
     @JsonIgnore
-    private String tariffName;
+    private String tariffName;//资费名称
 
     @JsonIgnore
     private String phoneNumber2;//联系电话2
 
     @JsonIgnore
-    private String phoneNumber3;
+    private String phoneNumber3;//联系电话3
 
     private String taskStatus;// 任务状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
 
@@ -166,7 +144,7 @@ public class TaskDetail {
     private Date endDate;//截止日期
 
     @JsonIgnore
-    private String userId;
+    private String userId;//用户ID
 
     private String operatorId; //人员主键
     private Date transferTime; //流转时间

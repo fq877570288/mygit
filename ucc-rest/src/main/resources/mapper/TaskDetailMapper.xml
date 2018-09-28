@@ -1201,11 +1201,14 @@
   <!-- 查询外呼任务列表 web用-->
   <select id="selectDetailByCode" resultMap="BaseResultMap"
           parameterType="java.util.Map">
-    select
-    <include refid="Base_Column_List" />
-    from OC_TASK_DETAIL d
-    where 1=1
-    and d.TASK_STATUS in ('2','3')
+    SELECT
+      d.*, tt.TASK_TYPE_NAME
+    FROM
+      OC_TASK_DETAIL d
+      INNER JOIN OC_TASK_TYPE tt ON d.TASK_TYPE_ID = tt.TASK_TYPE_ID
+    WHERE
+      1 = 1
+    AND d.TASK_STATUS IN ('2', '3')
     <include refid="Sql_Where" />
     order by d.TASK_CODE DESC
   </select>

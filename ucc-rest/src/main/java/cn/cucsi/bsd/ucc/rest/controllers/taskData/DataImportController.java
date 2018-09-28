@@ -454,12 +454,12 @@ public class DataImportController {
 		String domainId = (String)session.getAttribute("domainId");
 		String userID = Auth.getLoginUser(session).getUserId().toString();
 		//这块是临时写死
-		if(MyUtils.isBlank(domainId)){
+		/*if(MyUtils.isBlank(domainId)){
 			domainId = "ff80808165c0f40d0165c68b94df0000";
 		}
 		if(MyUtils.isBlank(userID)){
 			userID = "1";
-		}
+		}*/
 
 		Map<String,Object> readExcelXlsMap = new HashMap<String,Object>();
 		readExcelXlsMap.put("code", "-1");
@@ -740,12 +740,12 @@ public class DataImportController {
 		String domainId = (String)session.getAttribute("domainId");
 		String userID = Auth.getLoginUser(session).getUserId().toString();
 		//这块是临时写死
-		if(MyUtils.isBlank(domainId)){
+		/*if(MyUtils.isBlank(domainId)){
 			domainId = "ff80808165c0f40d0165c68b94df0000";
 		}
 		if(MyUtils.isBlank(userID)){
 			userID = "1";
-		}
+		}*/
 		Map<String,Object> readExcelXlsxMap = new HashMap<String,Object>();
 		readExcelXlsxMap.put("code","-1");
 		readExcelXlsxMap.put("msg","上传失败！");
