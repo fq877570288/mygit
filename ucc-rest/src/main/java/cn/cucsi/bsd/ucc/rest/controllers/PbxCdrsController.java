@@ -82,7 +82,7 @@ public class PbxCdrsController {
         return new ResultBean<>(result);
     }
     @ApiOperation(value = "根据cdrId获取录音文件", notes = "根据cdrId获取录音文件")
-    @RequestMapping(value = "/{cdrId}/record",method= RequestMethod.POST)
+    @RequestMapping(value = "/{cdrId}/record",method= RequestMethod.GET)
     public void getRecording(HttpServletResponse rsp, @PathVariable String cdrId){
         PbxRecords record = this.PbxCdrsService.findOne(cdrId).getPbxRecords1();
         System.out.println(record.getRecordName());  
@@ -125,9 +125,10 @@ public class PbxCdrsController {
         
     }
     @ApiOperation(value = "根据查询条件获取导出文件", notes = "根据查询条件获取导出文件")
-    @RequestMapping(value = "/findAllExport",method= RequestMethod.POST)
-    public void exportCdrs(HttpServletResponse rsp,@RequestBody PbxCdrsCriteria pbxCdrsCriteria) throws Exception {
-        ExportUtil export = new ExportUtil(rsp,"通话记录", "通话记录1", PbxCdrsExcelCriteria.class);	//实例化一个jxlExport
+    @RequestMapping(value = "/findAllExport",method= RequestMethod.GET)
+    public void exportCdrs(HttpServletResponse rsp, PbxCdrsCriteria pbxCdrsCriteria) throws Exception {
+        String filename = new String("通话记录".getBytes("ISO8859-1"), "UTF-8");
+        ExportUtil export = new ExportUtil(rsp,filename, "通话记录", PbxCdrsExcelCriteria.class);	//实例化一个jxlExport
         List<PbxCdrs> list = this.PbxCdrsService.findAllExcel(pbxCdrsCriteria);
         PbxCdrsExcelCriteria bean = null;
    
@@ -155,7 +156,7 @@ public class PbxCdrsController {
         }
     }
     @ApiOperation(value = "根据cdrId获取录音文件,逗号分隔", notes = "根据cdrId获取录音文件,逗号分隔")
-    @RequestMapping(value = "/{cdrIds}/downloadzip",method= RequestMethod.POST)
+    @RequestMapping(value = "/{cdrIds}/downloadzip",method= RequestMethod.GET)
     public void downloadFiles(HttpServletResponse rsp,@PathVariable String cdrIds)
     {
         try {
@@ -264,4 +265,5 @@ public class PbxCdrsController {
         }
 
     }
+
 }
