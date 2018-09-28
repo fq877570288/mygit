@@ -22,9 +22,9 @@ public class BaseHangupCauseController {
 
     @Autowired
     private BaseHangupCauseService baseHangupCauseService;
-    @ApiOperation(value="根据查询条件获取挂机原因参数表", notes="根据查询条件获取挂机原因参数表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll",method= RequestMethod.GET)
-    public ResultBean<List<BaseHangupCause>> findAll( @ModelAttribute BaseHangupCauseCriteria search){
+    @ApiOperation(value="根据查询条件获取挂机原因参数表", notes="根据查询条件获取挂机原因参数表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll",method= RequestMethod.POST)
+    public ResultBean<List<BaseHangupCause>> findAll( @RequestBody BaseHangupCauseCriteria search){
         return new ResultBean(this.baseHangupCauseService.findAll(search));
     }
     @ApiOperation(value="根据causeEn查询BaseHangupCause", notes="根据causeEn查询BaseHangupCause")
