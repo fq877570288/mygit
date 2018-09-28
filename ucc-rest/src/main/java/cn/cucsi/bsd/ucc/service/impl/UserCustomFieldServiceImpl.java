@@ -76,34 +76,44 @@ public class UserCustomFieldServiceImpl implements UserCustomFieldService {
 		
 		// 主键
 		UUIDGenerator generator = new UUIDGenerator();
-		
-		String dataCustomfieldsIds = "'" + customfieldNames.replaceAll(",", "','") + "'";
-		
-		Map<String, String> idsMap = new HashMap<String, String>();
-		idsMap.put("dataCustomfieldsIds", dataCustomfieldsIds);
-		
-		// 根据选择的自定义字段主键  查询自定义字段信息
-		customfiledInfoList = dataCustomfieldMapper.selectByIDsExport(idsMap);
-		
-		// 根据员工ID　删除员工-自定义字段关联中间表信息
-		userCustomFieldMapper.deleteExportByUserID(userId);
-		
-		// 组织数据  插入将员工对应选择的自定义字段 保存到员工-自定义字段关联中间表
-		for(int i=0; i<customfiledInfoList.size(); i++){
-			
-			userCustomFiled = new UserCustomField();
-			
-			userCustomFiled.setUserId(userId);
-			userCustomFiled.setDataCustomfieldsId(customfiledInfoList.get(i).getDataCustomfieldsId());
-			userCustomFiled.setIeFlag(UserCustomField.EXPORTFIELD);
-			
-			String uuid = generator.generate();
-			userCustomFiled.setUserCustomfieldsId(uuid);
-			
-			userCustomFiledList.add(userCustomFiled);
-		}
-		
-		return userCustomFieldMapper.insertGroup(userCustomFiledList);
-	}
 
+		try {
+			String dataCustomfieldsIds = "'" + customfieldNames.replaceAll(",", "','") + "'";
+
+			Map<String, String> idsMap = new HashMap<String, String>();
+			idsMap.put("dataCustomfieldsIds", dataCustomfieldsIds);
+
+			// 根据选择的自定义字段主键  查询自定义字段信息
+			try {
+                customfiledInfoList = dataCustomfieldMapper.selectByIDsExport(idsMap);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("根据选择的自定义字段主键查询自定义字段信息发生异常！");
+            }
+
+			// 根据员工ID　删除员工-自定义字段关联中间表信息
+			try {
+                userCustomFieldMapper.deleteExportByUserID(userId);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("根据员工ID删除员工-自定义字段关联中间表信息发生异常！");
+            }
+
+			// 组织数据  插入将员工对应选择的自定义字段 保存到员工-自定义字段关联中间表
+			for(int i=0; i<customfiledInfoList.size(); i++){
+                userCustomFiled = new UserCustomField();
+                userCustomFiled.setUserId(userId);
+                userCustomFiled.setDataCustomfieldsId(customfiledInfoList.get(i).getDataCustomfieldsId());
+                userCustomFiled.setIeFlag(UserCustomField.EXPORTFIELD);
+                String uuid = generator.generate();
+                userCustomFiled.setUserCustomfieldsId(uuid);
+                userCustomFiledList.add(userCustomFiled);
+            }
+			return userCustomFieldMapper.insertGroup(userCustomFiledList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("导出数据 员工自定义显示字段保存发生异常 ");
+			return -1;
+		}
+	}
 }

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /***
- * 任务操作类
+ * 任务操作类(目前限于移动端用)
  * add by wangxiaoyu
  * 2018-08-30
  */

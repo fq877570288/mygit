@@ -64,30 +64,37 @@ public class DataCustomfieldServiceImpl implements DataCustomfieldService {
 	@Override
 	public List<DataCustomfield> selectExportByUserID(String userId) throws Exception {
 		// TODO Auto-generated method stub
-	List<DataCustomfield> dataCustomfieldList = null;
+		List<DataCustomfield> dataCustomfieldList = null;
 		
 		String dataCustomfieldsIds = "";
-		
-		// 根据用户ID 查询员工-自定义显示字段中间表
-		List<UserCustomField> userCustomFieldList = userCustomFieldMapper.selectExportByUserID(userId);
-		if(userCustomFieldList != null && userCustomFieldList.size() > 0){
-			for(UserCustomField userCustomField : userCustomFieldList){
-				dataCustomfieldsIds = dataCustomfieldsIds + userCustomField.getDataCustomfieldsId() + ",";
+
+		try {
+			// 根据用户ID 查询员工-自定义显示字段中间表
+			List<UserCustomField> userCustomFieldList = userCustomFieldMapper.selectExportByUserID(userId);
+			System.out.println("导出数据 根据用户ID查询员工自定义显示字段中间表 userCustomFieldList:::" + userCustomFieldList.size());
+			if(userCustomFieldList != null && userCustomFieldList.size() > 0){
+                for(UserCustomField userCustomField : userCustomFieldList){
+                    dataCustomfieldsIds = dataCustomfieldsIds + userCustomField.getDataCustomfieldsId() + ",";
+                }
+                dataCustomfieldsIds = dataCustomfieldsIds.substring(0, dataCustomfieldsIds.lastIndexOf(","));
+                dataCustomfieldsIds = "'" + dataCustomfieldsIds.replaceAll(",", "','") + "'";
+            }
+			// 根据中间表中存的自定义显示字段主键查询  中间表信息为空  查询所有默认显示字段
+			Map<String, String> seachMap = new HashMap<String, String>();
+			seachMap.put("dataCustomfieldsIds", dataCustomfieldsIds);
+			seachMap.put("isDefault", DataCustomfield.SHOW);
+			try {
+				dataCustomfieldList = dataCustomfieldMapper.selectBySeachMapExport(seachMap);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("导出条件查询列表时发生异常！");
+				return null;
 			}
-			
-			dataCustomfieldsIds = dataCustomfieldsIds.substring(0, dataCustomfieldsIds.lastIndexOf(","));
-			
-			dataCustomfieldsIds = "'" + dataCustomfieldsIds.replaceAll(",", "','") + "'";
+			return dataCustomfieldList;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
-		
-		// 根据中间表中存的自定义显示字段主键查询  中间表信息为空  查询所有默认显示字段   
-		Map<String, String> seachMap = new HashMap<String, String>();
-		seachMap.put("dataCustomfieldsIds", dataCustomfieldsIds);
-		seachMap.put("isDefault", DataCustomfield.SHOW);
-		
-		dataCustomfieldList = dataCustomfieldMapper.selectBySeachMapExport(seachMap);
-		
-		return dataCustomfieldList;
 	}
 
 	@Override
