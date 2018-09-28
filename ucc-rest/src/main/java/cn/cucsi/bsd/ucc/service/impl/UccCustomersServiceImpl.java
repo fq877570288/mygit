@@ -75,10 +75,10 @@ public class UccCustomersServiceImpl implements UccCustomersService{
      * add by wangxiaoyu
      * 2018-09-27
      */
-    @Override
+   /* @Override
     public int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception {
         return uccCustomersMapper.inBlackListByBusinessCodeWEB(customer);
-    }
+    }*/
 
     /***
      * 根据条件查询客户是否在黑名单

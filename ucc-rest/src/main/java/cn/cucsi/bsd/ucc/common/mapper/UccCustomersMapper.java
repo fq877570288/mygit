@@ -44,5 +44,5 @@ public interface UccCustomersMapper {
 
     UccCustomers selectUccCustomersByCode(Map<String, Object> whereMap) throws Exception;
 
-    int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception;
+    //int inBlackListByBusinessCodeWEB(UccCustomers customer) throws Exception;
 }

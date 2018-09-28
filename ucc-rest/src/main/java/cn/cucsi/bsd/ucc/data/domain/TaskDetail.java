@@ -168,6 +168,11 @@ public class TaskDetail {
     @JsonIgnore
     private String userId;
 
+    private String operatorId; //人员主键
+    private Date transferTime; //流转时间
+    private String nickName; //用户昵称
+    private String deptName; //部门名称
+
     public String getTaskDetailId() {
         return taskDetailId;
     }
@@ -646,5 +651,37 @@ public class TaskDetail {
 
     public void setTaskTypeName(String taskTypeName) {
         this.taskTypeName = taskTypeName;
+    }
+
+    public String getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(String operatorId) {
+        this.operatorId = operatorId;
+    }
+
+    public Date getTransferTime() {
+        return transferTime;
+    }
+
+    public void setTransferTime(Date transferTime) {
+        this.transferTime = transferTime;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }

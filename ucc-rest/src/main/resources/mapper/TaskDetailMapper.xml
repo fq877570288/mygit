@@ -62,6 +62,11 @@
     <result column="CALL_RESULT" property="callResult" jdbcType="VARCHAR" />
     <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
     <result column="TASK_TYPE_NAME" property="taskTypeName" jdbcType="VARCHAR" />
+    <result column="OPERATOR_ID" property="operatorId" jdbcType="VARCHAR" />
+    <result column="TRANSFER_TIME" property="transferTime" jdbcType="TIMESTAMP" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     TASK_DETAIL_ID, BUSINESS_CODE, TASK_TYPE_ID, DEPT_MESH_ID, DEPT_AREA_ID, DEPT_AGENCY_ID, 
@@ -86,6 +91,43 @@
     LEFT JOIN ucc_customers AS c ON a.domain_id = c.domain_id AND a.BUSINESS_CODE = c.businesscode
     LEFT JOIN OC_TASK_TRANSFER AS b ON a.TASK_DETAIL_ID = b.TASK_DETAIL_ID
     where 1=1 AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 主键查询 -->
+  <select id="selectByPrimaryKeyForWEB" resultMap="BaseResultMap"
+          parameterType="java.lang.String">
+    select
+      d.TASK_DETAIL_ID, d.BUSINESS_CODE, d.TASK_TYPE_ID, d.DEPT_MESH_ID,
+      d.DEPT_AREA_ID,
+      d.DEPT_AGENCY_ID,
+      d.TASK_CODE,  d.PHONE_NUMBER,
+      d.CUSTOMFIELDS1, d.CUSTOMFIELDS2,
+      d.CUSTOMFIELDS3,
+      d.CUSTOMFIELDS4,
+      d.CUSTOMFIELDS5, d.CUSTOMFIELDS6, d.CUSTOMFIELDS7, d.CUSTOMFIELDS8,
+      d.CUSTOMFIELDS9,
+      d.CUSTOMFIELDS10, d.CUSTOMFIELDS11, d.CUSTOMFIELDS12,
+      d.CUSTOMFIELDS13, d.CUSTOMFIELDS14,
+      d.CUSTOMFIELDS15,
+      d.RESPONSIBLE, d.NET_STOP,
+      d.PACKAGE_NAME, d.CONTRACT_NAME, d.CONTRACT_START_TIME,
+      d.CONTRACT_END_TIME,
+      d.ACTIVATION_TIME, d.DEVELOPMENT_DEPT, d.IMPORT_BATCH, d.IMPORT_PERSON_ID,
+      d.IMPORT_TIME,
+      d.PHONE_NUMBER2, d.PHONE_NUMBER3,
+      d.TASK_STATUS, d.ROPERATE_DEPT_ID,
+      d.DEFULT_PHONE,
+      d.USER_NAME,
+      c.contacts CONTACTS,
+      c.status STATUS,
+      c.installedaddress INSTALLED_ADDRESS,
+      c.ponlogo PON_LOGO,
+      c.tariffname TARIFF_NAME,
+      c.PRODUCT_TYPE PRODUCT_TYPE,
+      c.RATE RATE ,
+      d.END_DATE
+    from OC_TASK_DETAIL d left join ucc_customers c on c.businesscode = d.BUSINESS_CODE and c.domain_id = d.domain_id
+    where d.TASK_DETAIL_ID=#{taskDetailId}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
@@ -756,9 +798,8 @@
 	  count(d.TASK_DETAIL_ID)
    FROM
 	  OC_TASK_DETAIL as d
-	  LEFT JOIN ucc_users AS uu ON d.USER_ID = uu.user_id
+	  LEFT JOIN ucc_users AS uu ON d.USER_ID = uu.user_id and d.domain_id = uu.domain_id
    WHERE d.TASK_STATUS = '2'
-   and d.domain_id = uu.domain_id
    AND d.USER_ID = #{userId,jdbcType=VARCHAR}
   </select>
 
@@ -770,7 +811,6 @@
       OC_TASK_DETAIL as d
       LEFT JOIN ucc_users AS uu ON d.USER_ID = uu.user_id and d.domain_id = uu.domain_id
     WHERE d.TASK_STATUS = '3'
-    and d.domain_id = uu.domain_id
     AND d.USER_ID = #{userId,jdbcType=VARCHAR}
   </select>
 
@@ -784,7 +824,6 @@
     LEFT JOIN ucc_users AS uu ON d.OPERATOR_ID = uu.user_id and d.domain_id = uu.domain_id
     WHERE
 	   r.TRANSFER_STATUS = '4'
-	and d.domain_id = uu.domain_id
     AND r.TRANSFER_TIME BETWEEN #{dateStart} and #{dateEnd}
     AND d.OPERATOR_ID = #{userId,jdbcType=VARCHAR}
   </select>
@@ -1159,7 +1198,6 @@
     </foreach>
   </insert>
 
-
   <!-- 查询外呼任务列表 web用-->
   <select id="selectDetailByCode" resultMap="BaseResultMap"
           parameterType="java.util.Map">
@@ -1243,5 +1281,239 @@
     and r.TRANSFER_TIME between #{dateStart} and #{dateEnd}
     and d.OPERATOR_DEPT in (${deptIds})
   </select>
+
+  <!-- 查询一天的完成任务数 -->
+  <select id="queryCompleteTask" resultType="int" parameterType="java.util.Map">
+    select count(*)
+      from OC_TASK_RECORD d
+    inner join
+    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
+    where
+    <![CDATA[
+      r.ROPERATE_DEPT_ID in (${deptIds})
+      and TRANSFER_TIME between #{dateStart} and #{dateEnd}
+    ]]>
+  </select>
+
+  <!-- 查询一天的有效电话任务数 -->
+  <select id="queryECall" resultType="int" parameterType="java.util.Map">
+    select count(*)
+      from OC_TASK_RECORD d
+    inner join
+       OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
+    inner join pbx_cdrs c on c.cdrid = r.CDR_ID
+    where
+    <![CDATA[
+      r.ROPERATE_DEPT_ID in (${deptIds})
+      and c.call_time>=5 and
+      TRANSFER_TIME between #{dateStart} and #{dateEnd}
+    ]]>
+  </select>
+
+  <!-- 查询一天的所有外呼任务数 -->
+  <select id="queryACall" resultType="int" parameterType="java.util.Map">
+    select count(*)
+      from OC_TASK_RECORD d
+    inner join
+      OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
+    inner join pbx_cdrs c on c.cdrid = r.CDR_ID
+    where
+    <![CDATA[
+      r.ROPERATE_DEPT_ID in (${deptIds})
+      and TRANSFER_TIME between #{dateStart} and #{dateEnd}
+    ]]>
+  </select>
+    <!-- 任务监控列表 -->
+    <sql id="Sql_MonitorWhere">
+        <if test="businessCode != null and businessCode != ''">
+            and d.BUSINESS_CODE LIKE '%${businessCode}%'
+        </if>
+        <if test="taskTypeName != null and taskTypeName != ''">
+            and d.TASK_TYPE_ID = #{taskTypeName}
+        </if>
+        <if test="deptMeshName != null and deptMeshName != ''">
+            and p1.dept_name LIKE '%${deptMeshName}%'
+        </if>
+        <if test="deptAreaName != null and deptAreaName != ''">
+            and p2.dept_name LIKE '%${deptAreaName}%'
+        </if>
+        <if test="developmentDeptName != null and developmentDeptName != ''">
+            and p3.dept_name LIKE '%${developmentDeptName}%'
+        </if>
+        <if test="taskStatus != null and taskStatus != ''">
+            and d.TASK_STATUS = #{taskStatus}
+        </if>
+        <if test="taskTypeId != null and taskTypeId != ''">
+            and d.TASK_TYPE_ID = #{taskTypeId}
+        </if>
+        <if test="defultPhone != null and defultPhone != ''">
+            and d.DEFULT_PHONE LIKE '%${defultPhone}%'
+        </if>
+        <if test="userName != null and userName != ''">
+            and c.cust_name LIKE '%${userName}%'
+        </if>
+        <if test="taskCode != null and taskCode != ''">
+            and d.TASK_CODE LIKE '%${taskCode}%'
+        </if>
+        <if test="deptIdAndChildIds != null and deptIdAndChildIds != ''">
+            and d.ROPERATE_DEPT_ID in (${deptIdAndChildIds})
+        </if>
+    </sql>
+
+    <select id="selectMonitorBySearchSearchCount" resultType="int"
+            parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+        SELECT
+          count(d.TASK_DETAIL_ID)
+        FROM
+          OC_TASK_DETAIL d
+          LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
+          INNER JOIN OC_TASK_TRANSFER r ON d.TASK_DETAIL_ID = r.TASK_DETAIL_ID
+        AND r.TRANSFER_STATUS = d.TASK_STATUS
+            LEFT JOIN ucc_users u ON u.user_id = r.OPERATOR_ID
+            LEFT JOIN ucc_depts p ON p.dept_id = r.OPERATOR_DEPT
+            LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+            LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+            LEFT JOIN OC_TASK_TYPE e ON e.TASK_TYPE_ID = d.TASK_TYPE_ID
+        WHERE
+          1 = 1
+        <if test="beginTime != null and beginTime != ''">
+            and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        <include refid="Sql_MonitorWhere" />
+    </select>
+
+    <select id="selectMonitorBySearch" resultMap="BaseResultMap"
+            parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+        SELECT
+            d.TASK_CODE TASK_CODE,
+            e.TASK_TYPE_NAME TASK_TYPE_NAME,
+            d.TASK_STATUS TASK_STATUS,
+            d.BUSINESS_CODE BUSINESS_CODE,
+            c.cust_name USER_NAME,
+            d.DEFULT_PHONE DEFULT_PHONE,
+            u.nick_name nick_name,
+            p.dept_name dept_name,
+            r.TRANSFER_TIME TRANSFER_TIME,
+            d.TASK_DETAIL_ID TASK_DETAIL_ID,
+            d.DEPT_MESH_ID DEPT_MESH_ID,
+            d.DEPT_AREA_ID DEPT_AREA_ID,
+            p1.dept_name DEPT_MESH_NAME,
+            p2.dept_name DEPT_AREA_NAME
+        FROM
+            OC_TASK_DETAIL d
+            LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+            AND d.domain_id = c.domain_id
+            INNER JOIN OC_TASK_TRANSFER r ON d.TASK_DETAIL_ID = r.TASK_DETAIL_ID
+            AND r.TRANSFER_STATUS = d.TASK_STATUS
+            LEFT JOIN ucc_users u ON u.user_id = r.OPERATOR_ID
+            LEFT JOIN ucc_depts p ON p.dept_id = r.OPERATOR_DEPT
+            LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+            LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+            LEFT JOIN OC_TASK_TYPE e ON e.TASK_TYPE_ID = d.TASK_TYPE_ID
+        WHERE
+          1 = 1
+        <if test="beginTime != null and beginTime != ''">
+            and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        <include refid="Sql_MonitorWhere" />
+        order by d.TASK_STATUS, d.TASK_CODE DESC
+        <if test="begin != null and showLines != null and showLines != 0">
+            limit #{begin},#{showLines}
+        </if>
+    </select>
+
+    <select id="selectTaskDetailIdByMonitorSearch" resultType="java.lang.String"
+            parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+        SELECT
+          d.TASK_DETAIL_ID TASK_DETAIL_ID
+        FROM
+          OC_TASK_DETAIL d
+            LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+            INNER JOIN OC_TASK_TRANSFER r ON d.TASK_DETAIL_ID = r.TASK_DETAIL_ID
+            AND r.TRANSFER_STATUS = d.TASK_STATUS
+            LEFT JOIN ucc_users u ON u.user_id = r.OPERATOR_ID
+            LEFT JOIN ucc_depts p ON p.dept_id = r.OPERATOR_DEPT
+            LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+            LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+            LEFT JOIN OC_TASK_TYPE e ON e.TASK_TYPE_ID = d.TASK_TYPE_ID
+        WHERE
+          1 = 1
+        <if test="beginTime != null and beginTime != ''">
+            and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        <include refid="Sql_MonitorWhere" />
+    </select>
+
+    <!-- 办结任务列表 -->
+    <select id="selectCompleteBySearchCount" resultType="int"
+            parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+        SELECT
+          count(d.TASK_DETAIL_ID)
+        FROM
+            OC_TASK_DETAIL d
+            LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+            AND d.domain_id = c.domain_id
+            LEFT JOIN OC_TASK_TRANSFER t ON d.TASK_DETAIL_ID = t.TASK_DETAIL_ID
+        WHERE
+            t.TRANSFER_STATUS = '4'
+        <include refid="Sql_Where" />
+    </select>
+    <select id="selectCompleteBySearch" resultMap="BaseResultMap"
+            parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+        SELECT
+            d.TASK_DETAIL_ID,
+            d.BUSINESS_CODE,
+            d.TASK_TYPE_ID,
+            d.DEPT_MESH_ID,
+            d.DEPT_AREA_ID,
+            d.DEVELOPMENT_DEPT,
+            d.TASK_CODE,
+            c.cust_name AS USER_NAME,
+            d.DEFULT_PHONE,
+            t.OPERATOR_ID OPERATOR_ID,
+            t.TRANSFER_TIME TRANSFER_TIME
+        FROM
+            OC_TASK_DETAIL d
+            LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
+            LEFT JOIN OC_TASK_TRANSFER t ON d.TASK_DETAIL_ID = t.TASK_DETAIL_ID
+        WHERE
+          t.TRANSFER_STATUS = '4'
+        <include refid="Sql_Where" />
+        order by d.TASK_CODE DESC
+        <if test="begin != null and showLines != null and showLines != 0">
+            limit #{begin},#{showLines}
+        </if>
+    </select>
+
+    <!-- 查询超过任务截止日期的任务状态更改为已办结   Add by bli 2017-02-03-->
+    <select id="selectTaskStatusByEndDate" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
+        select * from OC_TASK_DETAIL
+        <where>
+            <if test="endDateBeforeNow != null and endDateBeforeNow != ''">
+                AND sysdate() <![CDATA[>]]> END_DATE
+            </if>
+            <if test="importBatch != null and importBatch != ''">
+                AND IMPORT_BATCH = #{importBatch}
+            </if>
+            <if test="taskDetailIdInList != null and taskDetailIdInList != ''">
+                AND TASK_DETAIL_ID in
+                <foreach item="myId" index="index" collection="taskDetailIdInList"
+                         open="(" separator="," close=")">
+                    #{myId}
+                </foreach>
+            </if>
+        </where>
+        LIMIT 5000
+    </select>
+
 
 </mapper>

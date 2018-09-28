@@ -24,6 +24,9 @@ public interface TaskDetailMapper {
     //根据taskDetailId连表查询
     TaskDetail selectByPrimaryKey(String taskDetailId);
 
+    //根据taskDetailId连表查询（WEB端用）
+    TaskDetail selectByPrimaryKeyForWEB(String taskDetailId);
+
     int updateByPrimaryKeySelective(TaskDetail record);
 
     int updateByPrimaryKey(TaskDetail record);
@@ -119,5 +122,24 @@ public interface TaskDetailMapper {
     int selectCompleteByDaysCount(Map<String, Object> map);
     //zss
     int selectCompleteTodayCount(Map<String, Object> map);
+
+    //视图
+    int queryCompleteTask(Map<String, Object> map) throws Exception;
+
+    int queryECall(Map<String, Object> emap) throws Exception;
+
+    int queryACall(Map<String, Object> amap) throws Exception;
+
+    int selectMonitorBySearchSearchCount(TaskDetailSearch search) throws Exception;
+
+    List<TaskDetail> selectMonitorBySearch(TaskDetailSearch search) throws Exception;
+
+    List<String> selectTaskDetailIdByMonitorSearch(TaskDetailSearch search) throws Exception;
+
+    int selectCompleteBySearchCount(TaskDetailSearch search) throws Exception;
+
+    List<TaskDetail> selectCompleteBySearch(TaskDetailSearch search) throws Exception;
+
+    List<TaskDetail> selectTaskStatusByEndDate(TaskDetailSearch search) throws Exception;
 
 }

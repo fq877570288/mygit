@@ -20,6 +20,15 @@
     <result column="call_time" property="callTime" jdbcType="INTEGER" />
     <result column="TASK_CODE" property="taskCode" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="total_time" property="totalTime" jdbcType="INTEGER" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="answered_time" property="answeredTime" jdbcType="TIMESTAMP" />
+    <result column="hangup_time" property="hangupTime" jdbcType="TIMESTAMP" />
+    <result column="recordid1" property="recordid1" jdbcType="VARCHAR" />
+    <result column="recordid2" property="recordid2" jdbcType="VARCHAR" />
+    <result column="qc" property="qc" jdbcType="INTEGER" />
+    <result column="hangup_cause" property="hangupCause" jdbcType="VARCHAR" />
+    <result column="RECEIVE_DEPT_NAME" property="receiveDeptName" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -348,6 +357,45 @@
     left join OC_TASK_DETAIL d on t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
     where t.TASK_DETAIL_ID in ( ${taskDetailIds} )
     and t.CDR_ID is not null
+    order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC
+  </select>
+
+  <select id="selectTransferByTaskDetailIdInList" resultMap="BaseResultMap">
+    SELECT
+      t.TASK_TRANSFER_ID TASK_TRANSFER_ID,
+      t.TASK_DETAIL_ID TASK_DETAIL_ID,
+      t.TRANSFER_STATUS TRANSFER_STATUS,
+      t.ROPERATE_PERSON_ID ROPERATE_PERSON_ID,
+      t.ROPERATE_DEPT_ID ROPERATE_DEPT_ID,
+      t.CALL_MEMO CALL_MEMO,
+      t.CALL_RESULT CALL_RESULT,
+      t.TRANSFE_ROPERATE TRANSFE_ROPERATE,
+      t.TRANSFER_TIME TRANSFER_TIME,
+      t.CDR_ID CDR_ID,
+      t.BACK_MEMO BACK_MEMO,
+      t.OPERATOR_ID OPERATOR_ID,
+      t.OPERATOR_DEPT OPERATOR_DEPT,
+      c.destination_number destination_number,
+      c.total_time total_time,
+      c.call_time call_time,
+      c.created_time created_time,
+      c.answered_time answered_time,
+      c.hangup_time hangup_time,
+      c.recordid1 recordid1,
+      c.recordid2 recordid2,
+      c.qc qc,
+      c.hangup_cause hangup_cause,
+      p1.dept_name RECEIVE_DEPT_NAME
+    FROM
+     OC_TASK_TRANSFER t
+    LEFT JOIN pbx_cdrs c ON t.CDR_ID = c.cdr_id
+    LEFT JOIN OC_TASK_DETAIL d ON d.TASK_DETAIL_ID = t.TASK_DETAIL_ID
+    LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+    where t.TASK_DETAIL_ID in
+    <foreach item="item" index="index" collection="list"
+             open="(" separator="," close=")">
+      #{item}
+    </foreach>
     order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC
   </select>
 </mapper>
