@@ -5,6 +5,8 @@ import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.scripts.JS;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import java.util.*;
 @RequestMapping(value = "/home")
 public class HomeController {
     private static SimpleDateFormat sdf = new SimpleDateFormat("M.d");
+    private static SimpleDateFormat sdf_M_D_CHINA = new SimpleDateFormat("M月d日");
     @Autowired
     private PbxExtsService pbxExtsService;
     @Autowired
@@ -153,11 +156,12 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "主页Echars", notes = "主页Echars", httpMethod = "POST")
     @RequestMapping(value="/chartforpoint", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public Map<String,Object> ChartTaskList(TaskDetailSearch search){
-        Map<String,Object> map = new HashMap<String,Object>();
+    public String ChartTaskList(TaskDetailSearch search){
+        JSONObject jsonObject = new JSONObject();
         try{
-            map.put("return_msg", "success");
-            map.put("return_code", "success");
+            JSONArray j = new JSONArray();
+            jsonObject.put("return_msg", "success");
+            jsonObject.put("return_code", "success");
             String deptIdAndChildId = "";
             if(search.getDeptIdAndChildIds() != null && search.getDeptIdAndChildIds().length() > 0){
                 deptIdAndChildId = search.getDeptIdAndChildIds().replaceAll(",", "','");
@@ -168,7 +172,7 @@ public class HomeController {
             int eCallInts[] =  new int[7];
             int aCallInts[] =  new int[7];
             for(int i=6; i>=0;i--){
-                long date = new Date().getTime()-i*24*60*60*1000;
+                long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
                 //把一天的完成任务数装到完成任务数组中
                 cTaskInts[6-i]=taskService.queryCompleteTask(new Date(date),deptIds,search.getDomainId());
 
@@ -178,33 +182,33 @@ public class HomeController {
                 //把一天的外呼电话数装到外呼电话数组中
                 aCallInts[6-i]=taskService.queryACall(new Date(date),deptIds,search.getDomainId());
             }
-
-            map.put("c", cTaskInts);
-            map.put("e", eCallInts);
-            map.put("a", aCallInts);
-
-            GregorianCalendar gc =new GregorianCalendar();
-            Date now = new Date();
-            gc.setTime(now);
-            StringBuilder dates = new StringBuilder();
-            int c = 6;
-            for(int i=c;i>=0;i--){
-                gc.add(5,-i);
-                dates.append(sdf.format(gc.getTime()));
-                if(i!=0){
-                    dates.append(",");
-                }
+            String time = "";
+            JSONObject json;
+            for(int i=6; i>=0;i--){
+                long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
+                time = sdf_M_D_CHINA.format(new Date(date));
+                json = new JSONObject();
+                json.put("month",time);
+                json.put("c",cTaskInts[i]);
+                json.put("e",eCallInts[i]);
+                json.put("a",aCallInts[i]);
+                j.put(json);
+                json =null;
             }
-
-            map.put("nows", dates.toString());
-            return map;
+            jsonObject.put("data", j);
+            return jsonObject.toString();
         }catch (Exception e){
             System.out.println("主页Echars失败！");
             e.printStackTrace();
         }
-        map.put("return_msg", "error");
-        map.put("return_code", "error");
-        return map;
+        try{
+            jsonObject.put("return_msg", "error");
+            jsonObject.put("return_code", "error");
+        }catch (Exception e){
+            System.out.println("封装json失败");
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
     }
     /**
      * 监控中心
