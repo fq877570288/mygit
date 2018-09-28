@@ -77,7 +77,7 @@ public interface TaskService {
 	 */
 	int selectOngoingNoCount(String deptIds);
 	/****
-	 * 7日内办结任务数量 （移植自outcall）
+	 * 本月内办结任务数量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
