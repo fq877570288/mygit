@@ -67,7 +67,7 @@ public class ExportUtil {
 		//rsp.setContentType("application/vnd.ms-excel;charset=utf-8");
                 rsp.setHeader("Content-type", "application-download");
                 SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		rsp.setHeader("Content-Disposition", "attachment;filename=" + TableName + df.format(new Date()) + ".xls");
+		rsp.setHeader("Content-Disposition", "attachment;filename=" +  df.format(new Date()) + ".xls");
 
 		/**
 		 * 初始化
