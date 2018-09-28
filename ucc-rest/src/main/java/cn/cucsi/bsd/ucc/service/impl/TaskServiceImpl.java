@@ -410,47 +410,51 @@ public class TaskServiceImpl implements TaskService {
 	}
 	//zss
 	@Override
-	public int selectWaitAllCount(String deptIds) {
+	public int selectWaitAllCount(String deptIds,String domainId) {
 		Map<String, Object> cmap=new HashMap<String, Object>();
 		String dateStr = sdf.format(new Date());
 		cmap.put("dateStart", dateStr+" 00:00:00");
 		cmap.put("dateEnd", dateStr+" 23:59:59");
 		cmap.put("deptIds", deptIds);
+        cmap.put("domainId", domainId);
 		return taskDetailMapper.selectWaitAllCount(cmap);
 	}
 	//zss
 	@Override
-	public int selectWaitTodayCount(String deptIds){
+	public int selectWaitTodayCount(String deptIds,String domainId){
 		Map<String, Object> cmap=new HashMap<String, Object>();
 		String dateStr = sdf.format(new Date());
 		cmap.put("dateStart", dateStr+" 00:00:00");
 		cmap.put("dateEnd", dateStr+" 23:59:59");
 		cmap.put("deptIds", deptIds);
+        cmap.put("domainId", domainId);
 		return taskDetailMapper.selectWaitTodayCount(cmap);
 	}
 	//zss
 	@Override
-	public int selectOngoingAllCount(String deptIds){
+	public int selectOngoingAllCount(String deptIds,String domainId){
 		Map<String, Object> cmap=new HashMap<String, Object>();
 		String dateStr = sdf.format(new Date());
 		cmap.put("dateStart", dateStr+" 00:00:00");
 		cmap.put("dateEnd", dateStr+" 23:59:59");
 		cmap.put("deptIds", deptIds);
+        cmap.put("domainId", domainId);
 		return taskDetailMapper.selectOngoingAllCount(cmap);
 	}
 	//zss
 	@Override
-	public int selectOngoingNoCount(String deptIds){
+	public int selectOngoingNoCount(String deptIds,String domainId){
 		Map<String, Object> cmap=new HashMap<String, Object>();
 		String dateStr = sdf.format(new Date());
 		cmap.put("dateStart", dateStr+" 00:00:00");
 		cmap.put("dateEnd", dateStr+" 23:59:59");
 		cmap.put("deptIds", deptIds);
+        cmap.put("domainId", domainId);
 		return taskDetailMapper.selectOngoingNoCount(cmap);
 	}
 	//zss
 	@Override
-	public int selectCompleteByDaysCount(String deptIds){
+	public int selectCompleteByDaysCount(String deptIds,String domainId){
 		Map<String, Object> cmap=new HashMap<String, Object>();
 		Date now = new Date();
 		String dateStr = sdf.format(now);
@@ -458,17 +462,52 @@ public class TaskServiceImpl implements TaskService {
 		cmap.put("dateStart", sdfyyyyMM.format(now)+"-01 00:00:00");
 		cmap.put("dateEnd", dateStr+" 23:59:59");
 		cmap.put("deptIds", deptIds);
+        cmap.put("domainId", domainId);
 		return taskDetailMapper.selectCompleteByDaysCount(cmap);
 	}
 	//zss
 	@Override
-	public int selectCompleteTodayCount(String deptIds){
+	public int selectCompleteTodayCount(String deptIds,String domainId){
 		Map<String, Object> cmap=new HashMap<String, Object>();
 		String dateStr = sdf.format(new Date());
 		cmap.put("dateStart", dateStr+" 00:00:00");
 		cmap.put("dateEnd", dateStr+" 23:59:59");
 		cmap.put("deptIds", deptIds);
+        cmap.put("domainId", domainId);
 		return taskDetailMapper.selectCompleteTodayCount(cmap);
+	}
+
+	@Override
+	public int queryCompleteTask(Date date, String deptIds ,String domainId) {
+		Map<String, Object> cmap=new HashMap<String, Object>();
+		String dateStr = sdf.format(date);
+		cmap.put("dateStart", dateStr+" 00:00:00");
+		cmap.put("dateEnd", dateStr+" 23:59:59");
+		cmap.put("deptIds", deptIds);
+        cmap.put("domainId", domainId);
+		return taskDetailMapper.queryCompleteTask(cmap);
+	}
+
+	@Override
+	public int queryECall(Date date, String deptIds ,String domainId) {
+		Map<String, Object> emap=new HashMap<String, Object>();
+		String dateStr = sdf.format(date);
+		emap.put("dateStart", dateStr+" 00:00:00");
+		emap.put("dateEnd", dateStr+" 23:59:59");
+		emap.put("deptIds", deptIds);
+        emap.put("domainId", domainId);
+		return taskDetailMapper.queryECall(emap);
+	}
+
+	@Override
+	public int queryACall(Date date, String deptIds ,String domainId) {
+		Map<String, Object> amap=new HashMap<String, Object>();
+		String dateStr = sdf.format(date);
+		amap.put("dateStart", dateStr+" 00:00:00");
+		amap.put("dateEnd", dateStr+" 23:59:59");
+		amap.put("deptIds", deptIds);
+        amap.put("domainId", domainId);
+		return taskDetailMapper.queryACall(amap);
 	}
 
 }

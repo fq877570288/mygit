@@ -119,5 +119,10 @@ public interface TaskDetailMapper {
     int selectCompleteByDaysCount(Map<String, Object> map);
     //zss
     int selectCompleteTodayCount(Map<String, Object> map);
-
+    //zss
+    int queryCompleteTask(Map<String, Object> map);
+    //zss
+    int queryECall(Map<String, Object> emap);
+    //zss
+    int queryACall(Map<String, Object> amap);
 }

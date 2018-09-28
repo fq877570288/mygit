@@ -1,5 +1,7 @@
 package cn.cucsi.bsd.ucc.service;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,36 +57,53 @@ public interface TaskService {
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectWaitAllCount(String deptIds);
+	int selectWaitAllCount(String deptIds,String domainId);
 	/***
 	 *  今日新增待办任务量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectWaitTodayCount(String deptIds);
+	int selectWaitTodayCount(String deptIds,String domainId);
 	/****
 	 * 在办任务总量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectOngoingAllCount(String deptIds);
+	int selectOngoingAllCount(String deptIds,String domainId);
 	/****
 	 * 办理过但是没办完的任务数量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectOngoingNoCount(String deptIds);
+	int selectOngoingNoCount(String deptIds,String domainId);
 	/****
 	 * 本月内办结任务数量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectCompleteByDaysCount(String deptIds);
+	int selectCompleteByDaysCount(String deptIds,String domainId);
 	/****
 	 * 今日办结任务数量
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectCompleteTodayCount(String deptIds);
-
+	int selectCompleteTodayCount(String deptIds,String domainId);
+	/****
+ 	 * 	视图
+	 * 	add by zss
+	 *  2018-09-26
+ 	 */
+	int queryCompleteTask(Date date, String deptIds ,String domainId);
+	/****
+	 * 	(移植源码无注释)
+	 * 	add by zss
+	 *  2018-09-26
+	 */
+	int queryECall(Date date, String deptIds ,String domainId);
+	/****
+	 * 	(移植源码无注释)
+	 * 	add by zss
+	 *  2018-09-26
+	 */
+	int queryACall(Date date, String deptIds ,String domainId);
 }

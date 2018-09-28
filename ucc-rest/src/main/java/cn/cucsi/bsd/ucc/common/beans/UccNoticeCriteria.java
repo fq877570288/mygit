@@ -17,6 +17,7 @@ public class UccNoticeCriteria extends BasicCriteria {
     private Date noticeTimeFrom;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date noticeTimeTo;
+    private String domainId;
 
     //应移植需求增加 start zss
     private String flag; //通知跟踪状态，0表示未读，1表示已读
@@ -77,5 +78,13 @@ public class UccNoticeCriteria extends BasicCriteria {
 
     public void setNoticeTitle(String noticeTitle) {
         this.noticeTitle = noticeTitle;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }

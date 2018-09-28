@@ -34,6 +34,6 @@ public interface UccNoticeService {
      */
     ResultBean_New<UccNotice> showNoticeDetailByNoticeId(ShowNoticeDetailCriteria showNoticeDetailCriteria);
     //zss
-    int selectByFlagCount(String userId);
-    int selectByFlagTypeCount(String userId);
+    int selectByFlagCount(String userId,String domainId);
+    int selectByFlagTypeCount(String userId,String domainId);
 }
