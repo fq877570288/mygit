@@ -142,4 +142,147 @@ public class PbxCdrsController {
         }
     }
 
+    @ApiOperation(value = "根据cdrId获取录音文件,逗号分隔", notes = "根据cdrId获取录音文件,逗号分隔")
+    @RequestMapping(value = "/{cdrIds}/downloadzip",method= RequestMethod.POST)
+    public void downloadFiles(HttpServletResponse rsp,@PathVariable String cdrIds)
+    {
+        try {
+            List<File> files = new ArrayList<File>();
+            for (String cdrId : cdrIds.split(",")) {
+                PbxRecords record = this.PbxCdrsService.findOne(cdrId).getPbxRecords1();
+                //String fileName = record.getRecordName();
+                //InputStream inputStream = null;
+                //定义响应头
+                //rsp.setContentType(record.getContentType());
+                
+                   
+                /*if(record.getType().equals("1"))
+                {
+                     /*File file = new File(filePath + "\\" + record.getRecordName());
+                    files.add(record.getContent());
+                   FileOutputStream f = new FileOutputStream;
+                    */
+                //}
+                //else if(record.getType().equals("2"))
+                //{
+                    String filePath = systemConfigService.findOne("recordPath").getValue();
+                    File file = new File(filePath + "\\" + record.getRecordName());
+                     System.out.println(filePath + "\\" + record.getRecordName());
+                    if(file==null|| !file.exists()){
+                        //logger.error("要下载的文件不存在，忽略这个文件，文件名： "+fileQualifiedName);
+                    }else{
+                        files.add(file);
+                    }
+                //}
+            }
+            
+            UUIDGenerator generatorNot = new UUIDGenerator();
+            String taskTransferUuidNot = generatorNot.generate();
+            String fileName = taskTransferUuidNot + ".zip";
+                //rsp.setCharacterEncoding("utf-8");
+                //rsp.setContentType("application/zip;charset=utf-8");
+                rsp.setHeader("Content-Disposition", "attachment; filename=" + fileName); 
+            //rsp.setHeader("Content-Disposition", "attachment; filename=aa.zip");
+            String filePath = systemConfigService.findOne("recordPath").getValue();
+            File zipFile = new File(filePath + "\\" + fileName);
+            zipFiles(files, zipFile);
+           
+            
+            
+            
+         /*   
+            InputStream inputStream = null;
+        //定义响应头
+        rsp.setContentType("application/zip;charset=utf-8");
+        rsp.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+         // File file = new File(filePath + "\\" + record.getRecordName());
+            try {
+                //读取文件到ouputStream
+                inputStream = new FileInputStream(zipFile);
+                int tempbyte;
+                byte[] musicFile = new byte[1024];
+                OutputStream os = rsp.getOutputStream();
+                while ((tempbyte = inputStream.read(musicFile)) != -1) {
+                    os.write(musicFile, 0, tempbyte);
+                }
+                os.close();
+            } catch (Exception e) {
+                // e.printStackTrace();
+                // TODO 处理connect reset
+            }   
+            */
+            
+            
+            
+            
+            File file = new File(filePath + "\\" + fileName);
+            //读取文件到ouputStream
+            FileInputStream inputStream = new FileInputStream(file);
+            int tempbyte;
+            byte[] musicFile = new byte[1024];
+            OutputStream os = rsp.getOutputStream();
+            while ((tempbyte = inputStream.read(musicFile)) != -1) {
+                os.write(musicFile, 0, tempbyte);
+            }
+             //rsp.flushBuffer();
+            os.close();
+            File filede = new File(filePath + "\\" + fileName);
+            if(filede.exists()){
+                filede.delete();
+            }
+
+	}
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void zipFiles(List<File> srcFiles, File zipFile) {
+        // 判断压缩后的文件存在不，不存在则创建
+        if (!zipFile.exists()) {
+            try {
+                zipFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // 创建 FileOutputStream 对象
+        FileOutputStream fileOutputStream = null;
+        // 创建 ZipOutputStream
+        ZipOutputStream zipOutputStream = null;
+        // 创建 FileInputStream 对象
+        FileInputStream fileInputStream = null;
+
+        try {
+            // 实例化 FileOutputStream 对象
+            fileOutputStream = new FileOutputStream(zipFile);
+            // 实例化 ZipOutputStream 对象
+            zipOutputStream = new ZipOutputStream(fileOutputStream);
+            // 创建 ZipEntry 对象
+            ZipEntry zipEntry = null;
+            // 遍历源文件数组
+            for (int i = 0; i < srcFiles.size(); i++) {
+                // 将源文件数组中的当前文件读入 FileInputStream 流中
+                fileInputStream = new FileInputStream(srcFiles.get(i));
+                // 实例化 ZipEntry 对象，源文件数组中的当前文件
+                zipEntry = new ZipEntry(srcFiles.get(i).getName());
+                zipOutputStream.putNextEntry(zipEntry);
+                // 该变量记录每次真正读的字节个数
+                int len;
+                // 定义每次读取的字节数组
+                byte[] buffer = new byte[1024];
+                //OutputStream os = rsp.getOutputStream();
+                while ((len = fileInputStream.read(buffer)) > 0) {
+                    zipOutputStream.write(buffer, 0, len);
+                }
+            }
+            zipOutputStream.closeEntry();
+            zipOutputStream.close();
+            //fileInputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
