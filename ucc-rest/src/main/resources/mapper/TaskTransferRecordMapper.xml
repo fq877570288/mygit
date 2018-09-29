@@ -56,7 +56,7 @@
 		#{record.taskRecordId,jdbcType=VARCHAR}, #{record.transferStatus,jdbcType=VARCHAR}, #{record.roperatePersonId,jdbcType=VARCHAR},
 		#{record.roperateDeptId,jdbcType=VARCHAR}, #{record.callMemo,jdbcType=VARCHAR}, #{record.callResult,jdbcType=VARCHAR}, 
 		#{record.transfeRoperate,jdbcType=VARCHAR}, #{record.transferTime,jdbcType=TIMESTAMP}, #{record.cdrId,jdbcType=VARCHAR}, #{record.backMemo,jdbcType=VARCHAR}, 
-		#{record.recordTime,jdbcType=TIMESTAMP}, #{record.recordOperatorId,jdbcType=TIMESTAMP}, #{record.recordOperatorDept,jdbcType=VARCHAR} , #{domainId,jdbcType=VARCHAR}
+		#{record.recordTime,jdbcType=TIMESTAMP}, #{record.recordOperatorId,jdbcType=TIMESTAMP}, #{record.recordOperatorDept,jdbcType=VARCHAR} , #{record.domainId,jdbcType=VARCHAR}
 		)
 		</foreach>
 	</insert>

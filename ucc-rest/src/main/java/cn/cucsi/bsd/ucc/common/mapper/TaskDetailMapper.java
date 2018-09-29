@@ -21,8 +21,8 @@ public interface TaskDetailMapper {
 
     int insertSelective(TaskDetail record);
 
-    //根据taskDetailId连表查询
-    TaskDetail selectByPrimaryKey(String taskDetailId);
+    //根据条件连表查询（移动端用，因为关联流转表所以可能会返回多个）
+    List<TaskDetail> selectByPrimaryKey(ShowTaskDetailCriteria showTaskDetailCriteria);
 
     //根据taskDetailId连表查询（WEB端用）
     TaskDetail selectByPrimaryKeyForWEB(String taskDetailId);

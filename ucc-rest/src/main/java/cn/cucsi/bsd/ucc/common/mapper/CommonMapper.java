@@ -1,10 +1,14 @@
 package cn.cucsi.bsd.ucc.common.mapper;
 
 import cn.cucsi.bsd.ucc.data.domain.SystemConfig;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 
+@Mapper
+@Repository
 public interface CommonMapper {
 	
 
