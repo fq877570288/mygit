@@ -80,7 +80,7 @@
     ROPERATE_DEPT_ID, USER_NAME, DEFULT_PHONE, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID, 
     END_DATE, USER_ID,domain_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.ShowTaskDetailCriteria" >
     SELECT
         a.*, c.cust_name AS cust_name,
         c.defult_phone AS customer_phone,
@@ -91,7 +91,9 @@
         OC_TASK_DETAIL AS a
     LEFT JOIN ucc_customers AS c ON a.domain_id = c.domain_id AND a.BUSINESS_CODE = c.businesscode
     LEFT JOIN OC_TASK_TRANSFER AS b ON a.TASK_DETAIL_ID = b.TASK_DETAIL_ID
-    where 1=1 AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+    where 1=1
+    AND a.BUSINESS_CODE = #{businessCode,jdbcType=VARCHAR}
+    AND a.domain_id = #{domainId,jdbcType=VARCHAR}
   </select>
 
   <!-- 主键查询 -->
@@ -1203,11 +1205,10 @@
   <select id="selectDetailByCode" resultMap="BaseResultMap"
           parameterType="java.util.Map">
     SELECT
-      d.*, tt.TASK_TYPE_NAME,pp.CDR_ID
+      d.*, tt.TASK_TYPE_NAME
     FROM
       OC_TASK_DETAIL d
       INNER JOIN OC_TASK_TYPE tt ON d.TASK_TYPE_ID = tt.TASK_TYPE_ID
-      LEFT JOIN OC_TASK_TRANSFER pp ON d.TASK_DETAIL_ID = pp.TASK_DETAIL_ID
     WHERE
       1 = 1
     AND d.TASK_STATUS IN ('2', '3')

@@ -11,10 +11,7 @@ import cn.cucsi.bsd.ucc.common.mapper.TaskDetailMapper;
 import cn.cucsi.bsd.ucc.common.mapper.TaskTransferMapper;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
-import cn.cucsi.bsd.ucc.data.domain.Paging;
-import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
-import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
-import cn.cucsi.bsd.ucc.data.domain.UccDepts;
+import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.data.repo.UccCustomersRepository;
 import cn.cucsi.bsd.ucc.service.TaskService;
 import cn.cucsi.bsd.ucc.service.UccDeptsService;
@@ -132,6 +129,9 @@ public class TaskServiceImpl implements TaskService {
                 for (int j = 0; j < taskDetailList.size(); j++) {
                     taskDetail = taskDetailList.get(j);
                     userId = taskDetail.getUserId()==null?"":taskDetail.getUserId();
+					// 部门
+					List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+					String backDept = uccDeptsList.get(0).getDeptPid().toString();
                     taskDetailId = taskDetail.getTaskDetailId()==null?"":taskDetail.getTaskDetailId();
                     // 主键
                     UUIDGenerator generator = new UUIDGenerator();
@@ -141,6 +141,7 @@ public class TaskServiceImpl implements TaskService {
                     // 流转时间
                     Timestamp transferTime = new Timestamp(System.currentTimeMillis());
 
+					taskTransfer.setRoperateDeptId(backDept);
                     taskTransfer.setTaskTransferId(taskTransferUuid);
                     taskTransfer.setTransferStatus("5"); //流转状态   0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
                     taskTransfer.setTransfeRoperate(TaskTransfer.BACK); //流转操作  0:创建、1：分派、2：接收、3：回退
@@ -151,7 +152,7 @@ public class TaskServiceImpl implements TaskService {
 
                     //撤回任务时执行插入任务流转表
                     try {
-						taskTransferMapper.deleteByTaskDetailId(taskDetailId);
+						//taskTransferMapper.deleteByTaskDetailId(taskDetailId);
 						taskTransferMapper.insert(taskTransfer);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -218,13 +219,11 @@ public class TaskServiceImpl implements TaskService {
         String custName = "";//客户姓名
         String customerPhone = "";//客户联系电话
 		try {
-			taskDetailList = taskDetailMapper.selectDetailByCriteria(showTaskDetailCriteria);
+			taskDetailList = taskDetailMapper.selectByPrimaryKey(showTaskDetailCriteria);
 			if(!MyUtils.isBlank(taskDetailList)){
 				for (int j = 0; j < taskDetailList.size(); j++) {
 					taskDetail = taskDetailList.get(j);
 					taskDetailId = taskDetail.getTaskDetailId()==null?"":taskDetail.getTaskDetailId();
-					//根据任务明细ID查询客户任务详情
-					taskDetail =  taskDetailMapper.selectByPrimaryKey(taskDetailId);
 					responsible = taskDetail.getResponsible()==null?"":taskDetail.getResponsible();//责任体
 					packageName = taskDetail.getPackageName()==null?"":taskDetail.getPackageName();//套餐名称
 					contractName = taskDetail.getContractName()==null?"":taskDetail.getContractName();//合约名称

@@ -19,7 +19,7 @@ public interface OngoingTaskService {
 
 	
 	/***
-	 * 根据业务编码查询任务列表
+	 * 根据业务编码、租户ID查询任务列表
 	 */
 	List<TaskDetail> selectDetailByBusinessCode(String businessCode,String domainId) throws Exception;
 

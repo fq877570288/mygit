@@ -252,7 +252,7 @@
       c.destination_number as destination_number,
       c.call_time as call_time,
       d.TASK_CODE as TASK_CODE,
-      ud.dept_name as roperateDept,
+      ud.dept_name as RECEIVE_DEPT_NAME,
       uu.user_name as user_name
     from OC_TASK_TRANSFER t
       left join pbx_cdrs c on t.CDR_ID = c.cdr_id
@@ -351,10 +351,12 @@
       t.OPERATOR_DEPT OPERATOR_DEPT,
       c.destination_number destination_number,
       c.call_time call_time,
-      d.TASK_CODE TASK_CODE
+      d.TASK_CODE TASK_CODE,
+      p1.dept_name RECEIVE_DEPT_NAME
     from OC_TASK_TRANSFER t
     left join pbx_cdrs c on t.CDR_ID = c.cdr_id
     left join OC_TASK_DETAIL d on t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
+    left join ucc_depts p1 on t.ROPERATE_DEPT_ID = p1.dept_id
     where t.TASK_DETAIL_ID in ( ${taskDetailIds} )
     and t.CDR_ID is not null
     order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC

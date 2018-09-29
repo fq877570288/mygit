@@ -135,7 +135,7 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 			// 部门
 			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 
-			String deptId = uccDeptsList.get(0).getDeptId().toString();
+			String deptId = uccDeptsList.get(0).getDeptId();
 
 			List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
 			TaskTransfer taskTransfer = null;
@@ -158,7 +158,7 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
                         logger.error("cinfos不到4位 cinfo: "+cinfo);
                     }
                     if("4".equals(cinfos[3])){
-                        TaskDetail taskDetail = taskDetailMapper.selectByPrimaryKey(cinfos[0]);
+                        TaskDetail taskDetail = taskDetailMapper.selectByPrimaryKeyForWEB(cinfos[0]);
                         if(taskDetail==null){
                             logger.error("taskDetail为空,也许是重复提交导致的，忽略本条任务: "+cinfo);
                             continue;
@@ -382,7 +382,7 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 		// 部门
 		List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 		
-		search.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
+		search.setRoperateDeptId(uccDeptsList.get(0).getDeptId());
 		
 		// 查询下一个businessCode 状态为待办
 		search.setTaskStatus("2");
