@@ -18,7 +18,6 @@ public class TaskTransfer {
     public static final String RECEIVE = "2"; // 接收
     public static final String BACK = "3"; // 回退
 
-    @JsonIgnore
     private String taskTransferId; //主键
 
     @ApiModelProperty(value = "任务明细主键",required = true)

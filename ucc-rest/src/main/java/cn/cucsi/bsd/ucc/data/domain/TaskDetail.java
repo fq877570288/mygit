@@ -150,6 +150,7 @@ public class TaskDetail {
     private Date transferTime; //流转时间
     private String nickName; //用户昵称
     private String deptName; //部门名称
+    private String cdrId; //通话记录ID
 
     public String getTaskDetailId() {
         return taskDetailId;
@@ -661,5 +662,13 @@ public class TaskDetail {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public String getCdrId() {
+        return cdrId;
+    }
+
+    public void setCdrId(String cdrId) {
+        this.cdrId = cdrId;
     }
 }

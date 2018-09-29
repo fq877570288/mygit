@@ -66,6 +66,7 @@
     <result column="TRANSFER_TIME" property="transferTime" jdbcType="TIMESTAMP" />
     <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
     <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
+    <result column="CDR_ID" property="cdrId" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -1202,10 +1203,11 @@
   <select id="selectDetailByCode" resultMap="BaseResultMap"
           parameterType="java.util.Map">
     SELECT
-      d.*, tt.TASK_TYPE_NAME
+      d.*, tt.TASK_TYPE_NAME,pp.CDR_ID
     FROM
       OC_TASK_DETAIL d
       INNER JOIN OC_TASK_TYPE tt ON d.TASK_TYPE_ID = tt.TASK_TYPE_ID
+      LEFT JOIN OC_TASK_TRANSFER pp ON d.TASK_DETAIL_ID = pp.TASK_DETAIL_ID
     WHERE
       1 = 1
     AND d.TASK_STATUS IN ('2', '3')
