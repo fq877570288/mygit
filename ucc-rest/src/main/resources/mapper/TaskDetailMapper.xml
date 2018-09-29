@@ -1231,7 +1231,7 @@
     count(d.TASK_DETAIL_ID)
     from OC_TASK_DETAIL d
     where (d.TASK_STATUS = '1')
-    and ROPERATE_DEPT_ID in (${deptIds})
+    and ROPERATE_DEPT_ID in (${deptIds}) and d.domain_id = #{domainId}
   </select>
   <!-- 在办任务总量  zss (移植自outcall)-->
   <select id="selectOngoingAllCount" resultType="int" parameterType="java.util.Map">
@@ -1240,7 +1240,7 @@
     from
     OC_TASK_DETAIL d
     where d.ROPERATE_DEPT_ID in (${deptIds})
-    and (d.TASK_STATUS = '3' or d.TASK_STATUS = '2')
+    and (d.TASK_STATUS = '3' or d.TASK_STATUS = '2') and d.domain_id = #{domainId}
   </select>
   <!-- 今日新增待办任务量   zss (移植自outcall)-->
   <select id="selectWaitTodayCount" resultType="int" parameterType="java.util.Map">
@@ -1252,7 +1252,7 @@
     OC_TASK_TRANSFER r on d.TASK_DETAIL_ID = r.TASK_DETAIL_ID and r.TRANSFER_STATUS = d.TASK_STATUS
     where (d.TASK_STATUS = '1')
     and r.TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    and d.ROPERATE_DEPT_ID in (${deptIds})
+    and d.ROPERATE_DEPT_ID in (${deptIds})  and d.domain_id = #{domainId}
   </select>
   <!-- 办理过但是没办完的任务数量   zss (移植自outcall)-->
   <select id="selectOngoingNoCount" resultType="int" parameterType="java.util.Map">
@@ -1261,7 +1261,7 @@
     from
     OC_TASK_DETAIL d
     where d.ROPERATE_DEPT_ID in (${deptIds})
-    and d.TASK_STATUS = '3'
+    and d.TASK_STATUS = '3'  and d.domain_id = #{domainId}
   </select>
   <!-- 本月办结任务数量  zss (移植自outcall)-->
   <select id="selectCompleteByDaysCount" resultType="int" parameterType="java.util.Map">
@@ -1273,7 +1273,7 @@
     OC_TASK_TRANSFER_RECORD r on d.TASK_RECORD_ID = r.TASK_RECORD_ID
     where r.TRANSFER_STATUS = '4'
     and r.TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    and d.OPERATOR_DEPT in (${deptIds})
+    and d.OPERATOR_DEPT in (${deptIds})  and d.domain_id = #{domainId}
   </select>
   <!-- 今日办结任务数量   zss (移植自outcall)-->
   <select id="selectCompleteTodayCount" resultType="int" parameterType="java.util.Map">
@@ -1285,50 +1285,48 @@
     OC_TASK_TRANSFER_RECORD r on d.TASK_RECORD_ID = r.TASK_RECORD_ID
     where r.TRANSFER_STATUS = '4'
     and r.TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    and d.OPERATOR_DEPT in (${deptIds})
+    and d.OPERATOR_DEPT in (${deptIds})  and d.domain_id = #{domainId}
   </select>
-
-  <!-- 查询一天的完成任务数 -->
+  <!-- 查询一天的完成任务数   zss (移植自outcall)-->
   <select id="queryCompleteTask" resultType="int" parameterType="java.util.Map">
     select count(*)
-      from OC_TASK_RECORD d
+    from OC_TASK_RECORD d
     inner join
     OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
     where
     <![CDATA[
-      r.ROPERATE_DEPT_ID in (${deptIds})
-      and TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    ]]>
+		 	r.ROPERATE_DEPT_ID in (${deptIds})
+		 	and TRANSFER_TIME between #{dateStart} and #{dateEnd}
+		 ]]> and d.domain_id = #{domainId}
   </select>
-
-  <!-- 查询一天的有效电话任务数 -->
+  <!-- 查询一天的有效电话任务数   zss (移植自outcall)-->
   <select id="queryECall" resultType="int" parameterType="java.util.Map">
     select count(*)
-      from OC_TASK_RECORD d
+    from OC_TASK_RECORD d
     inner join
-       OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
-    inner join pbx_cdrs c on c.cdrid = r.CDR_ID
+    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
+    inner join pbx_cdrs c on c.cdr_id = r.CDR_ID
     where
     <![CDATA[
-      r.ROPERATE_DEPT_ID in (${deptIds})
-      and c.call_time>=5 and
-      TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    ]]>
+		 	r.ROPERATE_DEPT_ID in (${deptIds})
+		 	and c.call_time>=5 and
+         	TRANSFER_TIME between #{dateStart} and #{dateEnd}
+         ]]> and d.domain_id = #{domainId}
   </select>
-
-  <!-- 查询一天的所有外呼任务数 -->
+  <!-- 查询一天的所有外呼任务数   zss (移植自outcall)-->
   <select id="queryACall" resultType="int" parameterType="java.util.Map">
     select count(*)
-      from OC_TASK_RECORD d
+    from OC_TASK_RECORD d
     inner join
-      OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
-    inner join pbx_cdrs c on c.cdrid = r.CDR_ID
+    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
+    inner join pbx_cdrs c on c.cdr_id = r.CDR_ID
     where
     <![CDATA[
-      r.ROPERATE_DEPT_ID in (${deptIds})
-      and TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    ]]>
+		 	r.ROPERATE_DEPT_ID in (${deptIds})
+		 	and TRANSFER_TIME between #{dateStart} and #{dateEnd}
+         ]]> and d.domain_id = #{domainId}
   </select>
+
     <!-- 任务监控列表 -->
     <sql id="Sql_MonitorWhere">
         <if test="businessCode != null and businessCode != ''">
@@ -1520,6 +1518,4 @@
         </where>
         LIMIT 5000
     </select>
-
-
 </mapper>

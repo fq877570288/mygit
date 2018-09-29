@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,37 +58,31 @@ public interface TaskService {
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectWaitAllCount(String deptIds);
+	int selectWaitAllCount(String deptIds,String domainId);
 	/***
 	 *  今日新增待办任务量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectWaitTodayCount(String deptIds);
+	int selectWaitTodayCount(String deptIds,String domainId);
 	/****
 	 * 在办任务总量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectOngoingAllCount(String deptIds);
+	int selectOngoingAllCount(String deptIds,String domainId);
 	/****
 	 * 办理过但是没办完的任务数量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectOngoingNoCount(String deptIds);
+	int selectOngoingNoCount(String deptIds,String domainId);
 	/****
 	 * 本月内办结任务数量 （移植自outcall）
 	 *  add by zss
 	 *  2018-09-26
 	 */
-	int selectCompleteByDaysCount(String deptIds);
-	/****
-	 * 今日办结任务数量
-	 *  add by zss
-	 *  2018-09-26
-	 */
-	int selectCompleteTodayCount(String deptIds);
+	int selectCompleteByDaysCount(String deptIds,String domainId);
 
 	/***
 	 * 分页查询
@@ -99,10 +94,13 @@ public interface TaskService {
 	TaskDetail selectByPrimaryKeyForWEB(String taskDetailId) throws Exception;
 
 	//视图
-	int queryCompleteTask(Date date, String deptIds) throws Exception;
+	int queryCompleteTask(Date date, String deptIds,String domainId) throws Exception;
 
-	int queryECall(Date date, String deptIds)  throws Exception;
+	int queryECall(Date date, String deptIds,String domainId)  throws Exception;
 
-	int queryACall(Date date, String deptIds) throws Exception;
+	int queryACall(Date date, String deptIds,String domainId) throws Exception;
+
+	int selectCompleteTodayCount(String deptIds,String domainId);
+
 
 }

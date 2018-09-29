@@ -5,6 +5,7 @@ import cn.cucsi.bsd.ucc.common.beans.ShowNoticeDetailCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccNoticeCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccNotice;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public interface UccNoticeMapper {
     
     List<UccNotice> findAll(UccNoticeCriteria criteria);
     //zss
-    int selectByFlagCount(String userId);
+    int selectByFlagCount(@Param("userId")String userId,@Param("domainId")String domainId);
     //zss
-    int selectByFlagTypeCount(String userId);
+    int selectByFlagTypeCount(@Param("userId")String userId,@Param("domainId")String domainId);
 }

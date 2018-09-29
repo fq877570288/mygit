@@ -5,12 +5,15 @@ import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -22,6 +25,8 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/home")
 public class HomeController {
+    private static SimpleDateFormat sdf = new SimpleDateFormat("M.d");
+    private static SimpleDateFormat sdf_M_D_CHINA = new SimpleDateFormat("M月d日");
     @Autowired
     private PbxExtsService pbxExtsService;
     @Autowired
@@ -52,11 +57,12 @@ public class HomeController {
             search.setDomainId(domainId);
             PageResultBean<List<PbxExts>> bean = new PageResultBean(this.pbxExtsService.findAll(search));
             //未读消息
-            int countNotice = uccNoticeService.selectByFlagCount(userId);
+            int countNotice = uccNoticeService.selectByFlagCount(userId,domainId);
             UccNoticeCriteria uccNoticeCriteriaSearch = new UccNoticeCriteria();
             uccNoticeCriteriaSearch.setNoticeType("1");
             uccNoticeCriteriaSearch.setUserId(userId);
             uccNoticeCriteriaSearch.setFlag("0");
+            uccNoticeCriteriaSearch.setDomainId(domainId);
             Page<UccNotice> pageUccNotice = uccNoticeService.findAll(uccNoticeCriteriaSearch);
             map.put("return_msg", "success");
             map.put("return_code", "success");
@@ -94,12 +100,12 @@ public class HomeController {
             }
             String deptIds = "'" + deptIdAndChildId + "'";
             //通过部门ID查询需要的信息数量
-            int wa = taskService.selectWaitAllCount(deptIds);
-            int wt = taskService.selectWaitTodayCount(deptIds);
-            int oa = taskService.selectOngoingAllCount(deptIds);
-            int on = taskService.selectOngoingNoCount(deptIds);
-            int cd = taskService.selectCompleteByDaysCount(deptIds);
-            int ct = taskService.selectCompleteTodayCount(deptIds);
+            int wa = taskService.selectWaitAllCount(deptIds,domainId);
+            int wt = taskService.selectWaitTodayCount(deptIds,domainId);
+            int oa = taskService.selectOngoingAllCount(deptIds,domainId);
+            int on = taskService.selectOngoingNoCount(deptIds,domainId);
+            int cd = taskService.selectCompleteByDaysCount(deptIds,domainId);
+            int ct = taskService.selectCompleteTodayCount(deptIds,domainId);
             map.put("wa", wa);
             map.put("wt", wt);
             map.put("oa", oa);
@@ -108,13 +114,14 @@ public class HomeController {
             map.put("ct", ct);
             //未读消息
             UccNoticeCriteria uccNoticeCriteriaSearch = new UccNoticeCriteria();
+            uccNoticeCriteriaSearch.setDomainId(domainId);
             uccNoticeCriteriaSearch.setNoticeType("1");
             uccNoticeCriteriaSearch.setUserId(userId);
             uccNoticeCriteriaSearch.setFlag("0");
             Page<UccNotice> pageUccNotice = uccNoticeService.findAll(uccNoticeCriteriaSearch);
 
             map.put("count", pageUccNotice.getTotalElements());
-            map.put("countNotice", uccNoticeService.selectByFlagTypeCount(userId));
+            map.put("countNotice", uccNoticeService.selectByFlagTypeCount(userId,domainId));
             map.put("noticeList", pageUccNotice.getContent());
             //
             UccNoticeCriteria searchSevenDay = new UccNoticeCriteria();
@@ -127,10 +134,11 @@ public class HomeController {
             searchSevenDay.setNoticeTimeFrom(date);
             searchSevenDay.setUserId(userId);
             searchSevenDay.setNoticeType("0");
+            searchSevenDay.setDomainId(domainId);
             Page<UccNotice> pageUccNotice1 = uccNoticeService.findAll(searchSevenDay);
-            int countNoticeAndAffiche = uccNoticeService.selectByFlagCount(userId);
+            int countNoticeAndAffiche = uccNoticeService.selectByFlagCount(userId,domainId);
             map.put("noticeList1", pageUccNotice1.getContent());
-            map.put("countNoticeAndAffiche", countNoticeAndAffiche);
+            map.put("countNotice1", countNoticeAndAffiche);
             return map;
         } catch (Exception e) {
             System.out.println("查询主页视图Plus失败！");
@@ -140,7 +148,66 @@ public class HomeController {
         map.put("return_code", "error");
         return map;
     }
+    /***
+     * 任务查询列表查询
+     */
+    //@UserFlag
+    @ApiOperation(value = "主页Echars", notes = "主页Echars", httpMethod = "POST")
+    @RequestMapping(value="/chartforpoint", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String ChartTaskList(TaskDetailSearch search){
+        JSONObject jsonObject = new JSONObject();
+        try{
+            JSONArray j = new JSONArray();
+            jsonObject.put("return_msg", "success");
+            jsonObject.put("return_code", "success");
+            String deptIdAndChildId = "";
+            if(search.getDeptIdAndChildIds() != null && search.getDeptIdAndChildIds().length() > 0){
+                deptIdAndChildId = search.getDeptIdAndChildIds().replaceAll(",", "','");
+            }
+            String deptIds = "'" + deptIdAndChildId + "'";
 
+            int cTaskInts[] =  new int[7];
+            int eCallInts[] =  new int[7];
+            int aCallInts[] =  new int[7];
+            for(int i=6; i>=0;i--){
+                long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
+                //把一天的完成任务数装到完成任务数组中
+                cTaskInts[6-i]=taskService.queryCompleteTask(new Date(date),deptIds,search.getDomainId());
+
+                //把一天的有效电话数装到有效电话数组中
+                eCallInts[6-i]=taskService.queryECall( new Date(date),deptIds,search.getDomainId());
+
+                //把一天的外呼电话数装到外呼电话数组中
+                aCallInts[6-i]=taskService.queryACall(new Date(date),deptIds,search.getDomainId());
+            }
+            String time = "";
+            JSONObject json;
+            for(int i=6; i>=0;i--){
+                long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
+                time = sdf_M_D_CHINA.format(new Date(date));
+                json = new JSONObject();
+                json.put("month",time);
+                json.put("c",cTaskInts[i]);
+                json.put("e",eCallInts[i]);
+                json.put("a",aCallInts[i]);
+                j.put(json);
+                json =null;
+            }
+            jsonObject.put("data", j);
+            return jsonObject.toString();
+        }catch (Exception e){
+            System.out.println("主页Echars失败！");
+            e.printStackTrace();
+        }
+        try{
+            jsonObject.put("return_msg", "error");
+            jsonObject.put("return_code", "error");
+        }catch (Exception e){
+            System.out.println("封装json失败");
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
     /**
      * 监控中心
      */

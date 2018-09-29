@@ -122,7 +122,6 @@ public interface TaskDetailMapper {
     int selectCompleteByDaysCount(Map<String, Object> map);
     //zss
     int selectCompleteTodayCount(Map<String, Object> map);
-
     //视图
     int queryCompleteTask(Map<String, Object> map) throws Exception;
 

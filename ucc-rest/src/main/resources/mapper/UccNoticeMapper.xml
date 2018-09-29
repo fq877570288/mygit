@@ -80,17 +80,20 @@
     <if test="userId != null and userId != ''"  >
         AND user_id= #{userId,jdbcType=VARCHAR}
     </if>
+    <if test="domainId != null and domainId != ''">
+      AND domain_id= #{domainId,jdbcType=VARCHAR}
+    </if>
   </select>
   <!-- zss 未读消息 (移植自outcall) -->
   <select id="selectByFlagCount" resultType="java.lang.Integer" parameterType="java.lang.String">
     select count(*)
     from ucc_notice a LEFT JOIN
-    (select * from ucc_notice_trace  where user_id =#{userId} ) c on c.notice_id = a.notice_id  where c.flag is null
+    (select * from ucc_notice_trace  where user_id =#{userId} ) c on c.notice_id = a.notice_id  where c.flag is null and a.domain_id = #{domainId}
   </select>
   <!-- zss (移植自outcall) -->
   <select id="selectByFlagTypeCount" resultType="java.lang.Integer" parameterType="java.lang.String">
     select count(*)
     from ucc_notice a LEFT JOIN
-    (select * from ucc_notice_trace  where user_id =#{userId} ) c on c.notice_id = a.notice_id  where c.flag is null and a.notice_type='1'
+    (select * from ucc_notice_trace  where user_id =#{userId} ) c on c.notice_id = a.notice_id  where c.flag is null and a.notice_type='1' and a.domain_id= #{domainId}
   </select>
 </mapper>

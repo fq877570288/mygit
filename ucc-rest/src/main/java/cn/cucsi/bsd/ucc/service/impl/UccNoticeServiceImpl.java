@@ -161,13 +161,13 @@ public class UccNoticeServiceImpl implements UccNoticeService{
     }
     //zss
     @Override
-    public int selectByFlagCount(String userId) {
-        return uccNoticeMapper.selectByFlagCount(userId);
+    public int selectByFlagCount(String userId,String domainId) {
+        return uccNoticeMapper.selectByFlagCount(userId,domainId);
     }
     //zss
     @Override
-    public int selectByFlagTypeCount(String userId) {
-        return uccNoticeMapper.selectByFlagTypeCount(userId);
+    public int selectByFlagTypeCount(String userId,String domainId) {
+        return uccNoticeMapper.selectByFlagTypeCount(userId,domainId);
     }
 
 }
