@@ -1333,7 +1333,7 @@
             and d.BUSINESS_CODE LIKE '%${businessCode}%'
         </if>
         <if test="taskTypeName != null and taskTypeName != ''">
-            and d.TASK_TYPE_ID = #{taskTypeName}
+            and e.TASK_TYPE_NAME LIKE '%${taskTypeName}%'
         </if>
         <if test="deptMeshName != null and deptMeshName != ''">
             and p1.dept_name LIKE '%${deptMeshName}%'

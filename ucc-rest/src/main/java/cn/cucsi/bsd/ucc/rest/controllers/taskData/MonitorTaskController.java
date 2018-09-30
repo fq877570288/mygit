@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 import cn.cucsi.bsd.ucc.common.beans.MonitorCompleteCriteria;
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
-import cn.cucsi.bsd.ucc.common.untils.Auth;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
@@ -50,12 +49,17 @@ public class MonitorTaskController {
 		List<TaskDetail> list = null;
 		try {
 			String deptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
+			if(MyUtils.isBlank(deptIdAndChildIds)){
+				deptIdAndChildIds = "'4028e38165ea6d7f0165ea951c290000'";
+			}
 			//taskDetailSearch.setUserId(Auth.getLoginUser(session).getUserId());
 			taskDetailSearch.setUserId(taskDetailSearch.getUserId());
 			taskDetailSearch.setDeptIdAndChildIds(deptIdAndChildIds);
 
 			list = monitorTaskService.selectMonitorBySearch(taskDetailSearch);
 			if(MyUtils.isBlank(list)){
+				monitorTaskListMap.put("list", list);
+				monitorTaskListMap.put("msg","根据条件查询无结果！");
 				return monitorTaskListMap;
 			}
 			monitorTaskListMap.put("list", list);
