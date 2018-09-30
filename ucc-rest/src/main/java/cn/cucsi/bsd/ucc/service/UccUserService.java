@@ -4,6 +4,7 @@ import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import org.springframework.data.domain.Page;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,5 +34,7 @@ public interface UccUserService {
     ResultBean_New<List<UccUserByDept>> userListByDept(List<UserDeptCriteria> userDeptCriterias);
 
     List<UccUsers> selectSameDeptUserIdByUserId(String userId) throws Exception;
+
+    ResultBean<VerificationCode> VerificationImg()throws IOException;
 
 }
