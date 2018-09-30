@@ -29,6 +29,7 @@
     <result column="qc" property="qc" jdbcType="INTEGER" />
     <result column="hangup_cause" property="hangupCause" jdbcType="VARCHAR" />
     <result column="RECEIVE_DEPT_NAME" property="receiveDeptName" jdbcType="VARCHAR" />
+    <result column="OPERATOR_NAME" property="operatorName" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -314,11 +315,13 @@
       c.recordid2 recordid2,
       c.qc qc,
       c.hangup_cause hangup_cause,
-      p1.dept_name RECEIVE_DEPT_NAME
+      p1.dept_name RECEIVE_DEPT_NAME,
+      uu.user_name OPERATOR_NAME
     from OC_TASK_TRANSFER t
     left join pbx_cdrs c on t.CDR_ID = c.cdr_id
     left join OC_TASK_DETAIL d on d.TASK_DETAIL_ID = t.TASK_DETAIL_ID
     left join ucc_depts p1 on d.DEPT_MESH_ID = p1.dept_id
+    LEFT JOIN ucc_users uu on uu.user_id = t.OPERATOR_ID
     where t.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
     order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC
   </select>

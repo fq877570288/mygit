@@ -26,11 +26,9 @@ public class TaskTransfer {
     @ApiModelProperty(value = "流转状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退",required = true)
     private String transferStatus; //流转状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
 
-    @JsonIgnore
     private String roperatePersonId; //任务受理人ID
     private String userName; //任务受理人
 
-    @JsonIgnore
     private String roperateDeptId; //任务受理部门ID
 
     private String roperateDept; //任务受理部门
@@ -46,19 +44,15 @@ public class TaskTransfer {
 
     private Date transferTime; //流转时间
 
-    @JsonIgnore
     private String cdrId; //通话记录ID
 
-    @JsonIgnore
     private String backMemo; //回退备注
 
-    @JsonIgnore
     private String operatorId; //操作员
+    private String operatorName; //操作员姓名
 
-    @JsonIgnore
     private String operatorDept; //操作部门
 
-    @JsonIgnore
     private String domainId;//租户ID
 
     private String destinationNumber; //被叫
@@ -307,5 +301,13 @@ public class TaskTransfer {
 
     public void setReceiveDeptName(String receiveDeptName) {
         this.receiveDeptName = receiveDeptName;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
     }
 }

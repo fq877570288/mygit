@@ -67,6 +67,9 @@
     <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
     <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
     <result column="CDR_ID" property="cdrId" jdbcType="VARCHAR" />
+    <result column="DEPT_MESH_NAME" property="deptMeshName" jdbcType="VARCHAR" />
+    <result column="DEPT_AREA_NAME" property="deptAreaName" jdbcType="VARCHAR" />
+    <result column="DEVELOPMENT_DEPT_NAME" property="developmentDeptName" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -99,7 +102,7 @@
   <!-- 主键查询 -->
   <select id="selectByPrimaryKeyForWEB" resultMap="BaseResultMap"
           parameterType="java.lang.String">
-    select
+    select DISTINCT
       d.TASK_DETAIL_ID, d.BUSINESS_CODE, d.TASK_TYPE_ID, d.DEPT_MESH_ID,
       d.DEPT_AREA_ID,
       d.DEPT_AGENCY_ID,
@@ -128,8 +131,14 @@
       c.tariffname TARIFF_NAME,
       c.PRODUCT_TYPE PRODUCT_TYPE,
       c.RATE RATE ,
-      d.END_DATE
+      d.END_DATE,
+      p1.dept_name DEPT_MESH_NAME,
+      p2.dept_name DEPT_AREA_NAME,
+      p3.dept_name DEVELOPMENT_DEPT_NAME
     from OC_TASK_DETAIL d left join ucc_customers c on c.businesscode = d.BUSINESS_CODE and c.domain_id = d.domain_id
+    LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
+    LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
+    LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
     where d.TASK_DETAIL_ID=#{taskDetailId}
   </select>
 
