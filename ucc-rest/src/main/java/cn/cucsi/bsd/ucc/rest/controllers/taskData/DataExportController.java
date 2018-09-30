@@ -146,8 +146,8 @@ public class DataExportController {
 					dataCustomfieldJson = new String(dataCustomfieldJson.getBytes("iso8859-1"),"utf-8");
 				}
 			}else {
-				dataExportListMap.put("msg","session中不存在DataCustomExportfields！");
-				return dataExportListMap;
+				//dataExportListMap.put("msg","session中不存在DataCustomExportfields！");
+				//return dataExportListMap;
 			}
 			List<DataCustomfield> fieldAll = dataCustomfieldService.selectAllExport();
 			if(MyUtils.isBlank(fieldAll)){

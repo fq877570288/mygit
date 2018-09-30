@@ -1,7 +1,5 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Date;
 
 /****
@@ -23,27 +21,20 @@ public class TaskDetail {
     private String domainId;//租户ID
     private String taskTypeName; //任务类型名称
 
-    @JsonIgnore
     private String taskTypeId;//任务类型
 
-    @JsonIgnore
     private String deptMeshId;//网格
 
-    @JsonIgnore
     private String deptAreaId;//包区
 
-    @JsonIgnore
     private String deptAgencyId;//代理商
 
     private String taskCode;//任务编码
 
-    @JsonIgnore
     private String productType;//产品类型
 
-    @JsonIgnore
     private String phoneNumber;//默认显示号码
 
-    @JsonIgnore
     private String rate;//速率
 
     private String customfields1;//自定义字段1
@@ -92,58 +83,42 @@ public class TaskDetail {
 
     private String developmentDept;//发展部门
 
-    @JsonIgnore
     private String importBatch;//导入批次
 
-    @JsonIgnore
     private String importPersonId;//导入人主键
 
-    @JsonIgnore
     private Date importTime;//导入时间
 
-    @JsonIgnore
     private String contacts;//联系人
 
-    @JsonIgnore
     private String status;//状态
 
-    @JsonIgnore
     private String installedAddress;//装机地址
 
-    @JsonIgnore
     private String ponLogo;//PON标识
 
-    @JsonIgnore
     private String tariffName;//资费名称
 
-    @JsonIgnore
     private String phoneNumber2;//联系电话2
 
-    @JsonIgnore
     private String phoneNumber3;//联系电话3
 
     private String taskStatus;// 任务状态 0:未分派、1：未接收、2：待办、3：在办、4：办结、5：回退
 
-    @JsonIgnore
     private String roperateDeptId;//任务处理部
 
     private String userName; //用户名称
 
     private String defultPhone;//默认显示联系电话
 
-    @JsonIgnore
     private String initDevelopment;//发展部门(初始)
 
-    @JsonIgnore
     private String initMeshId;//网格(初始)
 
-    @JsonIgnore
     private String initAreaId;//包区(初始)
 
-    @JsonIgnore
     private Date endDate;//截止日期
 
-    @JsonIgnore
     private String userId;//用户ID
 
     private String operatorId; //人员主键
@@ -151,6 +126,9 @@ public class TaskDetail {
     private String nickName; //用户昵称
     private String deptName; //部门名称
     private String cdrId; //通话记录ID
+    private String deptMeshName; //网给名称
+    private String deptAreaName; //包区名称
+    private String developmentDeptName; //发展部门
 
     public String getTaskDetailId() {
         return taskDetailId;
@@ -670,5 +648,29 @@ public class TaskDetail {
 
     public void setCdrId(String cdrId) {
         this.cdrId = cdrId;
+    }
+
+    public String getDeptMeshName() {
+        return deptMeshName;
+    }
+
+    public void setDeptMeshName(String deptMeshName) {
+        this.deptMeshName = deptMeshName;
+    }
+
+    public String getDeptAreaName() {
+        return deptAreaName;
+    }
+
+    public void setDeptAreaName(String deptAreaName) {
+        this.deptAreaName = deptAreaName;
+    }
+
+    public String getDevelopmentDeptName() {
+        return developmentDeptName;
+    }
+
+    public void setDevelopmentDeptName(String developmentDeptName) {
+        this.developmentDeptName = developmentDeptName;
     }
 }

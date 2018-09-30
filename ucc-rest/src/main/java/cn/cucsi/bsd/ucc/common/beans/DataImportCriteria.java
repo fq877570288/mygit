@@ -19,6 +19,9 @@ public class DataImportCriteria extends Paging {
 	@ApiModelProperty(value = "业务编码",required = false)
 	private String businessCode; //业务号码
 
+	@ApiModelProperty(value = "租户ID",required = false)
+	private String domainId; //租户ID
+
 	@ApiModelProperty(value = "坐席员ID",required = false)
 	private String userId; //坐席员ID
 
@@ -99,5 +102,13 @@ public class DataImportCriteria extends Paging {
 
 	public void setDataCustomfields(List<DataCustomfield> dataCustomfields) {
 		DataCustomfields = dataCustomfields;
+	}
+
+	public String getDomainId() {
+		return domainId;
+	}
+
+	public void setDomainId(String domainId) {
+		this.domainId = domainId;
 	}
 }
