@@ -93,13 +93,29 @@ public interface TaskService {
 
 	TaskDetail selectByPrimaryKeyForWEB(String taskDetailId) throws Exception;
 
-	//视图
+	/****
+	 * 一天的完成任务数 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
 	int queryCompleteTask(Date date, String deptIds,String domainId) throws Exception;
-
+	/****
+	 * 一天的有效电话数 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
 	int queryECall(Date date, String deptIds,String domainId)  throws Exception;
-
+	/****
+	 * 一天的外呼电话数 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
 	int queryACall(Date date, String deptIds,String domainId) throws Exception;
-
+	/****
+	 * 今日办结任务数量 （移植自outcall）
+	 *  add by zss
+	 *  2018-09-26
+	 */
 	int selectCompleteTodayCount(String deptIds,String domainId);
 
 

@@ -498,7 +498,7 @@ public class TaskServiceImpl implements TaskService {
 	public TaskDetail selectByPrimaryKeyForWEB(String taskDetailId) throws Exception {
 		return taskDetailMapper.selectByPrimaryKeyForWEB(taskDetailId);
 	}
-	//视图
+	//zss
 	@Override
 	public int queryCompleteTask(Date date, String deptIds ,String domainId) throws Exception{
 
@@ -511,7 +511,7 @@ public class TaskServiceImpl implements TaskService {
         cmap.put("domainId", domainId);
 		return taskDetailMapper.queryCompleteTask(cmap);
 	}
-
+	//zss
 	@Override
 	public int queryECall(Date date, String deptIds ,String domainId) throws Exception {
 		Map<String, Object> emap=new HashMap<String, Object>();
@@ -522,7 +522,7 @@ public class TaskServiceImpl implements TaskService {
         emap.put("domainId", domainId);
 		return taskDetailMapper.queryECall(emap);
 	}
-
+	//zss
 	@Override
 	public int queryACall(Date date, String deptIds ,String domainId) throws Exception {
 
