@@ -17,6 +17,17 @@ public class ResultBean<T> implements Serializable {
     private int code = SUCCESS;
     @JsonView(JSONView.Summary.class)
     private T data;
+    public ResultBean(int code,String msg){
+        this.code = code;
+        this.msg = msg;
+    }
+
+    public ResultBean(int code,String msg,T data){
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+
     public ResultBean() {
         super();
     }

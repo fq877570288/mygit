@@ -2,7 +2,9 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
+import cn.cucsi.bsd.ucc.common.untils.ImgUtil;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
+import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.data.repo.UccUserRepository;
 import cn.cucsi.bsd.ucc.service.UccUserService;
@@ -17,13 +19,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import sun.misc.BASE64Encoder;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import org.apache.log4j.Logger;
 
 @Service
 public class UccUserServiceImpl implements UccUserService{
@@ -38,6 +47,7 @@ public class UccUserServiceImpl implements UccUserService{
     private UserRoleService userRoleService;
     @Autowired
     private UccUsersMapper uccUsersMapper;
+    private static Logger logger = Logger.getLogger(UccUserServiceImpl.class);
 
     @Override
     public Page<UccUsers> findAll(UccUserCriteria criteria) {
@@ -246,6 +256,37 @@ public class UccUserServiceImpl implements UccUserService{
     @Override
     public List<UccUsers> selectSameDeptUserIdByUserId(String userId) throws Exception {
         return uccUsersMapper.selectSameDeptUserIdByUserId(userId);
+
+    }
+
+    /**
+     * 获取验证码图片和ID
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/login/verification/image",method= RequestMethod.GET,
+            produces="application/json;charset=utf-8")
+    public ResultBean<VerificationCode> VerificationImg()
+            throws IOException {
+        ImgUtil imgUtil = new ImgUtil();
+        BufferedImage image = imgUtil.getImage();
+        String text = imgUtil.getText();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        VerificationCode alidateCodeBean = new VerificationCode();
+        ResultBean resultBean = new ResultBean();
+        String ImgId = "";
+        imgUtil.output(image, outputStream);
+        BASE64Encoder encoder = new BASE64Encoder();
+        String base64Img = encoder.encode(outputStream.toByteArray());
+        UUIDGenerator uuidGenerator = new UUIDGenerator();
+        ImgId = uuidGenerator.generate();
+        alidateCodeBean.setImgId(ImgId);
+        alidateCodeBean.setImgBase64(base64Img);
+        alidateCodeBean.setText(text);
+        resultBean.setData(alidateCodeBean);
+        logger.info("验证码内容："+text);
+        logger.info("验证码ID："+ImgId);
+        return resultBean;
 
     }
 }

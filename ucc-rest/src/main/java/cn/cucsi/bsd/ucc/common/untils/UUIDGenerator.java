@@ -94,7 +94,7 @@ public class UUIDGenerator {
         return buf.toString();  
     }  
 
-     public String generate() {
+     public  String generate() {
          return new StringBuilder()
                  .append( format( getIP() ) ).append(sep)
                  .append( format( getJVM() ) ).append(sep)
