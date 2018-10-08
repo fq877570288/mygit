@@ -333,7 +333,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 			}else {
 				search.setTaskStatusList("'0', '1'");
 			}
+			search.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
 		}
-		search.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
 	}
 }

@@ -1004,7 +1004,6 @@
     SELECT
       TASK_DETAIL_ID,
       BUSINESS_CODE,
-      TASK_TYPE_ID,
       DEPT_MESH_ID,
       DEPT_AREA_ID,
       DEVELOPMENT_DEPT,
@@ -1012,12 +1011,14 @@
       p1.dept_name DEPT_MESH_NAME,
       p2.dept_name DEPT_AREA_NAME,
       p3.dept_name DEVELOPMENT_DEPT_NAME,
+      e.TASK_TYPE_NAME TASK_TYPE_NAME,
       TASK_STATUS
     FROM
       OC_TASK_DETAIL d
       LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
       LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
       LEFT JOIN ucc_depts p3 ON d.DEVELOPMENT_DEPT = p3.dept_id
+      LEFT JOIN OC_TASK_TYPE e ON e.TASK_TYPE_ID = d.TASK_TYPE_ID
     WHERE
       1 = 1
     <include refid="Sql_AllocationWhere" />

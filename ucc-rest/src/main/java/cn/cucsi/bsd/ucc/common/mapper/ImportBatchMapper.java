@@ -25,4 +25,6 @@ public interface ImportBatchMapper {
 	List<ImportBatch> selectAllByBatchFlag(ImportBatch importBatch) throws Exception;
 
 	List<String> selectForTaskJob() throws Exception;
+
+	List<String> selectAllImportBatch() throws Exception;
 }

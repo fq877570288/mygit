@@ -121,6 +121,8 @@ public class TaskRecordSearch extends Paging {
 
 	private String recentImportBatch;
 
+	private String userId;
+
 	public String getRecentImportBatch() {
 		return recentImportBatch;
 	}
@@ -583,5 +585,13 @@ public class TaskRecordSearch extends Paging {
 
 	public void setDomainId(String domainId) {
 		this.domainId = domainId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

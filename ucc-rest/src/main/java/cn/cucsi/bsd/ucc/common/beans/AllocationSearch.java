@@ -5,13 +5,13 @@ import java.util.List;
 
 public class AllocationSearch extends Paging {
 
-	private String meshID;
+	private String meshID;//网格
 
-	private String areaID;
+	private String areaID;//包区
 
-	private String developmentID;
+	private String developmentID;//发展部门
 
-	private String taskDetailIds;
+	private String taskDetailIds;//任务明细ID
 
 	private Integer taskNumberStart;
 

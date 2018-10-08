@@ -420,4 +420,9 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 	public List<String> autoSearchTaskBatch(Map<String, Object> map) throws Exception {
 		return importBatchMapper.autoSearchTaskBatch(map);
 	}
+
+	@Override
+	public List<String> selectAllImportBatch() throws Exception {
+		return importBatchMapper.selectAllImportBatch();
+	}
 }

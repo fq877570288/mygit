@@ -164,7 +164,8 @@ public class DataExportController {
 			dataExportListMap.put("cfieldAll", cfieldAll);
 			dataExportListMap.put("taskRecordSearch", taskRecordSearch);
 			dataExportListMap.put("dataCustomfieldJson", dataCustomfieldJson);
-			dataExportListMap.put("userId", Auth.getLoginUser(session).getUserId());
+			//dataExportListMap.put("userId", Auth.getLoginUser(session).getUserId());
+			dataExportListMap.put("userId", taskRecordSearch.getUserId()==null?"":taskRecordSearch.getUserId());
 			dataExportListMap.put("msg","操作成功！");
 			dataExportListMap.put("code","0");
 			return dataExportListMap;
