@@ -119,6 +119,10 @@ public class AllocationTaskController {
 			session.setAttribute("taskDetailIdListForEditDeptList", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
 			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			//此处为临时加的
+			/*if(MyUtils.isBlank(deptIdAndChildId)){
+				deptIdAndChildId = "'40287d8165fb1e530165fb1e53900001','40287d8165fb1e530165fb2870120010'";
+			}*/
 
 			//String deptIdAndChildId = taskDetailSearch.getDeptIdAndChildIds()==null?"":taskDetailSearch.getDeptIdAndChildIds();
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
@@ -126,6 +130,7 @@ public class AllocationTaskController {
 				if(deptIdAndChildIds.length > 1){
 					list = allocationTaskService.selectAllocationBySearch(taskDetailSearch);
 					taskDetailIdList = this.allocationTaskService.selectTaskDetailIdBySearch(taskDetailSearch);
+					System.out.println("数据调拨页面(条件搜索查询) taskDetailIdList:::" + taskDetailIdList);
 					session.setAttribute("taskDetailIdListForEditDeptList", taskDetailIdList);
 					//editDeptListMap.put("taskDetailIdListForEditDeptList", taskDetailIdList);
 				}else {
@@ -180,6 +185,14 @@ public class AllocationTaskController {
 		try {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
 				List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForEditDeptList");
+				//临时测试用
+				/*if(MyUtils.isBlank(idList)){
+					idList.add("40287d8165fb1e530165fb226ce3000d");
+					idList.add("40287d8165fb1e530165fb226ce3000b");
+					idList.add("40287d8165fb1e530165fb2870120013");
+					idList.add("40287d8165fb1e530165fb287012000f");
+					idList.add("2");
+				}*/
 				if(!MyUtils.isBlank(idList)){
 					Integer _taskNumberStart = 1;
 					Integer _taskNumberEnd = idList.size();

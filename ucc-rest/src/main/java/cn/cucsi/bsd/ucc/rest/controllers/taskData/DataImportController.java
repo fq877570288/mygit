@@ -334,8 +334,10 @@ public class DataImportController {
 	 */
 	@ApiOperation(value="导入", notes="导入")
 	@RequestMapping(value="/upload",method= RequestMethod.POST)
-	public Map<String,Object> uploadFile(@RequestParam("files") MultipartFile file, HttpSession httpSession) {
+	public Map<String,Object> uploadFile(@RequestParam("files") MultipartFile file,@RequestParam("userId")String userId,@RequestParam("domainId")String domainId, HttpSession httpSession) {
 
+		System.out.println("导入接口获取到的参数userId：：：" + userId);
+		System.out.println("导入接口获取到的参数domainId：：：" + domainId);
 		Map<String,Object> customFieldsSaveMap = new HashMap<String,Object>();
 		//model.addAttribute("msg", "上传失败!");
 		//model.addAttribute("data", "/data/dataImportList.html");
@@ -350,18 +352,18 @@ public class DataImportController {
 				String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 				
 				if(DataImport.XLS.equals(suffix)){
-					dataImportMap = readExcelXls(file.getInputStream(), httpSession);
+					dataImportMap = readExcelXls(file.getInputStream(),httpSession,userId,domainId);
 					if(!MyUtils.isBlank(dataImportMap)){
-						if(dataImportMap.get("returnCode").equals("SUCCESS")){
+						if(dataImportMap.get("code").equals("0")){
 							if(!MyUtils.isBlank(dataImportMap.get("list"))){
 								dataImportList = (List<DataImport>)dataImportMap.get("list");
 							}
 						}
 					}
 				}else if(DataImport.XLSX.equals(suffix)){
-					dataImportMap = readExcelXlsx(file.getInputStream(), httpSession);
+					dataImportMap = readExcelXlsx(file.getInputStream(),httpSession,userId,domainId);
 					if(!MyUtils.isBlank(dataImportMap)){
-						if(dataImportMap.get("returnCode").equals("SUCCESS")){
+						if(dataImportMap.get("code").equals("0")){
 							if(!MyUtils.isBlank(dataImportMap.get("list"))){
 								dataImportList = (List<DataImport>)dataImportMap.get("list");
 							}
@@ -373,6 +375,10 @@ public class DataImportController {
 				String taskType = "";
 				String deptIdAndChildIds = (String)httpSession.getAttribute("DeptIdAndChildIds");
 
+				//此处为临时加的
+				/*if(MyUtils.isBlank(deptIdAndChildIds)){
+					deptIdAndChildIds = "'40287d8165fb1e530165fb1e53900001','40287d8165fb1e530165fb2870120010'";
+				}*/
 				/*if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
 					//model.addAttribute("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
 					customFieldsSaveMap.put("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
@@ -449,17 +455,10 @@ public class DataImportController {
 	 * add by wangxiaoyu
 	 * 2018-09-18
 	 */
-	public static Map<String,Object> readExcelXls(InputStream stream, HttpSession session) throws BiffException, IOException {
+	public static Map<String,Object> readExcelXls(InputStream stream, HttpSession session,String userID,String domainId) throws BiffException, IOException {
 
-		String domainId = (String)session.getAttribute("domainId");
-		String userID = Auth.getLoginUser(session).getUserId().toString();
-		//这块是临时写死
-		/*if(MyUtils.isBlank(domainId)){
-			domainId = "ff80808165c0f40d0165c68b94df0000";
-		}
-		if(MyUtils.isBlank(userID)){
-			userID = "1";
-		}*/
+		//String domainId = (String)session.getAttribute("domainId");
+		//String userID = Auth.getLoginUser(session).getUserId().toString();
 
 		Map<String,Object> readExcelXlsMap = new HashMap<String,Object>();
 		readExcelXlsMap.put("code", "-1");
@@ -735,17 +734,11 @@ public class DataImportController {
 	 * 读取Excel.xlsx内容
 	 * add by wangxiaoyu
 	 */
-	public static Map<String,Object> readExcelXlsx(InputStream stream, HttpSession session) throws BiffException, IOException {
+	public static Map<String,Object> readExcelXlsx(InputStream stream, HttpSession session,String userID,String domainId) throws BiffException, IOException {
 
-		String domainId = (String)session.getAttribute("domainId");
-		String userID = Auth.getLoginUser(session).getUserId().toString();
-		//这块是临时写死
-		/*if(MyUtils.isBlank(domainId)){
-			domainId = "ff80808165c0f40d0165c68b94df0000";
-		}
-		if(MyUtils.isBlank(userID)){
-			userID = "1";
-		}*/
+		//String domainId = (String)session.getAttribute("domainId");
+		//String userID = Auth.getLoginUser(session).getUserId().toString();
+
 		Map<String,Object> readExcelXlsxMap = new HashMap<String,Object>();
 		readExcelXlsxMap.put("code","-1");
 		readExcelXlsxMap.put("msg","上传失败！");

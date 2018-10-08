@@ -149,4 +149,29 @@ public class CreateTaskController {
 		}
 		return xmlStr;
 	}
+
+	/***
+	 * 查询所有批次号
+	 * add by wangxiaoyu
+	 * 2018-10-08
+	 */
+	@ApiOperation(value="查询所有批次号", notes="查询所有批次号")
+	@RequestMapping(value="/selectAllImportBatch",method= RequestMethod.GET)
+	public Map<String,Object> selectAllImportBatch() {
+
+		Map<String,Object> selectAllImportBatchMap = new HashMap<String,Object>();
+		selectAllImportBatchMap.put("msg", "查询所有批次号失败!");
+		selectAllImportBatchMap.put("code", "-1");
+		List<String> importBatchlist = null;
+		try {
+			importBatchlist = createTaskService.selectAllImportBatch();
+			selectAllImportBatchMap.put("msg", "查询所有批次号成功!");
+			selectAllImportBatchMap.put("code", "0");
+			selectAllImportBatchMap.put("importBatchlist",importBatchlist);
+			return selectAllImportBatchMap;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return selectAllImportBatchMap;
+		}
+	}
 }

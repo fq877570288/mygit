@@ -13,7 +13,12 @@ public interface CreateTaskService {
     /***
 	 * 替换现有任务
 	 */
+	List<String> autoSearchTaskBatch(Map<String, Object> map) throws Exception;
+
 	Map<String,Object> createOldTask(String barchs, String userId, String oldTaskBatch) throws Exception;
 
-	List<String> autoSearchTaskBatch(Map<String, Object> map) throws Exception;
+	/***
+	 * 查询所有批次号
+	 */
+	List<String> selectAllImportBatch() throws Exception;
 }

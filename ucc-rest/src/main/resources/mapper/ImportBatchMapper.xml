@@ -80,7 +80,6 @@
     order by OC_IMPORT_BATCH.IMPORT_TIME DESC
   </select>
   
-  
   <sql id="Sql_Where">
 	<if test="batchFlag != null and batchFlag != ''">
 		and OC_IMPORT_BATCH.BATCH_FLAG = #{batchFlag}
@@ -91,7 +90,6 @@
     <if test="taskTypeName != null and taskTypeName != ''">
       and OC_IMPORT_BATCH.TASK_TYPE = #{taskTypeName}
     </if>
-
 
 	</sql>
 	
@@ -116,6 +114,16 @@
     and OC_IMPORT_BATCH.IMPORT_PERSON_ID = #{userId}
     </if>
     order by OC_IMPORT_BATCH.IMPORT_TIME DESC
+  </select>
+
+  <!-- 查询所有批次号 -->
+  <select id="selectAllImportBatch" resultMap="BaseResultMap" >
+    SELECT
+	  a.IMPORT_BATCH
+    FROM
+        OC_IMPORT_BATCH AS a
+    LEFT JOIN ucc_users AS ucc_users ON ucc_users.user_id = a.IMPORT_PERSON_ID
+    where a.BATCH_FLAG = '0' or a.BATCH_FLAG = '1'
   </select>
 
   <select id="selectForTaskJob" resultType="java.lang.String">
