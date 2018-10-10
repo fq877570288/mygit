@@ -12,6 +12,7 @@ import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ChatLogin {
 	private static Logger logger = Logger.getLogger(ChatLogin.class);
-	private RedisTemplate<String, String> template;
+    @Autowired
+	private RedisTemplate<String, String> redisTemplate;
 	
 	public String login(HttpServletRequest req, ObjectMapper mapper) {
 		
@@ -53,7 +55,7 @@ public class ChatLogin {
 		String uid = UUID.randomUUID().toString();
 		String identity = Md5.Get(userAgent+":"+uid);
 		try {
-			template.opsForValue().set("ChatLogin_" + identity, mapper.writeValueAsString(info), 2, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set("ChatLogin_" + identity, mapper.writeValueAsString(info), 2, TimeUnit.MINUTES);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
@@ -72,5 +74,4 @@ public class ChatLogin {
 		
 		return re;
 	}
-	
 }
