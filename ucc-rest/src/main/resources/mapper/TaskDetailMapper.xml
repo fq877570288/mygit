@@ -943,7 +943,7 @@
       and p3.dept_name LIKE '%${developmentDeptName}%'
     </if>
     <if test="roperateDeptId != null and roperateDeptId != ''">
-      and d.ROPERATE_DEPT_ID = #{roperateDeptId}
+      and d.ROPERATE_DEPT_ID in (${roperateDeptId})
     </if>
     <if test="taskStatus != null and taskStatus != ''">
       and (d.TASK_STATUS = #{taskStatus} or d.TASK_STATUS = '5')

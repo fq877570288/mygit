@@ -119,11 +119,10 @@ public class AllocationTaskController {
 			session.setAttribute("taskDetailIdListForEditDeptList", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
 			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
-			//此处为临时加的
-			/*if(MyUtils.isBlank(deptIdAndChildId)){
+			/*//此处为临时加的
+			if(MyUtils.isBlank(deptIdAndChildId)){
 				deptIdAndChildId = "'40287d8165fb1e530165fb1e53900001','40287d8165fb1e530165fb2870120010'";
 			}*/
-
 			//String deptIdAndChildId = taskDetailSearch.getDeptIdAndChildIds()==null?"":taskDetailSearch.getDeptIdAndChildIds();
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
 				String [] deptIdAndChildIds = deptIdAndChildId.split(",");
@@ -186,13 +185,13 @@ public class AllocationTaskController {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
 				List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForEditDeptList");
 				//临时测试用
-				/*if(MyUtils.isBlank(idList)){
+				if(MyUtils.isBlank(idList)){
 					idList.add("40287d8165fb1e530165fb226ce3000d");
 					idList.add("40287d8165fb1e530165fb226ce3000b");
 					idList.add("40287d8165fb1e530165fb2870120013");
 					idList.add("40287d8165fb1e530165fb287012000f");
 					idList.add("2");
-				}*/
+				}
 				if(!MyUtils.isBlank(idList)){
 					Integer _taskNumberStart = 1;
 					Integer _taskNumberEnd = idList.size();

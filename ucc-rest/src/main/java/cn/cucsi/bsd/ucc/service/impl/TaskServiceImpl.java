@@ -251,6 +251,8 @@ public class TaskServiceImpl implements TaskService {
 						}else{
 							isInBlackList = "未进入黑名单";
 						}
+					}else{
+						isInBlackList = "未进入黑名单";
 					}
 					taskDetailObj = new JSONObject();
 					taskDetailObj.put("taskDetailId",taskDetailId);

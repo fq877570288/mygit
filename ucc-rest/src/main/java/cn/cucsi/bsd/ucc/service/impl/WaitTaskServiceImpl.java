@@ -34,21 +34,21 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 	@Transactional
 	public List<TaskDetail> selectWaitBySearch(TaskDetailSearch taskDetailSearch) throws Exception {
 
-		String userId = taskDetailSearch.getUserId()==null?"":taskDetailSearch.getUserId();
+		//String userId = taskDetailSearch.getUserId()==null?"":taskDetailSearch.getUserId();
 		try {
 			// 部门
-			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-			if(!MyUtils.isBlank(uccDeptsList)){
+			//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+			//if(!MyUtils.isBlank(uccDeptsList)){
+				//taskDetailSearch.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
+				//System.out.println("部门id:::" + uccDeptsList.get(0).getDeptId().toString());
 				taskDetailSearch.setTaskStatus("1");
-				taskDetailSearch.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
-				System.out.println("部门id:::" + uccDeptsList.get(0).getDeptId().toString());
 				// 分页查询
 				taskDetailSearch.setup(taskDetailMapper.selectwaitBySearchCount(taskDetailSearch),taskDetailSearch.getShowLines());
 				return taskDetailMapper.selectwaitBySearch(taskDetailSearch);
-			}else{
+			/*}else{
 				System.out.println("根据用户ID查询不到部门信息！");
 				return null;
-			}
+			}*/
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("待办任务列表查询时发生异常！");
