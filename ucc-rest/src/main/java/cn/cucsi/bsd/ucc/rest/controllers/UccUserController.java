@@ -87,7 +87,7 @@ public class UccUserController  {
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
     public  PageResultBean<List<UccUsers>> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response) {
 
-        List<UccUsers> list =this.uccUserService.findAllList(criteria);
+        List<UccUsers> list =this.uccUserService.loginList(criteria);
 
         Date date = new Date();
         SimpleDateFormat dtf = new SimpleDateFormat("yyyy年MM月dd日");
