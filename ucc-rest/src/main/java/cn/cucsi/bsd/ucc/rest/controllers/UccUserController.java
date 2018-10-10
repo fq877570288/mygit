@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -121,18 +122,6 @@ public class UccUserController  {
         response.addCookie(cookie);
         cookie.setDomain("localhost:8000");
 
-        Cookie[] cookies = request.getCookies();
-        String login = "";
-        for (Cookie cookie1 : cookies) {
-            switch(cookie1.getName()){
-                case "login":
-                    login = cookie1.getValue();
-                    break;
-                default:
-                    break;
-            }
-        }
-        System.out.println(login);
 
         PageResultBean<List<UccUsers>> uccUsersList = new PageResultBean<>();
         uccUsersList.setData(list);
@@ -142,6 +131,18 @@ public class UccUserController  {
         session.setAttribute("login", sessionValue);
         if(list!=null&&list.size()!=0){
             session.setAttribute("uccUsers", list.get(0));
+            Collection<UccDepts> deptList = list.get(0).getDepts();
+            String DeptIdAndChildIds = "";
+            int i = 0;
+            for (UccDepts uccDepts : deptList) {
+                DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
+                if(i<deptList.size()-1){
+                    DeptIdAndChildIds += ",";
+                }
+                i++;
+            }
+            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);
+
             uccUsersList.setMsg("登陆成功！");
         }else{
             uccUsersList.setMsg("用户名或密码不正确！");
