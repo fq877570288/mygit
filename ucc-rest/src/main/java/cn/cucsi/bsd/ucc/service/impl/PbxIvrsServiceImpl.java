@@ -23,7 +23,7 @@ public class PbxIvrsServiceImpl implements PbxIvrsService {
     PbxIvrsRepository repository;
     @Override
     public Page<PbxIvrs> findAll(PbxIvrsCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "domainId");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return repository.findAll(PbxIvrsSpecs.createSpec(criteria),pageable);
     }
