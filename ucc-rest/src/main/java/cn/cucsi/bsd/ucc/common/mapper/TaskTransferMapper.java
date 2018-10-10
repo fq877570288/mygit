@@ -44,7 +44,7 @@ public interface TaskTransferMapper {
      */
     List<TaskTransfer> selectCallNotesByDetailIdsForWEB(Map<String, Object> map) throws Exception;
 
-    int insertGroup(Map<String, Object> taskMap) throws Exception;
+    void insertGroup(Map<String, Object> taskMap) throws Exception;
 
     List<TaskTransfer> selectTransferByTaskDetailId(String taskDetailId) throws Exception;
 

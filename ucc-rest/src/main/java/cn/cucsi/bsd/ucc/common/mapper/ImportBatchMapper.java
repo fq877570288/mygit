@@ -14,7 +14,7 @@ public interface ImportBatchMapper {
 
 	List<ImportBatch> selectAll(ImportBatch importBatch) throws Exception;
 
-	int updateFlagByBatch(Map<String, Object> barchsMap) throws Exception;
+	void updateFlagByBatch(Map<String, Object> barchsMap) throws Exception;
 	
 	List<ImportBatch> selectBySearch(Map<String, Object> barchsMap) throws Exception;
 

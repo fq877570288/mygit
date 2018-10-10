@@ -37,6 +37,7 @@ management.security.enabled: false
 mybatis:
    mapper-locations: classpath:mapper/*Mapper.xml
    type-aliases-package: cn.cucsi.bsd.ucc.data.domain
+   defaultExecutorType: SIMPLE
 
 ucc.zk:
   hostPort: 10.64.8.133:2181

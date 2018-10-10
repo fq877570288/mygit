@@ -211,7 +211,6 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					}else {
 						taskDetail.setImportBatch(dataImport.getImportBatch());
 					}
-
 					// 任务编码
 					taskCode = taskDetail.getImportBatch() + i;
 					taskDetail.setImportPersonId(dataImport.getImportPersonId());
@@ -262,6 +261,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskDetail.setInitAreaId(deptArea == null ? areaDeptId.toString() : deptArea.getDeptId().toString()); //包区(初始)
 					taskDetail.setInitDevelopment(deptDevelopment == null ? dlpId : deptDevelopment.getDeptId().toString()); //发展部门(初始)
 					taskDetail.setDomainId(domainId);
+					taskDetail.setUserId(userId);
 
 					taskDetailList.add(taskDetail);
 
@@ -295,23 +295,31 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 				// 插入任务明细表
 				Map<String, Object> taskDetailmap = new HashMap<String, Object>();
 				taskDetailmap.put("list", taskDetailList);
-				int aa = taskDetailMapperForBatch.insertGroup(taskDetailmap);
-				System.out.println("创建任务测试 插入任务明细表返回:::" + aa);
-				if(aa<=0){
-					createTaskMap.put("msg", "创建任务时,插入任务明细表发生异常!");
+				try {
+					taskDetailMapperForBatch.insertGroup(taskDetailmap);
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("创建任务时,插入任务明细表发生异常!");
+					createTaskMap.put("msg", "创建任务时,插入任务明细表失败!");
 					return createTaskMap;
 				}
+				/*
+				System.out.println("创建任务测试 插入任务明细表返回:::" + aa);
+				if(aa<=0){
+					createTaskMap.put("msg", "创建任务时,插入任务明细表失败!");
+					return createTaskMap;
+				}*/
 
 				// 插入任务流转表
 				Map<String, Object> taskTransfermap = new HashMap<String, Object>();
 				taskTransfermap.put("list", taskTransferList);
-				int bb = taskTransferMapperForBatch.insertGroup(taskTransfermap);
-				System.out.println("创建任务测试 插入任务流转表:::" + bb);
-				if(bb<=0){
+				try {
+					taskTransferMapperForBatch.insertGroup(taskTransfermap);
+				} catch (Exception e) {
+					e.printStackTrace();
 					createTaskMap.put("msg", "创建任务时,插入任务流转表发生异常!");
 					return createTaskMap;
 				}
-
 				// 插入新导入的部门数据
 				if(UccDeptsNewMap != null && UccDeptsNewMap.size() > 0){
 					Iterator<Entry<String, UccDepts>> UccDeptsiter = UccDeptsNewMap.entrySet().iterator();  //获得map的Iterator
@@ -322,8 +330,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					Map<String, Object> deptNewmap = new HashMap<String, Object>();
 					deptNewmap.put("list", UccDeptsNewList);
 					try {
-						int cc = uccDeptsService.insertGroup(deptNewmap);
-						System.out.println("创建任务测试 插入新导入的部门数据返回:::" + cc);
+						uccDeptsService.insertGroup(deptNewmap);
 					} catch (Exception e) {
 						e.printStackTrace();
 						createTaskMap.put("msg", "创建任务时,插入新导入的部门数据时发生异常!");
@@ -334,8 +341,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 				if(oldTaskBatch == null || "".equals(oldTaskBatch)){
 					barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGY);
 					try {
-						int ii = importBatchMapperForBatch.updateFlagByBatch(barchsMap);
-						System.out.println("新建任务 修改数据导入批次表返回结果:::" + ii);
+						importBatchMapperForBatch.updateFlagByBatch(barchsMap);
 					} catch (Exception e) {
 						e.printStackTrace();
 						createTaskMap.put("msg", "创建任务时,修改数据导入批次表时发生异常!");

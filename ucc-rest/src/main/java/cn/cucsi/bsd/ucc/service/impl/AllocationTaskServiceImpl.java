@@ -54,6 +54,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
             for(UccDepts uccDepts : UccDeptsList){
                 userDeptID = uccDepts.getDeptId();
             }
+			System.out.println("userDeptID:::" + userDeptID);
 			UccUsers uccUsers = uccUserService.findOne(userId);
 			if(MyUtils.isBlank(uccUsers)){
 				allocationTaskMap.put("msg", "分派任务时 根据userId:::"+userId+"查询用户信息为空!");
@@ -166,8 +167,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
             barchsMap.put("importBarchs", barchs);
             barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGA);
 			try {
-				int ii = importBatchMapper.updateFlagByBatch(barchsMap);
-				System.out.println("分派任务 修改数据导入批次表返回结果:::" + ii);
+				importBatchMapper.updateFlagByBatch(barchsMap);
 			} catch (Exception e) {
 				e.printStackTrace();
 				allocationTaskMap.put("msg", "分派任务 修改数据导入批次表时发生异常!");

@@ -141,6 +141,7 @@ public class UccNoticeServiceImpl implements UccNoticeService{
                 trace.setUserId(userId);
                 trace.setFlag("1");//已读
                 trace.setNoticeId(uccNotice.getNoticeId());
+                uccNoticeTraceMapper.deleteByNoticeId(uccNotice.getNoticeId());
                 uccNoticeTraceMapper.insert(trace);
             }else if(flag.equals("0")){
                 UccNoticeTrace trace = new UccNoticeTrace();
