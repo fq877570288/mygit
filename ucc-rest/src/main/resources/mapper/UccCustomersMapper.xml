@@ -46,6 +46,7 @@
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="updated_user_id" property="updatedUserId" jdbcType="VARCHAR" />
     <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
+    <result column="release_time" property="releaseTime" jdbcType="TIMESTAMP" />
     <!-- 不是这张表的字段它是关联表字段 -->
     <result column="domain_name" property="domainName" jdbcType="VARCHAR" />
     <result column="TASK_TYPE_NAME" property="taskTypeName" jdbcType="VARCHAR" />
@@ -59,7 +60,7 @@
     created_time, created_user_id, created_user_name, cust_code, cust_name, defult_phone, 
     domain_id, email, fax, idcard, industrytype, installedaddress, memo, msg_resource, 
     phone, phone2, phone3, ponlogo, product_type, pull_black_reason, qq, rate, sex, status, 
-    tariffname, type, updated_nick_name, updated_time, updated_user_id, updated_user_name,domain_name
+    tariffname, type, updated_nick_name, updated_time, updated_user_id, updated_user_name,domain_name,release_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria" >
     select
@@ -106,7 +107,7 @@
       pull_black_reason, qq, rate, 
       sex, status, tariffname, 
       type, updated_nick_name, updated_time, 
-      updated_user_id, updated_user_name)
+      updated_user_id, updated_user_name,release_time)
     values (#{custId,jdbcType=VARCHAR}, #{address1,jdbcType=INTEGER}, #{address2,jdbcType=INTEGER}, 
       #{address3,jdbcType=INTEGER}, #{address4,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, 
       #{businesscode,jdbcType=VARCHAR}, #{changephone1,jdbcType=VARCHAR}, #{changephone2,jdbcType=VARCHAR}, 
@@ -121,7 +122,7 @@
       #{pullBlackReason,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, #{rate,jdbcType=VARCHAR}, 
       #{sex,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{tariffname,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER}, #{updatedNickName,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP}, 
-      #{updatedUserId,jdbcType=VARCHAR}, #{updatedUserName,jdbcType=VARCHAR})
+      #{updatedUserId,jdbcType=VARCHAR}, #{updatedUserName,jdbcType=VARCHAR}, #{releaseTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UccCustomers" >
     insert into ucc_customers
@@ -258,6 +259,9 @@
       <if test="updatedUserName != null" >
         updated_user_name,
       </if>
+      <if test="releaseTime != null" >
+        release_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="custId != null" >
@@ -391,6 +395,9 @@
       </if>
       <if test="updatedUserName != null" >
         #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseTime != null" >
+        #{releaseTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -526,6 +533,9 @@
       <if test="updatedUserName != null and updatedUserName !=''" >
         updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
       </if>
+      <if test="releaseTime != null and releaseTime !=''" >
+        release_time = #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where cust_id = #{custId,jdbcType=VARCHAR}
   </update>
@@ -573,7 +583,8 @@
       updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
       updated_time = #{updatedTime,jdbcType=TIMESTAMP},
       updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
-      updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+      updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
+      release_time = #{releaseTime,jdbcType=TIMESTAMP}
     where cust_id = #{custId,jdbcType=VARCHAR}
   </update>
 

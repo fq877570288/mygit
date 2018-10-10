@@ -27,9 +27,10 @@ public interface UccCustomersRepository  extends PagingAndSortingRepository<UccC
     @Query(value ="update ucc_customers uc set uc.type = ?1 , " +
             "uc.updated_user_id = ?2 , " +
             "uc.updated_time = ?3 ," +
-            "uc.pull_black_reason = ?4 " +
-            "where uc.cust_id = ?5", nativeQuery = true)
-    int inBlackListByBusinessCode(Integer type, String userId,Date updatedTime,String pullBlackReason,String custId);
+            "uc.pull_black_reason = ?4 ," +
+            "uc.release_time = ?5 " +
+            "where uc.cust_id = ?6", nativeQuery = true)
+    int inBlackListByBusinessCode(Integer type, String userId,Date updatedTime,String pullBlackReason,Date releaseTime,String custId);
 
     /***
      * 根据条件查询客户是否在黑名单
