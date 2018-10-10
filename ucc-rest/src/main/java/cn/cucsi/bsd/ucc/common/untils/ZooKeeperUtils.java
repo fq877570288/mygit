@@ -105,11 +105,9 @@ public class ZooKeeperUtils {
 							if (KeeperState.SyncConnected == keeperState) {
 								if (EventType.None == eventType) {
 									log.info("ZooKeeper 连接成功!");
-									System.out.println("ZooKeeper 连接成功!");
 								}
 							} else if (KeeperState.Disconnected == keeperState) {
 								log.info("ZooKeeper 连接断开......");
-								System.out.println("ZooKeeper 连接断开......");
 								connect(n + 1);
 							}
 

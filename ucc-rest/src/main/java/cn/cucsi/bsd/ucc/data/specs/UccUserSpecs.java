@@ -18,7 +18,7 @@ public class UccUserSpecs {
         return new Specification<UccUsers>() {
             @Override
             public Predicate toPredicate(Root<UccUsers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.like(root.<String>get("userName"), userName);
+                return criteriaBuilder.equal(root.<String>get("userName"), userName);
             }
         };
     }
