@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.untils.ChatLogin;
 import cn.cucsi.bsd.ucc.common.untils.ImgUtil;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.*;
@@ -10,6 +11,7 @@ import cn.cucsi.bsd.ucc.service.TeamUsersService;
 import cn.cucsi.bsd.ucc.service.UccPermissionsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -134,6 +136,9 @@ public class UccUserController  {
         session.setAttribute("login", sessionValue);
         if(list!=null&&list.size()!=0){
             session.setAttribute("uccUsers", list.get(0));
+            session.setAttribute("LoginUser", list.get(0));
+            ChatLogin chatLogin = new ChatLogin();
+            chatLogin.login(request,new ObjectMapper());
             Collection<UccDepts> deptList = list.get(0).getDepts();
             String DeptIdAndChildIds = "";
             int i = 0;
@@ -161,6 +166,7 @@ public class UccUserController  {
         HttpSession session = request.getSession();
         session.removeAttribute("login");
         session.removeAttribute("uccUsers");
+        session.removeAttribute("LoginUser");
         Cookie[] cookies=request.getCookies();
         for(Cookie cookie: cookies){
             if("login".equals(cookie.getName())){
