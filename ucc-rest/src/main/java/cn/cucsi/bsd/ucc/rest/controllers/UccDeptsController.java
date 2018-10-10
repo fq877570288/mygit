@@ -104,7 +104,10 @@ public class UccDeptsController {
             List<UccDepts> listOne = new ArrayList<UccDepts>();
             if(list!=null&&list.size()!=0) {
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i) != null && list.get(i).getDeptPid().equals("0")) {//顶级
+                    if(list.get(i).getDeptAdminByUserId()!=null&&list.get(i).getDeptAdminByUserId().getUserName()!=null){
+                        list.get(i).setDeptAdminName(list.get(i).getDeptAdminByUserId().getUserName());
+                    }
+                    if (list.get(i) != null && list.get(i).getDeptPid().equals("0")) { //顶级
                         listOne.add(list.get(i));
                     }
                 }
@@ -129,7 +132,6 @@ public class UccDeptsController {
             for(int i=0;i<list.size();i++){
                 if(uccDepts!=null&&uccDepts.getDeptId().equals(list.get(i).getDeptPid())){
                     Childrens.add(list.get(i));
-                    System.out.println(uccDepts.getDeptId()+" "+list.get(i).getDeptPid()+uccDepts.getDeptId().equals(list.get(i).getDeptPid()));
                 }
             }
             if(Childrens.size()!=0){
