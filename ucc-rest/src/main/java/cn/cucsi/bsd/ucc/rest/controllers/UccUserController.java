@@ -82,6 +82,20 @@ public class UccUserController  {
         return list;
     }
 
+    @ApiOperation(value="验证用户名是否重复", notes="验证用户名是否重复", httpMethod = "GET")
+    @RequestMapping(value = "/validate/{userName}", method= RequestMethod.GET)
+    @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
+    public  ResultBean<Boolean> validate(@PathVariable String userName) {
+        UccUserCriteria criteria = new UccUserCriteria();
+        criteria.setUserName(userName);
+        List<UccUsers> list = this.uccUserService.loginList(criteria);
+        Boolean result = list.size()==0;
+        if(result){
+            return new ResultBean<>(ResultBean.SUCCESS,"用户名不重复！",result);
+        }
+        return new ResultBean<>(ResultBean.FAIL,"用户名重复！",result);
+    }
+
     @ApiOperation(value="根据查询条件获取用户", notes="根据查询条件获取用户", httpMethod = "POST")
     @RequestMapping(value = "/login", method= RequestMethod.POST)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
