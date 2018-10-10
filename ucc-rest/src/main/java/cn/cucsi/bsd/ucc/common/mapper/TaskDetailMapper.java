@@ -81,7 +81,7 @@ public interface TaskDetailMapper {
      */
     int selectCompletedTaskCounts(Map<String, Object> map);
 
-    int insertGroup(Map<String, Object> taskMap) throws Exception;
+    void insertGroup(Map<String, Object> taskMap) throws Exception;
 
     void deleteBYBatch(Map<String, Object> taskDetailMap) throws Exception;
 

@@ -9,7 +9,6 @@ import java.util.*;
 import cn.cucsi.bsd.ucc.common.beans.AutoSearchTaskCriteria;
 import cn.cucsi.bsd.ucc.common.beans.CustomFieldsSaveCriteria;
 import cn.cucsi.bsd.ucc.common.beans.DataImportCriteria;
-import cn.cucsi.bsd.ucc.common.untils.Auth;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.*;

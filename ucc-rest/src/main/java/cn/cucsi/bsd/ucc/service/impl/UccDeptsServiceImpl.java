@@ -247,10 +247,9 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
-    public int insertGroup(Map<String, Object> UccDeptsNewmap) throws Exception {
-        int i = uccDeptsMapper.insertGroup(UccDeptsNewmap);
+    public void insertGroup(Map<String, Object> UccDeptsNewmap) throws Exception {
+        uccDeptsMapper.insertGroup(UccDeptsNewmap);
         this.putAllToMap();
-        return i;
     }
 
     private void selectChildren(List<UccDepts> UccDeptsAndChildList, List<UccDepts> parentList){

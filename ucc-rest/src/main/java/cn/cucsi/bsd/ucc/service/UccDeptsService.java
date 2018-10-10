@@ -52,7 +52,7 @@ public interface UccDeptsService {
 
     String selectMaxDeptID() throws Exception;
 
-    int insertGroup(Map<String, Object> UccDeptsNewmap) throws Exception;
+    void insertGroup(Map<String, Object> UccDeptsNewmap) throws Exception;
 
     List<UccDepts> selectDeptsByUserId(String userId);
 

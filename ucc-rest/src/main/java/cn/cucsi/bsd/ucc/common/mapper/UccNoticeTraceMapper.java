@@ -19,4 +19,6 @@ public interface UccNoticeTraceMapper {
     int updateByPrimaryKeySelective(UccNoticeTrace record);
 
     int updateByPrimaryKey(UccNoticeTrace record);
+
+    int deleteByNoticeId(String noticeId);
 }

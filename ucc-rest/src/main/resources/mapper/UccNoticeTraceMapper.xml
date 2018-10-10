@@ -174,4 +174,9 @@
       user_id = #{userId,jdbcType=VARCHAR}
     where notice_trace_id = #{noticeTraceId,jdbcType=VARCHAR}
   </update>
+
+  <delete id="deleteByNoticeId" parameterType="java.lang.String" >
+    delete from ucc_notice_trace
+    where notice_id = #{noticeId,jdbcType=VARCHAR}
+  </delete>
 </mapper>
