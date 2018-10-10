@@ -14,6 +14,15 @@ import java.util.List;
 import static org.springframework.data.jpa.domain.Specifications.*;
 
 public class UccUserSpecs {
+    public static Specification<UccUsers> userNameEqual(final String userName) {
+        return new Specification<UccUsers>() {
+            @Override
+            public Predicate toPredicate(Root<UccUsers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.like(root.<String>get("userName"), userName);
+            }
+        };
+    }
+
     public static Specification<UccUsers> userNameLike(final String userName) {
         return new Specification<UccUsers>() {
             @Override
@@ -227,6 +236,21 @@ public class UccUserSpecs {
                 }
 
             }
+        }
+        return specs;
+    }
+
+    public static Specification<UccUsers> loginCreateSpec(final UccUserCriteria criteria) {
+        Specification<UccUsers> spec = null;
+        if(criteria==null) return spec;
+
+        Specifications specs = where(spec);
+
+        if(!Strings.isNullOrEmpty(criteria.getUserName())){
+            specs = specs.and(userNameEqual(criteria.getUserName()));
+        }
+        if(!Strings.isNullOrEmpty(criteria.getPassword())){
+            specs = specs.and(passwordLike(criteria.getPassword()));
         }
         return specs;
     }

@@ -62,6 +62,11 @@ public class UccUserServiceImpl implements UccUserService{
         return uccUserRepository.findAll(UccUserSpecs.createSpec(criteria));
     }
 
+    @Override
+    public List<UccUsers> loginList(UccUserCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
+        return uccUserRepository.findAll(UccUserSpecs.loginCreateSpec(criteria));
+    }
 
     @Override
     public UccUsers findOne(String userId) {
