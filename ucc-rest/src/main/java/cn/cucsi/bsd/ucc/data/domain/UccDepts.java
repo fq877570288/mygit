@@ -20,7 +20,16 @@ public class UccDepts {
 
     @Transient
     private List<UccDepts> subDepts;
+    @Transient
+    @JsonView(JSONView.Summary.class)
+    private String deptAdminName;
+    public String getDeptAdminName() {
+        return deptAdminName;
+    }
 
+    public void setDeptAdminName(String deptAdminName) {
+        this.deptAdminName = deptAdminName;
+    }
     @JsonView(JSONView.Summary.class)
     private String deptId;//部门编码
     @JsonView(JSONView.Summary.class)
@@ -78,6 +87,7 @@ public class UccDepts {
     public List<UccDepts> getDepts() {
         return depts;
     }
+
 
     public void setDepts(List<UccDepts> depts) {
         this.depts = depts;
