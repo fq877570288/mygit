@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
 
@@ -41,6 +42,8 @@ public class UccUserController  {
     private TeamUsersService teamUsersService;
     @Autowired
     UccPermissionsService uccPermissionsService;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
