@@ -51,127 +51,131 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 				allocationTaskMap.put("msg", "分派任务时 根据用户ID获取部门主键失败!");
 				return allocationTaskMap;
 			}
-            for(UccDepts uccDepts : UccDeptsList){
-                userDeptID = uccDepts.getDeptId();
-            }
-			System.out.println("userDeptID:::" + userDeptID);
-			UccUsers uccUsers = uccUserService.findOne(userId);
-			if(MyUtils.isBlank(uccUsers)){
-				allocationTaskMap.put("msg", "分派任务时 根据userId:::"+userId+"查询用户信息为空!");
-				return allocationTaskMap;
-			}
-			String domainId = uccUsers.getDomainId()==null?"":uccUsers.getDomainId();
-			if(MyUtils.isBlank(domainId)){
-				allocationTaskMap.put("msg", "分派任务时 用户userId:::"+userId+"查询租户ID为空!");
-				return allocationTaskMap;
-			}
-            // 更新客户表信息
-            if(UccDeptsList.get(0).getDeptLevel() <= 1){
-				try {
-					updateCrm(domainId);
-				} catch (Exception e) {
-					e.printStackTrace();
-					allocationTaskMap.put("msg", "分派任务时 更新客户表信息失败!");
+			List<TaskDetail> taskDetailList = null;
+			// 流转时间
+			Timestamp transferTime = new Timestamp(System.currentTimeMillis());
+			List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
+			int i = 1;
+			for(UccDepts uccDepts : UccDeptsList){
+				userDeptID = uccDepts.getDeptId();
+				System.out.println("userDeptID:::" + userDeptID);
+				UccUsers uccUsers = uccUserService.findOne(userId);
+				if(MyUtils.isBlank(uccUsers)){
+					allocationTaskMap.put("msg", "分派任务时 根据userId:::"+userId+"查询用户信息为空!");
 					return allocationTaskMap;
 				}
-			}
-            // 查询待分配任务
-            Map<String, Object> whereMap = new HashMap<String, Object>();
-
-            if(UccDeptsList.get(0).getDeptLevel() <= 1){
-                whereMap.put("taskStatus", "0");
-                whereMap.put("importPersonId", userId);
-            }else {
-                //whereMap.put("taskStatus", "1");
-                whereMap.put("taskStatusList", "'0', '1'");
-            }
-            whereMap.put("roperateDeptId", userDeptID.toString());
-            whereMap.put("barchs", barchs);
-            List<TaskDetail> taskDetailList = taskDetailMapper.selectByWhere(whereMap);
-			System.out.println("分派任务时 taskDetailList:::" + taskDetailList.size());
-            // 主键
-            UUIDGenerator generator = new UUIDGenerator();
-            // 流转时间
-            Timestamp transferTime = new Timestamp(System.currentTimeMillis());
-            List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
-            TaskTransfer taskTransfer = null;
-
-            if(!MyUtils.isBlank(taskDetailList)){
-                for(TaskDetail taskDetail : taskDetailList){
-                    taskTransfer = new TaskTransfer();
-                    String taskTransferUuid = generator.generate();
-                    taskTransfer.setTaskTransferId(taskTransferUuid);
-                    taskTransfer.setTaskDetailId(taskDetail.getTaskDetailId()); //任务明细表主键
-                    taskTransfer.setTransferStatus("1"); //流转状态    0:未分派、1：未接收、2：待办、3：在办
-                    taskTransfer.setTransfeRoperate(TaskTransfer.ALLOCATION); //流转操作  0:创建、1：分派、2：接收、3：回退
-                    taskTransfer.setTransferTime(transferTime); //流转时间
-                    taskTransfer.setOperatorId(userId); //操作员
-                    taskTransfer.setRoperatePersonId(userId);//受理员
-                    taskTransfer.setRoperateDeptId(userDeptID.toString());//受理部门
-                    taskTransfer.setOperatorDept(userDeptID.toString());
-					taskTransfer.setDomainId(domainId);
-                    if(Task.ALLOCDEFULT.equals(alloc)){
-                        // 默认分派
-                        if(taskDetail.getDevelopmentDept() != null && !"".equals(taskDetail.getDevelopmentDept())
-                                && !"-1".equals(taskDetail.getDevelopmentDept())){
-                            taskTransfer.setRoperateDeptId(taskDetail.getDevelopmentDept());
-                        }else if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
-                                && !"-1".equals(taskDetail.getDeptAreaId())){
-                            taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
-                        }else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
-                                && !"-1".equals(taskDetail.getDeptMeshId())){
-                            taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
-                        }
-                    }else if(Task.ALLOCAREA.equals(alloc)){
-                        // 分派到包区
-                        if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
-                                && !"-1".equals(taskDetail.getDeptAreaId())){
-                            taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
-                        }else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
-                                && !"-1".equals(taskDetail.getDeptMeshId())){
-                            taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
-                        }
-                    }else if(Task.ALLOCMESH.equals(alloc)){
-                        // 分派到网格
-                        if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
-                                && !"-1".equals(taskDetail.getDeptMeshId())){
-                            taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
-                        }
-                    }
-                    taskTransferList.add(taskTransfer);
-                }
-            }
-            // 插入任务流转表
-            Map<String, Object> taskTransfermap = new HashMap<String, Object>();
-            taskTransfermap.put("list", taskTransferList);
-			try {
-				taskTransferMapper.insertGroup(taskTransfermap);
-			} catch (Exception e) {
-				e.printStackTrace();
-				allocationTaskMap.put("msg", "分派任务时 插入任务流转表时发生异常!");
-				return allocationTaskMap;
-			}
-			if(!MyUtils.isBlank(taskTransferList)){
-				// 更新任务状态、任务截止日期
-				for(TaskTransfer transfer : taskTransferList){
-					TaskDetail taskDetail = new TaskDetail();
-					taskDetail.setTaskDetailId(transfer.getTaskDetailId());
-					taskDetail.setStatus(transfer.getTransferStatus());
-					taskDetail.setRoperateDeptId(transfer.getRoperateDeptId());
-					taskDetail.setEndDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate));
-					taskDetailMapper.updateTaskByTaskDetail(taskDetail);
+				String domainId = uccUsers.getDomainId()==null?"":uccUsers.getDomainId();
+				if(MyUtils.isBlank(domainId)){
+					allocationTaskMap.put("msg", "分派任务时 用户userId:::"+userId+"查询租户ID为空!");
+					return allocationTaskMap;
 				}
-			}
-            // 修改数据导入批次表
-            Map<String, Object> barchsMap = new HashMap<String, Object>();
-            barchsMap.put("importBarchs", barchs);
-            barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGA);
-			try {
-				importBatchMapper.updateFlagByBatch(barchsMap);
-			} catch (Exception e) {
-				e.printStackTrace();
-				allocationTaskMap.put("msg", "分派任务 修改数据导入批次表时发生异常!");
-				return allocationTaskMap;
+				// 更新客户表信息
+				if(UccDeptsList.get(0).getDeptLevel() <= 1){
+					try {
+						updateCrm(domainId);
+					} catch (Exception e) {
+						e.printStackTrace();
+						allocationTaskMap.put("msg", "分派任务时 更新客户表信息失败!");
+						return allocationTaskMap;
+					}
+				}
+				// 查询待分配任务
+				Map<String, Object> whereMap = new HashMap<String, Object>();
+
+				if(UccDeptsList.get(0).getDeptLevel() <= 1){
+					whereMap.put("taskStatus", "0");
+					whereMap.put("importPersonId", userId);
+				}else {
+					whereMap.put("taskStatusList", "'0', '1'");
+				}
+				whereMap.put("roperateDeptId", userDeptID.toString());
+				whereMap.put("barchs", barchs);
+				taskDetailList = taskDetailMapper.selectByWhere(whereMap);
+				System.out.println("分派任务时 taskDetailList:::" + taskDetailList.size());
+
+				if(!MyUtils.isBlank(taskDetailList)){
+					for(TaskDetail taskDetail : taskDetailList){
+						TaskTransfer taskTransfer = new TaskTransfer();
+						// 主键
+						UUIDGenerator generator = new UUIDGenerator();
+						String taskTransferUuid = generator.generate();
+						System.out.println("第" + i + "次生成的TaskTransferId:::" + taskTransferUuid);
+						taskTransfer.setTaskTransferId(taskTransferUuid);
+						taskTransfer.setTaskDetailId(taskDetail.getTaskDetailId()); //任务明细表主键
+						taskTransfer.setTransferStatus("1"); //流转状态    0:未分派、1：未接收、2：待办、3：在办
+						taskTransfer.setTransfeRoperate(TaskTransfer.ALLOCATION); //流转操作  0:创建、1：分派、2：接收、3：回退
+						taskTransfer.setTransferTime(transferTime); //流转时间
+						taskTransfer.setOperatorId(userId); //操作员
+						taskTransfer.setRoperatePersonId(userId);//受理员
+						taskTransfer.setRoperateDeptId(userDeptID.toString());//受理部门
+						taskTransfer.setOperatorDept(userDeptID.toString());
+						taskTransfer.setDomainId(domainId);
+						if(Task.ALLOCDEFULT.equals(alloc)){
+							// 默认分派
+							if(taskDetail.getDevelopmentDept() != null && !"".equals(taskDetail.getDevelopmentDept())
+									&& !"-1".equals(taskDetail.getDevelopmentDept())){
+								taskTransfer.setRoperateDeptId(taskDetail.getDevelopmentDept());
+							}else if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
+									&& !"-1".equals(taskDetail.getDeptAreaId())){
+								taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
+							}else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
+									&& !"-1".equals(taskDetail.getDeptMeshId())){
+								taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
+							}
+						}else if(Task.ALLOCAREA.equals(alloc)){
+							// 分派到包区
+							if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
+									&& !"-1".equals(taskDetail.getDeptAreaId())){
+								taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
+							}else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
+									&& !"-1".equals(taskDetail.getDeptMeshId())){
+								taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
+							}
+						}else if(Task.ALLOCMESH.equals(alloc)){
+							// 分派到网格
+							if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
+									&& !"-1".equals(taskDetail.getDeptMeshId())){
+								taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
+							}
+						}
+						taskTransferList.add(taskTransfer);
+					}
+					// 插入任务流转表
+					Map<String, Object> taskTransfermap = new HashMap<String, Object>();
+					taskTransfermap.put("list", taskTransferList);
+					try {
+						taskTransferMapper.insertGroup(taskTransfermap);
+					} catch (Exception e) {
+						e.printStackTrace();
+						allocationTaskMap.put("msg", "分派任务时 插入任务流转表时发生异常!");
+						return allocationTaskMap;
+					}
+					if(!MyUtils.isBlank(taskTransferList)){
+						// 更新任务状态、任务截止日期
+						for(TaskTransfer transfer : taskTransferList){
+							TaskDetail taskDetail2 = new TaskDetail();
+							taskDetail2.setTaskDetailId(transfer.getTaskDetailId());
+							taskDetail2.setStatus(transfer.getTransferStatus());
+							taskDetail2.setRoperateDeptId(transfer.getRoperateDeptId());
+							taskDetail2.setEndDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate));
+							taskDetailMapper.updateTaskByTaskDetail(taskDetail2);
+						}
+					}
+					// 修改数据导入批次表
+					Map<String, Object> barchsMap = new HashMap<String, Object>();
+					barchsMap.put("importBarchs", barchs);
+					barchsMap.put(ImportBatch.BATCHFLAG, ImportBatch.BATCHFLAGA);
+					try {
+						importBatchMapper.updateFlagByBatch(barchsMap);
+					} catch (Exception e) {
+						e.printStackTrace();
+						allocationTaskMap.put("msg", "分派任务 修改数据导入批次表时发生异常!");
+						return allocationTaskMap;
+					}
+				}else{
+					allocationTaskMap.put("msg", "第" +i+ "条，部门ID为："+userDeptID+ " 分派任务时，根据部门ID和批次号查询任务明细为空!");
+				}
+				i++;
 			}
 		} catch (Exception e) {
             e.printStackTrace();

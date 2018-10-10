@@ -45,6 +45,9 @@ public class WaitTaskController {
 		try {
 			session.setAttribute("taskDetailIdListForWait", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
+			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			System.out.println("待办任务列表查询 从session获取到的DeptIdAndChildIds:::" + deptIdAndChildId);
+			taskDetailSearch.setRoperateDeptId(deptIdAndChildId);
 			list = waitTaskService.selectWaitBySearch(taskDetailSearch);//待办任务列表查询
 			taskDetailIdList = waitTaskService.selectWaitTaskDetailIdBySearch(taskDetailSearch);
 			session.setAttribute("taskDetailIdListForWait", taskDetailIdList);
