@@ -81,9 +81,11 @@ public class PbxMusicsController {
 
     @ApiOperation(value = "创建PbxMusics", notes = "创建PbxMusics")
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResultBean<Boolean> create(PbxMusics PbxMusics, @RequestParam("file") MultipartFile file) {
+    public ResultBean<Boolean> create(PbxMusics PbxMusics, @RequestParam("files") MultipartFile[] files) {
         byte[] fileBox = null;
-        if (file != null && file.getSize() > 0) {
+        if(files!=null && files.length>0){
+            MultipartFile file = files[0];
+
             PbxMusics.setMusicName(file.getOriginalFilename());
             PbxMusics.setContentType(file.getContentType());
             try {
@@ -92,6 +94,9 @@ public class PbxMusicsController {
                 e.printStackTrace();
             }
         }
+
+
+
         boolean result = this.PbxMusicsService.save(fileBox, PbxMusics) != null;
         return new ResultBean<>(result);
     }
