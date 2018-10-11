@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import cn.cucsi.bsd.ucc.data.domain.PbxExts;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ChatLogin {
 	private static Logger logger = Logger.getLogger(ChatLogin.class);
 
-	public String login(HttpServletRequest req, ObjectMapper mapper,RedisTemplate<String, String> redisTemplate) {
+	public JSONObject login(HttpServletRequest req, ObjectMapper mapper,RedisTemplate<String, String> redisTemplate) {
 		
 		UccUsers loginUser = Auth.getLoginUser(req.getSession());
 		
@@ -63,13 +64,15 @@ public class ChatLogin {
 		map.put("status", "0");
 		map.put("uid", uid);
 		String re = "";
+		JSONObject json = null;
 		try {
 			re =  mapper.writeValueAsString(map);
+			json =new JSONObject(map);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		}
 		
-		return re;
+		return json;
 	}
 }
