@@ -43,7 +43,7 @@ public class PbxQueuesServiceImpl implements PbxQueuesService {
     public Page<PbxQueues> findAll(PbxQueuesCriteria criteria) {
 
         Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
-        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize());
+        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(),sort);
         return repository.findAll(PbxQueuesSpecs.createSpec(criteria),pageable);
     }
 
