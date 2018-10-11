@@ -21,7 +21,7 @@ public class UccTeamsServiceImpl implements UccTeamsService{
     UccTeamsRepository uccTeamsRepository;
     @Override
     public Page<UccTeams> findAll(UccTeamsCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "teamName");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccTeamsRepository.findAll(UccTeamsSpecs.createSpec(criteria),pageable);
     }

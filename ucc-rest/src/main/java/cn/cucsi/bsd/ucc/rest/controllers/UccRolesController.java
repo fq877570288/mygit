@@ -27,7 +27,7 @@ public class UccRolesController {
     @Autowired
     private RolesPermissionsService rolesPermissionsService;
 
-    @ApiOperation(value="根据查询条件获取角色列表", notes="根据查询条件获取角色列表", httpMethod = "GET")
+    @ApiOperation(value="根据查询条件获取角色列表", notes="根据查询条件获取角色列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     public PageResultBean<List<UccRoles>> findAll(@RequestBody UccRolesCriteria search){
         return new PageResultBean(this.uccRolesService.findAll(search));
