@@ -141,6 +141,45 @@ public class UccDeptsController {
                 }
             }
         }
-
+    }
+    /**
+     * 查询用户关联的部门及其子部门
+     */
+    public List<UccDepts> queryChildrenByDepts(String domainId,List<UccDepts> list){
+        UccDeptsCriteria search = new UccDeptsCriteria();
+        search.setDomainId(domainId);
+        ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
+        List<UccDepts> source = bean.getData();
+        if(list!=null && list.size()!=0){
+            for(UccDepts uccDepts:list){
+                queryChildrenByDept(uccDepts,source,list);
+            }
+        }
+        return list;
+    }
+    //zss
+    public void queryChildrenByDept(UccDepts uccDepts,List<UccDepts> source,List<UccDepts> list){
+        if(source.size()!=0&&list.size()!=0){
+            for(UccDepts u:source){
+                if(uccDepts!=null&&uccDepts.getDeptId().equals(u.getDeptPid())){
+                    if(isHave(u,list)){
+                        list.add(u);
+                        queryChildrenByDept(u,source,list);
+                    }
+                }
+            }
+        }
+    }
+    public boolean isHave(UccDepts uccDepts,List<UccDepts> source){
+        boolean b = true;
+        if(source!=null&&source.size()!=0){
+            for(UccDepts u:source){
+                if(uccDepts.getDeptId().equals(u.getDeptId())){
+                    b = false;
+                    break;
+                }
+            }
+        }
+        return b;
     }
 }
