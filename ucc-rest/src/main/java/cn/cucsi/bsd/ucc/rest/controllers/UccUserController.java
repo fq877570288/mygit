@@ -12,6 +12,7 @@ import cn.cucsi.bsd.ucc.service.UccPermissionsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,39 +168,26 @@ public class UccUserController  {
     @RequestMapping(value = "/logout", method= RequestMethod.GET)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
     public  ResultBean<Boolean> logout( HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        session.removeAttribute("login");
-        session.removeAttribute("uccUsers");
-        session.removeAttribute("LoginUser");
-        Cookie[] cookies=request.getCookies();
-        if(cookies!=null&&cookies.length>0){
-            for(Cookie cookie: cookies){
-                if("login".equals(cookie.getName())){
-                    cookie.setValue("");
-                    cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
+        try {
+            HttpSession session = request.getSession();
+            session.removeAttribute("login");
+            session.removeAttribute("uccUsers");
+            session.removeAttribute("LoginUser");
+            Cookie[] cookies=request.getCookies();
+            if(cookies!=null&&cookies.length>0){
+                for(Cookie cookie: cookies){
+                    if("login".equals(cookie.getName())){
+                        cookie.setValue("");
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                    }
                 }
             }
+        } catch (Exception e) {
+            System.err.println("cookie:"+e);
         }
-        String login = "";
-        for (Cookie cookie : cookies) {
-            switch(cookie.getName()){
-                case "login":
-                    login = cookie.getValue();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        boolean result = session.getAttribute("login")==null
-                &&session.getAttribute("uccUsers")==null
-                &&"".equals(login);
-        if(result){
-            return new ResultBean<>(ResultBean.SUCCESS,"登出成功！",result);
-        }
-        return new ResultBean<>(ResultBean.FAIL,"登出失败！",result);
+        return new ResultBean<>(ResultBean.SUCCESS,"登出成功！",true);
     }
 
     @ApiOperation(value = "根据userId查询UccUsers", notes = "根据userId查询UccUsers")
