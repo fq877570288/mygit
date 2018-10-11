@@ -21,7 +21,7 @@ public class UccRolesServiceImpl implements UccRolesService{
     UccRolesRepository uccRolesRepository;
     @Override
     public Page<UccRoles> findAll(UccRolesCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "roleName");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccRolesRepository.findAll(UccRolesSpecs.createSpec(criteria),pageable);
     }
