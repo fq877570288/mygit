@@ -172,12 +172,14 @@ public class UccUserController  {
         session.removeAttribute("uccUsers");
         session.removeAttribute("LoginUser");
         Cookie[] cookies=request.getCookies();
-        for(Cookie cookie: cookies){
-            if("login".equals(cookie.getName())){
-                cookie.setValue("");
-                cookie.setMaxAge(0);
-                cookie.setPath("/");
-                response.addCookie(cookie);
+        if(cookies!=null&&cookies.length>0){
+            for(Cookie cookie: cookies){
+                if("login".equals(cookie.getName())){
+                    cookie.setValue("");
+                    cookie.setMaxAge(0);
+                    cookie.setPath("/");
+                    response.addCookie(cookie);
+                }
             }
         }
         String login = "";
