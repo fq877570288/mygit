@@ -51,7 +51,7 @@ public class UccUserServiceImpl implements UccUserService{
 
     @Override
     public Page<UccUsers> findAll(UccUserCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccUserRepository.findAll(UccUserSpecs.createSpec(criteria), pageable);
     }
