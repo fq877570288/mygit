@@ -24,10 +24,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ChatLogin {
 	private static Logger logger = Logger.getLogger(ChatLogin.class);
-    @Autowired
-	private RedisTemplate<String, String> redisTemplate;
-	
-	public String login(HttpServletRequest req, ObjectMapper mapper) {
+
+	public String login(HttpServletRequest req, ObjectMapper mapper,RedisTemplate<String, String> redisTemplate) {
 		
 		UccUsers loginUser = Auth.getLoginUser(req.getSession());
 		
