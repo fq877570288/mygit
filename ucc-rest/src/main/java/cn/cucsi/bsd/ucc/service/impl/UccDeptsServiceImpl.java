@@ -181,8 +181,8 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
-    public List<UccDepts> selectDidsByUserId(String userId) throws Exception {
-        return uccDeptsMapper.selectDidsByUserId(userId);
+    public List<UccDepts> selectDidsByUserId(String userId,String domainId) throws Exception {
+        return uccDeptsMapper.selectDidsByUserId(userId,domainId);
     }
 
     @Override

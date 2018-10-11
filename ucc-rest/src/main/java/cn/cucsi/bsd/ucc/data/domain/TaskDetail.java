@@ -129,6 +129,7 @@ public class TaskDetail {
     private String deptMeshName; //网给名称
     private String deptAreaName; //包区名称
     private String developmentDeptName; //发展部门
+    private String checkFlag; //用于分派任务避免重复更新客户信息
 
     public String getTaskDetailId() {
         return taskDetailId;
@@ -672,5 +673,13 @@ public class TaskDetail {
 
     public void setDevelopmentDeptName(String developmentDeptName) {
         this.developmentDeptName = developmentDeptName;
+    }
+
+    public String getCheckFlag() {
+        return checkFlag;
+    }
+
+    public void setCheckFlag(String checkFlag) {
+        this.checkFlag = checkFlag;
     }
 }

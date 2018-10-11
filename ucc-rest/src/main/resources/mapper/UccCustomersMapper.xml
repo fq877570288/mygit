@@ -727,6 +727,9 @@
     <if test="roperateDeptId != null and roperateDeptId != ''">
       and d.ROPERATE_DEPT_ID = #{roperateDeptId}
     </if>
+    <if test="deptIdAndChildIds != null and deptIdAndChildIds != ''">
+      and d.ROPERATE_DEPT_ID in (${deptIdAndChildIds})
+    </if>
     <if test="operatorId != null and operatorId != ''">
       and t.OPERATOR_ID = #{operatorId}
     </if>

@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.common.mapper;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ public interface UccDeptsMapper {
     
     List<UccDepts> selectByUserId(String userId);
 
-    List<UccDepts> selectDidsByUserId(String userId);
+    List<UccDepts> selectDidsByUserId(@Param("userId")String userId, @Param("domainId")String domainId);
     
     int updateByPrimaryKey(UccDepts record);
     

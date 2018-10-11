@@ -40,9 +40,10 @@ public class CompleteTaskServiceImpl implements CompleteTaskService {
 	public List<TaskDetail> selectCompleteBySearch(TaskDetailSearch search) throws Exception {
 		
 		// 部门
-		List<UccDepts> ngtDeptList = uccDeptsService.selectByUserId(search.getUserId());
+		//List<UccDepts> ngtDeptList = uccDeptsService.selectByUserId(search.getUserId());
+		String deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(search);
 		search.setTaskStatus("4");
-		search.setRoperateDeptId(ngtDeptList.get(0).getDeptId().toString());
+		search.setRoperateDeptId(deptID);
 		// 分页查询
 		search.setup(taskDetailMapper.selectCompleteBySearchCount(search), search.getShowLines());
 		return taskDetailMapper.selectCompleteBySearch(search);
@@ -204,9 +205,10 @@ public class CompleteTaskServiceImpl implements CompleteTaskService {
 			logger.warn("Login user id is empty.");
 			return 0;
 		}
-		List<UccDepts> ngtDeptList = uccDeptsService.selectByUserId(search.getUserId());
-
-		String deptId = ngtDeptList.get(0).getDeptId().toString();
+		//List<UccDepts> ngtDeptList = uccDeptsService.selectByUserId(search.getUserId());
+		//String deptId = ngtDeptList.get(0).getDeptId().toString();
+		// 部门
+		String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(search);
 		search.setRoperateDeptId(deptId);
 
 		List<TaskDetail> taskDetailList = taskDetailMapper.selectTaskStatusByEndDate(search);

@@ -42,8 +42,8 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 	public List<UccCustomers> selectOngoingBySearch(TaskDetailSearch taskDetailSearch) throws Exception {
 		try {
 			// 部门
-			List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
-			taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
+			//List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
+			//taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
 			taskDetailSearch.setOperatorId(taskDetailSearch.getUserId());
 			// 分页查询
 			taskDetailSearch.setup(uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch), taskDetailSearch.getShowLines());
