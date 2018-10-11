@@ -138,7 +138,7 @@ public class UccUserController  {
             session.setAttribute("uccUsers", list.get(0));
             session.setAttribute("LoginUser", list.get(0));
             ChatLogin chatLogin = new ChatLogin();
-            chatLogin.login(request,new ObjectMapper());
+            chatLogin.login(request,new ObjectMapper(),redisTemplate);
             Collection<UccDepts> deptList = list.get(0).getDepts();
             String DeptIdAndChildIds = "";
             int i = 0;
