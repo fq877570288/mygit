@@ -7,8 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import cn.cucsi.bsd.ucc.data.domain.PbxExts;
-import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import cn.cucsi.bsd.ucc.data.domain.*;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,9 +26,10 @@ public class ChatLogin {
 	private static Logger logger = Logger.getLogger(ChatLogin.class);
 
 	public JSONObject login(HttpServletRequest req, ObjectMapper mapper,RedisTemplate<String, String> redisTemplate) {
-		
-		UccUsers loginUser = Auth.getLoginUser(req.getSession());
-		
+
+		UccUsers uccUser = Auth.getLoginUser(req.getSession());
+		LoginUser loginUser = new LoginUser();
+
 		String userAgent = req.getHeader("user-agent");
 		
 		if (userAgent.equals("")) {
@@ -37,23 +37,40 @@ public class ChatLogin {
 		}
 		
 		HashMap<String, Object> info = new HashMap<String, Object>();
+		loginUser.setUserId(uccUser.getUserId());
+		loginUser.setUserName(uccUser.getUserName());
+		loginUser.setMobile(uccUser.getMobile());
 		info.put("user", loginUser);
-		if (loginUser.getExt() != null && loginUser.getExt().size()>0) {
+		if (uccUser.getExt() != null && uccUser.getExt().size()>0) {
 			String extNum = "";
-			for (PbxExts pbxExts : loginUser.getExt()) {
+			for (PbxExts pbxExts : uccUser.getExt()) {
 				extNum = pbxExts.getExtNum();
 				break;
 			}
 			info.put("ext", extNum);
 		}
-		if (Auth.UserFlagCanDo(req.getSession(), 870)) {
-			info.put("admin", true);
+		boolean admin = false;
+		if(uccUser.getUccPermissions()!=null&&uccUser.getUccPermissions().size()>0){
+			for (UccPermissionsAndUser uccPermissionsAndUser : uccUser.getUccPermissions()){
+				if("工作台".equals(uccPermissionsAndUser.getName())){
+					if(uccPermissionsAndUser.getChildren()!=null&&uccPermissionsAndUser.getChildren().size()>0){
+						for (UccPermissionsAndUserSecound uccPermissionsAndUserSecound : uccPermissionsAndUser.getChildren()){
+							if("质检员".equals(uccPermissionsAndUserSecound.getName())){
+								admin = true;
+							}
+						}
+					}
+				}
+			}
 		}
-		
+		info.put("admin", admin);
+		info.put("domainId",uccUser.getDomainId());
+
 		//String remortIp = LoginController.getRemortIP(req);
 		String uid = UUID.randomUUID().toString();
 		String identity = Md5.Get(userAgent+":"+uid);
 		try {
+			System.err.println("ChatLogin_" + identity);
             redisTemplate.opsForValue().set("ChatLogin_" + identity, mapper.writeValueAsString(info), 2, TimeUnit.MINUTES);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();

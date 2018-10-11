@@ -108,27 +108,8 @@ public class UccUserController  {
     @RequestMapping(value = "/login", method= RequestMethod.POST)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
     public  PageResultBean<List<UccUsers>> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response) {
-
         List<UccUsers> list =this.uccUserService.loginList(criteria);
         HttpSession session = request.getSession();
-        JSONObject re = null;
-        if(list!=null&&list.size()!=0){
-            session.setAttribute("uccUsers", list.get(0));
-            session.setAttribute("LoginUser", list.get(0));
-            Collection<UccDepts> deptList = list.get(0).getDepts();
-            String DeptIdAndChildIds = "";
-            int i = 0;
-            for (UccDepts uccDepts : deptList) {
-                DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
-                if(i<deptList.size()-1){
-                    DeptIdAndChildIds += ",";
-                }
-                i++;
-            }
-            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);
-            ChatLogin chatLogin = new ChatLogin();
-            re = chatLogin.login(request, new ObjectMapper(), redisTemplate);
-        }
 
         Date date = new Date();
         SimpleDateFormat dtf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -141,6 +122,22 @@ public class UccUserController  {
             List<UccPermissionsAndUser> uccPermissionsList = tree(search);
             list.get(i).setUccPermissions(uccPermissionsList);
             sessionValue=  list.get(i).getUserName()+"#"+ list.get(i).getPassword();
+
+            session.setAttribute("uccUsers", list.get(i));
+            session.setAttribute("LoginUser", list.get(i));
+            Collection<UccDepts> deptList = list.get(i).getDepts();
+            String DeptIdAndChildIds = "";
+            int j = 0;
+            for (UccDepts uccDepts : deptList) {
+                DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
+                if(i<deptList.size()-1){
+                    DeptIdAndChildIds += ",";
+                }
+                j++;
+            }
+            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);
+            ChatLogin chatLogin = new ChatLogin();
+            JSONObject re = chatLogin.login(request, new ObjectMapper(), redisTemplate);
             list.get(i).setResult(re);
         }
         Cookie cookie = new Cookie("login",sessionValue);
