@@ -49,6 +49,8 @@ public class UccUserController  {
     UccPermissionsService uccPermissionsService;
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    UccDeptsController uccDeptsController;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
@@ -137,6 +139,11 @@ public class UccUserController  {
                 j++;
             }
             session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);*/
+            List<UccDepts> uccDeptsList = new ArrayList<UccDepts>(deptList);
+            List<UccDepts> udList = uccDeptsController.queryChildrenByDepts(list.get(i).getDomainId(),uccDeptsList);
+            session.setAttribute("DeptIdList", udList);
+            String deptIdAndChildIds  = udList.parallelStream().map(uccDepts-> uccDepts.getDeptId()).collect(Collectors.joining(","));
+            session.setAttribute("DeptIdAndChildIds", deptIdAndChildIds);
             String deptIds  = deptList.parallelStream().map(uccDepts-> uccDepts.getDeptId()).collect(Collectors.joining(","));
             session.setAttribute("DeptIds", deptIds);
             ChatLogin chatLogin = new ChatLogin();
