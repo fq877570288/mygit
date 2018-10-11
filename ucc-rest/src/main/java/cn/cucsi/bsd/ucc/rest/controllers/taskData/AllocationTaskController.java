@@ -39,7 +39,7 @@ public class AllocationTaskController {
 	 */
 	@ApiOperation(value="分配任务列表查询", notes="分配任务列表查询")
 	@RequestMapping(value = "/allocationTaskList", method= RequestMethod.POST)
-	public PageResultBean_New<List<ImportBatch>> allocationTaskList(@RequestBody AllocationTaskCriteria allocationTaskCriteria){
+	public PageResultBean_New<List<ImportBatch>> allocationTaskList(@RequestBody AllocationTaskCriteria allocationTaskCriteria, HttpSession session){
 
 		Page pageInfo = PageHelper.startPage(allocationTaskCriteria.getPageNum(), allocationTaskCriteria.getPageSize());
 		List<ImportBatch> importBatchlist = null;
@@ -50,6 +50,8 @@ public class AllocationTaskController {
 		importBatch.setBatchFlag("1");
 		PageResultBean_New<List<ImportBatch>> pageResultBean_new = null;
 		try {
+			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			allocationTaskCriteria.setDeptIdAndChildIds(deptIdAndChildId);
 			importBatchlist = importBatchervice.selectAllocationAllByBatchFlag(importBatch,allocationTaskCriteria);
 			System.out.println("importBatchlist:::" + importBatchlist.size());
 			//model.addAttribute("importBatchlist", importBatchlist);

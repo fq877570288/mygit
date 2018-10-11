@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,10 +75,8 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 		List<TaskDetail> taskDetailList = null;
 		try {
 			String userId = allocationTaskCriteria.getUserId()==null?"":allocationTaskCriteria.getUserId();
-			System.out.println("分配任务列表查询测试 userId:::" + userId);
 			search.setUserId(userId);
 			String deptIdAndChildId = allocationTaskCriteria.getDeptIdAndChildIds()==null?"":allocationTaskCriteria.getDeptIdAndChildIds();
-			System.out.println("分配任务列表查询测试 deptIdAndChildId:::" + deptIdAndChildId);
 
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
                 String [] deptIdAndChildIds = deptIdAndChildId.split(",");
@@ -98,7 +97,7 @@ public class ImportBatchServiceImpl implements ImportBatchService {
                             search.setTaskStatus("1");
                         }
                     }
-                    search.setRoperateDeptId(UccDeptsList.get(0).getDeptId().toString());
+                    search.setRoperateDeptId(deptIdAndChildId);
 					try {
 						taskDetailList = taskDetailMapper.selectImportBatchsBySearch(search);
 					} catch (Exception e) {

@@ -1529,7 +1529,7 @@
         LIMIT 5000
     </select>
 
-  <select id="selDeptByUserIdFromTaskDetail" resultMap="java.lang.String" parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch" >
+  <select id="selDeptByUserIdFromTaskDetail" resultType="java.lang.String" parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch" >
     SELECT
         a.ROPERATE_DEPT_ID
     FROM
