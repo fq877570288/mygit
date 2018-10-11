@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/uccUser")
@@ -126,7 +127,7 @@ public class UccUserController  {
             session.setAttribute("uccUsers", list.get(i));
             session.setAttribute("LoginUser", list.get(i));
             Collection<UccDepts> deptList = list.get(i).getDepts();
-            String DeptIdAndChildIds = "";
+            /*String DeptIdAndChildIds = "";
             int j = 0;
             for (UccDepts uccDepts : deptList) {
                 DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
@@ -135,7 +136,9 @@ public class UccUserController  {
                 }
                 j++;
             }
-            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);
+            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);*/
+            String deptIds  = deptList.parallelStream().map(uccDepts-> uccDepts.getDeptId()).collect(Collectors.joining(","));
+            session.setAttribute("DeptIds", deptIds);
             ChatLogin chatLogin = new ChatLogin();
             JSONObject re = chatLogin.login(request, new ObjectMapper(), redisTemplate);
             list.get(i).setResult(re);
