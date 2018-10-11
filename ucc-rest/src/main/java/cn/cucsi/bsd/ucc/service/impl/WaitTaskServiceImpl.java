@@ -1,10 +1,8 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.common.mapper.TaskDetailMapper;
 import cn.cucsi.bsd.ucc.common.mapper.TaskTransferMapper;
@@ -60,12 +58,12 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 	@Transactional
 	public List<String> selectWaitTaskDetailIdBySearch(TaskDetailSearch taskDetailSearch) throws Exception {
 
-		String userId = taskDetailSearch.getUserId()==null?"":taskDetailSearch.getUserId();
+		//String userId = taskDetailSearch.getUserId()==null?"":taskDetailSearch.getUserId();
 		// 部门
-		List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+		//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 
 		taskDetailSearch.setTaskStatus("1");
-		taskDetailSearch.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
+		//taskDetailSearch.setRoperateDeptId(uccDeptsList.get(0).getDeptId().toString());
 		
 		return taskDetailMapper.selectWaitTaskDetailIdBySearch(taskDetailSearch);
 	}
@@ -94,8 +92,13 @@ public class WaitTaskServiceImpl implements WaitTaskService {
                 return taskBackMap;
             }
 			// 部门
-			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-			String backDept = uccDeptsList.get(0).getDeptPid().toString();
+			//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+			//String backDept = uccDeptsList.get(0).getDeptPid().toString();
+			TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+			taskDetailSearch.setUserId(userId);
+			taskDetailSearch.setTaskDetailId(taskTransfer.getTaskDetailId()==null?"":taskTransfer.getTaskDetailId());
+			// 部门
+			String backDept = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
 
 			taskTransfer.setRoperateDeptId(backDept);
 			taskTransfer.setTaskTransferId(taskTransferUuid);
@@ -103,7 +106,7 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 			taskTransfer.setTransfeRoperate(TaskTransfer.BACK); //流转操作  0:创建、1：分派、2：接收、3：回退
 			taskTransfer.setTransferTime(transferTime); //流转时间
 			taskTransfer.setOperatorId(userId); //操作员
-			taskTransfer.setOperatorDept(uccDeptsList.get(0).getDeptId().toString());
+			taskTransfer.setOperatorDept(backDept);
             taskTransfer.setDomainId(domainId);
 
 			taskTransferMapper.insert(taskTransfer);
@@ -131,15 +134,20 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 				doTaskReceiveMap.put("msg", "任务接收时 任务明细ID为空!");
 				return doTaskReceiveMap;
 			}
+			List<String> detailIdsList = Arrays.asList(detailIds);
 			List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
 			TaskTransfer taskTransfer = null;
 			// 主键
 			UUIDGenerator generator = new UUIDGenerator();
 			// 流转时间
 			Timestamp transferTime = new Timestamp(System.currentTimeMillis());
+			TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+			taskDetailSearch.setUserId(userId);
+			taskDetailSearch.setTaskDetailIdInList(detailIdsList);
 			// 部门
-			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-			String deptID = uccDeptsList.get(0).getDeptId().toString();
+			String deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
+			/*List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+			String deptID = uccDeptsList.get(0).getDeptId().toString();*/
 
 			for(String id : detailIds){
                 taskTransfer = new TaskTransfer();

@@ -37,6 +37,6 @@ public interface UccCustomersRepository  extends PagingAndSortingRepository<UccC
      * 2018-08-31
      */
     @Query(value =" SELECT a.type from ucc_customers as a where a.businesscode = ?1 AND a.domain_id = ?2",nativeQuery = true)
-    int checkCustmIsBlack(String businesscode,String domainId);
+    Integer checkCustmIsBlack(String businesscode,String domainId);
 
 }

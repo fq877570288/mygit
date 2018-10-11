@@ -48,7 +48,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 	 */
 	@Override
 //	@Transactional("txManager")
-	public Map<String,Object> createNewTask(String barchs, String userId, String oldTaskBatch) throws Exception {
+	public Map<String,Object> createNewTask(String barchs, String userId, String oldTaskBatch,String userDeptID) throws Exception {
 
 		Map<String,Object> createTaskMap = new HashMap<String,Object>();
 		createTaskMap.put("msg", "新建任务失败!");
@@ -72,9 +72,8 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 				return createTaskMap;
 			}
 			// 部门
-			String userDeptID = "";
-			List<UccDepts> userDeptList = uccDeptsService.selectByUserId(userId);
-			System.out.println("创建任务测试 userDeptList:::" + userDeptList.size());
+			//String userDeptID = "";
+			/*List<UccDepts> userDeptList = uccDeptsService.selectByUserId(userId);
 			if(!MyUtils.isBlank(userDeptList)){
 				for(UccDepts uccDepts : userDeptList){
 					userDeptID = uccDepts.getDeptId();
@@ -82,7 +81,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 			}else{
 				createTaskMap.put("msg", "创建任务时,根据userId查询部门信息为空!");
 				return createTaskMap;
-			}
+			}*/
 			// 部门ID最大值(当时是参照哈分项目，id是自增的，该项目id为uuid 所以没用了)
 			//String maxDeptID = uccDeptsService.selectMaxDeptID();
 			// 主键
@@ -254,7 +253,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskDetail.setPhoneNumber2(dataImport.getPhoneNumber2());
 					taskDetail.setPhoneNumber3(dataImport.getPhoneNumber3());
 					taskDetail.setTaskStatus("0");
-					taskDetail.setRoperateDeptId(userDeptID.toString());
+					taskDetail.setRoperateDeptId(userDeptID);
 					taskDetail.setUserName(dataImport.getUserName());
 					taskDetail.setDefultPhone(dataImport.getPhoneNumber1()); //默认显示号码
 					taskDetail.setInitMeshId(deptMesh == null ? meshDeptId.toString() : deptMesh.getDeptId().toString()); //网格(初始)
@@ -275,8 +274,8 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					taskTransfer.setTransferTime(transferTime); //流转时间
 					taskTransfer.setOperatorId(userId); //操作员
 					taskTransfer.setRoperatePersonId(userId);//受理员
-					taskTransfer.setOperatorDept(userDeptID.toString());
-					taskTransfer.setRoperateDeptId(userDeptID.toString());
+					taskTransfer.setOperatorDept(userDeptID);
+					taskTransfer.setRoperateDeptId(userDeptID);
 					taskTransfer.setDomainId(domainId);
 
 					taskTransferList.add(taskTransfer);
@@ -377,7 +376,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 	 */
 	@Override
 	@Transactional
-	public Map<String,Object> createOldTask(String barchs, String userId, String oldTaskBatch) throws Exception {
+	public Map<String,Object> createOldTask(String barchs, String userId, String oldTaskBatch,String userDeptID) throws Exception {
 
 		Map<String,Object> createOldTaskMap = new HashMap<String,Object>();
 		createOldTaskMap.put("msg", "替换现有任务失败!");
@@ -406,7 +405,7 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 			}
 			// 创建任务
 			try {
-				createNewTask(barchs, userId, oldTaskBatch);
+				createNewTask(barchs, userId, oldTaskBatch,userDeptID);
 			} catch (Exception e) {
 				e.printStackTrace();
 				createOldTaskMap.put("msg", "替换现有任务，调用创建任务方法时发生异常!");

@@ -27,7 +27,7 @@ public interface UccDeptsMapper {
     
     List<UccDepts> selectByUserId(String userId);
 
-    List<String> selectDidsByUserId(String userId);
+    List<UccDepts> selectDidsByUserId(String userId);
     
     int updateByPrimaryKey(UccDepts record);
     
