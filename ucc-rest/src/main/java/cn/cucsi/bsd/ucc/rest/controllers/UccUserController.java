@@ -10,6 +10,7 @@ import cn.cucsi.bsd.ucc.service.PbxExtsService;
 import cn.cucsi.bsd.ucc.service.TeamUsersService;
 import cn.cucsi.bsd.ucc.service.UccPermissionsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
@@ -108,6 +109,25 @@ public class UccUserController  {
     public  PageResultBean<List<UccUsers>> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response) {
 
         List<UccUsers> list =this.uccUserService.loginList(criteria);
+        HttpSession session = request.getSession();
+        JSONObject re = null;
+        if(list!=null&&list.size()!=0){
+            session.setAttribute("uccUsers", list.get(0));
+            session.setAttribute("LoginUser", list.get(0));
+            Collection<UccDepts> deptList = list.get(0).getDepts();
+            String DeptIdAndChildIds = "";
+            int i = 0;
+            for (UccDepts uccDepts : deptList) {
+                DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
+                if(i<deptList.size()-1){
+                    DeptIdAndChildIds += ",";
+                }
+                i++;
+            }
+            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);
+            ChatLogin chatLogin = new ChatLogin();
+            re = chatLogin.login(request, new ObjectMapper(), redisTemplate);
+        }
 
         Date date = new Date();
         SimpleDateFormat dtf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -120,6 +140,7 @@ public class UccUserController  {
             List<UccPermissionsAndUser> uccPermissionsList = tree(search);
             list.get(i).setUccPermissions(uccPermissionsList);
             sessionValue=  list.get(i).getUserName()+"#"+ list.get(i).getPassword();
+            list.get(i).setResult(re);
         }
         Cookie cookie = new Cookie("login",sessionValue);
         cookie.setMaxAge(900000);
@@ -131,26 +152,9 @@ public class UccUserController  {
         PageResultBean<List<UccUsers>> uccUsersList = new PageResultBean<>();
         uccUsersList.setData(list);
 
-        HttpSession session = request.getSession();
          //将数据存储到session中
         session.setAttribute("login", sessionValue);
         if(list!=null&&list.size()!=0){
-            session.setAttribute("uccUsers", list.get(0));
-            session.setAttribute("LoginUser", list.get(0));
-            ChatLogin chatLogin = new ChatLogin();
-            chatLogin.login(request,new ObjectMapper(),redisTemplate);
-            Collection<UccDepts> deptList = list.get(0).getDepts();
-            String DeptIdAndChildIds = "";
-            int i = 0;
-            for (UccDepts uccDepts : deptList) {
-                DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
-                if(i<deptList.size()-1){
-                    DeptIdAndChildIds += ",";
-                }
-                i++;
-            }
-            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);
-
             uccUsersList.setMsg("登陆成功！");
         }else{
             uccUsersList.setMsg("用户名或密码不正确！");
