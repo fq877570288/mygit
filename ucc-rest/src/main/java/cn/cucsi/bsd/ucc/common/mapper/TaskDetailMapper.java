@@ -141,4 +141,6 @@ public interface TaskDetailMapper {
 
     List<TaskDetail> selectTaskStatusByEndDate(TaskDetailSearch search) throws Exception;
 
+    //根据用户ID查询任务明细表中的部门ID
+    String selDeptByUserIdFromTaskDetail(TaskDetailSearch search) throws Exception;
 }

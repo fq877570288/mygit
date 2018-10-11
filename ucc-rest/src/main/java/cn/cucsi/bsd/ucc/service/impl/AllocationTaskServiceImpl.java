@@ -37,28 +37,28 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 
 	@Override
 	@Transactional
-	public Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate) throws Exception {
+	public Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate,String deptIdAndChildId) throws Exception {
 
 		Map<String,Object> allocationTaskMap = new HashMap<String,Object>();
-		allocationTaskMap.put("msg", "新建任务失败!");
+		allocationTaskMap.put("msg", "分派任务失败!");
 		allocationTaskMap.put("code", "-1");
 
 		// 根据用户ID获取部门主键
 		String userDeptID = "";
         try {
             List<UccDepts> UccDeptsList = uccDeptsService.selectByUserId(userId);
-            if(MyUtils.isBlank(UccDeptsList)){
+            /*if(MyUtils.isBlank(UccDeptsList)){
 				allocationTaskMap.put("msg", "分派任务时 根据用户ID获取部门主键失败!");
 				return allocationTaskMap;
-			}
+			}*/
 			List<TaskDetail> taskDetailList = null;
 			// 流转时间
 			Timestamp transferTime = new Timestamp(System.currentTimeMillis());
 			List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
-			int i = 1;
-			for(UccDepts uccDepts : UccDeptsList){
-				userDeptID = uccDepts.getDeptId();
-				System.out.println("userDeptID:::" + userDeptID);
+			//int i = 1;
+			//for(UccDepts uccDepts : UccDeptsList){
+				//userDeptID = uccDepts.getDeptId();
+				userDeptID = deptIdAndChildId;
 				UccUsers uccUsers = uccUserService.findOne(userId);
 				if(MyUtils.isBlank(uccUsers)){
 					allocationTaskMap.put("msg", "分派任务时 根据userId:::"+userId+"查询用户信息为空!");
@@ -88,7 +88,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 				}else {
 					whereMap.put("taskStatusList", "'0', '1'");
 				}
-				whereMap.put("roperateDeptId", userDeptID.toString());
+				whereMap.put("roperateDeptId", userDeptID);
 				whereMap.put("barchs", barchs);
 				taskDetailList = taskDetailMapper.selectByWhere(whereMap);
 				System.out.println("分派任务时 taskDetailList:::" + taskDetailList.size());
@@ -99,7 +99,6 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 						// 主键
 						UUIDGenerator generator = new UUIDGenerator();
 						String taskTransferUuid = generator.generate();
-						System.out.println("第" + i + "次生成的TaskTransferId:::" + taskTransferUuid);
 						taskTransfer.setTaskTransferId(taskTransferUuid);
 						taskTransfer.setTaskDetailId(taskDetail.getTaskDetailId()); //任务明细表主键
 						taskTransfer.setTransferStatus("1"); //流转状态    0:未分派、1：未接收、2：待办、3：在办
@@ -173,10 +172,10 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 						return allocationTaskMap;
 					}
 				}else{
-					allocationTaskMap.put("msg", "第" +i+ "条，部门ID为："+userDeptID+ " 分派任务时，根据部门ID和批次号查询任务明细为空!");
+					allocationTaskMap.put("msg", "根据部门ID和批次号查询任务明细为空!");
 				}
-				i++;
-			}
+				//i++;
+			//}
 		} catch (Exception e) {
             e.printStackTrace();
 			allocationTaskMap.put("msg", "分派任务时发生异常!");

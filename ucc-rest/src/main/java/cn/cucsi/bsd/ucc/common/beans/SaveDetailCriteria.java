@@ -21,6 +21,9 @@ public class SaveDetailCriteria {
 	@ApiModelProperty(value = "用户ID",required = true)
 	private String userId; //用户ID
 
+	@ApiModelProperty(value = "任务ID",required = true)
+	private String taskDetailIds;
+
 	public String getDomainId() {
 		return domainId;
 	}
@@ -51,5 +54,13 @@ public class SaveDetailCriteria {
 
 	public void setCdrId(String cdrId) {
 		this.cdrId = cdrId;
+	}
+
+	public String getTaskDetailIds() {
+		return taskDetailIds;
+	}
+
+	public void setTaskDetailIds(String taskDetailIds) {
+		this.taskDetailIds = taskDetailIds;
 	}
 }

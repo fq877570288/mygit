@@ -266,4 +266,13 @@
 	  ucc_depts a
     LEFT JOIN ucc_users b ON a.dept_admin = b.user_id
   </select>
+
+  <select id="selectDidsByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+      c.dept_id,
+	  c.dept_name
+    from ucc_users a left join user_dept b on a.user_id = b.user_id
+    left join ucc_depts c on b.dept_id = c.dept_id
+    where a.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
 </mapper>

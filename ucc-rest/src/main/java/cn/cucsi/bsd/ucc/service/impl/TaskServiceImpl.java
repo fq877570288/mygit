@@ -129,10 +129,16 @@ public class TaskServiceImpl implements TaskService {
                 for (int j = 0; j < taskDetailList.size(); j++) {
                     taskDetail = taskDetailList.get(j);
                     userId = taskDetail.getUserId()==null?"":taskDetail.getUserId();
+					taskDetailId = taskDetail.getTaskDetailId()==null?"":taskDetail.getTaskDetailId();
 					// 部门
-					List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-					String backDept = uccDeptsList.get(0).getDeptPid().toString();
-                    taskDetailId = taskDetail.getTaskDetailId()==null?"":taskDetail.getTaskDetailId();
+					//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+					//String backDept = uccDeptsList.get(0).getDeptPid().toString();
+					TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+					taskDetailSearch.setUserId(userId);
+					taskDetailSearch.setTaskDetailId(taskDetailId);
+					// 部门
+					String backDept = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
+
                     // 主键
                     UUIDGenerator generator = new UUIDGenerator();
                     String taskTransferUuid = generator.generate();

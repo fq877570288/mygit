@@ -39,7 +39,7 @@ public interface OngoingTaskService {
 	/***
 	 * 保存任务明细
 	 */
-	Map<String,Object> saveDetail(String callinfo, String userId, String cdrId,String domainId) throws Exception;
+	Map<String,Object> saveDetail(String callinfo, String userId, String cdrId,String domainId,String taskDetailIds) throws Exception;
 
 
 	/***
@@ -57,6 +57,6 @@ public interface OngoingTaskService {
 	/***
 	 * 保存并继续
 	 */
-	String saveAndGoonDetail(String callinfo, String userId, String taskTypeId, String cdrId, String businessCode,String domainId) throws Exception;
+	String saveAndGoonDetail(String callinfo, String userId, String taskTypeId, String cdrId, String businessCode,String domainId,String taskDetailIds) throws Exception;
 
 }

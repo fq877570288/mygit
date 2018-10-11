@@ -73,7 +73,7 @@ public class AllocationTaskController {
 	 */
 	@ApiOperation(value="分派任务", notes="分派任务")
 	@RequestMapping(value = "/allocationTask",method = RequestMethod.POST)
-	public ResultBean_New<String> allocationTask(@RequestBody DoAllocationTaskCriteria doAllocationTaskCriteria) {
+	public ResultBean_New<String> allocationTask(@RequestBody DoAllocationTaskCriteria doAllocationTaskCriteria,HttpSession session) {
 
 		String alloc = doAllocationTaskCriteria.getAlloc()==null?"":doAllocationTaskCriteria.getAlloc();
 		String userId = doAllocationTaskCriteria.getUserId()==null?"":doAllocationTaskCriteria.getUserId();
@@ -86,7 +86,9 @@ public class AllocationTaskController {
 		resultBean.setReturnCode(ResultBean_New.FAIL);
 		Map<String,Object> allocationTaskMap = new HashMap<String,Object>();
 		try {
-			allocationTaskMap = allocationTaskService.allocationTask(userId, alloc, barchs, endDate);
+			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			System.out.println("分派任务时 从session获取到的DeptIdAndChildIds:::" + deptIdAndChildId);
+			allocationTaskMap = allocationTaskService.allocationTask(userId, alloc, barchs, endDate,deptIdAndChildId);
 			if(allocationTaskMap.get("code").equals("-1")){
 				resultBean.setReturnMsg((String)allocationTaskMap.get("msg"));
 				return resultBean;
@@ -185,13 +187,13 @@ public class AllocationTaskController {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
 				List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForEditDeptList");
 				//临时测试用
-				if(MyUtils.isBlank(idList)){
+				/*if(MyUtils.isBlank(idList)){
 					idList.add("40287d8165fb1e530165fb226ce3000d");
 					idList.add("40287d8165fb1e530165fb226ce3000b");
 					idList.add("40287d8165fb1e530165fb2870120013");
 					idList.add("40287d8165fb1e530165fb287012000f");
 					idList.add("2");
-				}
+				}*/
 				if(!MyUtils.isBlank(idList)){
 					Integer _taskNumberStart = 1;
 					Integer _taskNumberEnd = idList.size();

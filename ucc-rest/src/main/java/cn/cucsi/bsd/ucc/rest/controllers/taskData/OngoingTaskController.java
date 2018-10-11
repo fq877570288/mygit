@@ -224,12 +224,13 @@ public class OngoingTaskController {
 		String cdrId = saveDetailCriteria.getCdrId()==null?"":saveDetailCriteria.getCdrId();
 		String userId = saveDetailCriteria.getUserId()==null?"":saveDetailCriteria.getUserId();
 		String domainId = saveDetailCriteria.getDomainId()==null?"":saveDetailCriteria.getDomainId();
+		String taskDetailIds = saveDetailCriteria.getTaskDetailIds()==null?"":saveDetailCriteria.getTaskDetailIds();
 
 		Map<String,Object> saveDetailMap = new HashMap<String,Object>();
 		saveDetailMap.put("msg","保存失败！");
 		saveDetailMap.put("code","-1");
 		try {
-            Map<String,Object> doSaveDetailMap = ongoingTaskService.saveDetail(callinfo, userId, cdrId,domainId);
+            Map<String,Object> doSaveDetailMap = ongoingTaskService.saveDetail(callinfo, userId, cdrId,domainId,taskDetailIds);
             if(doSaveDetailMap.get("code").equals("-1")){
                 saveDetailMap.put("msg",doSaveDetailMap.get("msg"));
                 return saveDetailMap;
@@ -262,11 +263,12 @@ public class OngoingTaskController {
         String cdrId = saveAndGoonDetailCriteria.getCdrId()==null?"":saveAndGoonDetailCriteria.getCdrId();
         String businessCode = saveAndGoonDetailCriteria.getBusinessCode()==null?"":saveAndGoonDetailCriteria.getBusinessCode();
         String domainId = saveAndGoonDetailCriteria.getDomainId()==null?"":saveAndGoonDetailCriteria.getDomainId();
+        String taskDetailIds = saveAndGoonDetailCriteria.getTaskDetailIds()==null?"":saveAndGoonDetailCriteria.getTaskDetailIds();
 
 		String businesscode = "";
 		session.setAttribute("selectTaskTypeId", taskTypeId);
 		try {
-			businesscode = ongoingTaskService.saveAndGoonDetail(callinfo, userId, taskTypeId, cdrId, businessCode,domainId);
+			businesscode = ongoingTaskService.saveAndGoonDetail(callinfo, userId, taskTypeId, cdrId, businessCode,domainId,taskDetailIds);
 			if(businesscode != null && !"".equals(businesscode)){
 				businesscode = AESUtil.encrypt(businesscode, this.aesPwd);
                 saveDetailMap.put("businesscode",businesscode);

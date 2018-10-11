@@ -887,7 +887,7 @@
       and p3.dept_name LIKE '%${developmentDeptName}%'
     </if>
     <if test="roperateDeptId != null and roperateDeptId != ''">
-      and d.ROPERATE_DEPT_ID = #{roperateDeptId}
+      and <![CDATA[ d.ROPERATE_DEPT_ID in (${roperateDeptId}) ]]>
     </if>
     <if test="taskStatus != null and taskStatus != ''">
       and (d.TASK_STATUS = #{taskStatus} or d.TASK_STATUS = '5')
@@ -943,7 +943,7 @@
       and p3.dept_name LIKE '%${developmentDeptName}%'
     </if>
     <if test="roperateDeptId != null and roperateDeptId != ''">
-      and d.ROPERATE_DEPT_ID in (${roperateDeptId})
+      and <![CDATA[ d.ROPERATE_DEPT_ID in (${roperateDeptId}) ]]>
     </if>
     <if test="taskStatus != null and taskStatus != ''">
       and (d.TASK_STATUS = #{taskStatus} or d.TASK_STATUS = '5')
@@ -1528,4 +1528,26 @@
         </where>
         LIMIT 5000
     </select>
+
+  <select id="selDeptByUserIdFromTaskDetail" resultMap="java.lang.String" parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch" >
+    SELECT
+        a.ROPERATE_DEPT_ID
+    FROM
+        OC_TASK_DETAIL AS a
+    WHERE
+        a.USER_ID = #{userId,jdbcType=VARCHAR}
+    <if test="taskDetailId != null and taskDetailId != ''">
+      AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
+    </if>
+    <if test="taskDetailIds != null and taskDetailIds != ''">
+      AND a.TASK_DETAIL_ID in ( ${taskDetailIds} )
+    </if>
+    <if test="taskDetailIdInList != null and taskDetailIdInList != ''">
+      AND a.TASK_DETAIL_ID in
+      <foreach item="myId" index="index" collection="taskDetailIdInList"
+               open="(" separator="," close=")">
+        #{myId}
+      </foreach>
+    </if>
+  </select>
 </mapper>

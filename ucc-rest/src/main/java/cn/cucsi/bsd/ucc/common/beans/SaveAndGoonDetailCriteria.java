@@ -27,6 +27,9 @@ public class SaveAndGoonDetailCriteria {
 	@ApiModelProperty(value = "业务编码",required = true)
 	private String businessCode; //业务编码
 
+	@ApiModelProperty(value = "任务ID",required = true)
+	private String taskDetailIds;
+
 	public String getDomainId() {
 		return domainId;
 	}
@@ -75,4 +78,11 @@ public class SaveAndGoonDetailCriteria {
 		this.businessCode = businessCode;
 	}
 
+	public String getTaskDetailIds() {
+		return taskDetailIds;
+	}
+
+	public void setTaskDetailIds(String taskDetailIds) {
+		this.taskDetailIds = taskDetailIds;
+	}
 }

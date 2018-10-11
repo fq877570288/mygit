@@ -17,8 +17,11 @@ public class DoCreateTaskCriteria {
     @ApiModelProperty(value = "新任务批次",required = false)
     private String barchs;
 
-    @ApiModelProperty(value = "用户ID",required = false)
+    @ApiModelProperty(value = "用户ID",required = true)
     private String userId;
+
+    @ApiModelProperty(value = "用户所属部门ID",required = true)
+    private String userDeptID;
 
     @ApiModelProperty(value = "旧任务批次",required = false)
     private String oldTaskBatch;
@@ -53,5 +56,13 @@ public class DoCreateTaskCriteria {
 
     public void setOldTaskBatch(String oldTaskBatch) {
         this.oldTaskBatch = oldTaskBatch;
+    }
+
+    public String getUserDeptID() {
+        return userDeptID;
+    }
+
+    public void setUserDeptID(String userDeptID) {
+        this.userDeptID = userDeptID;
     }
 }
