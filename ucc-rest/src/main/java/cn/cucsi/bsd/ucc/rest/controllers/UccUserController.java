@@ -417,4 +417,12 @@ public class UccUserController  {
         }
         return new ResultBean<>(ResultBean.FAIL,"分配失败！",result);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/chat/login", produces = "text/html;charset=UTF-8", method=RequestMethod.POST)
+    public JSONObject login(HttpServletRequest request, ObjectMapper mapper) {
+        ChatLogin chatLogin = new ChatLogin();
+        JSONObject re = chatLogin.login(request, mapper, redisTemplate);
+        return re;
+    }
 }
