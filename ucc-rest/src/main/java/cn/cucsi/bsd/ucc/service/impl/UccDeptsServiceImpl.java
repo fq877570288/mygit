@@ -352,18 +352,22 @@ public class UccDeptsServiceImpl implements UccDeptsService {
         search.setDomainId(domainId);
         ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
         List<UccDepts> source = bean.getData();
-
         List<UccDepts> all = new ArrayList<>();
-        for(UccDepts filter: list){
-            UccDepts rootDept = source.stream().filter(row-> row.getDeptId().equals(filter.getDeptId())).findFirst().get();
-            if(rootDept != null){
-                all.add(rootDept);
-                this.test(rootDept, source, all);
+        try{
+            for(UccDepts filter: list){
+                UccDepts rootDept = source.stream().filter(row-> row.getDeptId().equals(filter.getDeptId())).findFirst().get();
+                if(rootDept != null){
+                    all.add(rootDept);
+                    this.test(rootDept, source, all);
+                }
             }
+            for(UccDepts uccDepts:all){
+                System.out.println(uccDepts.getDeptId()+" "+uccDepts.getDeptPid()+" "+list.size());
+            }
+        }catch (Exception e){
+            System.out.println("询用户关联的部门及其子部门失败！");
+            e.printStackTrace();
         }
-        for(UccDepts uccDepts:all){
-            System.out.println(uccDepts.getDeptId()+" "+uccDepts.getDeptPid()+" "+list.size());
-        }
-        return list;
+        return all;
     }
 }
