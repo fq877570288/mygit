@@ -43,7 +43,7 @@ public class PbxCdrsServiceImpl implements PbxCdrsService {
     
     @Override
     public Page<PbxCdrs> findAll(PbxCdrsCriteria pbxCdrsCriteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(pbxCdrsCriteria.getPage(), pbxCdrsCriteria.getSize(), sort);
         return pbxCdrsRepository.findAll(PbxCdrsSpecs.createSpec(pbxCdrsCriteria), pageable);
     }
