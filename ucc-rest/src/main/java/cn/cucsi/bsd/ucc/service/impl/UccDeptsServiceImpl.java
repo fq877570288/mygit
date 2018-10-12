@@ -1,11 +1,15 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
+import cn.cucsi.bsd.ucc.common.beans.NgtDeptSearch;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 import cn.cucsi.bsd.ucc.common.mapper.UccDeptsMapper;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import cn.cucsi.bsd.ucc.data.repo.UccDeptsRepository;
 import cn.cucsi.bsd.ucc.data.specs.UccDeptsSpecs;
 import cn.cucsi.bsd.ucc.service.UccDeptsService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -325,5 +329,89 @@ public class UccDeptsServiceImpl implements UccDeptsService {
             }
         }
         return UccDepts;
+    }
+
+    /**
+     * select 获取网格名称 id
+     * add by wangxiaoyu
+     * 2018-10-12
+     * 备注：入参：centerID 、userId 、domainId
+     */
+    @Override
+    public String queryMesh(NgtDeptSearch search) throws Exception {
+        //String centerID = search.getCenterID()== null?"":search.getCenterID();
+        try {
+            search.setDeptLevel(1);
+            //search.setDeptPid(centerID);
+            List<UccDepts> deptCenters = uccDeptsMapper.selectByNgtDeptSearch(search);
+            if (deptCenters == null || deptCenters.isEmpty()) {
+                search.setDeptLevel(2);
+                //search.setDeptPid(centerID);
+                List<UccDepts> depts = uccDeptsMapper.selectByNgtDeptSearch(search);
+                ObjectMapper mapper = new ObjectMapper();
+                String json = mapper.writeValueAsString(depts);
+                return json;
+            } else {
+                List<UccDepts> depts = new ArrayList<>();
+                for (UccDepts _tmpCenterID : deptCenters) {
+                    search.setDeptLevel(2);
+                    //search.setDeptPid(_tmpCenterID.getDeptId());
+                    List<UccDepts> deptTmps = uccDeptsMapper.selectByNgtDeptSearch(search);
+                    if (deptTmps != null) {
+                        depts.addAll(deptTmps);
+                    }
+                }
+                ObjectMapper mapper = new ObjectMapper();
+                String json = mapper.writeValueAsString(depts);
+                return json;
+            }
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * select 获取包区名称 id
+     * add by wangxiaoyu
+     * 2018-10-12
+     * 备注：入参：meshID、userId 、domainId
+     */
+    @Override
+    public String queryArea(NgtDeptSearch search) throws Exception {
+        String meshID = search.getMeshID()==null?"":search.getMeshID();
+        try {
+            search.setDeptLevel(3);
+            search.setDeptPid(meshID);
+            List<UccDepts> depts = uccDeptsMapper.selectByNgtDeptSearch(search);
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(depts);
+            return json;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * select 获取发展部门名称 id
+     * add by wangxiaoyu
+     * 2018-10-12
+     * 备注：入参：areaID、userId 、domainId
+     */
+    @Override
+    public String queryDevelopment(NgtDeptSearch search) throws Exception {
+        String areaID = search.getAreaID()==null?"":search.getAreaID();
+        try {
+            search.setDeptLevel(4);
+            search.setDeptPid(areaID);
+            List<UccDepts> depts = uccDeptsMapper.selectByNgtDeptSearch(search);
+            ObjectMapper mapper = new ObjectMapper();
+            String json = mapper.writeValueAsString(depts);
+            return json;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

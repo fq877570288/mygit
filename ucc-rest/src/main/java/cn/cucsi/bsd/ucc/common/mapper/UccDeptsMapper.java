@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.common.mapper;
 
+import cn.cucsi.bsd.ucc.common.beans.NgtDeptSearch;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import org.apache.ibatis.annotations.Mapper;
@@ -52,5 +53,7 @@ public interface UccDeptsMapper {
 	List<UccDepts> selectMesh(UccDepts dept);
 
 	List<UccDepts> selectChildren(String deptIdList);
+
+    List<UccDepts> selectByNgtDeptSearch(NgtDeptSearch search);
 	
 }
