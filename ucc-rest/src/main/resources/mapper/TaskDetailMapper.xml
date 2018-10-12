@@ -90,7 +90,8 @@
         c.defult_phone AS customer_phone,
         b.CALL_MEMO,
         b.CALL_RESULT,
-        b.TRANSFER_STATUS
+        b.TRANSFER_STATUS,
+        max(b.TRANSFER_TIME)
     FROM
         OC_TASK_DETAIL AS a
     LEFT JOIN ucc_customers AS c ON a.domain_id = c.domain_id AND a.BUSINESS_CODE = c.businesscode

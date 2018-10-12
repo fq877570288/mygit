@@ -38,7 +38,7 @@ public class PbxExtsServiceImpl implements PbxExtsService {
 
     @Override
     public Page<PbxExts> findAll(PbxExtsCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "extNum");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         if(criteria.getExtGroupsId()!=null && ! "".equals(criteria.getExtGroupsId())){
            List<ExtGroupExts>  extGroupExtslist = ExtGroupExtsRepository.findExtGroupExtsByGroupId(criteria.getExtGroupsId());
@@ -64,6 +64,9 @@ public class PbxExtsServiceImpl implements PbxExtsService {
             for (PbxExtGroups pbxExtGroups:extGroupExtslist
                     ) {
                 extGroupsByExtId = extGroupsByExtId + pbxExtGroups.getGroupName()+",";
+            }
+            if(extGroupsByExtId.length()>0) {
+                extGroupsByExtId = extGroupsByExtId.substring(0, extGroupsByExtId.length() - 1);
             }
             pbxExts.setExtGroupsByExtId(extGroupsByExtId);
         }
