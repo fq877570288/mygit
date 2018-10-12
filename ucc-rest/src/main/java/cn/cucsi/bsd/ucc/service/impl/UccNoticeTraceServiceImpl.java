@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import cn.cucsi.bsd.ucc.data.specs.UccNoticeTraceSpecs;
 import java.util.Date;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,11 +24,17 @@ public class UccNoticeTraceServiceImpl  implements UccNoticeTraceService{
 
     @Override
     public Page<UccNoticeTrace> findAll(UccNoticeTraceCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "operateTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccNoticeTraceRepository.findAll(UccNoticeTraceSpecs.createSpec(criteria),pageable);
     }
-
+    @Override
+    public List<UccNoticeTrace> findAllOne(UccNoticeTraceCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
+        //Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
+        //return uccNoticeTraceRepository.findAll(UccNoticeTraceSpecs.createSpec(criteria),pageable);
+        return uccNoticeTraceRepository.findAll(UccNoticeTraceSpecs.createSpec(criteria),sort);
+    }
     @Override
     public UccNoticeTrace findOne(String noticeTraceId) {
         return uccNoticeTraceRepository.findOne(noticeTraceId);
