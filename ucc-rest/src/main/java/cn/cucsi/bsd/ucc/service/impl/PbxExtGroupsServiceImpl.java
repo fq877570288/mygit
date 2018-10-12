@@ -33,7 +33,7 @@ public class PbxExtGroupsServiceImpl implements PbxExtGroupsService {
 
     @Override
     public Page<PbxExtGroups> findAll(PbxExtGroupsCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "updatedTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return pbxextgroupsrepository.findAll(PbxExtGroupsSpecs.createSpec(criteria), pageable);
     }
