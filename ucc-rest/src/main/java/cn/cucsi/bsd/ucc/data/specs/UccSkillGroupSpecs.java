@@ -30,6 +30,15 @@ public class UccSkillGroupSpecs {
         };
     }
 
+    public static Specification<UccSkillGroup> statusEqual(final String status) {
+        return new Specification<UccSkillGroup>() {
+            @Override
+            public Predicate toPredicate(Root<UccSkillGroup> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("status"), status);
+            }
+        };
+    }
+
     public static Specification<UccSkillGroup> createTimeThanOrEqualTo(final Date from) {
         return new Specification<UccSkillGroup>() {
             @Override
@@ -59,6 +68,9 @@ public class UccSkillGroupSpecs {
 
         if(!Strings.isNullOrEmpty(criteria.getSkillGroupName())){
             specs = specs.and(skillGroupNameLike(criteria.getSkillGroupName()));
+        }
+        if(!Strings.isNullOrEmpty(criteria.getStatus())){
+            specs = specs.and(statusEqual(criteria.getStatus()));
         }
         if(null != criteria.getCreatedTimeFrom()){
             specs = specs.and(createTimeThanOrEqualTo(criteria.getCreatedTimeFrom()));
