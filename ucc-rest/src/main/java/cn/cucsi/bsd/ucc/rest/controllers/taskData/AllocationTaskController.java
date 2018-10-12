@@ -7,9 +7,9 @@ import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
-import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import cn.cucsi.bsd.ucc.service.AllocationTaskService;
 import cn.cucsi.bsd.ucc.service.ImportBatchService;
+import cn.cucsi.bsd.ucc.service.UccDeptsService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.base.Joiner;
@@ -31,6 +31,8 @@ public class AllocationTaskController {
 	private AllocationTaskService allocationTaskService;
 	@Autowired
 	private ImportBatchService importBatchervice;
+	@Autowired
+	private UccDeptsService uccDeptsService;
 	
 	/***
 	 * 分配任务列表查询
@@ -125,12 +127,12 @@ public class AllocationTaskController {
 			session.setAttribute("taskDetailIdListForEditDeptList", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
 			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			//此处临时加的
+			//deptIdAndChildId = "'" + deptIdAndChildId.replaceAll(",", "','") + "'";
+			System.out.println("数据调拨页面(条件搜索查询) DeptIdAndChildIds:::" + deptIdAndChildId);
 			taskDetailSearch.setRoperateDeptId(deptIdAndChildId);
-			/*//此处为临时加的
-			if(MyUtils.isBlank(deptIdAndChildId)){
-				deptIdAndChildId = "'40287d8165fb1e530165fb1e53900001','40287d8165fb1e530165fb2870120010'";
-			}*/
 			//String deptIdAndChildId = taskDetailSearch.getDeptIdAndChildIds()==null?"":taskDetailSearch.getDeptIdAndChildIds();
+
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
 				String [] deptIdAndChildIds = deptIdAndChildId.split(",");
 				if(deptIdAndChildIds.length > 1){
@@ -145,7 +147,6 @@ public class AllocationTaskController {
 			}else{
 				session.setAttribute("taskDetailIdListForEditDeptList", null);
 			}
-			//model.addAttribute("list", list);
 			editDeptListMap.put("list", list);
 			editDeptListMap.put("taskNumberStart", taskDetailSearch.getTaskNumberStart());
 			editDeptListMap.put("taskNumberEnd", taskDetailSearch.getTaskNumberEnd());
@@ -162,6 +163,49 @@ public class AllocationTaskController {
 			return editDeptListMap;
 		}
 	}
+	/**
+	 * select 获取网格名称 id
+	 * add by wangxiaoyu
+	 * 2018-10-12
+     * 备注：入参：userId 、domainId
+	 */
+    @ApiOperation(value="数据调拨--获取网格名称 id", notes="数据调拨--获取网格名称 id")
+    @RequestMapping(value = "/queryMesh",method = RequestMethod.POST)
+	private String queryMesh(@RequestBody NgtDeptSearch search,HttpSession session) throws Exception {
+		String deptIds = (String)session.getAttribute("DeptIds");
+        //此处临时加的
+        //deptIds = "'" + deptIds.replaceAll(",", "','") + "'";
+		System.out.println("数据调拨--获取网格名称 id session得到的 deptIds:::" + deptIds);
+		if(!MyUtils.isBlank(deptIds)){
+			search.setDeptIds(deptIds);
+		}
+		return uccDeptsService.queryMesh(search);
+	}
+
+	/**
+	 * select 获取包区名称 id
+	 * add by wangxiaoyu
+	 * 2018-10-12
+     * 备注：入参：meshID、userId 、domainId
+	 */
+	@ApiOperation(value="数据调拨--获取包区名称 id", notes="数据调拨--获取包区名称 id")
+    @RequestMapping(value = "/queryArea",method = RequestMethod.POST)
+	private String queryArea(@RequestBody NgtDeptSearch search) throws Exception {
+		return uccDeptsService.queryArea(search);
+	}
+
+
+	/**
+	 * select 获取发展部门名称 id
+	 * add by wangxiaoyu
+	 * 2018-10-12
+     * 备注：入参：areaID、userId 、domainId
+	 */
+	@ApiOperation(value="数据调拨--获取发展部门名称 id", notes="数据调拨--获取发展部门名称 id")
+	@RequestMapping(value = "/queryDevelopment",method = RequestMethod.POST)
+	private String queryDevelopment(@RequestBody NgtDeptSearch search) throws Exception {
+		return uccDeptsService.queryDevelopment(search);
+	}
 	
 	/***
 	 * 数据调拨--任务组织机构修改
@@ -175,7 +219,6 @@ public class AllocationTaskController {
 		Map<String,Object> editDeptListMap = new HashMap<String,Object>();
 		editDeptListMap.put("msg","操作失败！");
 		editDeptListMap.put("code","-1");
-		List<UccDepts> deptIdList = (List<UccDepts>)session.getAttribute("deptIdList");
 		//String userId = Auth.getLoginUser(session).getUserId();
 		String meshID = allocationSearch.getMeshID()==null?"":allocationSearch.getMeshID();
 		String areaID = allocationSearch.getAreaID()==null?"":allocationSearch.getAreaID();
@@ -215,7 +258,7 @@ public class AllocationTaskController {
 			//model.addAttribute("taskNumberStart", taskNumberStart);
 			//model.addAttribute("taskNumberEnd", taskNumberEnd);
 
-			editDeptListMap.put("deptIdList", deptIdList);
+			editDeptListMap.put("allocationSearch", allocationSearch);
 			editDeptListMap.put("taskNumberStart", taskNumberStart);
 			editDeptListMap.put("taskNumberEnd", taskNumberEnd);
 			editDeptListMap.put("msg", "数据调拨完成！");

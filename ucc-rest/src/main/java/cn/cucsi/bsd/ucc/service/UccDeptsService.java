@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.service;
 
+import cn.cucsi.bsd.ucc.common.beans.NgtDeptSearch;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import org.springframework.data.domain.Page;
@@ -61,4 +62,25 @@ public interface UccDeptsService {
     List<UccDepts> selectMesh(UccDepts dept);
 
     List<UccDepts> selectAllInCache(UccDeptsCriteria search) throws Exception;
+
+    /**
+     * select 获取网格名称 id
+     * add by wangxiaoyu
+     * 2018-10-12
+     */
+    String queryMesh(NgtDeptSearch search) throws Exception;
+
+    /**
+     * select 获取包区名称 id
+     * add by wangxiaoyu
+     * 2018-10-12
+     */
+    String queryArea(NgtDeptSearch search) throws Exception;
+
+    /**
+     * select 获取发展部门名称 id
+     * add by wangxiaoyu
+     * 2018-10-12
+     */
+    String queryDevelopment(NgtDeptSearch search) throws Exception;
 }

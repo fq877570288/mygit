@@ -129,7 +129,7 @@ public class TaskDetail {
     private String deptMeshName; //网给名称
     private String deptAreaName; //包区名称
     private String developmentDeptName; //发展部门
-    private String checkFlag; //用于分派任务避免重复更新客户信息
+    private String checkFlag; //用于分派任务避免重复更新客户信息 默认是"0",已更新时"1"
 
     public String getTaskDetailId() {
         return taskDetailId;

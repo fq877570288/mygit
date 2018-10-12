@@ -19,6 +19,7 @@
     <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
     <result column="updated_user_id" property="updatedUserId" jdbcType="VARCHAR" />
     <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
+    <result column="dept_admin_name" property="deptAdminName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     dept_id, created_by, created_nick_name, created_time, created_user_id, created_user_name, 
@@ -275,4 +276,30 @@
     left join ucc_depts c on b.dept_id = c.dept_id
     where a.user_id = #{userId,jdbcType=VARCHAR} and c.domain_id = #{domainId,jdbcType=VARCHAR}
   </select>
+
+  <!-- 条件查询 -->
+  <select id="selectByNgtDeptSearch" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.NgtDeptSearch">
+    SELECT
+      c.dept_id,
+      c.dept_name,
+      a.user_name dept_admin_name
+    FROM
+      ucc_users a
+    INNER JOIN user_dept b ON a.user_id = b.user_id
+    INNER JOIN ucc_depts c ON b.dept_id = c.dept_id AND a.domain_id = c.domain_id
+    <include refid="Sql_Where" />
+    and a.user_id = #{userId,jdbcType=VARCHAR}
+    and a.domain_id = #{domainId,jdbcType=VARCHAR}
+  </select>
+  <sql id="Sql_Where">
+    <if test="deptPid != null and deptPid != ''">
+      and dept_pid = #{deptPid,jdbcType=VARCHAR}
+    </if>
+    <if test="deptLevel != null and deptLevel != ''">
+      and dept_level = #{deptLevel,jdbcType=INTEGER}
+    </if>
+    <if test="deptIds != null and deptIds != ''">
+      and b.dept_id in (${deptIds})
+    </if>
+  </sql>
 </mapper>

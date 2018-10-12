@@ -48,10 +48,6 @@ public class MonitorTaskController {
 		List<TaskDetail> list = null;
 		try {
 			String deptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
-			/*//此处为临时加的
-			if(MyUtils.isBlank(deptIdAndChildIds)){
-				deptIdAndChildIds = "'8ac086e665f4746e0165f4a5e9cf0000'";
-			}*/
 			//taskDetailSearch.setUserId(Auth.getLoginUser(session).getUserId());
 			taskDetailSearch.setUserId(taskDetailSearch.getUserId());
 			taskDetailSearch.setDeptIdAndChildIds(deptIdAndChildIds);

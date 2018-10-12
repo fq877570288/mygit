@@ -753,8 +753,8 @@
     </if>
     WHERE
        1 = 1
-    <if test="taskCode != null ">
-    AND a.TASK_CODE &gt; #{taskCode,jdbcType=VARCHAR}
+    <if test='taskCode != null and taskCode !="" '>
+    AND a.TASK_CODE &lt; #{taskCode,jdbcType=VARCHAR}*1
     </if>
     AND a.USER_ID = #{userId,jdbcType=VARCHAR}
     <if test='taskCountsFlag == null or taskCountsFlag =="" '>

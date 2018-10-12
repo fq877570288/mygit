@@ -374,10 +374,6 @@ public class DataImportController {
 				String taskType = "";
 				String deptIdAndChildIds = (String)httpSession.getAttribute("DeptIdAndChildIds");
 
-				//此处为临时加的
-				/*if(MyUtils.isBlank(deptIdAndChildIds)){
-					deptIdAndChildIds = "'40287d8165fb1e530165fb1e53900001','40287d8165fb1e530165fb2870120010'";
-				}*/
 				/*if(deptIdAndChildIds==null || deptIdAndChildIds.isEmpty()){
 					//model.addAttribute("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
 					customFieldsSaveMap.put("msg", "您所属的部门为空，不能完成导入操作，请联系系统管理员!");
