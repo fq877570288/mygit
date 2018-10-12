@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "ucc_skill_group", schema = "ucc", catalog = "")
@@ -17,6 +18,7 @@ public class UccSkillGroup {
     private String skillGroupId;
     private String skillGroupName;
     private String skillGroupCode;
+    private String skillGroupPid;
     private String domainId;
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     private String createdUserId;
@@ -31,6 +33,10 @@ public class UccSkillGroup {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updatedTime;
     private String status;
+
+    @Transient
+    @JsonView(JSONView.Summary.class)
+    private List<UccSkillGroup> uccSkillGroups;
 
     @Basic
     @Column(name = "status", nullable = false, length = 1)
@@ -67,6 +73,16 @@ public class UccSkillGroup {
 
     public void setSkillGroupName(String skillGroupName) {
         this.skillGroupName = skillGroupName;
+    }
+
+    @Basic
+    @Column(name = "skill_group_pid", nullable = false, length = 32)
+    public String getSkillGroupPid() {
+        return skillGroupPid;
+    }
+
+    public void setSkillGroupPid(String skillGroupPid) {
+        this.skillGroupPid = skillGroupPid;
     }
 
     @Basic
@@ -207,5 +223,14 @@ public class UccSkillGroup {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    @Transient
+    public List<UccSkillGroup> getUccSkillGroups() {
+        return uccSkillGroups;
+    }
+
+    public void setUccSkillGroups(List<UccSkillGroup> uccSkillGroups) {
+        this.uccSkillGroups = uccSkillGroups;
     }
 }

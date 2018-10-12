@@ -106,20 +106,31 @@ public class UccPermissionsController {
                 }
             }
             //往父ID中添加子节点
-            if(pIdList!=null&&pIdList.size()!=0) {
-                for (UccPermissions pId : pIdList) {
-                    List<UccPermissions> childNodeList = new ArrayList<>();
-                    for (UccPermissions uccPermissions : list) {
-                        if(pId.getPermissionId().equals(uccPermissions.getMpid())){
-                            childNodeList.add(uccPermissions);
-                        }
-                    }
-                    pId.setUccPermissions(childNodeList);
+            if(pIdList.size()!=0){
+                for(int i=0;i<pIdList.size();i++){
+                    queryChildren(pIdList.get(i),list);
                 }
-                uccPermissionsList.setData(pIdList);
-                return uccPermissionsList;
             }
+            uccPermissionsList.setData(pIdList);
+            return uccPermissionsList;
         }
         return new PageResultBean(this.uccPermissionsService.findAllTree(search));
+    }
+
+    public void queryChildren(UccPermissions uccPermissions, List<UccPermissions> list){
+        List<UccPermissions> Childrens = new ArrayList<UccPermissions>();
+        if(list.size()!=0){
+            for(int i=0;i<list.size();i++){
+                if(uccPermissions!=null&&uccPermissions.getPermissionId().equals(list.get(i).getMpid())){
+                    Childrens.add(list.get(i));
+                }
+            }
+            if(Childrens.size()!=0){
+                uccPermissions.setUccPermissions(Childrens);
+                for(int a = 0;a<Childrens.size();a++){
+                    queryChildren(Childrens.get(a),list);
+                }
+            }
+        }
     }
 }

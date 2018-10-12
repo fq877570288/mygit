@@ -11,6 +11,7 @@ import java.util.Date;
 @ApiModel
 public class UccSkillGroupCriteria extends  BasicCriteria {
     private String skillGroupName;
+    private String status;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeFrom;
@@ -39,5 +40,13 @@ public class UccSkillGroupCriteria extends  BasicCriteria {
 
     public void setCreatedTimeTo(Date createdTimeTo) {
         this.createdTimeTo = createdTimeTo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
