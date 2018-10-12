@@ -1076,6 +1076,7 @@
     FROM
       OC_TASK_DETAIL d
       LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
+      LEFT JOIN OC_TASK_TYPE as o on d.TASK_TYPE_ID = o.TASK_TYPE_ID
     WHERE
       1 = 1
     <include refid="Sql_AllocationWhere" />
