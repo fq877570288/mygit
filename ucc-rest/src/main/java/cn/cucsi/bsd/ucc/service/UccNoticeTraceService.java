@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.service;
 
 import cn.cucsi.bsd.ucc.common.beans.UccNoticeTraceCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccNoticeTrace;
+import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
  */
 public interface UccNoticeTraceService {
     Page<UccNoticeTrace> findAll(UccNoticeTraceCriteria search);
+    List<UccNoticeTrace> findAllOne(UccNoticeTraceCriteria search);
     UccNoticeTrace findOne(String noticeTraceId );
     UccNoticeTrace save(UccNoticeTrace uccNoticeTrace);
     Boolean delete(String noticeTraceId);

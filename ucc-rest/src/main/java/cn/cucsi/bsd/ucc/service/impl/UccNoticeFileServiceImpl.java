@@ -34,13 +34,13 @@ public class UccNoticeFileServiceImpl implements UccNoticeFileService{
      
     @Override
     public Page<UccNoticeFile> findAll(UccNoticeFileCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccNoticeFileRepository.findAll(UccNoticeFileSpecs.createSpec(criteria), pageable);
     }
     @Override
     public List<UccNoticeFile> findAllOne(UccNoticeFileCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "uploadTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         //Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccNoticeFileRepository.findAll(UccNoticeFileSpecs.createSpec(criteria),sort);
     }
