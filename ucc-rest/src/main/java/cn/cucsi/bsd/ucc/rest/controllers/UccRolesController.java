@@ -49,28 +49,31 @@ public class UccRolesController {
     @ApiOperation(value = "创建UccRoles", notes = "创建UccRoles")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccRoles uccRoles) {
-        Date dateTime = new Date();
-        uccRoles.setCreatedTime(dateTime);
-        UccRoles queues = this.uccRolesService.save(uccRoles);
-        boolean result =queues != null;
-
-
-        if(result){
-            String[] permissionsIds = uccRoles.getPermissions();
-            result = false ;
-            for (String permissionsId:permissionsIds) {
-                RolesPermissions  rolesPermissions = new RolesPermissions();
-                rolesPermissions.setPermissionId(permissionsId);
-                rolesPermissions.setRoleId(queues.getRoleId());
-                result = this.rolesPermissionsService.save(rolesPermissions)!=null;
+        UccRolesCriteria uccRolesCriteria = new UccRolesCriteria();
+        uccRolesCriteria.setRoleName(uccRoles.getRoleName());
+        List<UccRoles> uccRolesList = this.uccRolesService.findByRoleName(uccRolesCriteria);
+        Boolean resultByName = uccRolesList.size()==0;
+        if(!resultByName){
+            return new ResultBean<>(ResultBean.FAIL,"角色名重复！",resultByName);
+        }else {
+            Date dateTime = new Date();
+            uccRoles.setCreatedTime(dateTime);
+            UccRoles queues = this.uccRolesService.save(uccRoles);
+            boolean result =queues != null;
+            if(result){
+                String[] permissionsIds = uccRoles.getPermissions();
+                result = false ;
+                for (String permissionsId:permissionsIds) {
+                    RolesPermissions  rolesPermissions = new RolesPermissions();
+                    rolesPermissions.setPermissionId(permissionsId);
+                    rolesPermissions.setRoleId(queues.getRoleId());
+                    result = this.rolesPermissionsService.save(rolesPermissions)!=null;
+                }
+                return new ResultBean<>(result);
+            }else{
+                return new ResultBean<>(result);
             }
-            return new ResultBean<>(result);
-        }else{
-            return new ResultBean<>(result);
         }
-        
-        
-        
     }
 
     @ApiOperation(value = "修改UccRoles", notes = "修改UccRoles")

@@ -23,6 +23,7 @@ import java.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by tianyuwei on 2017/10/16.
@@ -30,7 +31,8 @@ import java.util.List;
 
 @Service
 public class UccDeptsServiceImpl implements UccDeptsService {
-
+    @Autowired
+    private UccDeptsService uccDeptsService;
     @Autowired
     private UccDeptsRepository uccDeptsRepository;
     @Autowired

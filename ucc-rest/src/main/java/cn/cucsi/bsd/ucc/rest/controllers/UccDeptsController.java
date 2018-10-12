@@ -4,6 +4,7 @@ import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 //import cn.cucsi.bsd.ucc.data.beans.AllDeptsTreeBean;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.beans.DeptsTree;
 import cn.cucsi.bsd.ucc.data.domain.UccClients;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by tianyuwei on 2017/10/16.
@@ -97,7 +99,7 @@ public class UccDeptsController {
     @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
     @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
     @ResponseBody
-    public ResultBean<List<UccDepts>> findAllTree(UccDeptsCriteria search) {
+    public ResultBean<List<UccDepts>> findAllTree(@RequestBody UccDeptsCriteria search) {
         try {
             ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
             List<UccDepts> list = bean.getData();
@@ -142,44 +144,6 @@ public class UccDeptsController {
             }
         }
     }
-    /**
-     * 查询用户关联的部门及其子部门
-     */
-    public List<UccDepts> queryChildrenByDepts(String domainId,List<UccDepts> list){
-        UccDeptsCriteria search = new UccDeptsCriteria();
-        search.setDomainId(domainId);
-        ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
-        List<UccDepts> source = bean.getData();
-        if(list!=null && list.size()!=0){
-            for(UccDepts uccDepts:list){
-                queryChildrenByDept(uccDepts,source,list);
-            }
-        }
-        return list;
-    }
-    //zss
-    public void queryChildrenByDept(UccDepts uccDepts,List<UccDepts> source,List<UccDepts> list){
-        if(source.size()!=0&&list.size()!=0){
-            for(UccDepts u:source){
-                if(uccDepts!=null&&uccDepts.getDeptId().equals(u.getDeptPid())){
-                    if(isHave(u,list)){
-                        list.add(u);
-                        queryChildrenByDept(u,source,list);
-                    }
-                }
-            }
-        }
-    }
-    public boolean isHave(UccDepts uccDepts,List<UccDepts> source){
-        boolean b = true;
-        if(source!=null&&source.size()!=0){
-            for(UccDepts u:source){
-                if(uccDepts.getDeptId().equals(u.getDeptId())){
-                    b = false;
-                    break;
-                }
-            }
-        }
-        return b;
-    }
+
+
 }

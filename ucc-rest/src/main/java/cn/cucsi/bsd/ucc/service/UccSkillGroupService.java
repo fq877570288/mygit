@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
  */
 public interface UccSkillGroupService {
     Page<UccSkillGroup> findAll(UccSkillGroupCriteria search);
+    Page<UccSkillGroup> findAllTree(UccSkillGroupCriteria search);
     UccSkillGroup findOne(String skillGroupId );
     UccSkillGroup save(UccSkillGroup uccSkillGroup);
     Boolean delete(String skillGroupId);

@@ -27,6 +27,7 @@ public class UccNoticeTraceController {
     public PageResultBean<List<UccNoticeTrace>> findAll(@ModelAttribute UccNoticeTraceCriteria search){
         return new PageResultBean(this.uccNoticeTraceService.findAll(search));
     }
+    
     @ApiOperation(value = "根据noticeTraceId查询uccNoticeTrace", notes = "根据noticeTraceId查询uccNoticeTrace")
     @RequestMapping(value = "/{noticeTraceId}", method= RequestMethod.GET)
     public ResultBean<UccNoticeTrace> findOne(@PathVariable String noticeTraceId){

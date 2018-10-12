@@ -10,6 +10,7 @@ import cn.cucsi.bsd.ucc.service.PbxExtsService;
 import cn.cucsi.bsd.ucc.service.TeamUsersService;
 import cn.cucsi.bsd.ucc.service.UccPermissionsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
+import cn.cucsi.bsd.ucc.service.impl.UccDeptsServiceImpl;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -50,7 +51,7 @@ public class UccUserController  {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
-    UccDeptsController uccDeptsController;
+    private UccDeptsServiceImpl uccDeptsServiceImpl;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
@@ -140,11 +141,11 @@ public class UccUserController  {
             }
             session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);*/
             List<UccDepts> uccDeptsList = new ArrayList<UccDepts>(deptList);
-            List<UccDepts> udList = uccDeptsController.queryChildrenByDepts(list.get(i).getDomainId(),uccDeptsList);
+            List<UccDepts> udList = uccDeptsServiceImpl.queryChildrenByDepts(list.get(i).getDomainId(),uccDeptsList);
             session.setAttribute("DeptIdList", udList);
-            String deptIdAndChildIds  = udList.parallelStream().map(uccDepts-> uccDepts.getDeptId()).collect(Collectors.joining(","));
+            String deptIdAndChildIds  = udList.parallelStream().map(uccDepts-> "'"+uccDepts.getDeptId()+"'").collect(Collectors.joining(","));
             session.setAttribute("DeptIdAndChildIds", deptIdAndChildIds);
-            String deptIds  = deptList.parallelStream().map(uccDepts-> uccDepts.getDeptId()).collect(Collectors.joining(","));
+            String deptIds  = deptList.parallelStream().map(uccDepts->"'"+ uccDepts.getDeptId()+"'").collect(Collectors.joining(","));
             session.setAttribute("DeptIds", deptIds);
             ChatLogin chatLogin = new ChatLogin();
             JSONObject re = chatLogin.login(request, new ObjectMapper(), redisTemplate);

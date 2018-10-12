@@ -14,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +28,9 @@ public class ChatLogin {
 	private static Logger logger = Logger.getLogger(ChatLogin.class);
 
 	public JSONObject login(HttpServletRequest req, ObjectMapper mapper,RedisTemplate<String, String> redisTemplate) {
+
+		RedisSerializer stringSerializer = new StringRedisSerializer();
+		redisTemplate.setValueSerializer(stringSerializer);
 
 		UccUsers uccUser = Auth.getLoginUser(req.getSession());
 		LoginUser loginUser = new LoginUser();

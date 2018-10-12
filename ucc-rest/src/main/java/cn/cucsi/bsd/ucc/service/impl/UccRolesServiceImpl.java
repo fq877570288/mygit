@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by mk on 2017/10/16.
  */
@@ -24,6 +26,12 @@ public class UccRolesServiceImpl implements UccRolesService{
         Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccRolesRepository.findAll(UccRolesSpecs.createSpec(criteria),pageable);
+    }
+
+    @Override
+    public List<UccRoles> findByRoleName(UccRolesCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
+        return uccRolesRepository.findAll(UccRolesSpecs.createSpecByRoleName(criteria),sort);
     }
 
     @Override

@@ -1,22 +1,15 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
-import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
-import cn.cucsi.bsd.ucc.common.beans.UccServersCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccSkillGroupCriteria;
-import cn.cucsi.bsd.ucc.data.domain.UccServers;
-import cn.cucsi.bsd.ucc.data.domain.UccSkillGroup;
-import cn.cucsi.bsd.ucc.data.domain.UccUsers;
-import cn.cucsi.bsd.ucc.service.UccServersService;
+import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.UccSkillGroupService;
-import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,6 +58,53 @@ public class UccSkillGroupController {
     @RequestMapping(value = "/${skillGroupId}/${status}", method = RequestMethod.DELETE)
     public ResultBean<Boolean> updateStatusById( @PathVariable String status,@PathVariable String skillGroupId){
         return new ResultBean<>(this.uccSkillGroupService.updateStatusById( status,skillGroupId));
+    }
+
+    @ApiOperation(value="根据查询获取技能组树", notes="根据查询获取技能组树", httpMethod = "POST")
+    @RequestMapping(value = "/tree", method= RequestMethod.POST)
+    public PageResultBean<List<UccSkillGroup>> tree(@RequestBody UccSkillGroupCriteria search){
+        try {
+            search.setStatus("1");
+            PageResultBean<List<UccSkillGroup>> uccSkillGroupList= new PageResultBean(this.uccSkillGroupService.findAllTree(search));
+            List<UccSkillGroup> list = uccSkillGroupList.getData();
+            List<UccSkillGroup> pIdList = new ArrayList<>();
+            if(list!=null&&list.size()!=0) {
+                //父ID
+                for (UccSkillGroup uccPermissions : list) {
+                    if (uccPermissions.getSkillGroupPid() == null || "".equals(uccPermissions.getSkillGroupPid())) {
+                        pIdList.add(uccPermissions);
+                    }
+                }
+                //往父ID中添加子节点
+                if(pIdList.size()!=0){
+                    for(int i=0;i<pIdList.size();i++){
+                        queryChildren(pIdList.get(i),list);
+                    }
+                }
+                uccSkillGroupList.setData(pIdList);
+                return uccSkillGroupList;
+            }
+        } catch (Exception e) {
+            System.out.println("根据查询获取技能组树异常："+e);
+        }
+        return new PageResultBean(this.uccSkillGroupService.findAllTree(search));
+    }
+
+    public void queryChildren(UccSkillGroup uccSkillGroup, List<UccSkillGroup> list){
+        List<UccSkillGroup> Childrens = new ArrayList<UccSkillGroup>();
+        if(list.size()!=0){
+            for(int i=0;i<list.size();i++){
+                if(uccSkillGroup!=null&&uccSkillGroup.getSkillGroupId().equals(list.get(i).getSkillGroupPid())){
+                    Childrens.add(list.get(i));
+                }
+            }
+            if(Childrens.size()!=0){
+                uccSkillGroup.setUccSkillGroups(Childrens);
+                for(int a = 0;a<Childrens.size();a++){
+                    queryChildren(Childrens.get(a),list);
+                }
+            }
+        }
     }
 
 }

@@ -4,8 +4,10 @@ import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.UccNotice;
 import cn.cucsi.bsd.ucc.data.domain.UccNoticeFile;
+import cn.cucsi.bsd.ucc.data.domain.UccNoticeTrace;
 import cn.cucsi.bsd.ucc.service.UccNoticeFileService;
 import cn.cucsi.bsd.ucc.service.UccNoticeService;
+import cn.cucsi.bsd.ucc.service.UccNoticeTraceService;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +30,8 @@ public class UccNoticeController {
     UccNoticeService uccNoticeService;
     @Autowired
     private UccNoticeFileService uccNoticeFileService;
+    @Autowired
+    private UccNoticeTraceService uccNoticeTraceService;
          
     
     @ApiOperation(value="根据查询条件获取通知公告列表", notes="根据查询条件获取通知公告列表", httpMethod = "POST")
@@ -47,6 +51,13 @@ public class UccNoticeController {
         UccNoticeFileCriteria uccNoticeFileCriteria = new UccNoticeFileCriteria();
         uccNoticeFileCriteria.setNoticeId(noticeId);
         List<UccNoticeFile> uccNoticeFiles = uccNoticeFileService.findAllOne(uccNoticeFileCriteria);
+        UccNoticeTraceCriteria uccNoticeTraceCriteria = new UccNoticeTraceCriteria();
+        uccNoticeFileCriteria.setNoticeId(noticeId);
+        List<UccNoticeTrace>uccNoticeTraces = uccNoticeTraceService.findAllOne(uccNoticeTraceCriteria);
+        for(UccNoticeTrace uccNoticeTrace : uccNoticeTraces)
+        {
+            Boolean bol = uccNoticeTraceService.delete(uccNoticeTrace.getNoticeTraceId());
+        }
         for(UccNoticeFile uccNoticeFile : uccNoticeFiles)
         {
             Boolean bol = uccNoticeFileService.delete(uccNoticeFile.getNoticeFileId());
@@ -57,6 +68,7 @@ public class UccNoticeController {
     @ApiOperation(value = "创建UccNotice", notes = "创建UccNotice")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(UccNotice uccNotice, @RequestParam("files") MultipartFile[] files) {
+        
         Date dateTime = new Date();
         uccNotice.setCreatedTime(dateTime);
         UccNotice uccNoticere = this.uccNoticeService.save(uccNotice);
@@ -88,35 +100,51 @@ public class UccNoticeController {
     }
 
     @ApiOperation(value = "修改UccNotice", notes = "修改UccNotice")
-    @RequestMapping(value = "/{noticeId}", method =  RequestMethod.POST)
-    public ResultBean<UccNotice> save(@PathVariable String[] delFiledId,UccNotice uccNotice, @RequestParam("files") MultipartFile[] files){
+    @RequestMapping(value = "/update/{noticeId}", method =  RequestMethod.POST)
+    public ResultBean<UccNotice> save(@PathVariable String noticeId, String[] delFiledId,UccNotice uccNotice, @RequestParam("files") MultipartFile[] files){
         Date dateTime = new Date();
-        uccNotice.setUpdatedTime(dateTime);
-        for(String noticeFileId:delFiledId)
+        UccNotice uccNoticeold = uccNoticeService.findOne(noticeId);
+        
+        uccNoticeold.setNoticeTitle(uccNotice.getNoticeTitle());
+        uccNoticeold.setNoticeType(uccNotice.getNoticeType());
+        uccNoticeold.setNoticeContent(uccNotice.getNoticeContent());
+        uccNoticeold.setUpdatedNickName(uccNotice.getUpdatedNickName());
+        uccNoticeold.setUpdatedUserId(uccNotice.getUpdatedUserId());
+        uccNoticeold.setUpdatedUserName(uccNotice.getUpdatedUserName());
+        uccNoticeold.setUpdatedTime(dateTime);
+        //
+        //uccNotice.setUpdatedTime(dateTime);
+        if(delFiledId != null)
         {
-            uccNoticeFileService.delete(noticeFileId);
+            for(String noticeFileId:delFiledId)
+            {
+                uccNoticeFileService.delete(noticeFileId);
+            }
         }
-        for(MultipartFile file : files)
+        if(files != null)
         {
-           byte[] fileBox = null;
-           if (file != null && file.getSize() > 0) {                   
-               UccNoticeFile uccNoticeFile = new UccNoticeFile();
-               uccNoticeFile.setNoticeId(uccNotice.getNoticeId());
-               uccNoticeFile.setFileName(file.getOriginalFilename());
-               uccNoticeFile.setCreatedTime(dateTime);
-               uccNoticeFile.setCreatedUserId(uccNotice.getUpdatedUserId());
-               uccNoticeFile.setCreatedUserName(uccNotice.getUpdatedUserName());
-               uccNoticeFile.setContentType(file.getContentType());
-               try {
-                   fileBox = file.getBytes();
-                   this.uccNoticeFileService.save(fileBox, uccNoticeFile);
-               } catch (IOException e) {
-                   e.printStackTrace();
+            for(MultipartFile file : files)
+            {
+               byte[] fileBox = null;
+               if (file != null && file.getSize() > 0) {                   
+                   UccNoticeFile uccNoticeFile = new UccNoticeFile();
+                   uccNoticeFile.setNoticeId(uccNotice.getNoticeId());
+                   uccNoticeFile.setFileName(file.getOriginalFilename());
+                   uccNoticeFile.setCreatedTime(dateTime);
+                   uccNoticeFile.setCreatedUserId(uccNotice.getUpdatedUserId());
+                   uccNoticeFile.setCreatedUserName(uccNotice.getUpdatedUserName());
+                   uccNoticeFile.setContentType(file.getContentType());
+                   try {
+                       fileBox = file.getBytes();
+                       this.uccNoticeFileService.save(fileBox, uccNoticeFile);
+                   } catch (IOException e) {
+                       e.printStackTrace();
 
+                   }
                }
-           }
+            }
         }
-        return new ResultBean<>(this.uccNoticeService.save(uccNotice));
+        return new ResultBean<>(this.uccNoticeService.save(uccNoticeold));
     }
 
     /***

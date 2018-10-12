@@ -30,6 +30,13 @@ public class UccSkillGroupServiceImpl implements UccSkillGroupService {
     }
 
     @Override
+    public Page<UccSkillGroup> findAllTree(UccSkillGroupCriteria criteria) {
+        Sort sort = new Sort(Sort.Direction.DESC, "skillGroupName");
+        Pageable pageable = new PageRequest(0, 999999, sort);
+        return uccSkillGroupRepository.findAll(UccSkillGroupSpecs.createSpec(criteria),pageable);
+    }
+
+    @Override
     public UccSkillGroup findOne(String skillGroupId) {
         return uccSkillGroupRepository.findOne(skillGroupId);
     }
