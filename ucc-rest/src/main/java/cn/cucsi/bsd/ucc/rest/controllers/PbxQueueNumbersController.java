@@ -24,7 +24,7 @@ public class PbxQueueNumbersController {
 
     @ApiOperation(value="根据查询条件获取队列与分机号对应关系列表", notes="根据查询条件获取队列与分机号对应关系列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
-    public ResultBean<List<PbxQueueNumbers>> findAll(@ModelAttribute PbxQueueNumbersCriteria search){
+    public ResultBean<List<PbxQueueNumbers>> findAll(@RequestBody PbxQueueNumbersCriteria search){
         return new ResultBean<>(this.PbxQueueNumbersService.findAll(search));
     }
     @ApiOperation(value = "根据queueId、extId查询PbxQueueNumbers", notes = "根据queueId、extId查询PbxQueueNumbers")
