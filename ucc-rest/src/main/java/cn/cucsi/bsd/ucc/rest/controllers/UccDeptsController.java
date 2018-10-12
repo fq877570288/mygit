@@ -4,6 +4,7 @@ import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 //import cn.cucsi.bsd.ucc.data.beans.AllDeptsTreeBean;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.beans.DeptsTree;
 import cn.cucsi.bsd.ucc.data.domain.UccClients;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by tianyuwei on 2017/10/16.
@@ -97,7 +99,7 @@ public class UccDeptsController {
     @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
     @RequestMapping(value = "/deptTree", method = RequestMethod.POST)
     @ResponseBody
-    public ResultBean<List<UccDepts>> findAllTree(UccDeptsCriteria search) {
+    public ResultBean<List<UccDepts>> findAllTree(@RequestBody UccDeptsCriteria search) {
         try {
             ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
             List<UccDepts> list = bean.getData();
@@ -141,6 +143,7 @@ public class UccDeptsController {
                 }
             }
         }
-
     }
+
+
 }

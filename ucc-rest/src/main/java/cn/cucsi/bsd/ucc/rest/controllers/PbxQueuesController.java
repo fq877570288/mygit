@@ -99,13 +99,13 @@ public class PbxQueuesController {
     @RequestMapping(value = "/{queueId}", method= RequestMethod.PUT)
     public ResultBean<Boolean> save(@PathVariable String queueId,@RequestBody PbxQueues PbxQueues){
         String[] extGroupExts = PbxQueues.getExtGroupExts();
-        PbxQueues queues = this.PbxQueuesService.save(PbxQueues);
+        PbxQueues queues = this.PbxQueuesService.save(PbxQueues);//修改队列表
         boolean result = queues != null;
         if(result){
 
             PbxQueueNumbersCriteria criteria = new PbxQueueNumbersCriteria();
             criteria.setQueueId(queues.getQueueId());
-            List<PbxQueueNumbers> pbxQueueNumbersList=  this.pbxQueueNumbersService.findAll(criteria);
+            List<PbxQueueNumbers> pbxQueueNumbersList=  this.pbxQueueNumbersService.findAll(criteria);//查询队列分机号表
             for (PbxQueueNumbers pbxQueueNumbers:pbxQueueNumbersList) {
                 PbxQueueNumbersPK pk = new PbxQueueNumbersPK();
                 pk.setQueueId(pbxQueueNumbers.getQueueId());

@@ -19,6 +19,16 @@ public class UccToBlackCriteria{
     private String custId;
     @ApiModelProperty(value = "业务ID",required = false)
     private String businessCode;
+    @ApiModelProperty(value = "释放时间",required = true)
+    private String releaseTime;
+
+    public String getReleaseTime() {
+        return releaseTime;
+    }
+
+    public void setReleaseTime(String releaseTime) {
+        this.releaseTime = releaseTime;
+    }
 
     public String getPullBlackReason() {
         return pullBlackReason;

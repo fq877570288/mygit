@@ -7,11 +7,12 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import cn.cucsi.bsd.ucc.data.domain.PbxExts;
-import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import cn.cucsi.bsd.ucc.data.domain.*;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,12 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class ChatLogin {
 	private static Logger logger = Logger.getLogger(ChatLogin.class);
-	private RedisTemplate<String, String> template;
-	
-	public String login(HttpServletRequest req, ObjectMapper mapper) {
-		
-		UccUsers loginUser = Auth.getLoginUser(req.getSession());
-		
+
+	public JSONObject login(HttpServletRequest req, ObjectMapper mapper,RedisTemplate<String, String> redisTemplate) {
+
+		UccUsers uccUser = Auth.getLoginUser(req.getSession());
+		LoginUser loginUser = new LoginUser();
+
 		String userAgent = req.getHeader("user-agent");
 		
 		if (userAgent.equals("")) {
@@ -36,24 +37,41 @@ public class ChatLogin {
 		}
 		
 		HashMap<String, Object> info = new HashMap<String, Object>();
+		loginUser.setUserId(uccUser.getUserId());
+		loginUser.setUserName(uccUser.getUserName());
+		loginUser.setMobile(uccUser.getMobile());
 		info.put("user", loginUser);
-		if (loginUser.getExt() != null && loginUser.getExt().size()>0) {
+		if (uccUser.getExt() != null && uccUser.getExt().size()>0) {
 			String extNum = "";
-			for (PbxExts pbxExts : loginUser.getExt()) {
+			for (PbxExts pbxExts : uccUser.getExt()) {
 				extNum = pbxExts.getExtNum();
 				break;
 			}
 			info.put("ext", extNum);
 		}
-		if (Auth.UserFlagCanDo(req.getSession(), 870)) {
-			info.put("admin", true);
+		boolean admin = false;
+		if(uccUser.getUccPermissions()!=null&&uccUser.getUccPermissions().size()>0){
+			for (UccPermissionsAndUser uccPermissionsAndUser : uccUser.getUccPermissions()){
+				if("工作台".equals(uccPermissionsAndUser.getName())){
+					if(uccPermissionsAndUser.getChildren()!=null&&uccPermissionsAndUser.getChildren().size()>0){
+						for (UccPermissionsAndUserSecound uccPermissionsAndUserSecound : uccPermissionsAndUser.getChildren()){
+							if("质检员".equals(uccPermissionsAndUserSecound.getName())){
+								admin = true;
+							}
+						}
+					}
+				}
+			}
 		}
-		
+		info.put("admin", admin);
+		info.put("domainId",uccUser.getDomainId());
+
 		//String remortIp = LoginController.getRemortIP(req);
 		String uid = UUID.randomUUID().toString();
 		String identity = Md5.Get(userAgent+":"+uid);
 		try {
-			template.opsForValue().set("ChatLogin_" + identity, mapper.writeValueAsString(info), 2, TimeUnit.MINUTES);
+			System.err.println("ChatLogin_" + identity);
+            redisTemplate.opsForValue().set("ChatLogin_" + identity, mapper.writeValueAsString(info), 2, TimeUnit.MINUTES);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
@@ -63,14 +81,15 @@ public class ChatLogin {
 		map.put("status", "0");
 		map.put("uid", uid);
 		String re = "";
+		JSONObject json = null;
 		try {
 			re =  mapper.writeValueAsString(map);
+			json =new JSONObject(map);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 		}
 		
-		return re;
+		return json;
 	}
-	
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
@@ -34,7 +35,8 @@ public class PbxDialplansServiceImpl implements PbxDialplansService {
     PbxQueuesRepository pbxQueuesRepository;
     @Override
     public Page<PbxDialplans> findAll(PbxDialplansCriteria PbxDialplansCriteria) {
-        Pageable pageable = new PageRequest(PbxDialplansCriteria.getPage(), PbxDialplansCriteria.getSize());
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
+        Pageable pageable = new PageRequest(PbxDialplansCriteria.getPage(), PbxDialplansCriteria.getSize(),sort);
         Page<PbxDialplans> page =  PbxDialplansRepository.findAll(PbxDialplansSpecs.createSpec(PbxDialplansCriteria), pageable);
         List<PbxDialplans> PbxDialplanslist = page.getContent();
 

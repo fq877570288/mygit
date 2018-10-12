@@ -1,5 +1,6 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,15 +75,13 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 		List<TaskDetail> taskDetailList = null;
 		try {
 			String userId = allocationTaskCriteria.getUserId()==null?"":allocationTaskCriteria.getUserId();
-			System.out.println("分配任务列表查询测试 userId:::" + userId);
 			search.setUserId(userId);
 			String deptIdAndChildId = allocationTaskCriteria.getDeptIdAndChildIds()==null?"":allocationTaskCriteria.getDeptIdAndChildIds();
-			System.out.println("分配任务列表查询测试 deptIdAndChildId:::" + deptIdAndChildId);
 
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
-                String [] deptIdAndChildIds = deptIdAndChildId.split(",");
-                if(deptIdAndChildIds.length > 1){
-                    // 部门
+                //String [] deptIdAndChildIds = deptIdAndChildId.split(",");
+                //if(deptIdAndChildIds.length > 1){
+                    /*// 部门
 					List<UccDepts> UccDeptsList = null;
 					try {
 						UccDeptsList = uccDeptsService.selectByUserId(search.getUserId());
@@ -97,17 +96,18 @@ public class ImportBatchServiceImpl implements ImportBatchService {
                         }else {
                             search.setTaskStatus("1");
                         }
-                    }
-                    search.setRoperateDeptId(UccDeptsList.get(0).getDeptId().toString());
+                    }*/
+                    search.setRoperateDeptId(deptIdAndChildId);
+					search.setTaskStatusList("'0', '1'");
 					try {
 						taskDetailList = taskDetailMapper.selectImportBatchsBySearch(search);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}else {
-                    search.setAllLines(0);
-                }
-            }
+				//}
+            }else {
+				search.setAllLines(0);
+			}
 			String importBatchs = "";
 			if(taskDetailList != null && taskDetailList.size() > 0){
                 for(TaskDetail taskDetail : taskDetailList){

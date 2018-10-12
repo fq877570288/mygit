@@ -7,6 +7,7 @@ import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
 import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
+import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import cn.cucsi.bsd.ucc.service.AllocationTaskService;
 import cn.cucsi.bsd.ucc.service.ImportBatchService;
 import com.github.pagehelper.Page;
@@ -17,7 +18,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 
 @Api(tags={"任务分配、数据调拨操作接口"})
@@ -39,7 +39,7 @@ public class AllocationTaskController {
 	 */
 	@ApiOperation(value="分配任务列表查询", notes="分配任务列表查询")
 	@RequestMapping(value = "/allocationTaskList", method= RequestMethod.POST)
-	public PageResultBean_New<List<ImportBatch>> allocationTaskList(@RequestBody AllocationTaskCriteria allocationTaskCriteria){
+	public PageResultBean_New<List<ImportBatch>> allocationTaskList(@RequestBody AllocationTaskCriteria allocationTaskCriteria, HttpSession session){
 
 		Page pageInfo = PageHelper.startPage(allocationTaskCriteria.getPageNum(), allocationTaskCriteria.getPageSize());
 		List<ImportBatch> importBatchlist = null;
@@ -50,8 +50,11 @@ public class AllocationTaskController {
 		importBatch.setBatchFlag("1");
 		PageResultBean_New<List<ImportBatch>> pageResultBean_new = null;
 		try {
+			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			allocationTaskCriteria.setDeptIdAndChildIds(deptIdAndChildId);
 			importBatchlist = importBatchervice.selectAllocationAllByBatchFlag(importBatch,allocationTaskCriteria);
 			System.out.println("importBatchlist:::" + importBatchlist.size());
+
 			//model.addAttribute("importBatchlist", importBatchlist);
 			pageResultBean_new = new PageResultBean_New(pageInfo);
 			pageResultBean_new.setList(importBatchlist);
@@ -73,11 +76,12 @@ public class AllocationTaskController {
 	 */
 	@ApiOperation(value="分派任务", notes="分派任务")
 	@RequestMapping(value = "/allocationTask",method = RequestMethod.POST)
-	public ResultBean_New<String> allocationTask(@RequestBody DoAllocationTaskCriteria doAllocationTaskCriteria) {
+	public ResultBean_New<String> allocationTask(@RequestBody DoAllocationTaskCriteria doAllocationTaskCriteria,HttpSession session) {
 
 		String alloc = doAllocationTaskCriteria.getAlloc()==null?"":doAllocationTaskCriteria.getAlloc();
 		String userId = doAllocationTaskCriteria.getUserId()==null?"":doAllocationTaskCriteria.getUserId();
 		String barchs = doAllocationTaskCriteria.getBarchs()==null?"":doAllocationTaskCriteria.getBarchs();
+		barchs = "'" + barchs.replaceAll(",", "','") + "'";
 		String endDate = doAllocationTaskCriteria.getEndDate()==null?"":doAllocationTaskCriteria.getEndDate();
 
 		ResultBean_New<String> resultBean = new ResultBean_New<>();
@@ -86,7 +90,9 @@ public class AllocationTaskController {
 		resultBean.setReturnCode(ResultBean_New.FAIL);
 		Map<String,Object> allocationTaskMap = new HashMap<String,Object>();
 		try {
-			allocationTaskMap = allocationTaskService.allocationTask(userId, alloc, barchs, endDate);
+			String deptIds = (String)session.getAttribute("DeptIds");
+			System.out.println("分派任务时 从session获取到的deptIds:::" + deptIds);
+			allocationTaskMap = allocationTaskService.allocationTask(userId, alloc, barchs, endDate,deptIds);
 			if(allocationTaskMap.get("code").equals("-1")){
 				resultBean.setReturnMsg((String)allocationTaskMap.get("msg"));
 				return resultBean;
@@ -119,6 +125,7 @@ public class AllocationTaskController {
 			session.setAttribute("taskDetailIdListForEditDeptList", null);
 			//search.setUserId(Auth.getLoginUser(session).getId());
 			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			taskDetailSearch.setRoperateDeptId(deptIdAndChildId);
 			/*//此处为临时加的
 			if(MyUtils.isBlank(deptIdAndChildId)){
 				deptIdAndChildId = "'40287d8165fb1e530165fb1e53900001','40287d8165fb1e530165fb2870120010'";
@@ -129,7 +136,6 @@ public class AllocationTaskController {
 				if(deptIdAndChildIds.length > 1){
 					list = allocationTaskService.selectAllocationBySearch(taskDetailSearch);
 					taskDetailIdList = this.allocationTaskService.selectTaskDetailIdBySearch(taskDetailSearch);
-					System.out.println("数据调拨页面(条件搜索查询) taskDetailIdList:::" + taskDetailIdList);
 					session.setAttribute("taskDetailIdListForEditDeptList", taskDetailIdList);
 					//editDeptListMap.put("taskDetailIdListForEditDeptList", taskDetailIdList);
 				}else {
@@ -169,7 +175,8 @@ public class AllocationTaskController {
 		Map<String,Object> editDeptListMap = new HashMap<String,Object>();
 		editDeptListMap.put("msg","操作失败！");
 		editDeptListMap.put("code","-1");
-
+		List<UccDepts> deptIdList = (List<UccDepts>)session.getAttribute("deptIdList");
+		//String userId = Auth.getLoginUser(session).getUserId();
 		String meshID = allocationSearch.getMeshID()==null?"":allocationSearch.getMeshID();
 		String areaID = allocationSearch.getAreaID()==null?"":allocationSearch.getAreaID();
 		String developmentID = allocationSearch.getDevelopmentID()==null?"":allocationSearch.getDevelopmentID();
@@ -184,14 +191,6 @@ public class AllocationTaskController {
 		try {
 			if(taskDetailIds==null || taskDetailIds.isEmpty()){
 				List<String> idList = (List<String>)session.getAttribute("taskDetailIdListForEditDeptList");
-				//临时测试用
-				if(MyUtils.isBlank(idList)){
-					idList.add("40287d8165fb1e530165fb226ce3000d");
-					idList.add("40287d8165fb1e530165fb226ce3000b");
-					idList.add("40287d8165fb1e530165fb2870120013");
-					idList.add("40287d8165fb1e530165fb287012000f");
-					idList.add("2");
-				}
 				if(!MyUtils.isBlank(idList)){
 					Integer _taskNumberStart = 1;
 					Integer _taskNumberEnd = idList.size();
@@ -216,6 +215,7 @@ public class AllocationTaskController {
 			//model.addAttribute("taskNumberStart", taskNumberStart);
 			//model.addAttribute("taskNumberEnd", taskNumberEnd);
 
+			editDeptListMap.put("deptIdList", deptIdList);
 			editDeptListMap.put("taskNumberStart", taskNumberStart);
 			editDeptListMap.put("taskNumberEnd", taskNumberEnd);
 			editDeptListMap.put("msg", "数据调拨完成！");

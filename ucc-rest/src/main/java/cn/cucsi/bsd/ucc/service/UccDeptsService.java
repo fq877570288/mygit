@@ -27,7 +27,7 @@ public interface UccDeptsService {
 
     List<UccDepts> selectAll() throws Exception;
 
-    List<String> selectDidsByUserId(String userId) throws Exception;
+    List<UccDepts> selectDidsByUserId(String userId,String domainId) throws Exception;
 
     int updateByPrimaryKey(UccDepts record) throws Exception;
 

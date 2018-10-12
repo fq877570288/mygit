@@ -1,7 +1,10 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
+import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 import cn.cucsi.bsd.ucc.common.mapper.UccDeptsMapper;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import cn.cucsi.bsd.ucc.data.repo.UccDeptsRepository;
 import cn.cucsi.bsd.ucc.data.specs.UccDeptsSpecs;
@@ -19,6 +22,7 @@ import java.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by tianyuwei on 2017/10/16.
@@ -26,7 +30,8 @@ import java.util.List;
 
 @Service
 public class UccDeptsServiceImpl implements UccDeptsService {
-
+    @Autowired
+    private UccDeptsService uccDeptsService;
     @Autowired
     private UccDeptsRepository uccDeptsRepository;
     @Autowired
@@ -181,8 +186,8 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
-    public List<String> selectDidsByUserId(String userId) throws Exception {
-        return uccDeptsMapper.selectDidsByUserId(userId);
+    public List<UccDepts> selectDidsByUserId(String userId,String domainId) throws Exception {
+        return uccDeptsMapper.selectDidsByUserId(userId,domainId);
     }
 
     @Override
@@ -325,5 +330,44 @@ public class UccDeptsServiceImpl implements UccDeptsService {
             }
         }
         return UccDepts;
+    }
+    public void test(UccDepts rootDepts, List<UccDepts> source, List<UccDepts> all){
+        List<UccDepts> ownDepts = source.stream().filter(row-> row.getDeptPid().equals(rootDepts.getDeptId())).collect(Collectors.toList());
+        if(MyUtils.isBlank(ownDepts)){
+            return;
+        }
+        all.addAll(ownDepts);
+        for(UccDepts o: ownDepts){
+            test(o, source, all);
+        }
+
+    }
+
+
+    /**
+     * 查询用户关联的部门及其子部门
+     */
+    public List<UccDepts> queryChildrenByDepts(String domainId,List<UccDepts> list){
+        UccDeptsCriteria search = new UccDeptsCriteria();
+        search.setDomainId(domainId);
+        ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
+        List<UccDepts> source = bean.getData();
+        List<UccDepts> all = new ArrayList<>();
+        try{
+            for(UccDepts filter: list){
+                UccDepts rootDept = source.stream().filter(row-> row.getDeptId().equals(filter.getDeptId())).findFirst().get();
+                if(rootDept != null){
+                    all.add(rootDept);
+                    this.test(rootDept, source, all);
+                }
+            }
+            for(UccDepts uccDepts:all){
+                System.out.println(uccDepts.getDeptId()+" "+uccDepts.getDeptPid()+" "+list.size());
+            }
+        }catch (Exception e){
+            System.out.println("询用户关联的部门及其子部门失败！");
+            e.printStackTrace();
+        }
+        return all;
     }
 }

@@ -42,8 +42,8 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 	public List<UccCustomers> selectOngoingBySearch(TaskDetailSearch taskDetailSearch) throws Exception {
 		try {
 			// 部门
-			List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
-			taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
+			//List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
+			//taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
 			taskDetailSearch.setOperatorId(taskDetailSearch.getUserId());
 			// 分页查询
 			taskDetailSearch.setup(uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch), taskDetailSearch.getShowLines());
@@ -122,7 +122,7 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 	 */
 	@Override
 	@Transactional
-	public Map<String,Object> saveDetail(String callinfo, String userId, String cdrId,String domainId) throws Exception {
+	public Map<String,Object> saveDetail(String callinfo, String userId, String cdrId,String domainId,String taskDetailIds) throws Exception {
 
 		Map<String,Object> doSaveDetailMap = new HashMap<String,Object>();
 		doSaveDetailMap.put("msg", "保存任务明细失败!");
@@ -133,9 +133,12 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 			// 流转时间
 			Timestamp transferTime = new Timestamp(System.currentTimeMillis());
 			// 部门
-			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-
-			String deptId = uccDeptsList.get(0).getDeptId();
+			//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+			//String deptId = uccDeptsList.get(0).getDeptId();
+			TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+			taskDetailSearch.setUserId(userId);
+			taskDetailSearch.setTaskDetailIds(taskDetailIds);
+			String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
 
 			List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
 			TaskTransfer taskTransfer = null;
@@ -373,17 +376,20 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 
 	@Override
 	@Transactional
-	public String saveAndGoonDetail(String callinfo, String userId, String taskTypeId, String cdrId, String businessCode,String domainId) throws Exception {
+	public String saveAndGoonDetail(String callinfo, String userId, String taskTypeId, String cdrId, String businessCode,String domainId,String taskDetailIds) throws Exception {
 		
 		// 保存任务信息
-		saveDetail(callinfo, userId, cdrId,domainId);
+		saveDetail(callinfo, userId, cdrId,domainId,taskDetailIds);
 		List<UccCustomers> customerList = null;
 		TaskDetailSearch search = new TaskDetailSearch();
 		// 部门
-		List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-		
-		search.setRoperateDeptId(uccDeptsList.get(0).getDeptId());
-		
+		//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
+		TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+		taskDetailSearch.setUserId(userId);
+		taskDetailSearch.setTaskDetailIds(taskDetailIds);
+		String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
+		search.setRoperateDeptId(deptId);
+
 		// 查询下一个businessCode 状态为待办
 		search.setTaskStatus("2");
 		search.setBusinessCode(businessCode);

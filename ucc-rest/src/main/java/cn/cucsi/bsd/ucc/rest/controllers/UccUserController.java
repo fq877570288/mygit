@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.untils.ChatLogin;
 import cn.cucsi.bsd.ucc.common.untils.ImgUtil;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.*;
@@ -9,10 +10,15 @@ import cn.cucsi.bsd.ucc.service.PbxExtsService;
 import cn.cucsi.bsd.ucc.service.TeamUsersService;
 import cn.cucsi.bsd.ucc.service.UccPermissionsService;
 import cn.cucsi.bsd.ucc.service.UccUserService;
+import cn.cucsi.bsd.ucc.service.impl.UccDeptsServiceImpl;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
 
@@ -28,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/uccUser")
@@ -41,6 +48,10 @@ public class UccUserController  {
     private TeamUsersService teamUsersService;
     @Autowired
     UccPermissionsService uccPermissionsService;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+    @Autowired
+    private UccDeptsServiceImpl uccDeptsServiceImpl;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
@@ -101,8 +112,8 @@ public class UccUserController  {
     @RequestMapping(value = "/login", method= RequestMethod.POST)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
     public  PageResultBean<List<UccUsers>> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response) {
-
         List<UccUsers> list =this.uccUserService.loginList(criteria);
+        HttpSession session = request.getSession();
 
         Date date = new Date();
         SimpleDateFormat dtf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -115,6 +126,30 @@ public class UccUserController  {
             List<UccPermissionsAndUser> uccPermissionsList = tree(search);
             list.get(i).setUccPermissions(uccPermissionsList);
             sessionValue=  list.get(i).getUserName()+"#"+ list.get(i).getPassword();
+
+            session.setAttribute("uccUsers", list.get(i));
+            session.setAttribute("LoginUser", list.get(i));
+            Collection<UccDepts> deptList = list.get(i).getDepts();
+            /*String DeptIdAndChildIds = "";
+            int j = 0;
+            for (UccDepts uccDepts : deptList) {
+                DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
+                if(i<deptList.size()-1){
+                    DeptIdAndChildIds += ",";
+                }
+                j++;
+            }
+            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);*/
+            List<UccDepts> uccDeptsList = new ArrayList<UccDepts>(deptList);
+            List<UccDepts> udList = uccDeptsServiceImpl.queryChildrenByDepts(list.get(i).getDomainId(),uccDeptsList);
+            session.setAttribute("DeptIdList", udList);
+            String deptIdAndChildIds  = udList.parallelStream().map(uccDepts-> "'"+uccDepts.getDeptId()+"'").collect(Collectors.joining(","));
+            session.setAttribute("DeptIdAndChildIds", deptIdAndChildIds);
+            String deptIds  = deptList.parallelStream().map(uccDepts->"'"+ uccDepts.getDeptId()+"'").collect(Collectors.joining(","));
+            session.setAttribute("DeptIds", deptIds);
+            ChatLogin chatLogin = new ChatLogin();
+            JSONObject re = chatLogin.login(request, new ObjectMapper(), redisTemplate);
+            list.get(i).setResult(re);
         }
         Cookie cookie = new Cookie("login",sessionValue);
         cookie.setMaxAge(900000);
@@ -126,23 +161,9 @@ public class UccUserController  {
         PageResultBean<List<UccUsers>> uccUsersList = new PageResultBean<>();
         uccUsersList.setData(list);
 
-        HttpSession session = request.getSession();
          //将数据存储到session中
         session.setAttribute("login", sessionValue);
         if(list!=null&&list.size()!=0){
-            session.setAttribute("uccUsers", list.get(0));
-            Collection<UccDepts> deptList = list.get(0).getDepts();
-            String DeptIdAndChildIds = "";
-            int i = 0;
-            for (UccDepts uccDepts : deptList) {
-                DeptIdAndChildIds += "'"+uccDepts.getDeptId()+"'";
-                if(i<deptList.size()-1){
-                    DeptIdAndChildIds += ",";
-                }
-                i++;
-            }
-            session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);
-
             uccUsersList.setMsg("登陆成功！");
         }else{
             uccUsersList.setMsg("用户名或密码不正确！");
@@ -155,36 +176,26 @@ public class UccUserController  {
     @RequestMapping(value = "/logout", method= RequestMethod.GET)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
     public  ResultBean<Boolean> logout( HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        session.removeAttribute("login");
-        session.removeAttribute("uccUsers");
-        Cookie[] cookies=request.getCookies();
-        for(Cookie cookie: cookies){
-            if("login".equals(cookie.getName())){
-                cookie.setValue("");
-                cookie.setMaxAge(0);
-                cookie.setPath("/");
-                response.addCookie(cookie);
+        try {
+            HttpSession session = request.getSession();
+            session.removeAttribute("login");
+            session.removeAttribute("uccUsers");
+            session.removeAttribute("LoginUser");
+            Cookie[] cookies=request.getCookies();
+            if(cookies!=null&&cookies.length>0){
+                for(Cookie cookie: cookies){
+                    if("login".equals(cookie.getName())){
+                        cookie.setValue("");
+                        cookie.setMaxAge(0);
+                        cookie.setPath("/");
+                        response.addCookie(cookie);
+                    }
+                }
             }
+        } catch (Exception e) {
+            System.err.println("cookie:"+e);
         }
-        String login = "";
-        for (Cookie cookie : cookies) {
-            switch(cookie.getName()){
-                case "login":
-                    login = cookie.getValue();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        boolean result = session.getAttribute("login")==null
-                &&session.getAttribute("uccUsers")==null
-                &&"".equals(login);
-        if(result){
-            return new ResultBean<>(ResultBean.SUCCESS,"登出成功！",result);
-        }
-        return new ResultBean<>(ResultBean.FAIL,"登出失败！",result);
+        return new ResultBean<>(ResultBean.SUCCESS,"登出成功！",true);
     }
 
     @ApiOperation(value = "根据userId查询UccUsers", notes = "根据userId查询UccUsers")

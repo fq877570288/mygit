@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -152,6 +153,8 @@ public class UccUsers {
     private Collection<UccSkillGroup> skillGroup;
     @JsonView(JSONView.Summary.class)
     private List<UccPermissionsAndUser> uccPermissions;
+    @JsonView(JSONView.Summary.class)
+    private JSONObject result;
 
 
     @ManyToMany
@@ -841,5 +844,13 @@ public class UccUsers {
 
     public void setUccPermissions(List<UccPermissionsAndUser> uccPermissions) {
         this.uccPermissions = uccPermissions;
+    }
+
+    public JSONObject getResult() {
+        return result;
+    }
+
+    public void setResult(JSONObject result) {
+        this.result = result;
     }
 }
