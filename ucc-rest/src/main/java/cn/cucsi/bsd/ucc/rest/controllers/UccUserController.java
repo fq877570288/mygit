@@ -143,9 +143,9 @@ public class UccUserController  {
             List<UccDepts> uccDeptsList = new ArrayList<UccDepts>(deptList);
             List<UccDepts> udList = uccDeptsServiceImpl.queryChildrenByDepts(list.get(i).getDomainId(),uccDeptsList);
             session.setAttribute("DeptIdList", udList);
-            String deptIdAndChildIds  = udList.parallelStream().map(uccDepts-> uccDepts.getDeptId()).collect(Collectors.joining(","));
+            String deptIdAndChildIds  = udList.parallelStream().map(uccDepts-> "'"+uccDepts.getDeptId()+"'").collect(Collectors.joining(","));
             session.setAttribute("DeptIdAndChildIds", deptIdAndChildIds);
-            String deptIds  = deptList.parallelStream().map(uccDepts-> uccDepts.getDeptId()).collect(Collectors.joining(","));
+            String deptIds  = deptList.parallelStream().map(uccDepts->"'"+ uccDepts.getDeptId()+"'").collect(Collectors.joining(","));
             session.setAttribute("DeptIds", deptIds);
             ChatLogin chatLogin = new ChatLogin();
             JSONObject re = chatLogin.login(request, new ObjectMapper(), redisTemplate);
