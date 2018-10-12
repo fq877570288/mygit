@@ -6,10 +6,7 @@ import cn.cucsi.bsd.ucc.common.untils.ChatLogin;
 import cn.cucsi.bsd.ucc.common.untils.ImgUtil;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.*;
-import cn.cucsi.bsd.ucc.service.PbxExtsService;
-import cn.cucsi.bsd.ucc.service.TeamUsersService;
-import cn.cucsi.bsd.ucc.service.UccPermissionsService;
-import cn.cucsi.bsd.ucc.service.UccUserService;
+import cn.cucsi.bsd.ucc.service.*;
 import cn.cucsi.bsd.ucc.service.impl.UccDeptsServiceImpl;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -52,6 +49,8 @@ public class UccUserController  {
     private RedisTemplate<String, String> redisTemplate;
     @Autowired
     private UccDeptsServiceImpl uccDeptsServiceImpl;
+    @Autowired
+    private UserExtService userExtService;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
@@ -253,9 +252,9 @@ public class UccUserController  {
      * 根据部门获取所有的人员列表
      * @return
      */
-    @RequestMapping(value = "/findAllByDept", method= RequestMethod.GET)
-    public ResultBean_New<List<UccUserByDept>> userListByDept() {
-        UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
+    @RequestMapping(value = "/findAllByDept", method= RequestMethod.POST)
+    public ResultBean_New<List<UccUserByDept>> userListByDept(@RequestBody List<UserDeptCriteria> userDeptCriterias) {
+        /*UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
         userDeptCriteria.setDeptId("4028e38165ea6d7f0165ea951c290000");
         userDeptCriteria.setDomainId("domain1");
         userDeptCriteria.setDeptName("部门666");
@@ -267,7 +266,7 @@ public class UccUserController  {
 
         List<UserDeptCriteria> userDeptCriterias = new ArrayList<>();
         userDeptCriterias.add(userDeptCriteria);
-        userDeptCriterias.add(userDeptCriteria1);
+        userDeptCriterias.add(userDeptCriteria1);*/
 
         return uccUserService.userListByDept(userDeptCriterias);
     }
@@ -392,4 +391,30 @@ public class UccUserController  {
         return uccPermissionsAndUser;
     }
 
+
+    /**
+     * 分机分配
+     * @return
+     */
+    @RequestMapping(value="/pbx/setext", method=RequestMethod.POST,
+            produces="application/json;charset=utf-8")
+    @ResponseBody
+    public ResultBean<Boolean> pbxSetExt(@RequestBody List<UserExt> userExtList) {
+        Boolean result = false;
+        try {
+            if(userExtList!=null&&userExtList.size()>0){
+                for (UserExt userExt : userExtList) {
+                    if (userExt.getExtId()!=null && !"".equals(userExt.getExtId())) {
+                        result = userExtService.save(userExt)!=null;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(result){
+            return new ResultBean<>(ResultBean.SUCCESS,"分配成功！",result);
+        }
+        return new ResultBean<>(ResultBean.FAIL,"分配失败！",result);
+    }
 }
