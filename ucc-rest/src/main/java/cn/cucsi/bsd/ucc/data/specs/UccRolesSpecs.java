@@ -30,6 +30,15 @@ public class UccRolesSpecs {
         };
     }
 
+    public static Specification<UccRoles> roleNameEqual(final String roleName) {
+        return new Specification<UccRoles>() {
+            @Override
+            public Predicate toPredicate(Root<UccRoles> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("roleName"), roleName);
+            }
+        };
+    }
+
     public static Specification<UccRoles> createTimeThanOrEqualTo(final Date from) {
         return new Specification<UccRoles>() {
             @Override
@@ -54,6 +63,23 @@ public class UccRolesSpecs {
         Specifications specs = where(spec);
         if(!Strings.isNullOrEmpty(criteria.getRoleName())){
             specs = specs.and(roleNameLike(criteria.getRoleName()));
+        }
+        if(null != criteria.getCreatedTimeFrom()){
+            specs = specs.and(createTimeThanOrEqualTo(criteria.getCreatedTimeFrom()));
+        }
+        if(null != criteria.getCreatedTimeTo()){
+            specs = specs.and(createTimeLessOrEqualTo(criteria.getCreatedTimeTo()));
+        }
+        return specs;
+    }
+
+    public static Specification<UccRoles> createSpecByRoleName(final UccRolesCriteria criteria) {
+        Specification<UccRoles> spec = null;
+        if(criteria==null) return spec;
+
+        Specifications specs = where(spec);
+        if(!Strings.isNullOrEmpty(criteria.getRoleName())){
+            specs = specs.and(roleNameEqual(criteria.getRoleName()));
         }
         if(null != criteria.getCreatedTimeFrom()){
             specs = specs.and(createTimeThanOrEqualTo(criteria.getCreatedTimeFrom()));
