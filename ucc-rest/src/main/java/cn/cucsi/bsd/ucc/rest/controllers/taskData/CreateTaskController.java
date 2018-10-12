@@ -70,15 +70,15 @@ public class CreateTaskController {
 	 * 2018-10-10
 	 */
 	@ApiOperation(value="根据用户ID获取部门id列表", notes="根据用户ID获取部门id列表")
-	@RequestMapping(value = "/selectDeptIdsByUserId{userId}", method= RequestMethod.GET)
-	public Map<String,Object> selectDeptIdsByUserId(@PathVariable String userId) {
+	@RequestMapping(value = "/selectDeptIdsByUserId/{userId}/{domainId}", method= RequestMethod.GET)
+	public Map<String,Object> selectDeptIdsByUserId(@PathVariable String userId ,@PathVariable String domainId) {
 
 		Map<String,Object> selectDeptIdsByUserIdMap = new HashMap<String,Object>();
 		selectDeptIdsByUserIdMap.put("msg", "查询失败!");
 		selectDeptIdsByUserIdMap.put("code", "-1");
 		List<UccDepts> uccDeptsList = null;
 		try {
-			uccDeptsList = uccDeptsService.selectDidsByUserId(userId);
+			uccDeptsList = uccDeptsService.selectDidsByUserId(userId,domainId);
 			selectDeptIdsByUserIdMap.put("msg", "查询成功!");
 			selectDeptIdsByUserIdMap.put("code", "0");
 			selectDeptIdsByUserIdMap.put("uccDeptsList",uccDeptsList);
@@ -111,6 +111,7 @@ public class CreateTaskController {
 		String userId = doCreateTaskCriteria.getUserId()==null?"":doCreateTaskCriteria.getUserId();
 		String oldTaskBatch = doCreateTaskCriteria.getOldTaskBatch()==null?"":doCreateTaskCriteria.getOldTaskBatch();
 		String userDeptID = doCreateTaskCriteria.getUserDeptID()==null?"":doCreateTaskCriteria.getUserDeptID();
+		System.out.println("创建任务 userDeptID:::" + userDeptID);
 		try {
 			if(Task.CREATENEW.equals(createMode)){
 				// 新建任务

@@ -44,7 +44,7 @@ public class OngoingTaskController {
 	 */
 	@ApiOperation(value="在办任务列表查询", notes="在办任务列表查询")
 	@RequestMapping(value = "/ongoingTaskList", method= RequestMethod.POST)
-	public Map<String,Object> ongoingTaskList(@RequestBody TaskDetailSearch taskDetailSearch){
+	public Map<String,Object> ongoingTaskList(@RequestBody TaskDetailSearch taskDetailSearch,HttpSession session){
 
 		Map<String,Object> ongoingTaskListMap = new HashMap<String,Object>();
 		ongoingTaskListMap.put("msg","操作失败！");
@@ -53,6 +53,8 @@ public class OngoingTaskController {
 		List<UccCustomers> list = null;
 		try {
 			//search.setUserId(ShellProperties.Auth.getLoginUser(session).getId());
+			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
+			taskDetailSearch.setDeptIdAndChildIds(deptIdAndChildId);
 			list = ongoingTaskService.selectOngoingBySearch(taskDetailSearch);
 			if(list != null && list.size() > 0){
 				for(UccCustomers uccCustomers : list){

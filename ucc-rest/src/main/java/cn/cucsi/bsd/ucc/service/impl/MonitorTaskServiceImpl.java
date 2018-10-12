@@ -30,8 +30,8 @@ public class MonitorTaskServiceImpl implements MonitorTaskService {
 		try {
 			// 部门
 			List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(search.getUserId());
-			search.setRoperateDeptId(uccDeptsList.get(0).getDeptId());
-			search.setDeptLevel(uccDeptsList.get(0).getDeptLevel().toString());
+			//search.setRoperateDeptId(uccDeptsList.get(0).getDeptId());
+			//search.setDeptLevel(uccDeptsList.get(0).getDeptLevel().toString());
 			// 分页查询
 			search.setup(taskDetailMapper.selectMonitorBySearchSearchCount(search),search.getShowLines());
 			return taskDetailMapper.selectMonitorBySearch(search);

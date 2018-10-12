@@ -79,9 +79,9 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 			String deptIdAndChildId = allocationTaskCriteria.getDeptIdAndChildIds()==null?"":allocationTaskCriteria.getDeptIdAndChildIds();
 
 			if(deptIdAndChildId != null && !"".equals(deptIdAndChildId)){
-                String [] deptIdAndChildIds = deptIdAndChildId.split(",");
-                if(deptIdAndChildIds.length > 1){
-                    // 部门
+                //String [] deptIdAndChildIds = deptIdAndChildId.split(",");
+                //if(deptIdAndChildIds.length > 1){
+                    /*// 部门
 					List<UccDepts> UccDeptsList = null;
 					try {
 						UccDeptsList = uccDeptsService.selectByUserId(search.getUserId());
@@ -96,17 +96,18 @@ public class ImportBatchServiceImpl implements ImportBatchService {
                         }else {
                             search.setTaskStatus("1");
                         }
-                    }
+                    }*/
                     search.setRoperateDeptId(deptIdAndChildId);
+					search.setTaskStatusList("'0', '1'");
 					try {
 						taskDetailList = taskDetailMapper.selectImportBatchsBySearch(search);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-				}else {
-                    search.setAllLines(0);
-                }
-            }
+				//}
+            }else {
+				search.setAllLines(0);
+			}
 			String importBatchs = "";
 			if(taskDetailList != null && taskDetailList.size() > 0){
                 for(TaskDetail taskDetail : taskDetailList){

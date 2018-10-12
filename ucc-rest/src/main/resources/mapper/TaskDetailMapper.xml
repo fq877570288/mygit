@@ -70,6 +70,7 @@
     <result column="DEPT_MESH_NAME" property="deptMeshName" jdbcType="VARCHAR" />
     <result column="DEPT_AREA_NAME" property="deptAreaName" jdbcType="VARCHAR" />
     <result column="DEVELOPMENT_DEPT_NAME" property="developmentDeptName" jdbcType="VARCHAR" />
+    <result column="check_flag" property="checkFlag" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -81,7 +82,7 @@
     ACTIVATION_TIME, DEVELOPMENT_DEPT, IMPORT_BATCH, IMPORT_PERSON_ID, IMPORT_TIME, CONTACTS, 
     STATUS, INSTALLED_ADDRESS, PON_LOGO, TARIFF_NAME, PHONE_NUMBER2, PHONE_NUMBER3, TASK_STATUS, 
     ROPERATE_DEPT_ID, USER_NAME, DEFULT_PHONE, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID, 
-    END_DATE, USER_ID,domain_id
+    END_DATE, USER_ID,domain_id,check_flag
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.ShowTaskDetailCriteria" >
     SELECT
@@ -1123,7 +1124,8 @@
     <set>
       TASK_STATUS=#{status},
       END_DATE=#{endDate},
-      ROPERATE_DEPT_ID=#{roperateDeptId}
+      ROPERATE_DEPT_ID=#{roperateDeptId},
+      check_flag=#{checkFlag}
     </set>
     where TASK_DETAIL_ID=#{taskDetailId}
   </update>
@@ -1539,7 +1541,7 @@
     <if test="taskDetailId != null and taskDetailId != ''">
       AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
     </if>
-    <if test="taskDetailIds != null and taskDetailIds != ''">
+    <if test="taskDetailId != null and taskDetailId != ''">
       AND a.TASK_DETAIL_ID in ( ${taskDetailIds} )
     </if>
     <if test="taskDetailIdInList != null and taskDetailIdInList != ''">
