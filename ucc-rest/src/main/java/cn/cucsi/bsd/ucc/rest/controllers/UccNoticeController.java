@@ -100,7 +100,7 @@ public class UccNoticeController {
     }
 
     @ApiOperation(value = "修改UccNotice", notes = "修改UccNotice")
-    @RequestMapping(value = "/{noticeId}", method =  RequestMethod.POST)
+    @RequestMapping(value = "/update/{noticeId}", method =  RequestMethod.POST)
     public ResultBean<UccNotice> save(@PathVariable String noticeId, String[] delFiledId,UccNotice uccNotice, @RequestParam("files") MultipartFile[] files){
         Date dateTime = new Date();
         UccNotice uccNoticeold = uccNoticeService.findOne(noticeId);
