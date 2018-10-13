@@ -5,17 +5,20 @@ import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccDomainCriteria;
-import cn.cucsi.bsd.ucc.data.domain.UccDepts;
-import cn.cucsi.bsd.ucc.data.domain.UccDomain;
-import cn.cucsi.bsd.ucc.data.domain.UccUsers;
-import cn.cucsi.bsd.ucc.data.domain.UpdateUtil;
+import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.UccDomainService;
+import cn.cucsi.bsd.ucc.service.UccPermissionsService;
+import cn.cucsi.bsd.ucc.service.UccRolesService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +31,12 @@ import java.util.List;
 public class UccDomainController {
     @Autowired
     UccDomainService uccDomainService;
+
+    @Autowired
+    UccPermissionsService uccPermissionsService;
+
+    @Autowired
+    UccRolesService uccRolesService;
 
     @ApiOperation(value="根据查询条件获取域列表", notes="根据查询条件获取域列表", httpMethod = "POST")
     @JsonView(JSONView.DomainWithUser.class)
@@ -58,10 +67,45 @@ public class UccDomainController {
 
     @ApiOperation(value = "创建UccDomain", notes = "创建UccDomain")
     @RequestMapping(value = "", method =  RequestMethod.POST,produces="application/json;charset=UTF-8")
-    public ResultBean<Boolean> create(@RequestBody UccDomain uccDomain,HttpServletResponse response) {
-        uccDomain.setCreatedTime(new Date());
-        boolean result = this.uccDomainService.save(uccDomain) != null;
-        return new ResultBean<>(result);
+    public ResultBean<Object> create(@RequestBody UccDomain uccDomain, HttpServletResponse response,
+                                      HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        //加入判断平台管理员和处理 创建租户对时候对应创建一个管理员并且给此管理员赋权的操作
+        UccUsers loginUser = (UccUsers) session.getAttribute("LoginUser");
+        ResultBean<Object> resultBean = new ResultBean();
+        if(loginUser != null && "uccAdmin".equals(loginUser.getUserId())){
+            uccDomain.setCreatedTime(new Date());
+            UccDomain domain = this.uccDomainService.save(uccDomain);
+            if(domain != null){
+                String uccDomainId = domain.getDomainId();
+                //给新增的租户创建一个对应的管理员角色
+                UccRoles roles = new UccRoles();
+                roles.setDomainId(uccDomainId);
+                roles.setRoleName("管理员");
+                roles.setCreatedNickName("平台管理员");
+                roles.setCreatedTime(new Date());
+                roles.setCreatedUserId("uccAdmin");
+                roles.setCreatedUserName("uccAdmin");
+
+                List<UccPermissions> permissionsList = uccPermissionsService.findAll(null);
+                if(permissionsList != null && permissionsList.size() > 0){
+
+                    Collection<UccPermissions> rolesPermissions = new ArrayList<>();
+                    rolesPermissions = permissionsList;
+                    roles.setUccPermissions(rolesPermissions);
+                }
+                uccRolesService.save(roles);
+            }
+
+            resultBean.setCode(0);
+        }
+        else{
+            resultBean.setCode(1);
+            resultBean.setMsg("该用户没有此操作权限");
+        }
+
+        return resultBean;
     }
 
     @ApiOperation(value = "修改UccDomain", notes = "修改UccDomain")
