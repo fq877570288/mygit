@@ -35,6 +35,9 @@
     </selectKey>
     insert into OC_TASK_TYPE
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskTypeId !=null and taskTypeId != ''">
+          TASK_TYPE_ID,
+      </if>
       <if test="taskTypeCode != null" >
         TASK_TYPE_CODE,
       </if>
@@ -46,6 +49,9 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskTypeId != null" >
+            #{taskTypeId,jdbcType=VARCHAR},
+      </if>
       <if test="taskTypeCode != null" >
         #{taskTypeCode,jdbcType=VARCHAR},
       </if>
@@ -83,7 +89,7 @@
   
   <!-- Add by bli  begin -->
   <!-- 查询全部 -->
-	<select id="selectAll" resultMap="BaseResultMap"  parameterType="string">
+	<select id="selectAll" resultMap="BaseResultMap"  parameterType="java.lang.String">
      select 
      <include refid="Base_Column_List" />
      from OC_TASK_TYPE A
