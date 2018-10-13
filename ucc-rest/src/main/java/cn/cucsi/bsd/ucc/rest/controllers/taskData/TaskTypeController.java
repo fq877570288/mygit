@@ -26,7 +26,7 @@ import java.util.List;
 public class TaskTypeController {
     @Autowired
     private TaskTypeService taskTypeService;
-    @ApiOperation(value = "查询任务类别", notes = "查询任务类别", httpMethod = "GET")
+    @ApiOperation(value = "查询任务类别", notes = "查询任务类别，参数为true忽略在办任务的类别", httpMethod = "GET")
     @RequestMapping(value = "/selectAll/{ignoreNotask}", method = RequestMethod.GET)
     public PageResultBean<List<TaskType>> selectAll(@PathVariable String ignoreNotask){
         PageResultBean<List<TaskType>> bean = new PageResultBean<List<TaskType>>();
