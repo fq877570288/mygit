@@ -253,7 +253,19 @@ public class UccUserController  {
      * @return
      */
     @RequestMapping(value = "/findAllByDept", method= RequestMethod.POST)
-    public ResultBean_New<List<UccUserByDept>> userListByDept(@RequestBody List<UserDeptCriteria> userDeptCriterias) {
+    public ResultBean_New<List<UccUserByDept>> userListByDept( HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        UccUsers user = (UccUsers) session.getAttribute("uccUsers");
+        Collection<UccDepts> uccDepts = user.getDepts();
+        List<UserDeptCriteria> userDeptCriterias = new ArrayList<>();
+        for (UccDepts uccDept : uccDepts) {
+            UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
+            userDeptCriteria.setDeptId(uccDept.getDeptId());
+            userDeptCriteria.setDomainId(uccDept.getDomainId());
+            userDeptCriteria.setDeptName(uccDept.getDeptName());
+            userDeptCriterias.add(userDeptCriteria);
+        }
+
         /*UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
         userDeptCriteria.setDeptId("4028e38165ea6d7f0165ea951c290000");
         userDeptCriteria.setDomainId("domain1");
