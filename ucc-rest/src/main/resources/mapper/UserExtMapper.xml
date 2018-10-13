@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.ucc.common.mapper.UserExtMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <id column="ext_id" property="extId" jdbcType="VARCHAR" />
+    <result column="created_nick_name" property="createdNickName" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="created_user_id" property="createdUserId" jdbcType="VARCHAR" />
+    <result column="created_user_name" property="createdUserName" jdbcType="VARCHAR" />
+    <result column="updated_nick_name" property="updatedNickName" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="updated_user_id" property="updatedUserId" jdbcType="VARCHAR" />
+    <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
+    <result column="isdefault" property="isdefault" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, ext_id, created_nick_name, created_time, created_user_id, created_user_name, 
+    updated_nick_name, updated_time, updated_user_id, updated_user_name, isdefault
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_ext
+    where user_id = #{userId,jdbcType=VARCHAR}
+      and ext_id = #{extId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    delete from user_ext
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    insert into user_ext (user_id, ext_id)
+    values (#{userId,jdbcType=VARCHAR}, #{extId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    insert into user_ext
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null and userId!=''" >
+        user_id,
+      </if>
+      <if test="extId != null" >
+        ext_id,
+      </if>
+      <if test="createdNickName != null" >
+        created_nick_name,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id,
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name,
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id,
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name,
+      </if>
+      <if test="isdefault != null" >
+        isdefault,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="extId != null" >
+        #{extId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdNickName != null" >
+        #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedNickName != null" >
+        #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="isdefault != null" >
+        #{isdefault,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    update user_ext
+    <set >
+      <if test="createdNickName != null" >
+        created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="isdefault != null" >
+        isdefault = #{isdefault,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+      and ext_id = #{extId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    update user_ext
+    set created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
+      isdefault = #{isdefault,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=VARCHAR}
+      and ext_id = #{extId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findByUserId" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt" >
+    select
+    *
+    from user_ext
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+</mapper>
