@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 /**
@@ -27,7 +28,13 @@ public class UccCustomersController {
     @ResponseBody
     public PageResultBean<List<UccCustomers>> findAll(@RequestBody UccCustomersCriteria search) {
         try {
-            return new PageResultBean(this.uccCustomersService.findAll(search));
+            PageResultBean<List<UccCustomers>> bean = new PageResultBean(this.uccCustomersService.findAll(search));
+            bean.getData().forEach(e->{
+                if(e.getUccDomain()!=null&&e.getUccDomain().getDomainName()!=null){
+                    e.setDomainName(e.getUccDomain().getDomainName());
+                }
+            });
+            return bean;
         } catch (Exception e) {
             System.out.println("查询客户列表失败！");
             e.printStackTrace();
