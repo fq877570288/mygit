@@ -10,13 +10,13 @@ import java.util.List;
  * Created by mk on 2017/10/16.
  */
 public interface UserExtService {
-    Page<UserExt> findAll(UserExtCriteria search);
-    UserExt findOne(String userId);
-    UserExt save(UserExt userExt);
-    Boolean delete(String userId);
+    UserExt findOne(UserExt userExt);
+    int delete(UserExt userExt);
 
     List<UserExt> findByUserId(UserExt userExt);
     int del(UserExt userExt);
     int insert(UserExt userExt);
+
+    List<UserExt> selectByUserId(String userId);
 
 }

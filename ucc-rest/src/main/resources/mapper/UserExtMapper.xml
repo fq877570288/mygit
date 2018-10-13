@@ -13,6 +13,10 @@
     <result column="updated_user_id" property="updatedUserId" jdbcType="VARCHAR" />
     <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
     <result column="isdefault" property="isdefault" jdbcType="VARCHAR" />
+
+    <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
+    <result column="ext_num" property="extNum" jdbcType="VARCHAR" />
+
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, ext_id, created_nick_name, created_time, created_user_id, created_user_name, 
@@ -160,5 +164,21 @@
     *
     from user_ext
     where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT pue.*
+    FROM ucc_users uu
+    LEFT JOIN
+    (
+    SELECT ue.user_id,pe.ext_num, pe.domain_id, pe.ext_id
+    FROM user_ext ue
+    INNER JOIN pbx_exts pe
+    ON ue.ext_id=pe.ext_id
+    )pue
+    ON uu.user_id=pue.user_id
+    where
+    uu.user_id=#{userId}
   </select>
 </mapper>

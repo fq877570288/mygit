@@ -144,8 +144,9 @@ public class UccUsers {
     private Collection<UccRoles> roles;
     @JsonView(JSONView.UccUserWithDept.class)
     private Collection<UccDepts> depts;
-//    @JsonView(JSONView.UccUserWithExt.class)
-    private Collection<PbxExts> ext;
+    @JsonView(JSONView.UccUserWithExt.class)
+    @Transient
+    private List<UserExt> ext;
 
     @JsonView(JSONView.UccUserWithTeams.class)
     private Collection<UccTeams> teams;
@@ -202,18 +203,12 @@ public class UccUsers {
         this.teams = teams;
     }
 
-    @OneToMany
-    @JoinTable(name="user_ext",
-            joinColumns=
-            @JoinColumn(name="user_id", referencedColumnName="user_id"),
-            inverseJoinColumns=
-            @JoinColumn(name="ext_id", referencedColumnName="ext_id")
-    )
-    public Collection<PbxExts> getExt() {
+    @Transient
+    public List<UserExt> getExt() {
         return ext;
     }
 
-    public void setExt(Collection<PbxExts> ext) {
+    public void setExt(List<UserExt> ext) {
         this.ext = ext;
     }
 

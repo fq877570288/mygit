@@ -94,18 +94,26 @@ public class UccUserServiceImpl implements UccUserService{
 
 
         //添加或修改分机号码关联信息
-//        if(uccUsers.getUserExt() != null){
-//            UserExt userExt = new UserExt();
-//            String extId = uccUsers.getUserExt().getExtId();
-//
-//            userExt.setUserId(userId);
-//            userExt.setExtId(extId);
-//            userExt.setCreatedTime(currTime);
-//            userExt.setUpdatedTime(currTime);
-////            userExt.setUpdatedPerson(uccUsers.getUpdatedPerson());
-//
-//            userExtService.save(userExt);
-//        }
+        /*if(uccUsers.getUserExt() != null){
+            UserExt userExt = new UserExt();
+            String extId = uccUsers.getUserExt().getExtId();
+            userExt.setUserId(userId);
+            userExt.setExtId(extId);
+
+            List<UserExt> queryList=userExtService.findByUserId(userExt);
+            if(queryList.size()>0){
+                int delResult = userExtService.del(userExt);
+                if(delResult>0){
+                    userExtService.insert(userExt);
+                }
+            }else {
+                 userExtService.insert(userExt);
+            }
+           *//* userExt.setCreatedTime(currTime);
+            userExt.setUpdatedTime(currTime);*//*
+//            userExt.setUpdatedPerson(uccUsers.getUpdatedPerson());
+
+        }*/
 
         if(uccUsers.getUserId() == null || uccUsers.getUserId() == ""){
             return uccUsersD;
@@ -119,8 +127,14 @@ public class UccUserServiceImpl implements UccUserService{
 
     @Override
     public Boolean delete(String userId) {
-        this.uccUserRepository.delete(userId);
-        return true;
+        Boolean result = false;
+        UserExt userExt = new UserExt();
+        userExt.setUserId(userId);
+        int delResult = userExtService.del(userExt);
+        if(delResult>0){
+            result=true;
+        }
+        return result;
     }
 
 
@@ -187,7 +201,7 @@ public class UccUserServiceImpl implements UccUserService{
         //清空对应的部门关联信息后添加新的对应信息
         if(uccUsers.getUserDepts() != null){
             Collection<UserDept> depts = uccUsers.getUserDepts();
-            java.util.Iterator dept = depts.iterator();
+            Iterator dept = depts.iterator();
 
             while(dept.hasNext()){
                 UserDept ud = (UserDept) dept.next();
@@ -203,7 +217,7 @@ public class UccUserServiceImpl implements UccUserService{
         //清空角色保存新的角色信息
         if(uccUsers.getUserRoles() != null){
             Collection<UserRole> roles = uccUsers.getUserRoles();
-            java.util.Iterator role = roles.iterator();
+            Iterator role = roles.iterator();
             while(role.hasNext()){
                 UserRole ur = (UserRole) role.next();
                 ur.setUserId(userId);
