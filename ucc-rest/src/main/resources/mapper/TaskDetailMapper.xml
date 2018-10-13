@@ -894,7 +894,7 @@
     <if test="taskStatus != null and taskStatus != ''">
       and (d.TASK_STATUS = #{taskStatus} or d.TASK_STATUS = '5')
     </if>
-    <if test="taskStatusList != null and taskStatusList != ''">
+    <if test="taskStatusList != null">
       and (d.TASK_STATUS in (${taskStatusList}) or d.TASK_STATUS = '5')
     </if>
     <if test="taskTypeId != null and taskTypeId != ''">
@@ -950,7 +950,7 @@
     <if test="taskStatus != null and taskStatus != ''">
       and (d.TASK_STATUS = #{taskStatus} or d.TASK_STATUS = '5')
     </if>
-    <if test="taskStatusList != null and taskStatusList != ''">
+    <if test="taskStatusList != null">
       and (d.TASK_STATUS in (${taskStatusList}) or d.TASK_STATUS = '5')
     </if>
     <if test="taskTypeId != null and taskTypeId != ''">
@@ -1522,7 +1522,7 @@
             <if test="importBatch != null and importBatch != ''">
                 AND IMPORT_BATCH = #{importBatch}
             </if>
-            <if test="taskDetailIdInList != null and taskDetailIdInList != ''">
+            <if test="taskDetailIdInList != null">
                 AND TASK_DETAIL_ID in
                 <foreach item="myId" index="index" collection="taskDetailIdInList"
                          open="(" separator="," close=")">
@@ -1538,15 +1538,14 @@
         a.ROPERATE_DEPT_ID
     FROM
         OC_TASK_DETAIL AS a
-    WHERE
-        a.USER_ID = #{userId,jdbcType=VARCHAR}
+    WHERE a.domain_id = #{domainId,jdbcType=VARCHAR}
     <if test="taskDetailId != null and taskDetailId != ''">
       AND a.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
     </if>
-    <if test="taskDetailId != null and taskDetailId != ''">
+    <if test="taskDetailIds != null and taskDetailIds != ''">
       AND a.TASK_DETAIL_ID in ( ${taskDetailIds} )
     </if>
-    <if test="taskDetailIdInList != null and taskDetailIdInList != ''">
+    <if test="taskDetailIdInList != null">
       AND a.TASK_DETAIL_ID in
       <foreach item="myId" index="index" collection="taskDetailIdInList"
                open="(" separator="," close=")">

@@ -681,29 +681,27 @@
       count(DISTINCT concat(c.cust_id, tt.TASK_TYPE_ID))
     FROM
       ucc_customers c
-    INNER JOIN OC_TASK_DETAIL d ON c.businesscode = d.BUSINESS_CODE
-    INNER JOIN OC_TASK_TRANSFER t ON t.TASK_DETAIL_ID = d.TASK_DETAIL_ID
-    AND t.TRANSFER_STATUS = d.TASK_STATUS
+    INNER JOIN OC_TASK_DETAIL d ON c.businesscode = d.BUSINESS_CODE AND d.domain_id = c.domain_id
+    LEFT JOIN ucc_depts uc ON uc.dept_id = d.ROPERATE_DEPT_ID
     INNER JOIN OC_TASK_TYPE tt ON d.TASK_TYPE_ID = tt.TASK_TYPE_ID
     WHERE 1=1
-    and t.TRANSFER_STATUS IN ('2', '3')
-    AND d.domain_id = c.domain_id
+    and d.TASK_STATUS IN ('2', '3')
     <if test="roperateDeptId != null and roperateDeptId != ''">
       and d.ROPERATE_DEPT_ID = #{roperateDeptId}
     </if>
-    <if test="operatorId != null and operatorId != ''">
-      and t.OPERATOR_ID = #{operatorId}
+    <if test="deptIdAndChildIds != null and deptIdAndChildIds != ''">
+      and d.ROPERATE_DEPT_ID in (${deptIdAndChildIds})
     </if>
     <if test="taskTypeId !=null and taskTypeId != ''">
       and d.TASK_TYPE_ID = #{taskTypeId}
     </if>
     <include refid="Sql_WhereTask" />
+    GROUP BY c.cust_name
   </select>
 
   <select id="selectOngoingBySearch" resultMap="BaseResultMap"
           parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
     SELECT DISTINCT
-      d.TASK_DETAIL_ID as TASK_DETAIL_ID,
       tt.TASK_TYPE_ID as TASK_TYPE_ID,
       tt.TASK_TYPE_NAME as TASK_TYPE_NAME,
       c.businesscode businesscode,
@@ -718,25 +716,22 @@
     FROM
       ucc_customers c
       INNER JOIN OC_TASK_DETAIL d ON c.businesscode = d.BUSINESS_CODE  AND d.domain_id = c.domain_id
-      INNER JOIN OC_TASK_TRANSFER t ON t.TASK_DETAIL_ID = d.TASK_DETAIL_ID AND t.TRANSFER_STATUS = d.TASK_STATUS
       LEFT JOIN ucc_depts uc ON uc.dept_id = d.ROPERATE_DEPT_ID
       INNER JOIN OC_TASK_TYPE tt ON d.TASK_TYPE_ID = tt.TASK_TYPE_ID
     WHERE
       1 = 1
-    AND t.TRANSFER_STATUS IN ('2', '3')
+    AND d.TASK_STATUS IN ('2', '3')
     <if test="roperateDeptId != null and roperateDeptId != ''">
       and d.ROPERATE_DEPT_ID = #{roperateDeptId}
     </if>
     <if test="deptIdAndChildIds != null and deptIdAndChildIds != ''">
       and d.ROPERATE_DEPT_ID in (${deptIdAndChildIds})
     </if>
-    <if test="operatorId != null and operatorId != ''">
-      and t.OPERATOR_ID = #{operatorId}
-    </if>
     <if test="taskTypeId !=null and taskTypeId != ''">
       and d.TASK_TYPE_ID = #{taskTypeId}
     </if>
     <include refid="Sql_WhereTask" />
+    GROUP BY c.cust_name
     <if test="begin != null and showLines != null and showLines != 0">
       limit #{begin},#{showLines}
     </if>
