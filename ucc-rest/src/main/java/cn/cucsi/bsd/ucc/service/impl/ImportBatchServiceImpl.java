@@ -31,6 +31,7 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 
 	@Override
 	public String queryImportBatch(String taskTypeName, String recent) throws Exception {
+
 		Map<String, Object> condition = new HashMap<>();
 //		condition.put("batchFlag", "2");
 		condition.put("taskTypeName", taskTypeName);
