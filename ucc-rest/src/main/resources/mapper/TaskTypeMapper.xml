@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.outcall.mapper.task.TaskTypeMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.outcall.bean.task.TaskType" >
+    <id column="TASK_TYPE_ID" property="taskTypeId" jdbcType="VARCHAR" />
+    <result column="TASK_TYPE_CODE" property="taskTypeCode" jdbcType="VARCHAR" />
+    <result column="TASK_TYPE_NAME" property="taskTypeName" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TASK_TYPE_ID, TASK_TYPE_CODE, TASK_TYPE_NAME, CREATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from OC_TASK_TYPE
+    where TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from OC_TASK_TYPE
+    where TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cucsi.bsd.outcall.bean.task.TaskType" >
+    <selectKey resultType="java.lang.String" keyProperty="taskTypeId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into OC_TASK_TYPE (TASK_TYPE_CODE, TASK_TYPE_NAME, CREATE_TIME
+      )
+    values (#{taskTypeCode,jdbcType=VARCHAR}, #{taskTypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.outcall.bean.task.TaskType" >
+    <selectKey resultType="java.lang.String" keyProperty="taskTypeId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into OC_TASK_TYPE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskTypeCode != null" >
+        TASK_TYPE_CODE,
+      </if>
+      <if test="taskTypeName != null" >
+        TASK_TYPE_NAME,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskTypeCode != null" >
+        #{taskTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTypeName != null" >
+        #{taskTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.outcall.bean.task.TaskType" >
+    update OC_TASK_TYPE
+    <set >
+      <if test="taskTypeCode != null" >
+        TASK_TYPE_CODE = #{taskTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="taskTypeName != null" >
+        TASK_TYPE_NAME = #{taskTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cucsi.bsd.outcall.bean.task.TaskType" >
+    update OC_TASK_TYPE
+    set TASK_TYPE_CODE = #{taskTypeCode,jdbcType=VARCHAR},
+      TASK_TYPE_NAME = #{taskTypeName,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+    where TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <!-- Add by bli  begin -->
+  <!-- 查询全部 -->
+	<select id="selectAll" resultMap="BaseResultMap"  parameterType="string">
+     select 
+     <include refid="Base_Column_List" />
+     from OC_TASK_TYPE A
+     <where>
+     	<if test="ignoreNotask != null and ignoreNotask != ''">
+     		EXISTS (SELECT 1 FROM OC_TASK_DETAIL B WHERE A.TASK_TYPE_ID = B.TASK_TYPE_ID)
+     	</if>
+     </where>
+    </select>
+	
+   <!-- Add by bli  end -->
+</mapper>
