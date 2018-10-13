@@ -40,19 +40,15 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 	
 	@Override
 	public List<UccCustomers> selectOngoingBySearch(TaskDetailSearch taskDetailSearch) throws Exception {
-		try {
-			// 部门
-			//List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
-			//taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
-			taskDetailSearch.setOperatorId(taskDetailSearch.getUserId());
-			// 分页查询
-			taskDetailSearch.setup(uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch), taskDetailSearch.getShowLines());
+		// 部门
+		//List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
+		//taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
+		taskDetailSearch.setOperatorId(taskDetailSearch.getUserId());
+		Integer retcode = uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch)==null?0:uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch);
 
-			return uccCustomersMapper.selectOngoingBySearch(taskDetailSearch);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		// 分页查询
+		taskDetailSearch.setup(retcode, taskDetailSearch.getShowLines());
+		return uccCustomersMapper.selectOngoingBySearch(taskDetailSearch);
 	}
 
 	@Override
