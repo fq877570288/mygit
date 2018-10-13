@@ -73,7 +73,7 @@ public class UccCustomersServiceImpl implements UccCustomersService {
         return this.uccCustomersRepository.inBlackListByBusinessCode(7,userId,updatedTime,pullBlackReason,releaseTime,custId);
     }
     class MyTask extends TimerTask {
-        // 自定义定时任务（解除黑名单）
+        // 自定义定时任务（解除黑名单） zss
         private String custId;
         private Timer timer;
         private UccCustomersMapper uccCustomersMapper;
