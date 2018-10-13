@@ -414,11 +414,26 @@ public class UccUserController  {
     public ResultBean<Boolean> pbxSetExt(@RequestBody List<UserExt> userExtList) {
         Boolean result = false;
         try {
-            if(userExtList!=null&&userExtList.size()>0){
-                for (UserExt userExt : userExtList) {
-                    if (userExt.getExtId()!=null && !"".equals(userExt.getExtId())) {
-                        result = userExtService.save(userExt)!=null;
+            int insertResult=0;
+            UserExt userExt = new UserExt();
+            userExt.setUserId(userExtList.get(0).getUserId());
+            List<UserExt> queryList=userExtService.findByUserId(userExt);
+            if(queryList.size()>0){
+                int delResult = userExtService.del(userExt);
+                if(delResult>0){
+                    for (UserExt userEx : userExtList) {
+                        insertResult= userExtService.insert(userEx);
                     }
+                    if(insertResult!=0){
+                        result=true;
+                    }
+                }
+            }else {
+                for (UserExt userEx : userExtList) {
+                    insertResult= userExtService.insert(userEx);
+                }
+                if(insertResult!=0){
+                    result=true;
                 }
             }
         } catch (Exception e) {
