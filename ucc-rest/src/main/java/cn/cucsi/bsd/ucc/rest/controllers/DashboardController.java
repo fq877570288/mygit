@@ -1,17 +1,22 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
+import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
 import cn.cucsi.bsd.ucc.data.domain.PbxExtGroups;
+import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.service.ExtGroupExtsService;
+import cn.cucsi.bsd.ucc.service.UccUserService;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.google.gson.JsonObject;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +32,8 @@ public class DashboardController {
      */
     @Autowired
     private ExtGroupExtsService extGroupExtsService;
+    @Autowired
+    private UccUserService uccUserService;
 
     @ApiOperation(value = "查询机组、坐席员、分机号集合", notes = "查询机组、坐席员、分机号集合")
     @RequestMapping(value = "/list", method =  RequestMethod.GET)
@@ -40,13 +47,21 @@ public class DashboardController {
         }
     }
     @ApiOperation(value = "坐席总数、今日人工、今日IVR、示忙、示闲", notes = "坐席总数、今日人工、今日IVR、示忙、示闲")
-    @RequestMapping(value = "/allNumbers", method =  RequestMethod.GET)
+    @RequestMapping(value = "/allNumbers", method = RequestMethod.GET)
     public String allNumbers(String domainId){
         JsonObject j = new JsonObject();
         try {
+            List<UccUsers> uccUsersList = new ArrayList<>();
+            UccUserCriteria uccUserCriteria = new UccUserCriteria();
+            if(domainId.equals("uccAdmin")){
+                uccUsersList = uccUserService.querySeater(uccUserCriteria);
+            }else {
+                uccUserCriteria.setDomainId(domainId);
+                uccUsersList = uccUserService.querySeater(uccUserCriteria);
+            }
             j.addProperty("return_msg","success");
             j.addProperty("return_code","success");
-            j.addProperty("seatTotal",666);//坐席总数
+            j.addProperty("seatTotal",uccUsersList.size());//坐席总数
             j.addProperty("manTotal",666);//今日人工
             j.addProperty("ivrTotal",666);//今日IVR
             j.addProperty("callingQueueTotal",0);//人工通话中

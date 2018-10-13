@@ -24,6 +24,10 @@ public interface UccUsersMapper {
     int updateByPrimaryKeySelective(UccUsers record);
 
     int updateByPrimaryKey(UccUsers record);
+    /**
+     *  查询坐席数
+     * */
+    List<UccUsers> querySeater(UccUserCriteria uccUserCriteria);
 
     /***
      * 根据用户名、密码获取用户列表（APP登录用）

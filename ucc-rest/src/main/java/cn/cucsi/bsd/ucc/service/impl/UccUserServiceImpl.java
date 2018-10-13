@@ -142,6 +142,13 @@ public class UccUserServiceImpl implements UccUserService{
         return true;
     }
 
+    /**
+     * 查询坐席数
+     * */
+    @Override
+    public List<UccUsers> querySeater(UccUserCriteria uccUserCriteria) {
+        return uccUsersMapper.querySeater(uccUserCriteria);
+    }
 
     /***
      * 根据用户名、密码获取用户列表（APP登录用）
