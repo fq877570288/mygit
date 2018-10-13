@@ -3,16 +3,14 @@ package cn.cucsi.bsd.ucc.rest.controllers.taskData;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import cn.cucsi.bsd.ucc.common.beans.CustomFieldsSaveCriteria;
+import cn.cucsi.bsd.ucc.common.beans.QueryImportBatchCriteria;
 import cn.cucsi.bsd.ucc.common.beans.TaskRecordSearch;
 import cn.cucsi.bsd.ucc.common.untils.Auth;
 import cn.cucsi.bsd.ucc.common.untils.JxlExcelUtils;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.DataCustomfield;
 import cn.cucsi.bsd.ucc.data.domain.TaskRecord;
-import cn.cucsi.bsd.ucc.service.DataCustomfieldService;
-import cn.cucsi.bsd.ucc.service.MonitorTaskService;
-import cn.cucsi.bsd.ucc.service.TaskRecordService;
-import cn.cucsi.bsd.ucc.service.UserCustomFieldService;
+import cn.cucsi.bsd.ucc.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import jxl.write.biff.RowsExceededException;
@@ -45,7 +43,9 @@ public class DataExportController {
 	private DataCustomfieldService dataCustomfieldService;
 	@Autowired
 	private MonitorTaskService monitorTaskService;
-	
+	@Autowired
+	private ImportBatchService importBatchService;
+
 	HttpSession httpSession = null;
 	
 	/***
@@ -346,6 +346,33 @@ public class DataExportController {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			return customExfieldsSaveMap;
+		}
+	}
+
+	/***
+	 * 查询导入批次
+	 */
+	@ApiOperation(value="查询导入批次", notes="查询导入批次")
+	@RequestMapping(value = "/queryImportBatch",method = RequestMethod.POST)
+	public Map<String,Object> queryImportBatch(@RequestBody QueryImportBatchCriteria queryImportBatchCriteria) throws Exception {
+
+		String taskTypeName = queryImportBatchCriteria.getTaskTypeName() == null?"":queryImportBatchCriteria.getTaskTypeName();
+		String recent = queryImportBatchCriteria.getRecent() == null?"":queryImportBatchCriteria.getRecent();
+
+		Map<String,Object> queryImportBatchMap = new HashMap<String,Object>();
+		queryImportBatchMap.put("msg","操作失败！");
+		queryImportBatchMap.put("code","-1");
+
+		String resultValue = "";
+		try {
+			resultValue = importBatchService.queryImportBatch(taskTypeName, recent);
+			queryImportBatchMap.put("resultValue",resultValue);
+			queryImportBatchMap.put("msg","操作成功！");
+			queryImportBatchMap.put("code","0");
+			return queryImportBatchMap;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return queryImportBatchMap;
 		}
 	}
 }
