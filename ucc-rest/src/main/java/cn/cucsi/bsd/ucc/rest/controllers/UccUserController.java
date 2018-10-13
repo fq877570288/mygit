@@ -119,6 +119,8 @@ public class UccUserController  {
         String sessionValue ="";
         for (int i=0;i<list.size();i++){
             String userId = list.get(i).getUserId();
+            List<UserExt> extList = userExtService.selectByUserId(userId);
+            list.get(i).setExt(extList);
             UccPermissionsCriteria search = new UccPermissionsCriteria();
             search.setUserId(userId);
             //search.setIsLeftMenu("0");

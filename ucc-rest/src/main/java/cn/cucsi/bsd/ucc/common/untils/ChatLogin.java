@@ -46,14 +46,14 @@ public class ChatLogin {
 		loginUser.setUserName(uccUser.getUserName());
 		loginUser.setMobile(uccUser.getMobile());
 		info.put("user", loginUser);
-//		if (uccUser.getExt() != null && uccUser.getExt().size()>0) {
-//			String extNum = "";
-//			for (PbxExts pbxExts : uccUser.getExt()) {
-//				extNum = pbxExts.getExtNum();
-//				break;
-//			}
-//			info.put("ext", extNum);
-//		}
+		if (uccUser.getExt() != null && uccUser.getExt().size()>0) {
+			String extNum = "";
+			for (UserExt pbxExts : uccUser.getExt()) {
+				extNum = pbxExts.getExtNum();
+				break;
+			}
+			info.put("ext", extNum);
+		}
 		boolean admin = false;
 		if(uccUser.getUccPermissions()!=null&&uccUser.getUccPermissions().size()>0){
 			for (UccPermissionsAndUser uccPermissionsAndUser : uccUser.getUccPermissions()){
