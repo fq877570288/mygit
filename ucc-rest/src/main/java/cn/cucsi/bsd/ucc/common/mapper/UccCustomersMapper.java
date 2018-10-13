@@ -30,7 +30,7 @@ public interface UccCustomersMapper {
 
     int insertGroup(Map<String, Object> taskMap) throws Exception;
 
-    int selectOngoingBySearchCount(TaskDetailSearch search) throws Exception;
+    Integer selectOngoingBySearchCount(TaskDetailSearch search) throws Exception;
 
     List<UccCustomers> selectOngoingBySearch(TaskDetailSearch search) throws Exception;
 

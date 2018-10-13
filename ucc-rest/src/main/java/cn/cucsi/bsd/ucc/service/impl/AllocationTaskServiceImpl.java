@@ -212,7 +212,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 					businessCodes = businessCodes + taskDetail.getBusinessCode() + "','";
 				}
 				businessCodes = businessCodes.substring(0, businessCodes.lastIndexOf(","));
-				businesscodeMap.put("businessCode", businessCodes);
+				businesscodeMap.put("businesscode", businessCodes);
 			}
 			businesscodeMap.put("domainId", domainId);
 
