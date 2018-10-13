@@ -1157,7 +1157,7 @@
     PHONE_NUMBER2,
     PHONE_NUMBER3,
     TASK_STATUS, ROPERATE_DEPT_ID,
-    DEFULT_PHONE, USER_NAME, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID,domain_id)
+    DEFULT_PHONE, USER_NAME, INIT_DEVELOPMENT, INIT_MESH_ID, INIT_AREA_ID,USER_ID,domain_id)
     values
     <foreach collection="list" item="record" index="index"
              separator=",">
@@ -1211,6 +1211,7 @@
       #{record.initDevelopment,jdbcType=VARCHAR},
       #{record.initMeshId,jdbcType=VARCHAR},
       #{record.initAreaId,jdbcType=VARCHAR},
+      #{record.userId,jdbcType=VARCHAR},
       #{record.domainId,jdbcType=VARCHAR})
     </foreach>
   </insert>
