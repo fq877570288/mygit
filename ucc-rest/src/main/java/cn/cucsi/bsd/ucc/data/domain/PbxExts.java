@@ -53,9 +53,6 @@ public class PbxExts {
     private Collection<PbxQueueNumbers> pbxQueueNumbers;
     @JsonIgnore
     private Collection<PbxShowbusyLog> pbxShowbusyLogs;
-    @JsonIgnore
-    private UserExt userExt;
-
     @Transient
     private String username;
     @Transient
@@ -285,15 +282,6 @@ public class PbxExts {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
-    }
-
-    @OneToOne(mappedBy = "pbxExts")
-    public UserExt getUserExt() {
-        return userExt;
-    }
-
-    public void setUserExt(UserExt userExt) {
-        this.userExt = userExt;
     }
 
     @Transient

@@ -3,7 +3,6 @@ package cn.cucsi.bsd.ucc.service.impl;
 import cn.cucsi.bsd.ucc.common.beans.UserExtCriteria;
 import cn.cucsi.bsd.ucc.common.mapper.UserExtMapper;
 import cn.cucsi.bsd.ucc.data.domain.UserExt;
-import cn.cucsi.bsd.ucc.data.repo.UserExtRepository;
 import cn.cucsi.bsd.ucc.data.specs.UserExtSpecs;
 import cn.cucsi.bsd.ucc.service.UserExtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +20,17 @@ import java.util.List;
 @Service
 public class UserExtServiceImpl  implements UserExtService{
     @Autowired
-    private UserExtRepository userExtRepository;
-    @Autowired
     private UserExtMapper userExtMapper;
     @Override
     public Page<UserExt> findAll(UserExtCriteria criteria) {
         Sort sort = new Sort(Sort.Direction.DESC, "userId");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
-        return userExtRepository.findAll(UserExtSpecs.createSpec(criteria),pageable);
+        return null;
     }
 
     @Override
     public UserExt findOne(String userId) {
-        return userExtRepository.findOne(userId);
+        return null;
     }
 
     @Override
@@ -51,12 +48,11 @@ public class UserExtServiceImpl  implements UserExtService{
     }
     @Override
     public UserExt save(UserExt userExt) {
-        return userExtRepository.save(userExt);
+        return null;
     }
 
     @Override
     public Boolean delete(String userId) {
-        this.userExtRepository.delete(userId);
         return true;
     }
 }

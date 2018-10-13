@@ -2,7 +2,6 @@ package cn.cucsi.bsd.ucc.data.specs;
 
 import cn.cucsi.bsd.ucc.common.beans.UserExtCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UserRoleCriteria;
-import cn.cucsi.bsd.ucc.data.domain.UserExt;
 import cn.cucsi.bsd.ucc.data.domain.UserRole;
 import com.google.common.base.Strings;
 import org.springframework.data.jpa.domain.Specification;

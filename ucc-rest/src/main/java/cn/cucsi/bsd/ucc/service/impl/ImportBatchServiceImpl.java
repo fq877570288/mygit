@@ -30,16 +30,14 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 	private UccDeptsService uccDeptsService;
 
 	@Override
-	public String queryImportBatch(String taskTypeName, String recent) throws Exception {
+	public List<ImportBatch> queryImportBatch(String taskTypeName, String recent) throws Exception {
 
 		Map<String, Object> condition = new HashMap<>();
 //		condition.put("batchFlag", "2");
 		condition.put("taskTypeName", taskTypeName);
 		condition.put("recent", recent);
 		List<ImportBatch> importBatchList = importBatchMapper.selectBySearch(condition);
-		ObjectMapper mapper = new ObjectMapper();
-		String json = mapper.writeValueAsString(importBatchList);
-		return json;
+		return importBatchList;
 	}
 
 	@Override

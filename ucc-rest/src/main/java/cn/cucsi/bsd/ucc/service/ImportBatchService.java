@@ -22,5 +22,5 @@ public interface ImportBatchService {
 
 	List<String> selectRecentImportBatch() throws Exception;
 
-	String queryImportBatch(String taskTypeName, String recent) throws Exception;
+	List<ImportBatch> queryImportBatch(String taskTypeName, String recent) throws Exception;
 }

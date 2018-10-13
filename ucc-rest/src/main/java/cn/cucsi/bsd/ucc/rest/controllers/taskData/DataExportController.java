@@ -9,6 +9,7 @@ import cn.cucsi.bsd.ucc.common.untils.Auth;
 import cn.cucsi.bsd.ucc.common.untils.JxlExcelUtils;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.DataCustomfield;
+import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
 import cn.cucsi.bsd.ucc.data.domain.TaskRecord;
 import cn.cucsi.bsd.ucc.service.*;
 import io.swagger.annotations.Api;
@@ -19,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -363,10 +366,10 @@ public class DataExportController {
 		queryImportBatchMap.put("msg","操作失败！");
 		queryImportBatchMap.put("code","-1");
 
-		String resultValue = "";
+		List<ImportBatch> list = new ArrayList<ImportBatch>();
 		try {
-			resultValue = importBatchService.queryImportBatch(taskTypeName, recent);
-			queryImportBatchMap.put("resultValue",resultValue);
+			list = importBatchService.queryImportBatch(taskTypeName, recent);
+			queryImportBatchMap.put("resultValue",list);
 			queryImportBatchMap.put("msg","操作成功！");
 			queryImportBatchMap.put("code","0");
 			return queryImportBatchMap;
