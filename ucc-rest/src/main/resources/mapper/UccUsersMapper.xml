@@ -515,7 +515,31 @@
       user_type = #{userType,jdbcType=INTEGER}
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
-
+  <!-- 查询坐席数-->
+  <select id="querySeater" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccUserCriteria" >
+    SELECT DISTINCT(ucu.user_name),urp.permission_name,urp.route,ucu.domain_id
+    FROM `ucc_users` ucu
+    LEFT JOIN
+    (
+    SELECT ur.user_id,ur.role_id,ucr.role_name
+    FROM user_role ur
+    LEFT JOIN ucc_roles ucr
+    ON ur.role_id=ucr.role_id
+    )uur
+    ON ucu.user_id=uur.user_id
+    LEFT JOIN
+    (
+    SELECT rp.role_id,up.permission_name,up.route
+    FROM roles_permissions rp
+    LEFT JOIN ucc_permissions up
+    ON rp.permission_id=up.permission_id
+    )urp
+    ON uur.role_id=urp.role_id
+    WHERE 1=1 AND urp.route='/seater'
+    <if test="domainId != null and domainId!=''" >
+      AND ucu.domain_id = #{domainId,jdbcType=VARCHAR}
+    </if>
+  </select>
   <!--<select id="findByUccUserCriteria" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UserCriteria" >
     select
     <include refid="Base_Column_List" />

@@ -12,6 +12,7 @@ import java.util.Date;
 public class UccSkillGroupCriteria extends  BasicCriteria {
     private String skillGroupName;
     private String status;
+    private String domainId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeFrom;
@@ -48,5 +49,13 @@ public class UccSkillGroupCriteria extends  BasicCriteria {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }

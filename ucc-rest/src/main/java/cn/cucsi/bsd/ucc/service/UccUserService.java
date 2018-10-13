@@ -17,7 +17,7 @@ public interface UccUserService {
     Boolean multiDelete(String userIds);
     List<UccUsers> findAllList(UccUserCriteria search);
     List<UccUsers> loginList(UccUserCriteria search);
-
+    List<UccUsers> querySeater(UccUserCriteria uccUserCriteria);
     /***
      * 根据用户名、密码获取用户列表（APP登录用）
      * add by wangxiaoyu
