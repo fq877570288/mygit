@@ -94,7 +94,7 @@
      <include refid="Base_Column_List" />
      from OC_TASK_TYPE A
      <where>
-     	<if test="ignoreNotask != null and ignoreNotask != ''">
+     	<if test="ignoreNotask != null and ignoreNotask != '' and ignoreNotask == 'true'">
      		EXISTS (SELECT 1 FROM OC_TASK_DETAIL B WHERE A.TASK_TYPE_ID = B.TASK_TYPE_ID)
      	</if>
      </where>
