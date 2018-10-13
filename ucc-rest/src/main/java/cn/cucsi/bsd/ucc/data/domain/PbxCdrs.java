@@ -411,7 +411,7 @@ public class PbxCdrs {
         this.uccDomain = uccDomain;
     }
     @ManyToOne
-    @JoinColumn(name = "recordid2", referencedColumnName = "record_id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "recordid2", referencedColumnName = "record_id", updatable = false, insertable = false)
     public cn.cucsi.bsd.ucc.data.domain.PbxRecords getPbxRecords2() {
         return pbxRecords2;
     }
@@ -420,7 +420,7 @@ public class PbxCdrs {
         this.pbxRecords2 = pbxRecords2;
     }
     @ManyToOne
-    @JoinColumn(name = "recordid1", referencedColumnName = "record_id", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "recordid1", referencedColumnName = "record_id",  updatable = false, insertable = false)
     public cn.cucsi.bsd.ucc.data.domain.PbxRecords getPbxRecords1() {
         return pbxRecords1;
     }
@@ -429,7 +429,7 @@ public class PbxCdrs {
         this.pbxRecords1 = pbxRecords1;
     }
     @ManyToOne
-    @JoinColumn(name = "hangup_cause", referencedColumnName = "cause_en", nullable = false, updatable = false, insertable = false)
+    @JoinColumn(name = "hangup_cause", referencedColumnName = "cause_en", updatable = false, insertable = false)
     public cn.cucsi.bsd.ucc.data.domain.BaseHangupCause getBaseHangupCause() {
         return baseHangupCause;
     }
