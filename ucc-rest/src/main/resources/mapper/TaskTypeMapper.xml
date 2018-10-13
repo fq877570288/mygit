@@ -83,7 +83,7 @@
   
   <!-- Add by bli  begin -->
   <!-- 查询全部 -->
-	<select id="selectAll" resultMap="BaseResultMap"  parameterType="string">
+	<select id="selectAll" resultMap="BaseResultMap"  parameterType="java.lang.String">
      select 
      <include refid="Base_Column_List" />
      from OC_TASK_TYPE A

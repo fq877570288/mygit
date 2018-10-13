@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.cucsi.bsd.ucc.data.domain.TaskType;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -21,5 +22,5 @@ public interface TaskTypeMapper {
 
     int updateByPrimaryKey(TaskType record);
 	
-	List<TaskType> selectAll(String ignoreNotask) throws Exception;
+	List<TaskType> selectAll(@Param("ignoreNotask")String ignoreNotask) throws Exception;
 }

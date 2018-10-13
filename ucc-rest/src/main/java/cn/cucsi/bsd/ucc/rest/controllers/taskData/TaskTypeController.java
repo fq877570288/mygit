@@ -6,9 +6,11 @@ import cn.cucsi.bsd.ucc.data.domain.TaskType;
 import cn.cucsi.bsd.ucc.service.TaskTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -23,8 +25,8 @@ public class TaskTypeController {
     @Autowired
     private TaskTypeService taskTypeService;
     @ApiOperation(value = "查询任务类别", notes = "查询任务类别", httpMethod = "GET")
-    @RequestMapping(value = "/selectAll", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public PageResultBean<List<TaskType>> selectAll(String ignoreNotask){
+    @RequestMapping(value = "/selectAll/{ignoreNotask}", method = RequestMethod.GET)
+    public PageResultBean<List<TaskType>> selectAll(@PathVariable String ignoreNotask){
         PageResultBean<List<TaskType>> bean = new PageResultBean<List<TaskType>>();
         try{
             //ignoreNotask 忽略没有任务的任务类型
