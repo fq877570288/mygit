@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -135,8 +136,6 @@ public class UccUsers {
     @JsonView(JSONView.UccUserWithDept.class)
     private Collection<UserDept> userDepts;
 
-    @JsonView(JSONView.UccUserWithExt.class)
-    private UserExt userExt;
     @JsonView(JSONView.UccUserWithRole.class)
     @JsonIgnore
     private Collection<UserRole> userRoles;
@@ -145,8 +144,9 @@ public class UccUsers {
     private Collection<UccRoles> roles;
     @JsonView(JSONView.UccUserWithDept.class)
     private Collection<UccDepts> depts;
-    @JsonView(JSONView.UccUserWithExt.class)
+//    @JsonView(JSONView.UccUserWithExt.class)
     private Collection<PbxExts> ext;
+
     @JsonView(JSONView.UccUserWithTeams.class)
     private Collection<UccTeams> teams;
     @JsonView(JSONView.UccUserWithSkillGroup.class)
@@ -155,7 +155,6 @@ public class UccUsers {
     private List<UccPermissionsAndUser> uccPermissions;
     @JsonView(JSONView.Summary.class)
     private JSONObject result;
-
 
     @ManyToMany
     @JoinTable(name="user_role",
@@ -742,15 +741,6 @@ public class UccUsers {
 
     public void setUserDepts(Collection<UserDept> userDepts) {
         this.userDepts = userDepts;
-    }
-
-    @OneToOne(mappedBy = "uccUser")
-    public UserExt getUserExt() {
-        return userExt;
-    }
-
-    public void setUserExt(UserExt userExt) {
-        this.userExt = userExt;
     }
 
     @OneToMany(mappedBy = "uccUser")

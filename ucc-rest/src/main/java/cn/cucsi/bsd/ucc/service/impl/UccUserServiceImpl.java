@@ -94,18 +94,18 @@ public class UccUserServiceImpl implements UccUserService{
 
 
         //添加或修改分机号码关联信息
-        if(uccUsers.getUserExt() != null){
-            UserExt userExt = new UserExt();
-            String extId = uccUsers.getUserExt().getExtId();
-
-            userExt.setUserId(userId);
-            userExt.setExtId(extId);
-            userExt.setCreatedTime(currTime);
-            userExt.setUpdatedTime(currTime);
-//            userExt.setUpdatedPerson(uccUsers.getUpdatedPerson());
-
-            userExtService.save(userExt);
-        }
+//        if(uccUsers.getUserExt() != null){
+//            UserExt userExt = new UserExt();
+//            String extId = uccUsers.getUserExt().getExtId();
+//
+//            userExt.setUserId(userId);
+//            userExt.setExtId(extId);
+//            userExt.setCreatedTime(currTime);
+//            userExt.setUpdatedTime(currTime);
+////            userExt.setUpdatedPerson(uccUsers.getUpdatedPerson());
+//
+//            userExtService.save(userExt);
+//        }
 
         if(uccUsers.getUserId() == null || uccUsers.getUserId() == ""){
             return uccUsersD;
