@@ -21,16 +21,10 @@ import java.util.List;
 public class UserExtServiceImpl  implements UserExtService{
     @Autowired
     private UserExtMapper userExtMapper;
-    @Override
-    public Page<UserExt> findAll(UserExtCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "userId");
-        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
-        return null;
-    }
 
     @Override
-    public UserExt findOne(String userId) {
-        return null;
+    public UserExt findOne(UserExt userExt) {
+        return userExtMapper.selectByPrimaryKey(userExt);
     }
 
     @Override
@@ -46,13 +40,14 @@ public class UserExtServiceImpl  implements UserExtService{
     public int insert(UserExt userExt) {
         return userExtMapper.insert(userExt);
     }
+
     @Override
-    public UserExt save(UserExt userExt) {
-        return null;
+    public List<UserExt> selectByUserId(String userId) {
+        return userExtMapper.selectByUserId(userId);
     }
 
     @Override
-    public Boolean delete(String userId) {
-        return true;
+    public int delete(UserExt userExt) {
+        return userExtMapper.deleteByPrimaryKey(userExt);
     }
 }

@@ -1,30 +1,50 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
+import cn.cucsi.bsd.ucc.common.JSONView;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import java.util.Date;
 /*
 * 用户号码关系
 * */
 public class UserExt {
+    @JsonView(JSONView.Summary.class)
     private String extId;
 
+    @JsonView(JSONView.Summary.class)
+    private String extNum;
+
+    @JsonView(JSONView.Summary.class)
+    private String domainId;
+
+    @JsonView(JSONView.Summary.class)
     private String userId;
 
+    @JsonView(JSONView.Summary.class)
     private String createdNickName;
 
+    @JsonView(JSONView.Summary.class)
     private Date createdTime;
 
+    @JsonView(JSONView.Summary.class)
     private String createdUserId;
 
+    @JsonView(JSONView.Summary.class)
     private String createdUserName;
 
+    @JsonView(JSONView.Summary.class)
     private String updatedNickName;
 
+    @JsonView(JSONView.Summary.class)
     private Date updatedTime;
 
+    @JsonView(JSONView.Summary.class)
     private String updatedUserId;
 
+    @JsonView(JSONView.Summary.class)
     private String updatedUserName;
 
+    @JsonView(JSONView.Summary.class)
     private String isdefault;
 
     public String getCreatedNickName() {
@@ -113,5 +133,21 @@ public class UserExt {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getExtNum() {
+        return extNum;
+    }
+
+    public void setExtNum(String extNum) {
+        this.extNum = extNum;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }

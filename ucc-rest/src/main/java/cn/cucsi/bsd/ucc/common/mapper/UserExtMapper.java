@@ -15,11 +15,13 @@ public interface UserExtMapper {
 
     int insertSelective(UserExt record);
 
-    UserExt selectByPrimaryKey(String key);
+    UserExt selectByPrimaryKey(UserExt userExt);
 
     int updateByPrimaryKeySelective(UserExt record);
 
     int updateByPrimaryKey(UserExt record);
 
     List<UserExt> findByUserId(UserExt userExt);
+
+    List<UserExt> selectByUserId(String userId);
 }
