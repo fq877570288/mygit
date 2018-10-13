@@ -50,7 +50,14 @@ public class UccCustomersSpecs {
             }
         };
     }
-
+    public static Specification<UccCustomers> uccCustomersCustTypeNotEqual(final Integer type) {
+        return new Specification<UccCustomers>() {
+            @Override
+            public Predicate toPredicate(Root<UccCustomers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.notEqual(root.<Integer>get("type"), type);
+            }
+        };
+    }
     public static Specification<UccCustomers> uccCustomersCustPhoneLike(final String phone) {
         return new Specification<UccCustomers>() {
             @Override
@@ -101,6 +108,8 @@ public class UccCustomersSpecs {
         }
         if(null != criteria.getType()){
             specs = specs.and(uccCustomersCustTypeEqual(criteria.getType()));
+        }else{
+            specs = specs.and(uccCustomersCustTypeNotEqual(7));
         }
         if(!Strings.isNullOrEmpty(criteria.getPhone())){
             specs = specs.and(uccCustomersCustPhoneLike(criteria.getPhone()));
