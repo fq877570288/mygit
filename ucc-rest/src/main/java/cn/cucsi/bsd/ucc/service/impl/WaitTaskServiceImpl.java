@@ -81,7 +81,8 @@ public class WaitTaskServiceImpl implements WaitTaskService {
             // 流转时间
             Timestamp transferTime = new Timestamp(System.currentTimeMillis());
             String taskTransferUuid = generator.generate();
-            UccUsers uccUsers = uccUserService.findOne(userId);
+			String domainId = taskTransfer.getDomainId()==null?"":taskTransfer.getDomainId();
+            /*UccUsers uccUsers = uccUserService.findOne(userId);
             if(MyUtils.isBlank(uccUsers)){
                 taskBackMap.put("msg", "任务回退时 根据userId:::"+userId+"查询用户信息为空!");
                 return taskBackMap;
@@ -90,12 +91,13 @@ public class WaitTaskServiceImpl implements WaitTaskService {
             if(MyUtils.isBlank(domainId)){
                 taskBackMap.put("msg", "任务回退时 用户userId:::"+userId+"查询租户ID为空!");
                 return taskBackMap;
-            }
+            }*/
 			// 部门
 			//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 			//String backDept = uccDeptsList.get(0).getDeptPid().toString();
 			TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
 			taskDetailSearch.setUserId(userId);
+			taskDetailSearch.setDomainId(domainId);
 			taskDetailSearch.setTaskDetailId(taskTransfer.getTaskDetailId()==null?"":taskTransfer.getTaskDetailId());
 			// 部门
 			String backDept = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
