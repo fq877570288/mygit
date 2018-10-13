@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.rest.controllers.taskData;
 
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.TaskType;
 import cn.cucsi.bsd.ucc.service.TaskTypeService;
 import io.swagger.annotations.Api;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +49,7 @@ public class TaskTypeController {
     public PageResultBean<TaskType> update(@PathVariable String taskTypeId, @RequestBody TaskType taskType){
         PageResultBean<TaskType> bean = new PageResultBean<TaskType>();
         try {
+            taskType.setTaskTypeId(taskTypeId);
             bean.setMsg("success");
             taskTypeService.updateByPrimaryKeySelective(taskType);
             return bean;
@@ -75,10 +78,13 @@ public class TaskTypeController {
 
     @ApiOperation(value = "创建TaskType", notes = "创建TaskType")
     @RequestMapping(value = "", method =  RequestMethod.POST,produces="application/json;charset=UTF-8")
-    public ResultBean<Boolean> create(@RequestBody TaskType TaskType) {
+    public ResultBean<Boolean> create(@RequestBody TaskType taskType) {
+        UUIDGenerator uuidGenerator = new UUIDGenerator();
+        taskType.setTaskTypeId(uuidGenerator.generate());
+        taskType.setCreateTime(new Date(System.currentTimeMillis()));
         boolean result = false;
         try {
-            int num = this.taskTypeService.insertSelective(TaskType);
+            int num = this.taskTypeService.insertSelective(taskType);
             if(num !=0){
                 result =true;
             }

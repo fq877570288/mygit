@@ -1,5 +1,8 @@
 package cn.cucsi.bsd.ucc.data.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /****
@@ -12,7 +15,8 @@ public class TaskType {
     private String taskTypeCode; //任务类型编码
 
     private String taskTypeName; //任务类型名称
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime; //创建时间
 
     public String getTaskTypeId() {
@@ -38,7 +42,8 @@ public class TaskType {
     public void setTaskTypeName(String taskTypeName) {
         this.taskTypeName = taskTypeName == null ? null : taskTypeName.trim();
     }
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     public Date getCreateTime() {
         return createTime;
     }
