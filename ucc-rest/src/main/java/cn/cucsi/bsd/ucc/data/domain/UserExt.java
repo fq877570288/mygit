@@ -12,6 +12,7 @@ import java.util.Date;
 * */
 @Entity
 @Table(name = "user_ext", schema = "ucc", catalog = "")
+@IdClass(UserExtPK.class)
 public class UserExt {
     private String userId;//用户ID
     private String extId;//分机号
@@ -47,8 +48,8 @@ public class UserExt {
         this.userId = userId;
     }
 
-    @Basic
-    @Column(name = "ext_id", nullable = true, length = 30)
+    @Id
+    @Column(name = "ext_id", nullable = false, length = 32)
     public String getExtId() {
         return extId;
     }
@@ -58,7 +59,7 @@ public class UserExt {
     }
 
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "ext_id", referencedColumnName = "ext_id", nullable = false, updatable = false, insertable = false)
     public PbxExts getPbxExts() {
         return pbxExts;
@@ -73,10 +74,10 @@ public class UserExt {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserExt userExt = (UserExt) o;
+        UserExt userRole = (UserExt) o;
 
-        if (userId != null ? !userId.equals(userExt.userId) : userExt.userId != null) return false;
-        if (extId != null ? !extId.equals(userExt.extId) : userExt.extId != null) return false;
+        if (userId != null ? !userId.equals(userRole.userId) : userRole.userId != null) return false;
+        if (extId != null ? !extId.equals(userRole.extId) : userRole.extId != null) return false;
 
         return true;
     }
@@ -88,7 +89,7 @@ public class UserExt {
         return result;
     }
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false, updatable = false, insertable = false)
     public cn.cucsi.bsd.ucc.data.domain.UccUsers getUccUser() {
         return uccUser;
