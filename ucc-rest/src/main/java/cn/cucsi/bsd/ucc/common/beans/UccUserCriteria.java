@@ -29,6 +29,7 @@ public class UccUserCriteria extends BasicCriteria {
     private List<String> uccDepts = new ArrayList<>();
     private List<String> userRoles = new ArrayList<>();
     private List<String> extId = new ArrayList<>();
+    private String userStatus;
 
     public String getUserName() {
         return userName;
@@ -148,5 +149,13 @@ public class UccUserCriteria extends BasicCriteria {
 
     public void setTeamId(String teamId) {
         this.teamId = teamId;
+    }
+
+    public String getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus;
     }
 }
