@@ -169,7 +169,7 @@ public class PbxCdrsSpecs {
         return new Specification<PbxCdrs>() {
             @Override
             public Predicate toPredicate(Root<PbxCdrs> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.greaterThanOrEqualTo(root.<Integer>get("qc"), qc);
+                return criteriaBuilder.equal(root.<Integer>get("qc"), qc);
             }
         };
     }

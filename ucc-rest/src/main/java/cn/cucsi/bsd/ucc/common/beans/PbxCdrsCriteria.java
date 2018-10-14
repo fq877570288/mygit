@@ -29,18 +29,18 @@ public class PbxCdrsCriteria extends BasicCriteria{
     private String isRecord2;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTimeFrom;
+    private Date createdTimeFrom;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTimeTo;
+    private Date createdTimeTo;
 
     private Integer totalTimeFrom;
 
     private Integer totalTimeTo;
 
-    private Integer callTimeFrom;
+    private Integer callTimeBegin;
 
-    private Integer callTimeTo;
+    private Integer callTimeEnd;
 
     private Integer satisfaction;//满意度qc
 
@@ -95,28 +95,28 @@ public class PbxCdrsCriteria extends BasicCriteria{
         this.totalTimeTo = totalTimeTo;
     }
 
-    public void setCreateTimeTo(Date createTimeTo) {
-        this.createTimeTo = createTimeTo;
+    public void setCreateTimeTo(Date createdTimeTo) {
+        this.createdTimeTo = createdTimeTo;
     }
 
     public void setCreateTimeFrom(Date createTimeFrom) {
-        this.createTimeFrom = createTimeFrom;
+        this.createdTimeFrom = createTimeFrom;
     }
 
     public void setCdrId(String cdrId) {
         this.cdrId = cdrId;
     }
 
-    public void setCallTimeTo(Integer callTimeTo) {
-        this.callTimeTo = callTimeTo;
+    public void setCallTimeTo(Integer callTimeEnd) {
+        this.callTimeEnd = callTimeEnd;
     }
 
     public void setAfterqueueId(String afterqueueId) {
         this.afterqueueId = afterqueueId;
     }
 
-    public void setCallTimeFrom(Integer callTimeFrom) {
-        this.callTimeFrom = callTimeFrom;
+    public void setCallTimeFrom(Integer callTimeBegin) {
+        this.callTimeBegin = callTimeBegin;
     }
 
     public void setAfterivrId(String afterivrId) {
@@ -160,7 +160,7 @@ public class PbxCdrsCriteria extends BasicCriteria{
     }
 
     public Date getCreateTimeTo() {
-        return createTimeTo;
+        return createdTimeTo;
     }
 
     public String getCdrId() {
@@ -169,11 +169,11 @@ public class PbxCdrsCriteria extends BasicCriteria{
     
 
     public Date getCreateTimeFrom() {
-        return createTimeFrom;
+        return createdTimeFrom;
     }
 
     public Integer getCallTimeTo() {
-        return callTimeTo;
+        return callTimeEnd;
     }
 
     public String getAfterqueueId() {
@@ -181,7 +181,7 @@ public class PbxCdrsCriteria extends BasicCriteria{
     }
 
     public Integer getCallTimeFrom() {
-        return callTimeFrom;
+        return callTimeBegin;
     }
 
     public String getAfterivrId() {
