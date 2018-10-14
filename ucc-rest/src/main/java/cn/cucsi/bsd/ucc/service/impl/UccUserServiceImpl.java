@@ -134,12 +134,24 @@ public class UccUserServiceImpl implements UccUserService{
         if(delResult>0){
             result=true;
         }
-        UserRolePK userRolePK = new UserRolePK();
-        userRolePK.setUserId(userId);
-        userRoleService.delete(userRolePK);
-        UserDeptPK userDeptPK = new UserDeptPK();
-        userDeptPK.setDeptId(userId);
-        userDeptService.delete(userDeptPK);
+        UserRoleCriteria userRoleCriteria = new UserRoleCriteria();
+        userRoleCriteria.setUserId(userId);
+        List<UserRole> roles = userRoleService.findAll(userRoleCriteria);
+        for (UserRole role : roles) {
+            UserRolePK userRolePK = new UserRolePK();
+            userRolePK.setUserId(userId);
+            userRolePK.setRoleId(role.getRoleId());
+            userRoleService.delete(userRolePK);
+        }
+        UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
+        userDeptCriteria.setUserId(userId);
+        Page<UserDept> userDepts = userDeptService.findAll(userDeptCriteria);
+        for (UserDept userDept : userDepts) {
+            UserDeptPK userDeptPK = new UserDeptPK();
+            userDeptPK.setUserId(userId);
+            userDeptPK.setDeptId(userDept.getDeptId());
+            userDeptService.delete(userDeptPK);
+        }
         uccUsersMapper.deleteByPrimaryKey(userId);
         return result;
     }
