@@ -67,6 +67,13 @@ public class UccUserController  {
             criteria.setExtId(extId);
         }
         PageResultBean<List<UccUsers>> list = new PageResultBean(this.uccUserService.findAll(criteria));
+        if(list!=null&&list.getData().size()>0){
+            for (UccUsers uccUsers : list.getData() ) {
+                String userId = uccUsers.getUserId();
+                List<UserExt> extList = userExtService.selectByUserId(userId);
+                uccUsers.setExt(extList);
+            }
+        }
         return list;
     }
 
@@ -202,7 +209,12 @@ public class UccUserController  {
     @ApiOperation(value = "根据userId查询UccUsers", notes = "根据userId查询UccUsers")
     @RequestMapping(value = "/{userId}", method= RequestMethod.GET)
     public ResultBean<UccUsers> findOne(@PathVariable String userId){
-        return new ResultBean<>(this.uccUserService.findOne(userId));
+        UccUsers uccUsers = this.uccUserService.findOne(userId);
+        List<UserExt> extList = userExtService.selectByUserId(userId);
+        if(uccUsers!=null){
+            uccUsers.setExt(extList);
+        }
+        return new ResultBean<>(uccUsers);
     }
 
     @ApiOperation(value = "根据userId删除UccUsers", notes = "根据userId删除UccUsers")

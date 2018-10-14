@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -43,7 +44,9 @@ public class UserExtServiceImpl  implements UserExtService{
 
     @Override
     public List<UserExt> selectByUserId(String userId) {
-        return userExtMapper.selectByUserId(userId);
+        List<UserExt> resultList = userExtMapper.selectByUserId(userId);
+        resultList.removeAll(Collections.singleton(null));
+        return resultList;
     }
 
     @Override
