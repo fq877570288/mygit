@@ -475,7 +475,7 @@ public class UccUserController  {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/chat/login", produces = "application/json;charset=UTF-8", method=RequestMethod.POST)
+    @RequestMapping(value = "/chat/login", produces = "application/json;charset=UTF-8", method=RequestMethod.GET)
     public JSONObject login(HttpServletRequest request, ObjectMapper mapper) {
         ChatLogin chatLogin = new ChatLogin();
         JSONObject re = chatLogin.login(request, mapper, redisTemplate);
