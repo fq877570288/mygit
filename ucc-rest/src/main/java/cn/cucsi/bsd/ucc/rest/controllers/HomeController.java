@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -85,8 +86,9 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "主页视图Plus", notes = "主页视图Plus", httpMethod = "GET")
     @RequestMapping(value = "/index1", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public Map<String,Object> IndexView1(String domainId, String userId, String DeptIdAndChildIds) throws Exception {
+    public Map<String,Object> IndexView1(String domainId, String userId, HttpSession session) throws Exception {
         Map<String,Object> map = new HashMap<String,Object>();
+        String DeptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
         try {
             map.put("return_msg", "success");
             map.put("return_code", "success");
@@ -94,11 +96,12 @@ public class HomeController {
             search.setDomainId(domainId);
             PageResultBean<List<PbxExts>> bean = new PageResultBean(this.pbxExtsService.findAll(search));
             map.put("exts", bean.getData());
+            String deptIds = null;
             String deptIdAndChildId = DeptIdAndChildIds;
             if (deptIdAndChildId != null && deptIdAndChildId.length() > 0) {
                 deptIdAndChildId = deptIdAndChildId.replaceAll(",", "','");
+                deptIds = "'" + deptIdAndChildId + "'";
             }
-            String deptIds = "'" + deptIdAndChildId + "'";
             //通过部门ID查询需要的信息数量
             int wa = taskService.selectWaitAllCount(deptIds,domainId);
             int wt = taskService.selectWaitTodayCount(deptIds,domainId);
