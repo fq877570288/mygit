@@ -451,10 +451,12 @@ public class UccDeptsServiceImpl implements UccDeptsService {
             for(UccDepts uccDepts:all){
                 System.out.println(uccDepts.getDeptId()+" "+uccDepts.getDeptPid()+" "+list.size());
             }
+            return all;
         }catch (Exception e){
             System.out.println("询用户关联的部门及其子部门失败！");
             e.printStackTrace();
+            return list;
         }
-        return all;
+
     }
 }
