@@ -7,6 +7,7 @@ import cn.cucsi.bsd.ucc.data.domain.TaskDetail;
 import cn.cucsi.bsd.ucc.data.domain.TaskRecord;
 import cn.cucsi.bsd.ucc.data.domain.TaskTransfer;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
@@ -123,11 +124,11 @@ public interface TaskDetailMapper {
     //zss
     int selectCompleteTodayCount(Map<String, Object> map);
     //视图
-    int queryCompleteTask(Map<String, Object> map) throws Exception;
+    int[] queryCompleteTask(@Param("sql") String sql) throws Exception;
 
-    int queryECall(Map<String, Object> emap) throws Exception;
+    int[] queryECall(@Param("sql") String sql) throws Exception;
 
-    int queryACall(Map<String, Object> amap) throws Exception;
+    int[] queryACall(@Param("sql") String sql) throws Exception;
 
     int selectMonitorBySearchSearchCount(TaskDetailSearch search) throws Exception;
 
