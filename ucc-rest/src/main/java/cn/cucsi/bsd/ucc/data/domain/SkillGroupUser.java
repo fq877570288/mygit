@@ -32,6 +32,8 @@ public class SkillGroupUser {
 
     private String userName;//用户名
     private String groupName;//技能组名称
+    private String nickName;//用户昵称
+    private String deptName;//部门名称
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTime;//创建时间
@@ -191,5 +193,21 @@ public class SkillGroupUser {
 
     public void setGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
     }
 }
