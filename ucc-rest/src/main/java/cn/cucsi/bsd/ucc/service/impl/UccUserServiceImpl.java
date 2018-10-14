@@ -134,6 +134,13 @@ public class UccUserServiceImpl implements UccUserService{
         if(delResult>0){
             result=true;
         }
+        UserRolePK userRolePK = new UserRolePK();
+        userRolePK.setUserId(userId);
+        userRoleService.delete(userRolePK);
+        UserDeptPK userDeptPK = new UserDeptPK();
+        userDeptPK.setDeptId(userId);
+        userDeptService.delete(userDeptPK);
+        uccUsersMapper.deleteByPrimaryKey(userId);
         return result;
     }
 
