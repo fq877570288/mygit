@@ -218,9 +218,13 @@ public class UccUserController  {
     }
 
     @ApiOperation(value = "根据userId删除UccUsers", notes = "根据userId删除UccUsers")
-    @RequestMapping(value = "/{userId}", method= RequestMethod.DELETE)
-    public ResultBean<Boolean> delete(@PathVariable String userId){
-        return new ResultBean<>(this.uccUserService.delete(userId));
+    @RequestMapping(value = "/delete", method= RequestMethod.POST,produces="application/json;charset=utf-8")
+    public ResultBean<Boolean> delete(@RequestBody UccUsers uccUsers){
+        int userStatus = uccUsers.getUserStatus();
+        uccUsers = this.uccUserService.findOne(uccUsers.getUserId());
+        uccUsers.setUserStatus(userStatus);
+        return new ResultBean<>(this.uccUserService.save(uccUsers)!=null);
+        //return new ResultBean<>(this.uccUserService.delete(userId));
     }
 
     @ApiOperation(value = "根据userId批量删除UccUsers", notes = "根据userId批量删除UccUsers")

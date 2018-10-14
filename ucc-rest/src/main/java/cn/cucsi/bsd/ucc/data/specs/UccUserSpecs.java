@@ -162,6 +162,15 @@ public class UccUserSpecs {
         };
     }
 
+    public static Specification<UccUsers> userStatusEqual(final String userStatus) {
+        return new Specification<UccUsers>() {
+            @Override
+            public Predicate toPredicate(Root<UccUsers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("userStatus"), userStatus);
+            }
+        };
+    }
+
     public static Specification<UccUsers> createSpec(final UccUserCriteria criteria) {
         Specification<UccUsers> spec = null;
         if(criteria==null) return spec;
@@ -205,6 +214,10 @@ public class UccUserSpecs {
 
         if(null != criteria.getLastLoginTimeTo()){
             specs = specs.and(lastLoginTimeLessOrEqualTo(criteria.getLastLoginTimeTo()));
+        }
+
+        if(!Strings.isNullOrEmpty(criteria.getUserStatus())){
+            specs = specs.and(userStatusEqual(criteria.getUserStatus()));
         }
 
         if(null != criteria.getUccDepts() && criteria.getUccDepts().size() > 0){
