@@ -2,6 +2,8 @@ package cn.cucsi.bsd.ucc.common.untils;
 
 import org.apache.poi.ss.formula.functions.T;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -273,11 +275,134 @@ public class MyUtils extends org.apache.commons.lang.StringUtils{
         }
         return result;
     }
+    // zss  优化源码重复查数据库问题
+    public String generateSQL(String[] times,String domain,String depts,String flag){
+        String sql = "";
+        String generateSQL = "";
+        switch (flag){
+            case "CompleteTask":
+                sql = "select count(*)\n" +
+                        "    from OC_TASK_RECORD d\n" +
+                        "    inner join\n" +
+                        "    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'\n" +
+                        "    where\n" +
+                        "    \n" +
+                        "\t\t \tr.ROPERATE_DEPT_ID in ({1})\n" +
+                        "\t\t \tand TRANSFER_TIME between {2} and {3}\n" +
+                        "\t\t  and d.domain_id = {4}";
+                break;
+            case  "ECall":
+                sql = " select count(*)\n" +
+                        "    from OC_TASK_RECORD d\n" +
+                        "    inner join\n" +
+                        "    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'\n" +
+                        "    inner join pbx_cdrs c on c.cdr_id = r.CDR_ID\n" +
+                        "    where\n" +
+                        "    \n" +
+                        "\t\t \tr.ROPERATE_DEPT_ID in ({1})\n" +
+                        "\t\t \tand c.call_time>=5 and\n" +
+                        "         \tTRANSFER_TIME between {2} and {3}\n" +
+                        "          and d.domain_id = {4}";
+                break;
+            case  "ACall":
+                sql = " select count(*)\n" +
+                        "    from OC_TASK_RECORD d\n" +
+                        "    inner join\n" +
+                        "    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'\n" +
+                        "    inner join pbx_cdrs c on c.cdr_id = r.CDR_ID\n" +
+                        "    where\n" +
+                        "    \n" +
+                        "\t\t \tr.ROPERATE_DEPT_ID in ({1})\n" +
+                        "\t\t \tand TRANSFER_TIME between {2} and {3}\n" +
+                        "          and d.domain_id = {4}";
+                break;
+        }
+        for(int i=0;i<times.length;i++){
+            if(i==0){//第一次
+                generateSQL += sql.replaceAll("\\{1\\}",depts).replaceAll("\\{2\\}","'"+times[i]+" 00:00:00'").replaceAll("\\{3\\}","'"+times[i]+" 23:59:59'").replaceAll("\\{4\\}","'"+domain+"'");
+            }
+            if(i!=0){//不是第一次
+                generateSQL +=  "UNION ALL("+sql.replaceAll("\\{1\\}",depts).replaceAll("\\{2\\}","'"+times[i]+" 00:00:00'").replaceAll("\\{3\\}","'"+times[i]+" 23:59:59'").replaceAll("\\{4\\}","'"+domain+"'")+")";
+            }
+        }
+        return generateSQL;
+    }
+// 测试 js zss
+   public static void main(String[] args) {
+       ScriptEngineManager manager = new ScriptEngineManager();
+       ScriptEngine engine = manager.getEngineByName( "JavaScript" );
+       System.out.println( engine.getClass().getName() );
+       try{
+           System.out.println( "Result:" + engine.eval( "" +
+                   "function f() { \"data\": [\n" +
+                   "        {\n" +
+                   "            \"subDepts\": null,\n" +
+                   "            \"deptAdminName\": \"admin2\",\n" +
+                   "            \"deptId\": \"4028e381665b7a8b01665bc851710001\",\n" +
+                   "            \"createdBy\": null,\n" +
+                   "            \"deptName\": \"二级02\",\n" +
+                   "            \"deptPid\": \"0\",\n" +
+                   "            \"deptLevel\": null,\n" +
+                   "            \"deptCreateTime\": \"2018-10-10 10:22:26\",\n" +
+                   "            \"deptDesc\": \"cccc\",\n" +
+                   "            \"domainId\": \"2c9289d164f985b10164f998369a0001\",\n" +
+                   "            \"deptAdmin\": \"ff808081665b88b601665bb83be90004\",\n" +
+                   "            \"createdUserId\": null,\n" +
+                   "            \"createdUserName\": null,\n" +
+                   "            \"createdNickName\": null,\n" +
+                   "            \"updatedUserId\": null,\n" +
+                   "            \"updatedUserName\": null,\n" +
+                   "            \"updatedNickName\": null,\n" +
+                   "            \"createdTime\": null,\n" +
+                   "            \"updatedTime\": null,\n" +
+                   "            \"userDepts\": [\n" +
+                   "                {\n" +
+                   "                    \"userId\": \"ff8080816661212b016661f802e40008\",\n" +
+                   "                    \"deptId\": \"4028e381665b7a8b01665bc851710001\"\n" +
+                   "                },\n" +
+                   "                {\n" +
+                   "                    \"userId\": \"ff80808166659d890166677328960026\",\n" +
+                   "                    \"deptId\": \"4028e381665b7a8b01665bc851710001\"\n" +
+                   "                },\n" +
+                   "                {\n" +
+                   "                    \"userId\": \"ff80808166680b6c0166681f60170000\",\n" +
+                   "                    \"deptId\": \"4028e381665b7a8b01665bc851710001\"\n" +
+                   "                }\n" +
+                   "            ],\n" +
+                   "            \"depts\": [\n" +
+                   "                {\n" +
+                   "                    \"subDepts\": null,\n" +
+                   "                    \"deptAdminName\": \"admin\",\n" +
+                   "                    \"deptId\": \"4028e381665b7a8b01665bc89d880002\",\n" +
+                   "                    \"createdBy\": null,\n" +
+                   "                    \"deptName\": \"嘻嘻\",\n" +
+                   "                    \"deptPid\": \"4028e381665b7a8b01665bc851710001\",\n" +
+                   "                    \"deptLevel\": null,\n" +
+                   "                    \"deptCreateTime\": \"2018-10-10 10:22:46\",\n" +
+                   "                    \"deptDesc\": \"踩踩踩\",\n" +
+                   "                    \"domainId\": \"2c9289d164f985b10164f998369a0001\",\n" +
+                   "                    \"deptAdmin\": \"1\",\n" +
+                   "                    \"createdUserId\": null,\n" +
+                   "                    \"createdUserName\": null,\n" +
+                   "                    \"createdNickName\": null,\n" +
+                   "                    \"updatedUserId\": null,\n" +
+                   "                    \"updatedUserName\": null,\n" +
+                   "                    \"updatedNickName\": null,\n" +
+                   "                    \"createdTime\": null,\n" +
+                   "                    \"updatedTime\": null,\n" +
+                   "                    \"userDepts\": [],\n" +
+                   "                    \"depts\": null\n" +
+                   "                }\n" +
+                   "            ]\n" +
+                   "        }]" +
+                   "" +
+                   "" +
+                   "};"
+           ) );
+       }catch (Exception e){
 
-   /*public static void main(String[] args) {
-        List<String> ls = Arrays.asList("1,2,3,4,5,6,7,8,9,1,2,4,5,6,7,7,6,6,6,6,6,66".split(","));
-        List<List<String>> ll = MyUtils.averageAssign(ls,1);
+       }
 
-        System.out.println(ll);
-    }*/
+
+   }
 }
