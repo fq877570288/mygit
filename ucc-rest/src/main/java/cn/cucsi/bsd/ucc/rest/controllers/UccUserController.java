@@ -429,7 +429,8 @@ public class UccUserController  {
     @RequestMapping(value="/pbx/setext", method=RequestMethod.POST,
             produces="application/json;charset=utf-8")
     @ResponseBody
-    public ResultBean<Boolean> pbxSetExt(@RequestBody List<UserExt> userExtList) {
+    public ResultBean<Boolean> pbxSetExt(@RequestBody UccUsers uccUsers) {
+        List<UserExt> userExtList = uccUsers.getExt();
         Boolean result = false;
         try {
             int insertResult=0;
