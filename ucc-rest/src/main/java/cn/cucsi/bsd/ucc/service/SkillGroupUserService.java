@@ -22,6 +22,9 @@ public interface SkillGroupUserService {
     List<SkillGroupUser>  findSkillGroupUsersByUserIdEquals(String userId );
     Boolean deleteByUserId(String userId);
     Boolean update(String userId, String skillGroup);
+    List<SkillGroupUser> newFindAll(SkillGroupUserCriteria skillGroupUserCriteria);
+    int del(SkillGroupUser skillGroupUser);
+    int inse(SkillGroupUser skillGroupUser);
 
 
 }

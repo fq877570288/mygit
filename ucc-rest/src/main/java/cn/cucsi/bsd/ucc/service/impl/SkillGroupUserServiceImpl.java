@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.SkillGroupUserCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
+import cn.cucsi.bsd.ucc.common.mapper.SkillGroupUserMapper;
 import cn.cucsi.bsd.ucc.data.domain.SkillGroupUser;
 import cn.cucsi.bsd.ucc.data.domain.SkillGroupUserPK;
 import cn.cucsi.bsd.ucc.data.domain.UccSkillGroup;
@@ -34,6 +35,8 @@ public class SkillGroupUserServiceImpl implements SkillGroupUserService {
     UccUserRepository uccUserRepository;
     @Autowired
     UccSkillGroupRepository uccSkillGroupRepository;
+    @Autowired
+    private SkillGroupUserMapper skillGroupUserMapper;
 
 
 
@@ -59,6 +62,7 @@ public class SkillGroupUserServiceImpl implements SkillGroupUserService {
             sgu.setGroupName(groupName);
            UccUsers uu= uccUserRepository.findOne(userId);
            sgu.setUserName(uu.getUserName());
+           sgu.setNickName(uu.getNickName());
 
         }
         return  pageSkillGroupUser;
@@ -146,5 +150,18 @@ public class SkillGroupUserServiceImpl implements SkillGroupUserService {
         return true;
     }
 
+    @Override
+    public List<SkillGroupUser> newFindAll(SkillGroupUserCriteria skillGroupUserCriteria) {
+        return  skillGroupUserMapper.selectByPrimaryKey(skillGroupUserCriteria);
+    }
 
+    @Override
+    public int del(SkillGroupUser skillGroupUser) {
+        return  skillGroupUserMapper.deleteByPrimaryKey(skillGroupUser);
+    }
+
+    @Override
+    public int inse(SkillGroupUser skillGroupUser) {
+        return  skillGroupUserMapper.insert(skillGroupUser);
+    }
 }

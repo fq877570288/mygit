@@ -43,6 +43,7 @@ public class UccSkillGroupController {
     @ApiOperation(value = "创建uccSkillGroup", notes = "创建uccSkillGroup")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody  UccSkillGroup uccSkillGroup) {
+        uccSkillGroup.setStatus("1");
         boolean result=this.uccSkillGroupService.save(uccSkillGroup)!=null;
         return new ResultBean<>(result);
     }
@@ -71,7 +72,7 @@ public class UccSkillGroupController {
             if(list!=null&&list.size()!=0) {
                 //父ID
                 for (UccSkillGroup uccPermissions : list) {
-                    if (uccPermissions.getSkillGroupPid() == null || "".equals(uccPermissions.getSkillGroupPid())) {
+                    if (uccPermissions.getSkillGroupPid() == null || "".equals(uccPermissions.getSkillGroupPid()) || "0".equals(uccPermissions.getSkillGroupPid())) {
                         pIdList.add(uccPermissions);
                     }
                 }
