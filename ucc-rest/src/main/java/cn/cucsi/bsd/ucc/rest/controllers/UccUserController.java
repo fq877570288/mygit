@@ -235,7 +235,12 @@ public class UccUserController  {
 
     @ApiOperation(value = "创建UccUsers", notes = "创建UccUsers")
     @RequestMapping(value = "", method =  RequestMethod.POST)
-    public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers) {
+    public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers,HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        UccUsers sessionUser = (UccUsers) session.getAttribute("uccUsers");
+        uccUsers.setCreatedNickName(sessionUser.getNickName());
+        uccUsers.setCreatedUserId(sessionUser.getUserId());
+        uccUsers.setCreatedUserName(sessionUser.getUserName());
         uccUsers.setCreatedTime(new Date());
         this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
@@ -245,9 +250,14 @@ public class UccUserController  {
     @ApiOperation(value = "修改UccUsers", notes = "保存UccUsers")
     //@ApiImplicitParam(name = "uccUsers", value = "用户entity", required = true, dataType = "UccUsers")
     @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
-    public ResultBean<Boolean> save(@PathVariable String userId,@RequestBody UccUsers uccUsers){
+    public ResultBean<Boolean> save(@PathVariable String userId,@RequestBody UccUsers uccUsers,HttpServletRequest request){
         UccUsers targetUser = this.uccUserService.findOne(uccUsers.getUserId());
         UpdateUtil.copyNullProperties(targetUser,uccUsers);
+        HttpSession session = request.getSession();
+        UccUsers sessionUser = (UccUsers) session.getAttribute("uccUsers");
+        uccUsers.setUpdatedNickName(sessionUser.getNickName());
+        uccUsers.setUpdatedUserId(sessionUser.getUserId());
+        uccUsers.setUpdatedUserName(sessionUser.getUserName());
         uccUsers.setUpdatedTime(new Date());
         this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
