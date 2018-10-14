@@ -25,7 +25,7 @@
     where OC_IMPORT_BATCH.BATCH_FLAG = #{batchFlag,jdbcType=VARCHAR}
       and OC_IMPORT_BATCH.IMPORT_PERSON_ID = #{importPersonId,jdbcType=VARCHAR}
     <if test="importBatchs != null and importBatchs != ''">
-		or OC_IMPORT_BATCH.IMPORT_BATCH in ( ${importBatchs} )
+		AND OC_IMPORT_BATCH.IMPORT_BATCH in ( ${importBatchs} )
 	</if>
     order by OC_IMPORT_BATCH.IMPORT_TIME DESC
   </select>
