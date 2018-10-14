@@ -98,17 +98,23 @@ public class HomeController {
             map.put("exts", bean.getData());
             String deptIds = null;
             String deptIdAndChildId = DeptIdAndChildIds;
+            int wa = 0;
+            int wt = 0;
+            int oa = 0;
+            int on = 0;
+            int cd = 0;
+            int ct = 0;
             if (deptIdAndChildId != null && deptIdAndChildId.length() > 0) {
                 deptIdAndChildId = deptIdAndChildId.replaceAll(",", "','");
                 deptIds = "'" + deptIdAndChildId + "'";
+                //通过部门ID查询需要的信息数量
+                wa = taskService.selectWaitAllCount(deptIds,domainId);
+                wt = taskService.selectWaitTodayCount(deptIds,domainId);
+                oa = taskService.selectOngoingAllCount(deptIds,domainId);
+                on = taskService.selectOngoingNoCount(deptIds,domainId);
+                cd = taskService.selectCompleteByDaysCount(deptIds,domainId);
+                ct = taskService.selectCompleteTodayCount(deptIds,domainId);
             }
-            //通过部门ID查询需要的信息数量
-            int wa = taskService.selectWaitAllCount(deptIds,domainId);
-            int wt = taskService.selectWaitTodayCount(deptIds,domainId);
-            int oa = taskService.selectOngoingAllCount(deptIds,domainId);
-            int on = taskService.selectOngoingNoCount(deptIds,domainId);
-            int cd = taskService.selectCompleteByDaysCount(deptIds,domainId);
-            int ct = taskService.selectCompleteTodayCount(deptIds,domainId);
             map.put("wa", wa);
             map.put("wt", wt);
             map.put("oa", oa);
@@ -157,31 +163,34 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "主页Echars", notes = "主页Echars", httpMethod = "POST")
     @RequestMapping(value="/chartforpoint", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String ChartTaskList(TaskDetailSearch search){
+    public String ChartTaskList(TaskDetailSearch search,HttpSession session){
         JSONObject jsonObject = new JSONObject();
+        String DeptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
+        String deptIds = null;
         try{
             JSONArray j = new JSONArray();
             jsonObject.put("return_msg", "success");
             jsonObject.put("return_code", "success");
             String deptIdAndChildId = "";
-            if(search.getDeptIdAndChildIds() != null && search.getDeptIdAndChildIds().length() > 0){
+            if(DeptIdAndChildIds != null && DeptIdAndChildIds.length() > 0){
                 deptIdAndChildId = search.getDeptIdAndChildIds().replaceAll(",", "','");
+                deptIds = "'" + deptIdAndChildId + "'";
             }
-            String deptIds = "'" + deptIdAndChildId + "'";
+            int cTaskInts[] =  new int[]{0,0,0,0,0,0,0};
+            int eCallInts[] =  new int[]{0,0,0,0,0,0,0};
+            int aCallInts[] =  new int[]{0,0,0,0,0,0,0};
+            if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
+                for(int i=6; i>=0;i--){
+                    long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
+                    //把一天的完成任务数装到完成任务数组中
+                    cTaskInts[6-i]=taskService.queryCompleteTask(new Date(date),deptIds,search.getDomainId());
 
-            int cTaskInts[] =  new int[7];
-            int eCallInts[] =  new int[7];
-            int aCallInts[] =  new int[7];
-            for(int i=6; i>=0;i--){
-                long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
-                //把一天的完成任务数装到完成任务数组中
-                cTaskInts[6-i]=taskService.queryCompleteTask(new Date(date),deptIds,search.getDomainId());
+                    //把一天的有效电话数装到有效电话数组中
+                    eCallInts[6-i]=taskService.queryECall( new Date(date),deptIds,search.getDomainId());
 
-                //把一天的有效电话数装到有效电话数组中
-                eCallInts[6-i]=taskService.queryECall( new Date(date),deptIds,search.getDomainId());
-
-                //把一天的外呼电话数装到外呼电话数组中
-                aCallInts[6-i]=taskService.queryACall(new Date(date),deptIds,search.getDomainId());
+                    //把一天的外呼电话数装到外呼电话数组中
+                    aCallInts[6-i]=taskService.queryACall(new Date(date),deptIds,search.getDomainId());
+                }
             }
             String time = "";
             JSONObject json;
