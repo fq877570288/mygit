@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,7 +25,8 @@ public class UccDomainServersServiceImpl implements UccDomainServersService {
 
     @Override
     public Page<UccDomainServers> findAll(UccDomainServersCriteria criteria) {
-        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize());
+        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
+        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(),sort);
         return uccDomainServersRepository.findAll(UccDomainServersSpecs.createSpec(criteria), pageable);
     }
 

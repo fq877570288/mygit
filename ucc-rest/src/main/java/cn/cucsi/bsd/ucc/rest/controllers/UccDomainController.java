@@ -6,6 +6,7 @@ import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccDeptsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.UccDomainCriteria;
 import cn.cucsi.bsd.ucc.data.domain.*;
+import cn.cucsi.bsd.ucc.service.UccDomainServersService;
 import cn.cucsi.bsd.ucc.service.UccDomainService;
 import cn.cucsi.bsd.ucc.service.UccPermissionsService;
 import cn.cucsi.bsd.ucc.service.UccRolesService;
@@ -37,6 +38,7 @@ public class UccDomainController {
 
     @Autowired
     UccRolesService uccRolesService;
+
 
     @ApiOperation(value="根据查询条件获取域列表", notes="根据查询条件获取域列表", httpMethod = "POST")
     @JsonView(JSONView.DomainWithUser.class)
@@ -75,37 +77,14 @@ public class UccDomainController {
         UccUsers loginUser = (UccUsers) session.getAttribute("LoginUser");
         ResultBean<Object> resultBean = new ResultBean();
         if(loginUser != null && "uccAdmin".equals(loginUser.getUserId())){
-            uccDomain.setCreatedTime(new Date());
-            UccDomain domain = this.uccDomainService.save(uccDomain);
-            if(domain != null){
-                String uccDomainId = domain.getDomainId();
-                //给新增的租户创建一个对应的管理员角色
-                UccRoles roles = new UccRoles();
-                roles.setDomainId(uccDomainId);
-                roles.setRoleName("管理员");
-                roles.setCreatedNickName("平台管理员");
-                roles.setCreatedTime(new Date());
-                roles.setCreatedUserId("uccAdmin");
-                roles.setCreatedUserName("uccAdmin");
-
-                List<UccPermissions> permissionsList = uccPermissionsService.findAll(null);
-                if(permissionsList != null && permissionsList.size() > 0){
-
-                    Collection<UccPermissions> rolesPermissions = new ArrayList<>();
-                    rolesPermissions = permissionsList;
-                    roles.setUccPermissions(rolesPermissions);
-                }
-                uccRolesService.save(roles);
-            }
-
-            resultBean.setCode(0);
+//            uccDomain.setCreatedTime(new Date());
         }
         else{
             resultBean.setCode(1);
             resultBean.setMsg("该用户没有此操作权限");
         }
 
-        return resultBean;
+        return uccDomainService.createDomin(uccDomain);
     }
 
     @ApiOperation(value = "修改UccDomain", notes = "修改UccDomain")

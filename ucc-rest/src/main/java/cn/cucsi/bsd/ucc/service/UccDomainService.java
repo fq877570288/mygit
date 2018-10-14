@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.service;
 
 
+import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccDomainCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccDomain;
 import org.springframework.data.domain.Page;
@@ -18,5 +19,7 @@ public interface UccDomainService {
     Boolean updateStatusById(String domainId, String status);
 
     List<UccDomain> findAllOfNoPage(UccDomainCriteria criteria);
+
+    ResultBean<Object> createDomin(UccDomain uccDomain);
 
 }

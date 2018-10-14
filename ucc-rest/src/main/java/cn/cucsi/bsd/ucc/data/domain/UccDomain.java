@@ -114,8 +114,8 @@ public class UccDomain {
 
     @Id
     @Column(name = "domain_id", nullable = false, length = 32)
-    @GenericGenerator(name="idGenerator", strategy="uuid")
-    @GeneratedValue(generator="idGenerator")
+//    @GenericGenerator(name="idGenerator", strategy="uuid")
+//    @GeneratedValue(generator="idGenerator")
     public String getDomainId() {
         return domainId;
     }
