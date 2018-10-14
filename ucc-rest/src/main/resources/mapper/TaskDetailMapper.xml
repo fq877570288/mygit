@@ -1246,7 +1246,10 @@
     count(d.TASK_DETAIL_ID)
     from OC_TASK_DETAIL d
     where (d.TASK_STATUS = '1')
-    and ROPERATE_DEPT_ID in (${deptIds}) and d.domain_id = #{domainId}
+    <if test="deptIds !=null and deptIds!=''">
+      and ROPERATE_DEPT_ID in (${deptIds})
+    </if>
+    and d.domain_id = #{domainId}
   </select>
   <!-- 在办任务总量  zss (移植自outcall)-->
   <select id="selectOngoingAllCount" resultType="int" parameterType="java.util.Map">
@@ -1254,7 +1257,10 @@
     count(d.TASK_DETAIL_ID)
     from
     OC_TASK_DETAIL d
-    where d.ROPERATE_DEPT_ID in (${deptIds})
+    where 1=1
+    <if test="deptIds !=null and deptIds!=''">
+     AND d.ROPERATE_DEPT_ID in (${deptIds})
+    </if>
     and (d.TASK_STATUS = '3' or d.TASK_STATUS = '2') and d.domain_id = #{domainId}
   </select>
   <!-- 今日新增待办任务量   zss (移植自outcall)-->
@@ -1267,7 +1273,10 @@
     OC_TASK_TRANSFER r on d.TASK_DETAIL_ID = r.TASK_DETAIL_ID and r.TRANSFER_STATUS = d.TASK_STATUS
     where (d.TASK_STATUS = '1')
     and r.TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    and d.ROPERATE_DEPT_ID in (${deptIds})  and d.domain_id = #{domainId}
+    <if test="deptIds !=null and deptIds!=''">
+      and d.ROPERATE_DEPT_ID in (${deptIds})
+    </if>
+      and d.domain_id = #{domainId}
   </select>
   <!-- 办理过但是没办完的任务数量   zss (移植自outcall)-->
   <select id="selectOngoingNoCount" resultType="int" parameterType="java.util.Map">
@@ -1275,7 +1284,10 @@
     count(d.TASK_DETAIL_ID)
     from
     OC_TASK_DETAIL d
-    where d.ROPERATE_DEPT_ID in (${deptIds})
+    where 1=1
+    <if test="deptIds!=null and deptIds!=''">
+      and d.ROPERATE_DEPT_ID in (${deptIds})
+    </if>
     and d.TASK_STATUS = '3'  and d.domain_id = #{domainId}
   </select>
   <!-- 本月办结任务数量  zss (移植自outcall)-->
@@ -1288,7 +1300,10 @@
     OC_TASK_TRANSFER_RECORD r on d.TASK_RECORD_ID = r.TASK_RECORD_ID
     where r.TRANSFER_STATUS = '4'
     and r.TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    and d.OPERATOR_DEPT in (${deptIds})  and d.domain_id = #{domainId}
+    <if test="deptIds != null and deptIds!=''">
+      and d.OPERATOR_DEPT in (${deptIds})
+    </if>
+     and d.domain_id = #{domainId}
   </select>
   <!-- 今日办结任务数量   zss (移植自outcall)-->
   <select id="selectCompleteTodayCount" resultType="int" parameterType="java.util.Map">
@@ -1300,7 +1315,10 @@
     OC_TASK_TRANSFER_RECORD r on d.TASK_RECORD_ID = r.TASK_RECORD_ID
     where r.TRANSFER_STATUS = '4'
     and r.TRANSFER_TIME between #{dateStart} and #{dateEnd}
-    and d.OPERATOR_DEPT in (${deptIds})  and d.domain_id = #{domainId}
+    <if test="deptIds!=null and deptIds!=''">
+      and d.OPERATOR_DEPT in (${deptIds})
+    </if>
+     and d.domain_id = #{domainId}
   </select>
   <!-- 查询一天的完成任务数   zss (移植自outcall)-->
   <select id="queryCompleteTask" resultType="int" parameterType="java.util.Map">
