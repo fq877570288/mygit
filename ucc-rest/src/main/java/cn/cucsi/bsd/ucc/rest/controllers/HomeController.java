@@ -169,7 +169,6 @@ public class HomeController {
             JSONArray j = new JSONArray();
             jsonObject.put("return_msg", "success");
             jsonObject.put("return_code", "success");
-            String deptIdAndChildId = "";
             int cTaskInts[] =  new int[]{0,0,0,0,0,0,0};
             int eCallInts[] =  new int[]{0,0,0,0,0,0,0};
             int aCallInts[] =  new int[]{0,0,0,0,0,0,0};
