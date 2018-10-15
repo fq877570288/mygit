@@ -91,7 +91,12 @@ public class UccDomainController {
     @RequestMapping(value = "/{domainId}", method =  RequestMethod.PUT)
     public ResultBean<UccDomain> save(@PathVariable String domainId, @RequestBody UccDomain uccDomain){
         UccDomain targetDomain = this.uccDomainService.findOne(domainId);
+        String targetStatus = targetDomain.getStatus();
+        String status = uccDomain.getStatus();
         UpdateUtil.copyNullProperties(targetDomain,uccDomain);
+        if(status==null||"".equals(status)){
+            uccDomain.setStatus(targetStatus);
+        }
         uccDomain.setUpdatedTime(new Date());
         return new ResultBean<>(this.uccDomainService.save(uccDomain));
     }
