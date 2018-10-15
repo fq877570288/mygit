@@ -238,9 +238,15 @@ public class UccUserController  {
     public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers,HttpServletRequest request) {
         HttpSession session = request.getSession();
         UccUsers sessionUser = (UccUsers) session.getAttribute("uccUsers");
-        uccUsers.setCreatedNickName(sessionUser.getNickName());
-        uccUsers.setCreatedUserId(sessionUser.getUserId());
-        uccUsers.setCreatedUserName(sessionUser.getUserName());
+        if(sessionUser.getNickName()!=null&&!"".equals(sessionUser.getNickName())){
+            uccUsers.setCreatedNickName(sessionUser.getNickName());
+        }
+        if(sessionUser.getUserName()!=null&&!"".equals(sessionUser.getUserName())){
+            uccUsers.setCreatedUserName(sessionUser.getUserName());
+        }
+        if(sessionUser.getUserId()!=null&&!"".equals(sessionUser.getUserId())){
+            uccUsers.setCreatedUserId(sessionUser.getUserId());
+        }
         uccUsers.setCreatedTime(new Date());
         this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
@@ -255,9 +261,15 @@ public class UccUserController  {
         UpdateUtil.copyNullProperties(targetUser,uccUsers);
         HttpSession session = request.getSession();
         UccUsers sessionUser = (UccUsers) session.getAttribute("uccUsers");
-        uccUsers.setUpdatedNickName(sessionUser.getNickName());
-        uccUsers.setUpdatedUserId(sessionUser.getUserId());
-        uccUsers.setUpdatedUserName(sessionUser.getUserName());
+        if(sessionUser.getNickName()!=null&&!"".equals(sessionUser.getNickName())){
+            uccUsers.setUpdatedNickName(sessionUser.getNickName());
+        }
+        if(sessionUser.getUserName()!=null&&!"".equals(sessionUser.getUserName())){
+            uccUsers.setUpdatedUserName(sessionUser.getUserName());
+        }
+        if(sessionUser.getUserId()!=null&&!"".equals(sessionUser.getUserId())){
+            uccUsers.setUpdatedUserId(sessionUser.getUserId());
+        }
         uccUsers.setUpdatedTime(new Date());
         this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
