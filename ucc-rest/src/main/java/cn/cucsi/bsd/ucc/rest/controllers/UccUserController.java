@@ -120,6 +120,7 @@ public class UccUserController  {
     public  PageResultBean<List<UccUsers>> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response) {
         List<UccUsers> list =this.uccUserService.loginList(criteria);
         HttpSession session = request.getSession();
+        session.setMaxInactiveInterval(-1);//设置单位为秒，设置为-1永不过期
 
         Date date = new Date();
         SimpleDateFormat dtf = new SimpleDateFormat("yyyy年MM月dd日");
@@ -132,6 +133,18 @@ public class UccUserController  {
             search.setUserId(userId);
             //search.setIsLeftMenu("0");
             List<UccPermissionsAndUser> uccPermissionsList = tree(search);
+            String fistPath = "";
+            if(uccPermissionsList!=null&&uccPermissionsList.size()>0){
+                fistPath += uccPermissionsList.get(0).getPath();
+                if(uccPermissionsList.get(0).getChildren()!=null&&uccPermissionsList.get(0).getChildren().size()>0){
+                    String path = uccPermissionsList.get(0).getChildren().get(0).getPath();
+                    if(!path.startsWith("/")){
+                        path = "/"+path;
+                    }
+                    fistPath += path;
+                }
+            }
+            list.get(i).setFistPath(fistPath);
             list.get(i).setUccPermissions(uccPermissionsList);
             sessionValue=  list.get(i).getUserName()+"#"+ list.get(i).getPassword();
 
@@ -235,12 +248,21 @@ public class UccUserController  {
 
     @ApiOperation(value = "创建UccUsers", notes = "创建UccUsers")
     @RequestMapping(value = "", method =  RequestMethod.POST)
-    public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers,HttpServletRequest request) {
+    @ResponseBody
+    public ResultBean<Boolean> create(@RequestBody UccUsers uccUsers, HttpServletRequest request) {
         HttpSession session = request.getSession();
         UccUsers sessionUser = (UccUsers) session.getAttribute("uccUsers");
-        uccUsers.setCreatedNickName(sessionUser.getNickName());
-        uccUsers.setCreatedUserId(sessionUser.getUserId());
-        uccUsers.setCreatedUserName(sessionUser.getUserName());
+        if(sessionUser!=null){
+            if(sessionUser.getNickName()!=null&&!"".equals(sessionUser.getNickName())){
+                uccUsers.setCreatedNickName(sessionUser.getNickName());
+            }
+            if(sessionUser.getUserName()!=null&&!"".equals(sessionUser.getUserName())){
+                uccUsers.setCreatedUserName(sessionUser.getUserName());
+            }
+            if(sessionUser.getUserId()!=null&&!"".equals(sessionUser.getUserId())){
+                uccUsers.setCreatedUserId(sessionUser.getUserId());
+            }
+        }
         uccUsers.setCreatedTime(new Date());
         this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
@@ -250,14 +272,23 @@ public class UccUserController  {
     @ApiOperation(value = "修改UccUsers", notes = "保存UccUsers")
     //@ApiImplicitParam(name = "uccUsers", value = "用户entity", required = true, dataType = "UccUsers")
     @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+    @ResponseBody
     public ResultBean<Boolean> save(@PathVariable String userId,@RequestBody UccUsers uccUsers,HttpServletRequest request){
         UccUsers targetUser = this.uccUserService.findOne(uccUsers.getUserId());
         UpdateUtil.copyNullProperties(targetUser,uccUsers);
         HttpSession session = request.getSession();
         UccUsers sessionUser = (UccUsers) session.getAttribute("uccUsers");
-        uccUsers.setUpdatedNickName(sessionUser.getNickName());
-        uccUsers.setUpdatedUserId(sessionUser.getUserId());
-        uccUsers.setUpdatedUserName(sessionUser.getUserName());
+        if(sessionUser!=null) {
+            if (sessionUser.getNickName() != null && !"".equals(sessionUser.getNickName())) {
+                uccUsers.setUpdatedNickName(sessionUser.getNickName());
+            }
+            if (sessionUser.getUserName() != null && !"".equals(sessionUser.getUserName())) {
+                uccUsers.setUpdatedUserName(sessionUser.getUserName());
+            }
+            if (sessionUser.getUserId() != null && !"".equals(sessionUser.getUserId())) {
+                uccUsers.setUpdatedUserId(sessionUser.getUserId());
+            }
+        }
         uccUsers.setUpdatedTime(new Date());
         this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
@@ -413,6 +444,7 @@ public class UccUserController  {
     }
 
     private UccPermissionsAndUser copyProperties(UccPermissions uccPermissions,UccPermissionsAndUser uccPermissionsAndUser) {
+        uccPermissionsAndUser.setPermissionId(uccPermissions.getPermissionId());
         uccPermissionsAndUser.setName(uccPermissions.getPermissionName());
         uccPermissionsAndUser.setIcon(uccPermissions.getIcon());
         uccPermissionsAndUser.setPath(uccPermissions.getRoute());
@@ -421,6 +453,7 @@ public class UccUserController  {
         if(uccPermissionsList!=null&&uccPermissionsList.size()!=0){
             for (UccPermissions permissions : uccPermissionsList) {
                 UccPermissionsAndUserSecound permissionsAndUser = new UccPermissionsAndUserSecound();
+                permissionsAndUser.setPermissionId(permissions.getPermissionId());
                 permissionsAndUser.setName(permissions.getPermissionName());
                 permissionsAndUser.setIcon(permissions.getIcon());
                 permissionsAndUser.setPath(permissions.getRoute());
