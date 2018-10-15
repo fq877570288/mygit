@@ -264,6 +264,8 @@ public class UccUserController  {
             }
         }
         uccUsers.setCreatedTime(new Date());
+        uccUsers.setPassword("123456");
+        uccUsers.setUserStatus(0);
         this.uccUserService.saveMiddleTable(uccUsers);
         boolean result = this.uccUserService.save(uccUsers) != null;
         return new ResultBean<>(result);
