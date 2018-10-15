@@ -28,10 +28,10 @@ public class PbxCdrsCriteria extends BasicCriteria{
 
     private String isRecord2;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdTimeFrom;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdTimeTo;
 
     private Integer totalTimeFrom;
@@ -159,7 +159,7 @@ public class PbxCdrsCriteria extends BasicCriteria{
         return hangupCauseEn;
     }
 
-    public Date getCreateTimeTo() {
+    public Date getCreatedTimeTo() {
         return createdTimeTo;
     }
 
