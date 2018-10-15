@@ -156,6 +156,9 @@ public class UccUsers {
     private List<UccPermissionsAndUser> uccPermissions;
     @JsonView(JSONView.Summary.class)
     private JSONObject result;
+    @JsonView(JSONView.Summary.class)
+    private String fistPath;
+
 
     @ManyToMany
     @JoinTable(name="user_role",
@@ -837,5 +840,13 @@ public class UccUsers {
 
     public void setResult(JSONObject result) {
         this.result = result;
+    }
+
+    public String getFistPath() {
+        return fistPath;
+    }
+
+    public void setFistPath(String fistPath) {
+        this.fistPath = fistPath;
     }
 }

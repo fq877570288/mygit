@@ -41,7 +41,7 @@ public class UccDomainServiceImpl implements UccDomainService {
 
     @Override
     public Page<UccDomain> findAll(UccDomainCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
+        Sort sort = new Sort(Sort.Direction.DESC, "permissionId");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(),sort);
         return uccDomainRepository.findAll(UccDomainSpecs.createSpec(criteria), pageable);
 
