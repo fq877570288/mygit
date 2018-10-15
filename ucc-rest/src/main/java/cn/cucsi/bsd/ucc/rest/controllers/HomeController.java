@@ -203,9 +203,9 @@ public class HomeController {
                 time = sdf_M_D_CHINA.format(new Date(date));
                 json = new JSONObject();
                 json.put("month",time);
-                json.put("c",cTaskInts[i]);
-                json.put("e",eCallInts[i]);
-                json.put("a",aCallInts[i]);
+                json.put("每日完成任务数量",cTaskInts[i]);
+                json.put("有效电话数量",eCallInts[i]);
+                json.put("外呼电话数量",aCallInts[i]);
                 j.put(json);
                 json =null;
             }
