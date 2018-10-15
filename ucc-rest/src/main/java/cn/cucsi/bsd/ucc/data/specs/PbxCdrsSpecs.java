@@ -256,8 +256,8 @@ public class PbxCdrsSpecs {
         if(null != PbxCdrsCriteria.getCreatedTimeFrom()){
             specs = specs.and(createTimeThanOrEqualFrom(PbxCdrsCriteria.getCreatedTimeFrom()));
         }
-        if(null != PbxCdrsCriteria.getCreateTimeTo()){
-            specs = specs.and(createTimeLessOrEqualTo(PbxCdrsCriteria.getCreateTimeTo()));
+        if(null != PbxCdrsCriteria.getCreatedTimeTo()){
+            specs = specs.and(createTimeLessOrEqualTo(PbxCdrsCriteria.getCreatedTimeTo()));
         }
         if(null != PbxCdrsCriteria.getTotalTimeFrom()){
             specs = specs.and(totalTimeThanOrEqualFrom(PbxCdrsCriteria.getTotalTimeFrom()));
