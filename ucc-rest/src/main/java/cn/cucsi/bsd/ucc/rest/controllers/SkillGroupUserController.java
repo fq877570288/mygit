@@ -49,32 +49,19 @@ public class SkillGroupUserController {
     }
 
     @ApiOperation(value = "创建SkillGroupUser", notes = "创建SkillGroupUser")
-    @RequestMapping(value = "", method =  RequestMethod.POST)
+    @RequestMapping(value = "/create", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody SkillGroupUser skillGroupUser) {
         boolean result = false;
         try {
-            String[] usersIds = skillGroupUser.getUserId().split(",");
             SkillGroupUserCriteria skillGroupUserCriteria = new SkillGroupUserCriteria();
             skillGroupUserCriteria.setSkillGroupId(skillGroupUser.getSkillGroupId());
-            List<SkillGroupUser> queryList = skillGroupUserService.newFindAll(skillGroupUserCriteria);
             int insertResult=0;
             //技能组下有成员，先删除在添加
-            if(queryList.size()>0){
-                SkillGroupUser delSkillGroupUser = new SkillGroupUser();
-                delSkillGroupUser.setSkillGroupId(skillGroupUser.getSkillGroupId());
-                int delResult = skillGroupUserService.del(delSkillGroupUser);
-                if(delResult>0){
-                    for (String usersId : usersIds) {
-                        SkillGroupUser createSkillGroupUser = new SkillGroupUser();
-                        createSkillGroupUser.setSkillGroupId(skillGroupUser.getSkillGroupId());
-                        createSkillGroupUser.setUserId(usersId);
-                        insertResult = this.skillGroupUserService.inse(createSkillGroupUser);
-                    }
-                    if(insertResult!=0){
-                        result=true;
-                    }
-                }
-            }else {
+            SkillGroupUser delSkillGroupUser = new SkillGroupUser();
+            delSkillGroupUser.setSkillGroupId(skillGroupUser.getSkillGroupId());
+            skillGroupUserService.del(delSkillGroupUser);
+            if(skillGroupUser.getUserId().length()!=0){
+                String[] usersIds = skillGroupUser.getUserId().split(",");
                 for (String usersId : usersIds) {
                     SkillGroupUser createSkillGroupUser = new SkillGroupUser();
                     createSkillGroupUser.setSkillGroupId(skillGroupUser.getSkillGroupId());
@@ -84,6 +71,8 @@ public class SkillGroupUserController {
                 if(insertResult!=0){
                     result=true;
                 }
+            }else {
+                result=true;
             }
         }catch (Exception e){
             System.out.println("创建SkillGroupUser异常："+e);
