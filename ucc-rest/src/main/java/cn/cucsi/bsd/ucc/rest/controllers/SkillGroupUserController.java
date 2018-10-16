@@ -1,15 +1,12 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
-import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
-import cn.cucsi.bsd.ucc.common.beans.ResultBean;
-import cn.cucsi.bsd.ucc.common.beans.SkillGroupUserCriteria;
-import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
-import cn.cucsi.bsd.ucc.data.domain.SkillGroupUser;
-import cn.cucsi.bsd.ucc.data.domain.SkillGroupUserPK;
-import cn.cucsi.bsd.ucc.data.domain.UccUsers;
+import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.SkillGroupUserService;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,9 +49,34 @@ public class SkillGroupUserController {
     }
 
     @ApiOperation(value = "创建SkillGroupUser", notes = "创建SkillGroupUser")
-    @RequestMapping(value = "", method =  RequestMethod.POST)
+    @RequestMapping(value = "/create", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody SkillGroupUser skillGroupUser) {
-        boolean result = this.skillGroupUserService.save(skillGroupUser) != null;
+        boolean result = false;
+        try {
+            SkillGroupUserCriteria skillGroupUserCriteria = new SkillGroupUserCriteria();
+            skillGroupUserCriteria.setSkillGroupId(skillGroupUser.getSkillGroupId());
+            int insertResult=0;
+            //技能组下有成员，先删除在添加
+            SkillGroupUser delSkillGroupUser = new SkillGroupUser();
+            delSkillGroupUser.setSkillGroupId(skillGroupUser.getSkillGroupId());
+            skillGroupUserService.del(delSkillGroupUser);
+            if(skillGroupUser.getUserId().length()!=0){
+                String[] usersIds = skillGroupUser.getUserId().split(",");
+                for (String usersId : usersIds) {
+                    SkillGroupUser createSkillGroupUser = new SkillGroupUser();
+                    createSkillGroupUser.setSkillGroupId(skillGroupUser.getSkillGroupId());
+                    createSkillGroupUser.setUserId(usersId);
+                    insertResult = this.skillGroupUserService.inse(createSkillGroupUser);
+                }
+                if(insertResult!=0){
+                    result=true;
+                }
+            }else {
+                result=true;
+            }
+        }catch (Exception e){
+            System.out.println("创建SkillGroupUser异常："+e);
+        }
         return new ResultBean<>(result);
     }
 
@@ -99,6 +121,13 @@ public class SkillGroupUserController {
     public ResultBean<Boolean> update(  String userId, String skillGroup) {
         boolean result = this.skillGroupUserService.update(userId,skillGroup) != null;
         return new ResultBean<>(result);
+    }
+
+    @ApiOperation(value="根据查询条件获取技能组用户列表", notes="根据查询条件获取技能组用户列表", httpMethod = "POST")
+    @RequestMapping(value = "/newFindAll", method = RequestMethod.POST)
+    public List<SkillGroupUser> newFindAll(@RequestBody SkillGroupUserCriteria skillGroupUserCriteria) {
+        List<SkillGroupUser> list = skillGroupUserService.newFindAll(skillGroupUserCriteria);
+        return list;
     }
 
 

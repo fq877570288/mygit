@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.*;
 import io.swagger.annotations.Api;
@@ -9,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,7 @@ import java.util.*;
 public class HomeController {
     private static SimpleDateFormat sdf = new SimpleDateFormat("M.d");
     private static SimpleDateFormat sdf_M_D_CHINA = new SimpleDateFormat("M月d日");
+    private static SimpleDateFormat sdfd = new SimpleDateFormat("yyyy-MM-dd");
     @Autowired
     private PbxExtsService pbxExtsService;
     @Autowired
@@ -96,24 +99,20 @@ public class HomeController {
             search.setDomainId(domainId);
             PageResultBean<List<PbxExts>> bean = new PageResultBean(this.pbxExtsService.findAll(search));
             map.put("exts", bean.getData());
-            String deptIds = null;
-            String deptIdAndChildId = DeptIdAndChildIds;
             int wa = 0;
             int wt = 0;
             int oa = 0;
             int on = 0;
             int cd = 0;
             int ct = 0;
-            if (deptIdAndChildId != null && deptIdAndChildId.length() > 0) {
-                deptIdAndChildId = deptIdAndChildId.replaceAll(",", "','");
-                deptIds = "'" + deptIdAndChildId + "'";
+            if (DeptIdAndChildIds != null && DeptIdAndChildIds.length() > 0) {
                 //通过部门ID查询需要的信息数量
-                wa = taskService.selectWaitAllCount(deptIds,domainId);
-                wt = taskService.selectWaitTodayCount(deptIds,domainId);
-                oa = taskService.selectOngoingAllCount(deptIds,domainId);
-                on = taskService.selectOngoingNoCount(deptIds,domainId);
-                cd = taskService.selectCompleteByDaysCount(deptIds,domainId);
-                ct = taskService.selectCompleteTodayCount(deptIds,domainId);
+                wa = taskService.selectWaitAllCount(DeptIdAndChildIds,domainId);
+                wt = taskService.selectWaitTodayCount(DeptIdAndChildIds,domainId);
+                oa = taskService.selectOngoingAllCount(DeptIdAndChildIds,domainId);
+                on = taskService.selectOngoingNoCount(DeptIdAndChildIds,domainId);
+                cd = taskService.selectCompleteByDaysCount(DeptIdAndChildIds,domainId);
+                ct = taskService.selectCompleteTodayCount(DeptIdAndChildIds,domainId);
             }
             map.put("wa", wa);
             map.put("wt", wt);
@@ -163,34 +162,43 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "主页Echars", notes = "主页Echars", httpMethod = "POST")
     @RequestMapping(value="/chartforpoint", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String ChartTaskList(TaskDetailSearch search,HttpSession session){
+    public String ChartTaskList(@RequestBody TaskDetailSearch search, HttpSession session){
         JSONObject jsonObject = new JSONObject();
         String DeptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
-        String deptIds = null;
         try{
             JSONArray j = new JSONArray();
             jsonObject.put("return_msg", "success");
             jsonObject.put("return_code", "success");
-            String deptIdAndChildId = "";
-            if(DeptIdAndChildIds != null && DeptIdAndChildIds.length() > 0){
-                deptIdAndChildId = search.getDeptIdAndChildIds().replaceAll(",", "','");
-                deptIds = "'" + deptIdAndChildId + "'";
-            }
             int cTaskInts[] =  new int[]{0,0,0,0,0,0,0};
             int eCallInts[] =  new int[]{0,0,0,0,0,0,0};
             int aCallInts[] =  new int[]{0,0,0,0,0,0,0};
+            String[] times = new String[7];
+            for(int i=6; i>=0;i--){
+                times[i] = sdfd.format(new Date(new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000));
+            }
+            String CompleteTasksql = "";
+            String ECallsql = "";
+            String ACallsql = "";
             if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
-                for(int i=6; i>=0;i--){
+                CompleteTasksql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"CompleteTask");
+                ECallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ECall");
+                ACallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ACall");
+            }
+            if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
+                cTaskInts = taskService.queryCompleteTask(CompleteTasksql);
+                eCallInts = taskService.queryECall(ECallsql);
+                aCallInts = taskService.queryACall(ACallsql);
+               /* for(int i=6; i>=0;i--){
                     long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
                     //把一天的完成任务数装到完成任务数组中
-                    cTaskInts[6-i]=taskService.queryCompleteTask(new Date(date),deptIds,search.getDomainId());
+                    cTaskInts[6-i]=taskService.queryCompleteTask(new Date(date),DeptIdAndChildIds,search.getDomainId());
 
                     //把一天的有效电话数装到有效电话数组中
-                    eCallInts[6-i]=taskService.queryECall( new Date(date),deptIds,search.getDomainId());
+                    eCallInts[6-i]=taskService.queryECall( new Date(date),DeptIdAndChildIds,search.getDomainId());
 
                     //把一天的外呼电话数装到外呼电话数组中
-                    aCallInts[6-i]=taskService.queryACall(new Date(date),deptIds,search.getDomainId());
-                }
+                    aCallInts[6-i]=taskService.queryACall(new Date(date),DeptIdAndChildIds,search.getDomainId());
+                }*/
             }
             String time = "";
             JSONObject json;
@@ -199,9 +207,9 @@ public class HomeController {
                 time = sdf_M_D_CHINA.format(new Date(date));
                 json = new JSONObject();
                 json.put("month",time);
-                json.put("c",cTaskInts[i]);
-                json.put("e",eCallInts[i]);
-                json.put("a",aCallInts[i]);
+                json.put("每日完成任务数量",cTaskInts[i]);
+                json.put("有效电话数量",eCallInts[i]);
+                json.put("外呼电话数量",aCallInts[i]);
                 j.put(json);
                 json =null;
             }

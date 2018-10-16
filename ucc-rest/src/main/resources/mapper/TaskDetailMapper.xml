@@ -1001,6 +1001,9 @@
     <if test="importBatch != null and importBatch != ''">
       and d.IMPORT_BATCH = #{importBatch}
     </if>
+    <if test="taskTypeName != null and taskTypeName != ''">
+      and e.TASK_TYPE_NAME LIKE '%${taskTypeName}%'
+    </if>
   </select>
 
   <select id="selectBySearch" resultMap="BaseResultMap"
@@ -1030,6 +1033,9 @@
     <include refid="Sql_AllocationWhere" />
     <if test="importBatch != null and importBatch != ''">
       and d.IMPORT_BATCH = #{importBatch}
+    </if>
+    <if test="taskTypeName != null and taskTypeName != ''">
+      and e.TASK_TYPE_NAME LIKE '%${taskTypeName}%'
     </if>
     order by d.TASK_CODE DESC
     <if test="begin != null and showLines != null and showLines != 0">
@@ -1325,43 +1331,16 @@
      and d.domain_id = #{domainId}
   </select>
   <!-- 查询一天的完成任务数   zss (移植自outcall)-->
-  <select id="queryCompleteTask" resultType="int" parameterType="java.util.Map">
-    select count(*)
-    from OC_TASK_RECORD d
-    inner join
-    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
-    where
-    <![CDATA[
-		 	r.ROPERATE_DEPT_ID in (${deptIds})
-		 	and TRANSFER_TIME between #{dateStart} and #{dateEnd}
-		 ]]> and d.domain_id = #{domainId}
+  <select id="queryCompleteTask" resultType="int" parameterType="java.lang.String">
+    ${sql}
   </select>
   <!-- 查询一天的有效电话任务数   zss (移植自outcall)-->
-  <select id="queryECall" resultType="int" parameterType="java.util.Map">
-    select count(*)
-    from OC_TASK_RECORD d
-    inner join
-    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
-    inner join pbx_cdrs c on c.cdr_id = r.CDR_ID
-    where
-    <![CDATA[
-		 	r.ROPERATE_DEPT_ID in (${deptIds})
-		 	and c.call_time>=5 and
-         	TRANSFER_TIME between #{dateStart} and #{dateEnd}
-         ]]> and d.domain_id = #{domainId}
+  <select id="queryECall" resultType="int" parameterType="java.lang.String">
+     ${sql}
   </select>
   <!-- 查询一天的所有外呼任务数   zss (移植自outcall)-->
-  <select id="queryACall" resultType="int" parameterType="java.util.Map">
-    select count(*)
-    from OC_TASK_RECORD d
-    inner join
-    OC_TASK_TRANSFER_RECORD r ON d.TASK_RECORD_ID = r.TASK_RECORD_ID and r.TRANSFER_STATUS = '4'
-    inner join pbx_cdrs c on c.cdr_id = r.CDR_ID
-    where
-    <![CDATA[
-		 	r.ROPERATE_DEPT_ID in (${deptIds})
-		 	and TRANSFER_TIME between #{dateStart} and #{dateEnd}
-         ]]> and d.domain_id = #{domainId}
+  <select id="queryACall" resultType="int" parameterType="java.lang.String">
+    ${sql}
   </select>
 
     <!-- 任务监控列表 -->

@@ -10,6 +10,8 @@ import java.util.List;
 @ApiModel
 public class UccPermissionsCriteria  extends  BasicCriteria{
 
+    private String permissionId;
+
     private String userId;
 
 
@@ -49,5 +51,13 @@ public class UccPermissionsCriteria  extends  BasicCriteria{
 
     public void setIsLeftMenu(String isLeftMenu) {
         this.isLeftMenu = isLeftMenu;
+    }
+
+    public String getPermissionId() {
+        return permissionId;
+    }
+
+    public void setPermissionId(String permissionId) {
+        this.permissionId = permissionId;
     }
 }
