@@ -78,10 +78,12 @@ public interface UccUsersMapper {
 
     UccUsers selectByPrimaryKey2(String userId);
 
-
     // 根据部门查询所有用户列表
     List<UccUsers> selectByDept(UserDeptCriteria search);
 
     List<UccUsers> selectSameDeptUserIdByUserId(String userId);
 
+    List<UccUsers> selectTeamUserByDomainId(UccUserCriteria uccUserCriteria);
+
+    List<UccUsers> selectNoTeamUserByDomainId(UccUserCriteria uccUserCriteria);
 }

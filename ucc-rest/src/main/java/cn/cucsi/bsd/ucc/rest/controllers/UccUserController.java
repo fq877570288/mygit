@@ -79,27 +79,15 @@ public class UccUserController  {
         return list;
     }
 
-    @ApiOperation(value="根据类型查询所有用户列表", notes="根据类型查询所有用户列表", httpMethod = "GET")
-    @RequestMapping(value = "/findAllByType/{type}", method= RequestMethod.GET)
-    @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
-    public PageResultBean<List<UccUsers>> findAllByType(@PathVariable String type){
-        PageResultBean<List<UccUsers>> list = new PageResultBean<>();
+    @ApiOperation(value="根据类型查询所有用户列表", notes="根据类型查询所有用户列表", httpMethod = "POST")
+    @RequestMapping(value = "/findAllByType/{type}", method= RequestMethod.POST)
+    public ResultBean<List<UccUsers>> findAllByType(@PathVariable String type,@RequestBody UccUserCriteria uccUserCriteria){
+        ResultBean<List<UccUsers>> resultBean = new ResultBean<>();
         if("team".equals(type)){
-            UccUserCriteria criteria = new UccUserCriteria();
-            list = new PageResultBean(this.teamUsersService.addFindAll(criteria));
-            List<UccUsers> uccUsersList = list.getData();
-            Integer totalElements = 0;
-            List<UccUsers> resultUccUsersList = new ArrayList<>();
-            for (UccUsers uccUsers : uccUsersList) {
-                if(uccUsers.getTeamUsers().size()==0){
-                    totalElements+=1;
-                    resultUccUsersList.add(uccUsers);
-                }
-            }
-            list.setTotalElements(totalElements);
-            list.setData(resultUccUsersList);
+            List<UccUsers> uccUsersList = teamUsersService.addFindAll(uccUserCriteria);
+            resultBean.setData(uccUsersList);
         }
-        return list;
+        return resultBean;
     }
 
     @ApiOperation(value="验证用户名是否重复", notes="验证用户名是否重复", httpMethod = "GET")

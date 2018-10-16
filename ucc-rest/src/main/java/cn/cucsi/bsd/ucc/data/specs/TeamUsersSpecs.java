@@ -32,6 +32,15 @@ public class TeamUsersSpecs {
         };
     }
 
+    public static Specification<UccUsers> domainIdEqual(final String domainId) {
+        return new Specification<UccUsers>() {
+            @Override
+            public Predicate toPredicate(Root<UccUsers> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("domainId"),domainId);
+            }
+        };
+    }
+
     public static Specification<UccUsers> createTimeThanOrEqualTo(final Date from) {
         return new Specification<UccUsers>() {
             @Override
@@ -62,6 +71,9 @@ public class TeamUsersSpecs {
 
         if(!Strings.isNullOrEmpty(criteria.getTeamId())){
             specs = specs.and(teamIdEqual(criteria.getTeamId()));
+        }
+        if(!Strings.isNullOrEmpty(criteria.getDomainId())){
+            specs = specs.and(domainIdEqual(criteria.getDomainId()));
         }
 
         if(null != criteria.getCreatedTimeFrom()){

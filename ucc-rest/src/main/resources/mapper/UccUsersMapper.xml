@@ -43,6 +43,7 @@
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="user_status" property="userStatus" jdbcType="INTEGER" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
+    <result column="teamsName" property="teamsName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, address1, address2, address3, address4, age, birthday, created_nick_name, 
@@ -617,6 +618,52 @@
         LEFT JOIN user_dept b ON a.user_id = b.user_id
         LEFT JOIN ucc_depts c ON c.dept_id = b.dept_id
     WHERE a.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
+  <!-- 查询班组成员列表 -->
+  <select id="selectTeamUserByDomainId" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccUserCriteria" >
+    SELECT
+        uu.*,
+      GROUP_CONCAT(
+            teams.team_name SEPARATOR ","
+        ) AS teamsName
+    FROM
+        ucc_users uu
+    LEFT JOIN (
+        SELECT
+            tu.user_id,
+            ut.team_name
+        FROM
+            team_users tu
+        INNER JOIN ucc_teams ut ON tu.team_id = ut.team_id
+    ) teams ON teams.user_id = uu.user_id
+    WHERE 1=1
+        AND  teams.team_name != ""
+        <if test="domainId != null and domainId!=''" >
+          AND uu.domain_id =#{domainId,jdbcType=VARCHAR}
+        </if>
+    GROUP BY uu.user_id
+  </select>
+
+  <!-- 查询不带班组信息的成员 -->
+  <select id="selectNoTeamUserByDomainId" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccUserCriteria" >
+    SELECT
+    uu.*
+    FROM
+    ucc_users uu
+    LEFT JOIN (
+    SELECT
+    tu.user_id,
+    ut.team_name
+    FROM
+    team_users tu
+    INNER JOIN ucc_teams ut ON tu.team_id = ut.team_id
+    ) teams ON teams.user_id = uu.user_id
+    WHERE 1=1
+    AND  teams.team_name IS NULL
+    <if test="domainId != null and domainId!=''" >
+      AND uu.domain_id =#{domainId,jdbcType=VARCHAR}
+    </if>
   </select>
 
 
