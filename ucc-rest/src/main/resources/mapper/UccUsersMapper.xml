@@ -44,6 +44,7 @@
     <result column="user_status" property="userStatus" jdbcType="INTEGER" />
     <result column="user_type" property="userType" jdbcType="INTEGER" />
     <result column="teamsName" property="teamsName" jdbcType="VARCHAR" />
+    <result column="teamsId" property="teamsId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     user_id, address1, address2, address3, address4, age, birthday, created_nick_name, 
@@ -626,13 +627,17 @@
         uu.*,
       GROUP_CONCAT(
             teams.team_name SEPARATOR ","
-        ) AS teamsName
+        ) AS teamsName,
+      GROUP_CONCAT(
+      teams.team_id SEPARATOR ","
+      ) AS teamsId
     FROM
         ucc_users uu
     LEFT JOIN (
         SELECT
             tu.user_id,
-            ut.team_name
+            ut.team_name,
+            ut.team_id
         FROM
             team_users tu
         INNER JOIN ucc_teams ut ON tu.team_id = ut.team_id
