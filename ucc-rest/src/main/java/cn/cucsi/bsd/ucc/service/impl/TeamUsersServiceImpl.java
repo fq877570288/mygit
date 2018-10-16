@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.UccUserCriteria;
 import cn.cucsi.bsd.ucc.common.mapper.TeamUsersMapper;
+import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.data.repo.TeamUsersRepository;
 import cn.cucsi.bsd.ucc.data.repo.UccUserRepository;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class TeamUsersServiceImpl implements TeamUsersService{
 
@@ -24,19 +27,17 @@ public class TeamUsersServiceImpl implements TeamUsersService{
     private UccUserRepository uccUserRepository;
     @Autowired
     private TeamUsersMapper teamUsersMapper;
+    @Autowired
+    private UccUsersMapper uccUsersMapper;
 
     @Override
-    public Page<UccUsers> findAll(UccUserCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
-        Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
-        return uccUserRepository.findAll(TeamUsersSpecs.createSpec(criteria), pageable);
+    public List<UccUsers> findAll(UccUserCriteria criteria) {
+        return uccUsersMapper.selectTeamUserByDomainId(criteria);
     }
 
     @Override
-    public Page<UccUsers> addFindAll(UccUserCriteria criteria) {
-        Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
-        Pageable pageable = new PageRequest(0, 999999, sort);
-        return uccUserRepository.findAll(TeamUsersSpecs.createSpec(criteria), pageable);
+    public List<UccUsers> addFindAll(UccUserCriteria criteria) {
+        return uccUsersMapper.selectNoTeamUserByDomainId(criteria);
     }
 
     @Override

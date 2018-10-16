@@ -156,6 +156,7 @@ public class UccUsers {
     private List<UccPermissionsAndUser> uccPermissions;
     @JsonView(JSONView.Summary.class)
     private JSONObject result;
+    private String teamsName;
 
     @ManyToMany
     @JoinTable(name="user_role",
@@ -837,5 +838,13 @@ public class UccUsers {
 
     public void setResult(JSONObject result) {
         this.result = result;
+    }
+
+    public String getTeamsName() {
+        return teamsName;
+    }
+
+    public void setTeamsName(String teamsName) {
+        this.teamsName = teamsName;
     }
 }
