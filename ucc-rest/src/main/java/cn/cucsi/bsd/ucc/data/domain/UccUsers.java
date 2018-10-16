@@ -158,8 +158,12 @@ public class UccUsers {
     @JsonView(JSONView.Summary.class)
     private JSONObject result;
     @JsonView(JSONView.Summary.class)
+
+    @Transient
     private String fistPath;
+    @Transient
     private String teamsName;
+    @Transient
     private String teamsId;
 
 
@@ -845,6 +849,7 @@ public class UccUsers {
         this.result = result;
     }
 
+    @Transient
     public String getFistPath() {
         return fistPath;
     }
@@ -853,6 +858,7 @@ public class UccUsers {
         this.fistPath = fistPath;
     }
 
+    @Transient
     public String getTeamsName() {
         return teamsName;
     }
@@ -869,6 +875,7 @@ public class UccUsers {
         this.teamsList = teamsList;
     }
 
+    @Transient
     public String getTeamsId() {
         return teamsId;
     }
