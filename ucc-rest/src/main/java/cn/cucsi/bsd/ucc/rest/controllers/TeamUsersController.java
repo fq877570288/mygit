@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.JSONView;
 import cn.cucsi.bsd.ucc.common.beans.*;
+import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.TeamUsersService;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -24,10 +26,16 @@ public class TeamUsersController {
     @ApiOperation(value="根据查询条件获取班组成员列表", notes="根据查询条件获取班组成员列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     public  PageResultBean_New<List<UccUsers>> findAll(@RequestBody UccUserCriteria criteria){
-        Page pageInfo = PageHelper.startPage(criteria.getPage(), criteria.getSize());
-        List<UccUsers> list = teamUsersService.findAll(criteria);
-        PageResultBean_New<List<UccUsers>> pageResultBean_new = new PageResultBean_New(pageInfo);
-        pageResultBean_new.setList(list);
+        PageResultBean_New<List<UccUsers>> pageResultBean_new = null;
+        try {
+            Page pageInfo = PageHelper.startPage(criteria.getPage(), criteria.getSize());
+            List<UccUsers> list = teamUsersService.findAll(criteria);
+            pageResultBean_new = new PageResultBean_New(pageInfo);
+            pageResultBean_new.setList(list);
+        } catch (Exception e) {
+            System.out.println("获取班组成员列表异常:"+e);
+            return null;
+        }
         return pageResultBean_new;
     }
 

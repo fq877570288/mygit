@@ -647,6 +647,18 @@
         <if test="domainId != null and domainId!=''" >
           AND uu.domain_id =#{domainId,jdbcType=VARCHAR}
         </if>
+        <if test="teamId != null and teamId!=''" >
+          AND teams.team_id =#{teamId,jdbcType=VARCHAR}
+        </if>
+        <if test="userName != null and userName!=''" >
+          AND uu.user_name =#{userName,jdbcType=VARCHAR}
+        </if>
+        <if test="createdTimeStart != null ">
+          and  DATE_FORMAT(uu.created_time,'%Y-%m-%d') &gt;= #{createdTimeStart}
+        </if>
+        <if test="createdTimeEnd != null ">
+          and  DATE_FORMAT(uu.created_time,'%Y-%m-%d') &lt;= #{createdTimeEnd}
+        </if>
     GROUP BY uu.user_id
   </select>
 
