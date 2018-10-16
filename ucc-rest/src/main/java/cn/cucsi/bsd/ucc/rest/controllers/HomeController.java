@@ -176,10 +176,14 @@ public class HomeController {
             for(int i=6; i>=0;i--){
                 times[i] = sdfd.format(new Date(new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000));
             }
-            String CompleteTasksql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"CompleteTask");
-            String ECallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ECall");
-            String ACallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ACall");
-
+            String CompleteTasksql = "";
+            String ECallsql = "";
+            String ACallsql = "";
+            if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
+                CompleteTasksql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"CompleteTask");
+                ECallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ECall");
+                ACallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ACall");
+            }
             if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
                 cTaskInts = taskService.queryCompleteTask(CompleteTasksql);
                 eCallInts = taskService.queryECall(ECallsql);
