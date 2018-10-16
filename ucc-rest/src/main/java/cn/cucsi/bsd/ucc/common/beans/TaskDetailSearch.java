@@ -29,6 +29,9 @@ public class TaskDetailSearch  extends Paging {
 	@ApiModelProperty(value = "受理部门",required = false)
     private String roperateDeptId; // 受理部门
 
+	@ApiModelProperty(value = "受理部门名称",required = false)
+	private String deptName; //部门名称
+
 	@ApiModelProperty(value = "流转操作",required = false)
     private String taskStatus; // 流转操作
 
@@ -369,5 +372,13 @@ public class TaskDetailSearch  extends Paging {
 
 	public void setBusinesscode(String businesscode) {
 		this.businesscode = businesscode;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
 }
