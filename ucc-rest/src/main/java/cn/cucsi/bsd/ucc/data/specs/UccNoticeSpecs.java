@@ -70,15 +70,7 @@ public class UccNoticeSpecs {
             }
         };
     }
-    public static Specification<UccNotice> domainIdEqual(final String domainId) {
-
-        return new Specification<UccNotice>() {
-            @Override
-            public Predicate toPredicate(Root<UccNotice> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.<String>get("domainId"), domainId);
-            }
-        };
-    }
+    
 
     public static Specification<UccNotice> createSpec(final UccNoticeCriteria criteria) {
 
@@ -105,10 +97,7 @@ public class UccNoticeSpecs {
         if(null != criteria.getNoticeTimeTo()){
             specs = specs.and(uccNoticeEndDateEqual(criteria.getNoticeTimeTo()));
         }
-        if(!Strings.isNullOrEmpty(criteria.getDomainId())){
-            specs = specs.and(domainIdEqual(criteria.getDomainId()));
-        }
-        //System.out.println("2222");
+        System.out.println("2222");
         return specs;
     }
 }

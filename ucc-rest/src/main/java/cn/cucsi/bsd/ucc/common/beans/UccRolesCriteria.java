@@ -14,7 +14,7 @@ public class UccRolesCriteria extends  BasicCriteria {
     private String blacklist_flag;
     private String created_user_id;
     private String created_user_name;
-    private String domainId;
+    private String domain_id;
     private String sensitive_flag;
     private String updated_user_id;
     private String updated_user_name;
@@ -54,6 +54,14 @@ public class UccRolesCriteria extends  BasicCriteria {
 
     public void setCreated_user_name(String created_user_name) {
         this.created_user_name = created_user_name;
+    }
+
+    public String getDomain_id() {
+        return domain_id;
+    }
+
+    public void setDomain_id(String domain_id) {
+        this.domain_id = domain_id;
     }
 
     public String getSensitive_flag() {
@@ -96,14 +104,6 @@ public class UccRolesCriteria extends  BasicCriteria {
 
     public void setCreatedTimeTo(Date createdTimeTo) {
         this.createdTimeTo = createdTimeTo;
-    }
-
-    public String getDomainId() {
-        return domainId;
-    }
-
-    public void setDomainId(String domainId) {
-        this.domainId = domainId;
     }
     
 }

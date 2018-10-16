@@ -126,7 +126,7 @@ public class PbxCdrsController {
     }
     @ApiOperation(value = "根据查询条件获取导出文件", notes = "根据查询条件获取导出文件")
     @RequestMapping(value = "/findAllExport",method= RequestMethod.GET)
-    public void exportCdrs(HttpServletResponse rsp, @ModelAttribute PbxCdrsCriteria pbxCdrsCriteria) throws Exception {
+    public void exportCdrs(HttpServletResponse rsp, PbxCdrsCriteria pbxCdrsCriteria) throws Exception {
         String filename = new String("通话记录".getBytes("ISO8859-1"), "UTF-8");
         ExportUtil export = new ExportUtil(rsp,filename, "通话记录", PbxCdrsExcelCriteria.class);	//实例化一个jxlExport
         List<PbxCdrs> list = this.PbxCdrsService.findAllExcel(pbxCdrsCriteria);
@@ -141,10 +141,10 @@ public class PbxCdrsController {
                 bean.setCreatedTime(row.getCreatedTime());
                 bean.setFirstCallee(row.getFirstCallee());
                 bean.setFirstCaller(row.getFirstCaller());
-                bean.setHangupCause(row.getHangupCauseStr());
+                bean.setHangupCause(row.getHangupCause());
                 bean.setHangupTime(row.getHangupTime());
                 bean.setTotalTime(row.getTotalTime());
-                //System.out.println(row.getHangupCauseStr());   
+                System.out.println(row.getCreatedTime());   
                 export.writeRow(bean);
                 //bean = null;
             }

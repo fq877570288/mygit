@@ -61,11 +61,9 @@ public class PbxExtsServiceImpl implements PbxExtsService {
             String extId= pbxExts.getExtId();
             List<PbxExtGroups> extGroupExtslist = pbxExtGroupsRepository.findpbxExtGroupsByExtId(extId);
             String extGroupsByExtId = "";
-            for (PbxExtGroups pbxExtGroups:extGroupExtslist) {
+            for (PbxExtGroups pbxExtGroups:extGroupExtslist
+                    ) {
                 extGroupsByExtId = extGroupsByExtId + pbxExtGroups.getGroupName()+",";
-            }
-            if(extGroupsByExtId.length()>0) {
-                extGroupsByExtId = extGroupsByExtId.substring(0, extGroupsByExtId.length() - 1);
             }
             pbxExts.setExtGroupsByExtId(extGroupsByExtId);
         }

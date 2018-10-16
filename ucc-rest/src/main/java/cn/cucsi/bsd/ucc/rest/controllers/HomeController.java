@@ -169,6 +169,7 @@ public class HomeController {
             JSONArray j = new JSONArray();
             jsonObject.put("return_msg", "success");
             jsonObject.put("return_code", "success");
+            String deptIdAndChildId = "";
             int cTaskInts[] =  new int[]{0,0,0,0,0,0,0};
             int eCallInts[] =  new int[]{0,0,0,0,0,0,0};
             int aCallInts[] =  new int[]{0,0,0,0,0,0,0};
@@ -176,14 +177,10 @@ public class HomeController {
             for(int i=6; i>=0;i--){
                 times[i] = sdfd.format(new Date(new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000));
             }
-            String CompleteTasksql = "";
-            String ECallsql = "";
-            String ACallsql = "";
-            if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
-                CompleteTasksql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"CompleteTask");
-                ECallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ECall");
-                ACallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ACall");
-            }
+            String CompleteTasksql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"CompleteTask");
+            String ECallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ECall");
+            String ACallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ACall");
+
             if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
                 cTaskInts = taskService.queryCompleteTask(CompleteTasksql);
                 eCallInts = taskService.queryECall(ECallsql);
@@ -207,9 +204,9 @@ public class HomeController {
                 time = sdf_M_D_CHINA.format(new Date(date));
                 json = new JSONObject();
                 json.put("month",time);
-                json.put("每日完成任务数量",cTaskInts[i]);
-                json.put("有效电话数量",eCallInts[i]);
-                json.put("外呼电话数量",aCallInts[i]);
+                json.put("c",cTaskInts[i]);
+                json.put("e",eCallInts[i]);
+                json.put("a",aCallInts[i]);
                 j.put(json);
                 json =null;
             }

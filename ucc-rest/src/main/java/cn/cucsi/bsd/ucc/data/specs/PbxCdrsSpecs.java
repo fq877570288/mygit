@@ -82,15 +82,6 @@ public class PbxCdrsSpecs {
             }
         };
     }
-    public static Specification<PbxCdrs> domainIdEqual(final String domainId) {
-
-        return new Specification<PbxCdrs>() {
-            @Override
-            public Predicate toPredicate(Root<PbxCdrs> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.<String>get("domainId"), domainId);
-            }
-        };
-    }
     public static Specification<PbxCdrs> hangupCauseEqual(final String hangupCause) {
         return new Specification<PbxCdrs>() {
             @Override
@@ -186,7 +177,7 @@ public class PbxCdrsSpecs {
         return new Specification<PbxCdrs>() {
             @Override
             public Predicate toPredicate(Root<PbxCdrs> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.<Integer>get("type"), type);
+                return criteriaBuilder.lessThanOrEqualTo(root.<Integer>get("type"), type);
             }
         };
     }
@@ -255,18 +246,16 @@ public class PbxCdrsSpecs {
             specs = specs.and(afterqueueEqual(PbxCdrsCriteria.getAfterqueueId()));
         }
         if(!Strings.isNullOrEmpty(PbxCdrsCriteria.getHangupCauseEn())){
-            specs = specs.and(hangupCauseEqual(PbxCdrsCriteria.getHangupCauseEn()));
+            specs = specs.and(afterqueueEqual(PbxCdrsCriteria.getHangupCauseEn()));
         }
-        /*
         if(!Strings.isNullOrEmpty(PbxCdrsCriteria.getHangupCauseEn())){
             specs = specs.and(afterqueueEqual(PbxCdrsCriteria.getHangupCauseEn()));
         }
-*/
-        if(null != PbxCdrsCriteria.getCreatedTimeFrom()){
-            specs = specs.and(createTimeThanOrEqualFrom(PbxCdrsCriteria.getCreatedTimeFrom()));
+        if(null != PbxCdrsCriteria.getCreateTimeFrom()){
+            specs = specs.and(createTimeThanOrEqualFrom(PbxCdrsCriteria.getCreateTimeFrom()));
         }
-        if(null != PbxCdrsCriteria.getCreatedTimeTo()){
-            specs = specs.and(createTimeLessOrEqualTo(PbxCdrsCriteria.getCreatedTimeTo()));
+        if(null != PbxCdrsCriteria.getCreateTimeTo()){
+            specs = specs.and(createTimeLessOrEqualTo(PbxCdrsCriteria.getCreateTimeTo()));
         }
         if(null != PbxCdrsCriteria.getTotalTimeFrom()){
             specs = specs.and(totalTimeThanOrEqualFrom(PbxCdrsCriteria.getTotalTimeFrom()));
@@ -274,11 +263,11 @@ public class PbxCdrsSpecs {
         if(null != PbxCdrsCriteria.getTotalTimeTo()){
             specs = specs.and(totalTimeThanOrEqualTo(PbxCdrsCriteria.getTotalTimeTo()));
         }
-        if(null != PbxCdrsCriteria.getCallTimeBegin()){
-            specs = specs.and(callTimeThanOrEqualFrom(PbxCdrsCriteria.getCallTimeBegin()));
+        if(null != PbxCdrsCriteria.getCallTimeFrom()){
+            specs = specs.and(callTimeThanOrEqualFrom(PbxCdrsCriteria.getCallTimeFrom()));
         }
-        if(null != PbxCdrsCriteria.getCallTimeEnd()){
-            specs = specs.and(callTimeThanOrEqualTo(PbxCdrsCriteria.getCallTimeEnd()));
+        if(null != PbxCdrsCriteria.getCallTimeTo()){
+            specs = specs.and(callTimeThanOrEqualTo(PbxCdrsCriteria.getCallTimeTo()));
         }
         if(null != PbxCdrsCriteria.getSatisfaction()){
             specs = specs.and(qcEqual(PbxCdrsCriteria.getSatisfaction()));
@@ -286,25 +275,23 @@ public class PbxCdrsSpecs {
         if(null != PbxCdrsCriteria.getType()){
             specs = specs.and(typeEqual(PbxCdrsCriteria.getType()));
         }
-        if(null != PbxCdrsCriteria.getIsRecord1() && PbxCdrsCriteria.getIsRecord1().equals("1"))
+        if(PbxCdrsCriteria.getIsRecord1() == "1")
         {
             specs = specs.and(recordid1EqualNull());
         }
-        else if(null != PbxCdrsCriteria.getIsRecord1() && PbxCdrsCriteria.getIsRecord1().equals("2"))
+        else if(PbxCdrsCriteria.getIsRecord1() == "2")
         {
             specs = specs.and(recordid1EqualNotNull());
         }
-        if(null != PbxCdrsCriteria.getIsRecord2() && PbxCdrsCriteria.getIsRecord2().equals("1"))
+        if(PbxCdrsCriteria.getIsRecord2() == "1")
         {
             specs = specs.and(recordid2EqualNull());
         }
-        else if(null != PbxCdrsCriteria.getIsRecord2() && PbxCdrsCriteria.getIsRecord2().equals("2"))
+        else if(PbxCdrsCriteria.getIsRecord2() == "2")
         {
             specs = specs.and(recordid2EqualNotNull());
         }
-        if(!Strings.isNullOrEmpty(PbxCdrsCriteria.getDomainId())){
-            specs = specs.and(domainIdEqual(PbxCdrsCriteria.getDomainId()));
-        }
+
         return specs;
     }
 }
