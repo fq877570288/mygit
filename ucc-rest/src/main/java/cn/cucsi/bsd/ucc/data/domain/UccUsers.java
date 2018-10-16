@@ -158,6 +158,7 @@ public class UccUsers {
     private JSONObject result;
     @JsonView(JSONView.Summary.class)
     private String fistPath;
+    private String teamsName;
 
 
     @ManyToMany
@@ -848,5 +849,13 @@ public class UccUsers {
 
     public void setFistPath(String fistPath) {
         this.fistPath = fistPath;
+    }
+
+    public String getTeamsName() {
+        return teamsName;
+    }
+
+    public void setTeamsName(String teamsName) {
+        this.teamsName = teamsName;
     }
 }
