@@ -518,6 +518,6 @@ public class UccUserController  {
     public JSONObject login(HttpServletRequest request, ObjectMapper mapper) {
         ChatLogin chatLogin = new ChatLogin();
         JSONObject re = chatLogin.login(request, mapper, redisTemplate);
-        return null;
+        return re;
     }
 }
