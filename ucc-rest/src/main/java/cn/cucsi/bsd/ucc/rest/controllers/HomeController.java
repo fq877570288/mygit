@@ -54,14 +54,14 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "主页逻辑块", notes = "主页逻辑块", httpMethod = "GET")
     @RequestMapping(value = "/index", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public Map<String,Object> IndexView(String domainId, String userId) throws Exception {
-        Map<String,Object> map = new HashMap<String,Object>();
+    public Map<String, Object> IndexView(String domainId, String userId) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
             PbxExtsCriteria search = new PbxExtsCriteria();
             search.setDomainId(domainId);
             PageResultBean<List<PbxExts>> bean = new PageResultBean(this.pbxExtsService.findAll(search));
             //未读消息
-            int countNotice = uccNoticeService.selectByFlagCount(userId,domainId);
+            int countNotice = uccNoticeService.selectByFlagCount(userId, domainId);
             UccNoticeCriteria uccNoticeCriteriaSearch = new UccNoticeCriteria();
             uccNoticeCriteriaSearch.setNoticeType("1");
             uccNoticeCriteriaSearch.setUserId(userId);
@@ -89,9 +89,9 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "主页视图Plus", notes = "主页视图Plus", httpMethod = "GET")
     @RequestMapping(value = "/index1", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public Map<String,Object> IndexView1(String domainId, String userId, HttpSession session) throws Exception {
-        Map<String,Object> map = new HashMap<String,Object>();
-        String DeptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
+    public Map<String, Object> IndexView1(String domainId, String userId, HttpSession session) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        String DeptIdAndChildIds = (String) session.getAttribute("DeptIdAndChildIds");
         try {
             map.put("return_msg", "success");
             map.put("return_code", "success");
@@ -107,12 +107,12 @@ public class HomeController {
             int ct = 0;
             if (DeptIdAndChildIds != null && DeptIdAndChildIds.length() > 0) {
                 //通过部门ID查询需要的信息数量
-                wa = taskService.selectWaitAllCount(DeptIdAndChildIds,domainId);
-                wt = taskService.selectWaitTodayCount(DeptIdAndChildIds,domainId);
-                oa = taskService.selectOngoingAllCount(DeptIdAndChildIds,domainId);
-                on = taskService.selectOngoingNoCount(DeptIdAndChildIds,domainId);
-                cd = taskService.selectCompleteByDaysCount(DeptIdAndChildIds,domainId);
-                ct = taskService.selectCompleteTodayCount(DeptIdAndChildIds,domainId);
+                wa = taskService.selectWaitAllCount(DeptIdAndChildIds, domainId);
+                wt = taskService.selectWaitTodayCount(DeptIdAndChildIds, domainId);
+                oa = taskService.selectOngoingAllCount(DeptIdAndChildIds, domainId);
+                on = taskService.selectOngoingNoCount(DeptIdAndChildIds, domainId);
+                cd = taskService.selectCompleteByDaysCount(DeptIdAndChildIds, domainId);
+                ct = taskService.selectCompleteTodayCount(DeptIdAndChildIds, domainId);
             }
             map.put("wa", wa);
             map.put("wt", wt);
@@ -129,7 +129,7 @@ public class HomeController {
             Page<UccNotice> pageUccNotice = uccNoticeService.findAll(uccNoticeCriteriaSearch);
 
             map.put("count", pageUccNotice.getTotalElements());
-            map.put("countNotice", uccNoticeService.selectByFlagTypeCount(userId,domainId));
+            map.put("countNotice", uccNoticeService.selectByFlagTypeCount(userId, domainId));
             map.put("noticeList", pageUccNotice.getContent());
             //
             UccNoticeCriteria searchSevenDay = new UccNoticeCriteria();
@@ -144,7 +144,7 @@ public class HomeController {
             searchSevenDay.setNoticeType("0");
             searchSevenDay.setDomainId(domainId);
             Page<UccNotice> pageUccNotice1 = uccNoticeService.findAll(searchSevenDay);
-            int countNoticeAndAffiche = uccNoticeService.selectByFlagCount(userId,domainId);
+            int countNoticeAndAffiche = uccNoticeService.selectByFlagCount(userId, domainId);
             map.put("noticeList1", pageUccNotice1.getContent());
             map.put("countNotice1", countNoticeAndAffiche);
             return map;
@@ -156,32 +156,35 @@ public class HomeController {
         map.put("return_code", "error");
         return map;
     }
+
     /***
      * 任务查询列表查询
      */
     //@UserFlag
     @ApiOperation(value = "主页Echars", notes = "主页Echars", httpMethod = "POST")
-    @RequestMapping(value="/chartforpoint", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    public String ChartTaskList(@RequestBody TaskDetailSearch search, HttpSession session){
+    @RequestMapping(value = "/chartforpoint", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    public String ChartTaskList(@RequestBody TaskDetailSearch search, HttpSession session) {
         JSONObject jsonObject = new JSONObject();
-        String DeptIdAndChildIds = (String)session.getAttribute("DeptIdAndChildIds");
-        try{
+        String DeptIdAndChildIds = (String) session.getAttribute("DeptIdAndChildIds");
+        try {
             JSONArray j = new JSONArray();
             jsonObject.put("return_msg", "success");
             jsonObject.put("return_code", "success");
             String deptIdAndChildId = "";
-            int cTaskInts[] =  new int[]{0,0,0,0,0,0,0};
-            int eCallInts[] =  new int[]{0,0,0,0,0,0,0};
-            int aCallInts[] =  new int[]{0,0,0,0,0,0,0};
+            int cTaskInts[] = new int[]{0, 0, 0, 0, 0, 0, 0};
+            int eCallInts[] = new int[]{0, 0, 0, 0, 0, 0, 0};
+            int aCallInts[] = new int[]{0, 0, 0, 0, 0, 0, 0};
             String[] times = new String[7];
-            for(int i=6; i>=0;i--){
-                times[i] = sdfd.format(new Date(new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000));
+            for (int i = 6; i >= 0; i--) {
+                times[i] = sdfd.format(new Date(new Date(System.currentTimeMillis()).getTime() - i * 24 * 60 * 60 * 1000));
             }
-            String CompleteTasksql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"CompleteTask");
-            String ECallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ECall");
-            String ACallsql = new MyUtils().generateSQL(times,search.getDomainId(),DeptIdAndChildIds,"ACall");
-
-            if(DeptIdAndChildIds!=null&&DeptIdAndChildIds.length()!=0){
+            String CompleteTasksql = "";
+            String ECallsql = "";
+            String ACallsql = "";
+            if (DeptIdAndChildIds != null && DeptIdAndChildIds.length() != 0) {
+                CompleteTasksql = new MyUtils().generateSQL(times, search.getDomainId(), DeptIdAndChildIds, "CompleteTask");
+                ECallsql = new MyUtils().generateSQL(times, search.getDomainId(), DeptIdAndChildIds, "ECall");
+                ACallsql = new MyUtils().generateSQL(times, search.getDomainId(), DeptIdAndChildIds, "ACall");
                 cTaskInts = taskService.queryCompleteTask(CompleteTasksql);
                 eCallInts = taskService.queryECall(ECallsql);
                 aCallInts = taskService.queryACall(ACallsql);
@@ -199,40 +202,41 @@ public class HomeController {
             }
             String time = "";
             JSONObject json;
-            for(int i=6; i>=0;i--){
-                long date = new Date(System.currentTimeMillis()).getTime()-i*24*60*60*1000;
+            for (int i = 6; i >= 0; i--) {
+                long date = new Date(System.currentTimeMillis()).getTime() - i * 24 * 60 * 60 * 1000;
                 time = sdf_M_D_CHINA.format(new Date(date));
                 json = new JSONObject();
-                json.put("month",time);
-                json.put("c",cTaskInts[i]);
-                json.put("e",eCallInts[i]);
-                json.put("a",aCallInts[i]);
+                json.put("month", time);
+                json.put("每日完成任务数量", cTaskInts[i]);
+                json.put("有效电话数量", eCallInts[i]);
+                json.put("外呼电话数量", aCallInts[i]);
                 j.put(json);
-                json =null;
+                json = null;
             }
             jsonObject.put("data", j);
             return jsonObject.toString();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("主页Echars失败！");
             e.printStackTrace();
         }
-        try{
+        try {
             jsonObject.put("return_msg", "error");
             jsonObject.put("return_code", "error");
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("封装json失败");
             e.printStackTrace();
         }
         return jsonObject.toString();
     }
+
     /**
      * 监控中心
      */
     //@UserFlag(870)
     @ApiOperation(value = "监控中心", notes = "监控中心", httpMethod = "GET")
     @RequestMapping(value = "/monitor", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public Map<String,Object> MonitorView(String domainId) throws Exception {
-        Map<String,Object> map = new HashMap<String,Object>();
+    public Map<String, Object> MonitorView(String domainId) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
             map.put("return_msg", "success");
             map.put("return_code", "success");
@@ -276,8 +280,8 @@ public class HomeController {
     //@UserFlag(870)
     @ApiOperation(value = "员工详情", notes = "员工详情", httpMethod = "GET")
     @RequestMapping(value = "/monitor/userInfo", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public Map<String,Object> taskDetail(String userId, String extNum) throws Exception {
-        Map<String,Object> map = new HashMap<String,Object>();
+    public Map<String, Object> taskDetail(String userId, String extNum) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
             map.put("return_msg", "success");
             map.put("return_code", "success");
@@ -304,8 +308,8 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "用户中心", notes = "用户中心", httpMethod = "GET")
     @RequestMapping(value = "/user/center", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public Map<String,Object> userCenterView(String userId) throws Exception {
-        Map<String,Object> map = new HashMap<String,Object>();
+    public Map<String, Object> userCenterView(String userId) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
         try {
             map.put("return_msg", "success");
             map.put("return_code", "success");
