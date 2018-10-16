@@ -1001,6 +1001,9 @@
     <if test="importBatch != null and importBatch != ''">
       and d.IMPORT_BATCH = #{importBatch}
     </if>
+    <if test="taskTypeName != null and taskTypeName != ''">
+      and e.TASK_TYPE_NAME LIKE '%${taskTypeName}%'
+    </if>
   </select>
 
   <select id="selectBySearch" resultMap="BaseResultMap"
@@ -1030,6 +1033,9 @@
     <include refid="Sql_AllocationWhere" />
     <if test="importBatch != null and importBatch != ''">
       and d.IMPORT_BATCH = #{importBatch}
+    </if>
+    <if test="taskTypeName != null and taskTypeName != ''">
+      and e.TASK_TYPE_NAME LIKE '%${taskTypeName}%'
     </if>
     order by d.TASK_CODE DESC
     <if test="begin != null and showLines != null and showLines != 0">

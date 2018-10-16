@@ -21,7 +21,7 @@ spring:
     interactive_timeout: 28800000 # zss 解决8小时断链
     wait_timeout: 28800000 # zss 解决8小时断链
     #none, validate, update, create, create-drop
-    jpa.hibernate.ddl-auto: update
+    jpa.hibernate.ddl-auto: none
 
     boot:
         admin:
