@@ -1402,6 +1402,9 @@
         <if test="endTime != null and endTime != ''">
             and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &lt;= #{endTime}
         </if>
+        <if test="deptName != null and deptName != ''">
+           and p.dept_name = #{deptName}
+        </if>
         <include refid="Sql_MonitorWhere" />
     </select>
 
@@ -1440,6 +1443,9 @@
         </if>
         <if test="endTime != null and endTime != ''">
             and  DATE_FORMAT(TRANSFER_TIME,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+        <if test="deptName != null and deptName != ''">
+            and  p.dept_name = #{deptName}
         </if>
         <include refid="Sql_MonitorWhere" />
         order by d.TASK_STATUS, d.TASK_CODE DESC
