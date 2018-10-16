@@ -51,6 +51,8 @@ public class UccUserController  {
     private UccDeptsServiceImpl uccDeptsServiceImpl;
     @Autowired
     private UserExtService userExtService;
+    @Autowired
+    private DataCustomfieldService dataCustomfieldService;
 
     @ApiOperation(value="根据查询条件获取用户列表", notes="根据查询条件获取用户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
@@ -117,7 +119,7 @@ public class UccUserController  {
     @ApiOperation(value="根据查询条件获取用户", notes="根据查询条件获取用户", httpMethod = "POST")
     @RequestMapping(value = "/login", method= RequestMethod.POST)
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
-    public  PageResultBean<List<UccUsers>> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response) {
+    public  PageResultBean<List<UccUsers>> login(@RequestBody UccUserCriteria criteria, HttpServletRequest request, HttpServletResponse response) throws Exception {
         List<UccUsers> list =this.uccUserService.loginList(criteria);
         HttpSession session = request.getSession();
         session.setMaxInactiveInterval(-1);//设置单位为秒，设置为-1永不过期
@@ -161,6 +163,8 @@ public class UccUserController  {
                 j++;
             }
             session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);*/
+            List<DataCustomfield> dataCustomfieldExportList = dataCustomfieldService.selectExportByUserID(list.get(i).getUserId().toString());
+            session.setAttribute("dataCustomfieldExportList",dataCustomfieldExportList);
             List<UccDepts> uccDeptsList = new ArrayList<UccDepts>(deptList);
             List<UccDepts> udList = uccDeptsServiceImpl.queryChildrenByDepts(list.get(i).getDomainId(),uccDeptsList);
             session.setAttribute("DeptIdList", udList);
@@ -512,8 +516,8 @@ public class UccUserController  {
     @ResponseBody
     @RequestMapping(value = "/chat/login", produces = "application/json;charset=UTF-8", method=RequestMethod.GET)
     public JSONObject login(HttpServletRequest request, ObjectMapper mapper) {
-        ChatLogin chatLogin = new ChatLogin();
-        JSONObject re = chatLogin.login(request, mapper, redisTemplate);
-        return re;
+        /*ChatLogin chatLogin = new ChatLogin();
+        JSONObject re = chatLogin.login(request, mapper, redisTemplate);*/
+        return null;
     }
 }
