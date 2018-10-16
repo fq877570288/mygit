@@ -82,6 +82,15 @@ public class PbxCdrsSpecs {
             }
         };
     }
+    public static Specification<PbxCdrs> domainIdEqual(final String domainId) {
+
+        return new Specification<PbxCdrs>() {
+            @Override
+            public Predicate toPredicate(Root<PbxCdrs> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.<String>get("domainId"), domainId);
+            }
+        };
+    }
     public static Specification<PbxCdrs> hangupCauseEqual(final String hangupCause) {
         return new Specification<PbxCdrs>() {
             @Override
@@ -293,7 +302,9 @@ public class PbxCdrsSpecs {
         {
             specs = specs.and(recordid2EqualNotNull());
         }
-
+        if(!Strings.isNullOrEmpty(PbxCdrsCriteria.getDomainId())){
+            specs = specs.and(domainIdEqual(PbxCdrsCriteria.getDomainId()));
+        }
         return specs;
     }
 }

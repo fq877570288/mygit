@@ -45,7 +45,15 @@ public class PbxCdrsCriteria extends BasicCriteria{
     private Integer satisfaction;//满意度qc
 
     private Integer type;
-    
+    private String domainId;
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
    
     
     public void setfirstCaller(String firstCaller) {
