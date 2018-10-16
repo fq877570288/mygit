@@ -62,6 +62,16 @@ public class PbxExts {
     @Transient
     private String extGroupName;
     @Transient
+    private String extGroupExtIds;
+    @Transient
+    public String getExtGroupExtIds() {
+        return extGroupExtIds;
+    }
+
+    public void setExtGroupExtIds(String extGroupExtIds) {
+        this.extGroupExtIds = extGroupExtIds;
+    }
+    @Transient
     public String getUsername() {
         return username;
     }
