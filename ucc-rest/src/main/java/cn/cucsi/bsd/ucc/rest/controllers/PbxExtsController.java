@@ -81,7 +81,7 @@ public class PbxExtsController {
     @ApiOperation(value = "新增/修改PbxExts", notes = "新增/修改PbxExts")
     @RequestMapping(value = "/createOne", method = RequestMethod.POST)
     public ResultBean<Boolean> createOne(@RequestBody PbxExts PbxExts, String extGroupExts) {
-        boolean result = this.PbxExtsService.saveOne(PbxExts, extGroupExts) != null;
+        boolean result = this.PbxExtsService.saveOne(PbxExts, PbxExts.getExtGroupExtIds()) != null;
         if(result){
             PbxReload.reloadExtAsync(PbxExts, "create", zk);
         }

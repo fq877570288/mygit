@@ -31,7 +31,7 @@ public class UccDomain {
     @JsonView(JSONView.Summary.class)
     private String domainDesc;//域描述
     @JsonView(JSONView.Summary.class)
-    private String status = "1";//状态
+    private String status;//状态
     @JsonView(JSONView.Summary.class)
     private String addr1;//地址1
     @JsonView(JSONView.Summary.class)

@@ -227,15 +227,13 @@ public class DataExportController {
 	 * 导出数据
 	 */
 	@ApiOperation(value="导出数据", notes="导出数据")
-	@RequestMapping(value = "/export", method= RequestMethod.POST)
-	public Map<String,Object> Export(@RequestBody TaskRecordSearch taskRecordSearch , HttpSession session, HttpServletResponse response){
-
-		Map<String,Object> exportMap = new HashMap<String,Object>();
-		exportMap.put("msg","导出数据操作失败！");
-		exportMap.put("code","-1");
-
+	@RequestMapping(value = "/export/{importBatch}", method= RequestMethod.GET)
+	public void Export(@PathVariable String importBatch, HttpSession session, HttpServletResponse response){
+		TaskRecordSearch taskRecordSearch = new TaskRecordSearch();
+		if(!MyUtils.isBlank(importBatch)){
+			taskRecordSearch.setImportBatch(importBatch);
+		}
 		List<TaskRecord> list = null;
-		exportMap.put("infourl", "/dataExportList");
 		try {
 			taskRecordSearch.setShowLines(0);
 			list = taskRecordService.selectAll(taskRecordSearch);
@@ -244,50 +242,41 @@ public class DataExportController {
 				list.add(_tr);
 			}
 			List<DataCustomfield> dataCustomfieldList = (List<DataCustomfield>) session.getAttribute("DataCustomExportfields");
-			if(MyUtils.isBlank(dataCustomfieldList)){
-				exportMap.put("msg","session中DataCustomExportfields为空！");
-				return exportMap;
+			if(!MyUtils.isBlank(dataCustomfieldList)){
+                String[] keys = new String[dataCustomfieldList.size()];
+                StringBuffer sb = new StringBuffer();
+                for(int i = 0; i< dataCustomfieldList.size();i++){
+                    if(sb!=null){
+                        sb.append(",");
+                    }
+                    if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("recordTime")){
+                        sb.append("reTime");
+                    }else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("importTime")){
+                        sb.append("trTime");
+                    }else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("operatorDept")){
+                        sb.append("operatorDName");
+                    }else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("importPersonId")){
+                        sb.append("importPersonName");
+                    }else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("operatorId")){
+                        sb.append("operatorName");
+                    }else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("callResult")){
+                        sb.append("callResultName");
+                    }
+                    else{
+                        sb.append(dataCustomfieldList.get(i).getDataCustomfieldsId());
+                    }
+                    keys[i]=dataCustomfieldList.get(i).getCustomfieldsName();
+                }
+                String tmarray = sb.toString() ;
+                //导出列表
+                JxlExcelUtils.exportexcle(response, "列表", list, "work", keys,TaskRecord.class,null,tmarray);
 			}
-			String[] keys = new String[dataCustomfieldList.size()];
-			StringBuffer sb = new StringBuffer();
-			for(int i = 0; i< dataCustomfieldList.size();i++){
-				if(sb!=null){
-					sb.append(",");
-				}
-				if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("recordTime")){
-					sb.append("reTime");
-				}else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("importTime")){
-					sb.append("trTime");
-				}else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("operatorDept")){
-					sb.append("operatorDName");
-				}else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("importPersonId")){
-					sb.append("importPersonName");
-				}else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("operatorId")){
-					sb.append("operatorName");
-				}else if(dataCustomfieldList.get(i).getDataCustomfieldsId().equals("callResult")){
-					sb.append("callResultName");
-				}
-				else{
-					sb.append(dataCustomfieldList.get(i).getDataCustomfieldsId());
-				}
-				keys[i]=dataCustomfieldList.get(i).getCustomfieldsName();
-				
-			}
-			String tmarray = sb.toString() ;
-		    //导出列表
-		    JxlExcelUtils.exportexcle(response, "列表", list, "work", keys,TaskRecord.class,null,tmarray);
-			exportMap.put("msg","导出操作成功！");
-			exportMap.put("code","0");
-			exportMap.put("taskRecordSearch","taskRecordSearch");
-			exportMap.put("userId", Auth.getLoginUser(session).getUserId());
-			return exportMap;
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
 			if(e instanceof RowsExceededException){
-				exportMap.put("msg","导出数据量过大！");
+                System.out.println("导出数据量过大！");
 			}
-			return exportMap;
 		}
 	}
 

@@ -65,6 +65,9 @@ public class PbxExtsServiceImpl implements PbxExtsService {
                     ) {
                 extGroupsByExtId = extGroupsByExtId + pbxExtGroups.getGroupName()+",";
             }
+            if(extGroupsByExtId.length()>0) {
+                extGroupsByExtId = extGroupsByExtId.substring(0, extGroupsByExtId.length() - 1);
+            }
             pbxExts.setExtGroupsByExtId(extGroupsByExtId);
         }
         return pbxExtsPage;
