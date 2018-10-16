@@ -78,20 +78,25 @@ public class UccDomainController {
         ResultBean<Object> resultBean = new ResultBean();
         if(loginUser != null && "uccAdmin".equals(loginUser.getUserId())){
 //            uccDomain.setCreatedTime(new Date());
+            return uccDomainService.createDomin(uccDomain);
         }
         else{
             resultBean.setCode(1);
             resultBean.setMsg("该用户没有此操作权限");
+            return resultBean;
         }
-
-        return uccDomainService.createDomin(uccDomain);
     }
 
     @ApiOperation(value = "修改UccDomain", notes = "修改UccDomain")
     @RequestMapping(value = "/{domainId}", method =  RequestMethod.PUT)
     public ResultBean<UccDomain> save(@PathVariable String domainId, @RequestBody UccDomain uccDomain){
         UccDomain targetDomain = this.uccDomainService.findOne(domainId);
+        String targetStatus = targetDomain.getStatus();
+        String status = uccDomain.getStatus();
         UpdateUtil.copyNullProperties(targetDomain,uccDomain);
+        if(status==null||"".equals(status)){
+            uccDomain.setStatus(targetStatus);
+        }
         uccDomain.setUpdatedTime(new Date());
         return new ResultBean<>(this.uccDomainService.save(uccDomain));
     }

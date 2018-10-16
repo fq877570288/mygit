@@ -39,16 +39,6 @@ public class UccRolesSpecs {
         };
     }
 
-
-    public static Specification<UccRoles> domainIdEqual(final String domainId) {
-        return new Specification<UccRoles>() {
-            @Override
-            public Predicate toPredicate(Root<UccRoles> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get("domainId"), domainId);
-            }
-        };
-    }
-
     public static Specification<UccRoles> createTimeThanOrEqualTo(final Date from) {
         return new Specification<UccRoles>() {
             @Override
@@ -73,9 +63,6 @@ public class UccRolesSpecs {
         Specifications specs = where(spec);
         if(!Strings.isNullOrEmpty(criteria.getRoleName())){
             specs = specs.and(roleNameLike(criteria.getRoleName()));
-        }
-        if(!Strings.isNullOrEmpty(criteria.getDomainId())){
-            specs = specs.and(domainIdEqual(criteria.getDomainId()));
         }
         if(null != criteria.getCreatedTimeFrom()){
             specs = specs.and(createTimeThanOrEqualTo(criteria.getCreatedTimeFrom()));
