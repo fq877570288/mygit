@@ -18,10 +18,14 @@ public class UccUserCriteria extends BasicCriteria {
     private String nickName;
     private String extNum;
     private String teamId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeFrom;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeTo;
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    private Date createdTimeStart;
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    private Date createdTimeEnd;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLoginTimeFrom;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -85,6 +89,23 @@ public class UccUserCriteria extends BasicCriteria {
 
     public void setCreatedTimeTo(Date createdTimeTo) {
         this.createdTimeTo = createdTimeTo;
+    }
+
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    public Date getCreatedTimeStart() {
+        return createdTimeStart;
+    }
+
+    public void setCreatedTimeStart(Date createdTimeStart) {
+        this.createdTimeStart = createdTimeStart;
+    }
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone="GMT+8")
+    public Date getCreatedTimeEnd() {
+        return createdTimeEnd;
+    }
+
+    public void setCreatedTimeEnd(Date createdTimeEnd) {
+        this.createdTimeEnd = createdTimeEnd;
     }
 
     public Date getLastLoginTimeFrom() {
