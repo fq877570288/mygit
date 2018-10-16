@@ -163,6 +163,8 @@ public class UccUserController  {
                 j++;
             }
             session.setAttribute("DeptIdAndChildIds", DeptIdAndChildIds);*/
+            List<DataCustomfield> dataCustomfields = dataCustomfieldService.selectImportByUserID(list.get(i).getUserId().toString());
+            session.setAttribute("dataCustomfields",dataCustomfields);
             List<DataCustomfield> dataCustomfieldExportList = dataCustomfieldService.selectExportByUserID(list.get(i).getUserId().toString());
             session.setAttribute("dataCustomfieldExportList",dataCustomfieldExportList);
             List<UccDepts> uccDeptsList = new ArrayList<UccDepts>(deptList);
