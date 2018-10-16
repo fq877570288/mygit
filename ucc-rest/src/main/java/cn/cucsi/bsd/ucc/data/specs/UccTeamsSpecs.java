@@ -29,6 +29,16 @@ public class UccTeamsSpecs {
             }
         };
     }
+
+
+    public static Specification<UccTeams> teamDomainId(final String domainId) {
+        return new Specification<UccTeams>() {
+            @Override
+            public Predicate toPredicate(Root<UccTeams> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.<String>get("domainId"), domainId);
+            }
+        };
+    }
     public static Specification<UccTeams> createTimeThanOrEqualTo(final Date from) {
         return new Specification<UccTeams>() {
             @Override
@@ -52,6 +62,10 @@ public class UccTeamsSpecs {
         if(criteria==null) return spec;
 
         Specifications specs = where(spec);
+
+        if(!Strings.isNullOrEmpty(criteria.getDomainId())){
+            specs = specs.and(teamDomainId(criteria.getDomainId()));
+        }
 
         if(!Strings.isNullOrEmpty(criteria.getTeamName())){
             specs = specs.and(teamNameLike(criteria.getTeamName()));

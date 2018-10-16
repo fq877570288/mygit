@@ -12,6 +12,7 @@ import java.util.Date;
 @ApiModel
 public class UccTeamsCriteria extends  BasicCriteria  {
     private String teamName;
+    private String domainId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTimeFrom;
@@ -41,5 +42,13 @@ public class UccTeamsCriteria extends  BasicCriteria  {
 
     public void setTeamName(String teamName) {
         this.teamName = teamName;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }
