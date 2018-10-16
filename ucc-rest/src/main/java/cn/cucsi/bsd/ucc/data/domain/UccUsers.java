@@ -147,7 +147,8 @@ public class UccUsers {
     @JsonView(JSONView.UccUserWithExt.class)
     @Transient
     private List<UserExt> ext;
-
+    @Transient
+    private List<UccTeams> teamsList;
     @JsonView(JSONView.UccUserWithTeams.class)
     private Collection<UccTeams> teams;
     @JsonView(JSONView.UccUserWithSkillGroup.class)
@@ -159,6 +160,7 @@ public class UccUsers {
     @JsonView(JSONView.Summary.class)
     private String fistPath;
     private String teamsName;
+    private String teamsId;
 
 
     @ManyToMany
@@ -857,5 +859,21 @@ public class UccUsers {
 
     public void setTeamsName(String teamsName) {
         this.teamsName = teamsName;
+    }
+    @Transient
+    public List<UccTeams> getTeamsList() {
+        return teamsList;
+    }
+
+    public void setTeamsList(List<UccTeams> teamsList) {
+        this.teamsList = teamsList;
+    }
+
+    public String getTeamsId() {
+        return teamsId;
+    }
+
+    public void setTeamsId(String teamsId) {
+        this.teamsId = teamsId;
     }
 }
