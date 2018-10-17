@@ -105,26 +105,27 @@ public class UccUserServiceImpl implements UccUserService{
             if(targetUser.getUserDepts()!=null&&targetUser.getUserDepts().size()>0){
                 userDeptService.deleteByUserId(userId);
             }
-            if(targetUser.getUserRoles()!=null&&targetUser.getUserRoles().size()>0) {
+            if(targetUser.getUserRoles()!=null&&targetUser.getUserRoles().size()>0&&roles!=null&&roles.size()>0) {
                 userRoleService.deleteByUserId(userId);
             }
-            if(roles==null||roles.size()==0){
-                roles = targetUser.getRoles();
-            }
-            for (UccDepts dept : depts) {
-                if(dept!=null){
-                    UserDeptKey userDept = new UserDeptKey();
-                    userDept.setUserId(userId);
-                    userDept.setDeptId(dept.getDeptId());
-                    userDeptService.insert(userDept);
+            if(depts!=null&&depts.size()>0){
+                for (UccDepts dept : depts) {
+                    if(dept!=null){
+                        UserDeptKey userDept = new UserDeptKey();
+                        userDept.setUserId(userId);
+                        userDept.setDeptId(dept.getDeptId());
+                        userDeptService.insert(userDept);
+                    }
                 }
             }
-            for (UccRoles role : roles) {
-                if(role!=null){
-                    UserRole userRole = new UserRole();
-                    userRole.setUserId(userId);
-                    userRole.setRoleId(role.getRoleId());
-                    userRoleMapper.insert(userRole);
+            if(roles!=null&&roles.size()>0){
+                for (UccRoles role : roles) {
+                    if(role!=null){
+                        UserRole userRole = new UserRole();
+                        userRole.setUserId(userId);
+                        userRole.setRoleId(role.getRoleId());
+                        userRoleMapper.insert(userRole);
+                    }
                 }
             }
         }
