@@ -13,6 +13,7 @@ public class UccPermissionsCriteria  extends  BasicCriteria{
     private String permissionId;
 
     private String userId;
+    private String domainId;
 
 
     private String permissionName;
@@ -59,5 +60,13 @@ public class UccPermissionsCriteria  extends  BasicCriteria{
 
     public void setPermissionId(String permissionId) {
         this.permissionId = permissionId;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }

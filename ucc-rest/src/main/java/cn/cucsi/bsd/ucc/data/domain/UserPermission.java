@@ -56,5 +56,5 @@ public class UserPermission {
 	public void setChecked(Boolean checked) {
 		this.checked = checked;
 	}
-    
+
 }

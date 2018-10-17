@@ -30,6 +30,8 @@ public class UccPermissions {
     @JsonView(JSONView.Summary.class)
     private String mpid;
 
+    private String domainId;
+
 
 
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
@@ -241,4 +243,11 @@ public class UccPermissions {
         this.uccPermissions = uccPermissions;
     }
 
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
 }
