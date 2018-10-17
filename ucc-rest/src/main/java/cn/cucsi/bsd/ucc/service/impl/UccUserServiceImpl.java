@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
+import cn.cucsi.bsd.ucc.common.mapper.UserRoleMapper;
 import cn.cucsi.bsd.ucc.common.untils.ImgUtil;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
@@ -47,6 +48,8 @@ public class UccUserServiceImpl implements UccUserService{
     private UserRoleService userRoleService;
     @Autowired
     private UccUsersMapper uccUsersMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     private static Logger logger = Logger.getLogger(UccUserServiceImpl.class);
 
     @Override
@@ -91,7 +94,6 @@ public class UccUserServiceImpl implements UccUserService{
         uccUsers.setRegTime(currTime);
         if(uccUsers.getUserId() == null || uccUsers.getUserId() == ""){
             uccUsersD =  this.uccUserRepository.save(uccUsers);
-            userId = uccUsersD.getUserId();
         }
         else {
             userId = uccUsers.getUserId();
@@ -109,21 +111,21 @@ public class UccUserServiceImpl implements UccUserService{
             if(roles==null||roles.size()==0){
                 roles = targetUser.getRoles();
             }
-        }
-        for (UccDepts dept : depts) {
-            if(dept!=null){
-                UserDeptKey userDept = new UserDeptKey();
-                userDept.setUserId(userId);
-                userDept.setDeptId(dept.getDeptId());
-                userDeptService.insert(userDept);
+            for (UccDepts dept : depts) {
+                if(dept!=null){
+                    UserDeptKey userDept = new UserDeptKey();
+                    userDept.setUserId(userId);
+                    userDept.setDeptId(dept.getDeptId());
+                    userDeptService.insert(userDept);
+                }
             }
-        }
-        for (UccRoles role : roles) {
-            if(role!=null){
-                UserRole userRole = new UserRole();
-                userRole.setUserId(userId);
-                userRole.setRoleId(role.getRoleId());
-                userRoleService.insert(userRole);
+            for (UccRoles role : roles) {
+                if(role!=null){
+                    UserRole userRole = new UserRole();
+                    userRole.setUserId(userId);
+                    userRole.setRoleId(role.getRoleId());
+                    userRoleMapper.insert(userRole);
+                }
             }
         }
         return uccUsersD;

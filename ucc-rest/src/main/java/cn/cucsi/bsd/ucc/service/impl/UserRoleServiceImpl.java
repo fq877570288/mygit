@@ -51,6 +51,6 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public void insert(UserRole userRole) {
-        userRoleMapper.insertSelective(userRole);
+        userRoleMapper.insert(userRole);
     }
 }
