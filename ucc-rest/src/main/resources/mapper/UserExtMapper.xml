@@ -16,6 +16,7 @@
 
     <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
     <result column="ext_num" property="extNum" jdbcType="VARCHAR" />
+    <result column="ext_pwd" property="extPwd" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -172,7 +173,7 @@
     FROM ucc_users uu
     LEFT JOIN
     (
-    SELECT ue.user_id,pe.ext_num, pe.domain_id, pe.ext_id
+    SELECT ue.user_id,pe.ext_num, pe.domain_id, pe.ext_id,pe.ext_pwd
     FROM user_ext ue
     INNER JOIN pbx_exts pe
     ON ue.ext_id=pe.ext_id

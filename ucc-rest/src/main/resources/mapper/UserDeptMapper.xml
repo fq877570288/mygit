@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.ucc.common.mapper.UserDeptMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.ucc.data.domain.UserDeptKey" >
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <id column="dept_id" property="deptId" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.UserDeptKey" >
+    delete from user_dept
+    where user_id = #{userId,jdbcType=VARCHAR}
+      and dept_id = #{deptId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByUserId" parameterType="cn.cucsi.bsd.ucc.data.domain.UserDeptKey" >
+    delete from user_dept
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.UserDeptKey" >
+    insert into user_dept (user_id, dept_id)
+    values (#{userId,jdbcType=VARCHAR}, #{deptId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.UserDeptKey" >
+    insert into user_dept
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="deptId != null" >
+        dept_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

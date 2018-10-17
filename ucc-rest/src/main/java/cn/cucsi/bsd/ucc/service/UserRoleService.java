@@ -17,4 +17,8 @@ public interface UserRoleService {
     UserRole findOne(UserRolePK userId);
     UserRole save(UserRole userRole);
     Boolean delete(UserRolePK userId);
+
+    void deleteByUserId(String userId);
+
+    void insert(UserRole userRole);
 }

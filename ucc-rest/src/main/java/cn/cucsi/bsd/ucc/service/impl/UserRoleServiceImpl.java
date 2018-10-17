@@ -1,6 +1,7 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.UserRoleCriteria;
+import cn.cucsi.bsd.ucc.common.mapper.UserRoleMapper;
 import cn.cucsi.bsd.ucc.data.domain.UserRole;
 import cn.cucsi.bsd.ucc.data.domain.UserRolePK;
 import cn.cucsi.bsd.ucc.data.repo.UserRoleRepository;
@@ -18,6 +19,8 @@ import java.util.List;
 public class UserRoleServiceImpl implements UserRoleService {
     @Autowired
     private UserRoleRepository userRoleRepository;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     @Override
     public List<UserRole> findAll(UserRoleCriteria search) {
         return userRoleRepository.findAll(UserRoleSpecs.createSpec(search));
@@ -37,5 +40,17 @@ public class UserRoleServiceImpl implements UserRoleService {
     public Boolean delete(UserRolePK userRolePK) {
         this.userRoleRepository.delete(userRolePK);
         return true;
+    }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        UserRole userRole = new UserRole();
+        userRole.setUserId(userId);
+        userRoleMapper.deleteByUserId(userRole);
+    }
+
+    @Override
+    public void insert(UserRole userRole) {
+        userRoleMapper.insertSelective(userRole);
     }
 }
