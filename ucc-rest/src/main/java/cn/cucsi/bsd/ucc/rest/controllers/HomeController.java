@@ -89,14 +89,15 @@ public class HomeController {
     //@UserFlag
     @ApiOperation(value = "主页视图Plus", notes = "主页视图Plus", httpMethod = "GET")
     @RequestMapping(value = "/index1", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    public Map<String, Object> IndexView1(String domainId, String userId, HttpSession session) throws Exception {
+    public Map<String, Object> IndexView1(HttpSession session) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
         String DeptIdAndChildIds = (String) session.getAttribute("DeptIdAndChildIds");
         try {
             map.put("return_msg", "success");
             map.put("return_code", "success");
             PbxExtsCriteria search = new PbxExtsCriteria();
-            search.setDomainId(domainId);
+            search.setDomainId(user.getDomainId());
             PageResultBean<List<PbxExts>> bean = new PageResultBean(this.pbxExtsService.findAll(search));
             map.put("exts", bean.getData());
             int wa = 0;
@@ -107,12 +108,12 @@ public class HomeController {
             int ct = 0;
             if (DeptIdAndChildIds != null && DeptIdAndChildIds.length() > 0) {
                 //通过部门ID查询需要的信息数量
-                wa = taskService.selectWaitAllCount(DeptIdAndChildIds, domainId);
-                wt = taskService.selectWaitTodayCount(DeptIdAndChildIds, domainId);
-                oa = taskService.selectOngoingAllCount(DeptIdAndChildIds, domainId);
-                on = taskService.selectOngoingNoCount(DeptIdAndChildIds, domainId);
-                cd = taskService.selectCompleteByDaysCount(DeptIdAndChildIds, domainId);
-                ct = taskService.selectCompleteTodayCount(DeptIdAndChildIds, domainId);
+                wa = taskService.selectWaitAllCount(DeptIdAndChildIds, user.getUserId());
+                wt = taskService.selectWaitTodayCount(DeptIdAndChildIds, user.getUserId());
+                oa = taskService.selectOngoingAllCount(DeptIdAndChildIds, user.getUserId());
+                on = taskService.selectOngoingNoCount(DeptIdAndChildIds, user.getUserId());
+                cd = taskService.selectCompleteByDaysCount(DeptIdAndChildIds, user.getDomainId());
+                ct = taskService.selectCompleteTodayCount(DeptIdAndChildIds, user.getDomainId());
             }
             map.put("wa", wa);
             map.put("wt", wt);
@@ -122,14 +123,14 @@ public class HomeController {
             map.put("ct", ct);
             //未读消息
             UccNoticeCriteria uccNoticeCriteriaSearch = new UccNoticeCriteria();
-            uccNoticeCriteriaSearch.setDomainId(domainId);
+            uccNoticeCriteriaSearch.setDomainId(user.getDomainId());
             uccNoticeCriteriaSearch.setNoticeType("1");
-            uccNoticeCriteriaSearch.setUserId(userId);
+            uccNoticeCriteriaSearch.setUserId(user.getUserId());
             uccNoticeCriteriaSearch.setFlag("0");
             Page<UccNotice> pageUccNotice = uccNoticeService.findAll(uccNoticeCriteriaSearch);
 
             map.put("count", pageUccNotice.getTotalElements());
-            map.put("countNotice", uccNoticeService.selectByFlagTypeCount(userId, domainId));
+            map.put("countNotice", uccNoticeService.selectByFlagTypeCount(user.getUserId(), user.getDomainId()));
             map.put("noticeList", pageUccNotice.getContent());
             //
             UccNoticeCriteria searchSevenDay = new UccNoticeCriteria();
@@ -140,11 +141,11 @@ public class HomeController {
             calendar.add(Calendar.WEEK_OF_YEAR, -1);
             date = (Date) calendar.getTime();
             searchSevenDay.setNoticeTimeFrom(date);
-            searchSevenDay.setUserId(userId);
+            searchSevenDay.setUserId(user.getUserId());
             searchSevenDay.setNoticeType("0");
-            searchSevenDay.setDomainId(domainId);
+            searchSevenDay.setDomainId(user.getDomainId());
             Page<UccNotice> pageUccNotice1 = uccNoticeService.findAll(searchSevenDay);
-            int countNoticeAndAffiche = uccNoticeService.selectByFlagCount(userId, domainId);
+            int countNoticeAndAffiche = uccNoticeService.selectByFlagCount(user.getUserId(), user.getDomainId());
             map.put("noticeList1", pageUccNotice1.getContent());
             map.put("countNotice1", countNoticeAndAffiche);
             return map;
