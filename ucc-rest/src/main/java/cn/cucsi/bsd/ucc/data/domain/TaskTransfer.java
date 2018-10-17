@@ -31,7 +31,7 @@ public class TaskTransfer {
 
     private String roperateDeptId; //任务受理部门ID
 
-    private String roperateDept; //任务受理部门
+    private String roperateDept; //任务受理部门名称
 
     @ApiModelProperty(value = "外呼备注",required = true)
     private String callMemo; //外呼备注
