@@ -38,4 +38,5 @@ public interface UccUserService {
 
     ResultBean<VerificationCode> VerificationImg()throws IOException;
 
+    UccUsers saveAll(UccUsers uccUsers, UccUsers targetUser);
 }

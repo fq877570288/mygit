@@ -10,6 +10,10 @@
     where user_id = #{userId,jdbcType=VARCHAR}
       and role_id = #{roleId,jdbcType=VARCHAR}
   </delete>
+  <delete id="deleteByUserId" parameterType="cn.cucsi.bsd.ucc.data.domain.UserRole" >
+    delete from user_role
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
   <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.UserRole" >
     insert into user_role (user_id, role_id)
     values (#{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR})

@@ -156,6 +156,7 @@ public class UccUsers {
     @JsonView(JSONView.Summary.class)
     private List<UccPermissionsAndUser> uccPermissions;
     @JsonView(JSONView.Summary.class)
+    @Transient
     private JSONObject result;
     @JsonView(JSONView.Summary.class)
 
@@ -841,6 +842,7 @@ public class UccUsers {
         this.uccPermissions = uccPermissions;
     }
 
+    @Transient
     public JSONObject getResult() {
         return result;
     }
