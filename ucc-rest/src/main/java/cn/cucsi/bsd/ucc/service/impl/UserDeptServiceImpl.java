@@ -59,6 +59,6 @@ public class UserDeptServiceImpl implements UserDeptService {
 
     @Override
     public void insert(UserDeptKey userDept) {
-        userDeptMapper.insertSelective(userDept);
+        userDeptMapper.insert(userDept);
     }
 }
