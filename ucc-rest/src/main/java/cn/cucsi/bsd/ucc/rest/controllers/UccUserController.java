@@ -260,8 +260,7 @@ public class UccUserController  {
         uccUsers.setCreatedTime(new Date());
         uccUsers.setPassword("123456");
         uccUsers.setUserStatus(0);
-        this.uccUserService.saveMiddleTable(uccUsers);
-        boolean result = this.uccUserService.save(uccUsers) != null;
+        boolean result = this.uccUserService.saveAll(uccUsers,new UccUsers()) != null;
         return new ResultBean<>(result);
     }
 
@@ -271,7 +270,6 @@ public class UccUserController  {
     @ResponseBody
     public ResultBean<Boolean> save(@PathVariable String userId,@RequestBody UccUsers uccUsers,HttpServletRequest request){
         UccUsers targetUser = this.uccUserService.findOne(uccUsers.getUserId());
-        UpdateUtil.copyNullProperties(targetUser,uccUsers);
         HttpSession session = request.getSession();
         UccUsers sessionUser = (UccUsers) session.getAttribute("uccUsers");
         if(sessionUser!=null) {
@@ -286,8 +284,7 @@ public class UccUserController  {
             }
         }
         uccUsers.setUpdatedTime(new Date());
-        this.uccUserService.saveMiddleTable(uccUsers);
-        boolean result = this.uccUserService.save(uccUsers) != null;
+        boolean result = this.uccUserService.saveAll(uccUsers,targetUser) != null;
         return new ResultBean<>(result);
     }
 

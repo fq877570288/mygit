@@ -475,7 +475,7 @@ public class DataImportController {
 			String eventId = "";
 			if(!MyUtils.isBlank(userID)){
                 // 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
-                eventId = TIME+userID+createRandomCode(10);
+                eventId = TIME+userID+createRandomCode(1);
             }else{
                 System.out.println("读取Excel.xls内容,session获取userID为空！");
 				readExcelXlsMap.put("msg","读取Excel.xls内容,session获取userID为空！");
@@ -753,7 +753,7 @@ public class DataImportController {
 			String eventId = "";
 			if(!MyUtils.isBlank(userID)){
 			// 导入批次  规则：yyyyMMddHHmmss+操作员ID+十位随机码
-				eventId = TIME+userID+createRandomCode(10);
+				eventId = TIME+createRandomCode(1);
 			}else{
 				System.out.println("读取Excel.xlsx内容,session获取userID为空！");
 				readExcelXlsxMap.put("msg","读取Excel.xlsx内容,session获取userID为空！");
@@ -1013,7 +1013,7 @@ public class DataImportController {
 	public static String createRandomCode(int ln) {
 		String pwd = "";
 		for (int i = 0; i != ln; i++) {
-			pwd += (int) (Math.random() * 10);
+			pwd += (int) (Math.random() * 1000);
 		}
 		return pwd;
 	}

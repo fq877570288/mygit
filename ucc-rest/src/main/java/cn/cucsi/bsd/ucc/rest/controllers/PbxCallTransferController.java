@@ -8,6 +8,7 @@ import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.PbxCallTransfer;
 import cn.cucsi.bsd.ucc.service.PbxCallTransferService;
 import io.swagger.annotations.ApiOperation;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,8 @@ public class PbxCallTransferController {
     @ApiOperation(value = "创建PbxCallTransfer", notes = "创建PbxCallTransfer")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody PbxCallTransfer pbxCallTransfer) {
+        Date dateTime = new Date();
+        pbxCallTransfer.setCreatedTime(dateTime);
         boolean result = this.pbxCallTransferService.save(pbxCallTransfer) != null;
         if(result){
             PbxReload.reloadCallTransfer(pbxCallTransfer, "replace", zk);
@@ -58,6 +61,8 @@ public class PbxCallTransferController {
     @ApiOperation(value = "修改PbxCallTransfer", notes = "修改PbxCallTransfer")
     @RequestMapping(value = "/{extId}", method =  RequestMethod.POST)
     public ResultBean<Boolean> save(@PathVariable String extId,@RequestBody PbxCallTransfer pbxCallTransfer) {
+        Date dateTime = new Date();
+        pbxCallTransfer.setUpdatedTime(dateTime);
         boolean result = this.pbxCallTransferService.save(pbxCallTransfer) != null;
         if(result){
             PbxReload.reloadCallTransfer(pbxCallTransfer, "update", zk);

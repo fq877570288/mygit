@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccDomainCriteria;
+import cn.cucsi.bsd.ucc.common.beans.UccPermissionsCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccDomain;
 import cn.cucsi.bsd.ucc.data.domain.UccPermissions;
 import cn.cucsi.bsd.ucc.data.domain.UccRoles;
@@ -92,8 +93,9 @@ public class UccDomainServiceImpl implements UccDomainService {
             roles.setCreatedTime(new Date());
             roles.setCreatedUserId("uccAdmin");
             roles.setCreatedUserName("uccAdmin");
-
-            List<UccPermissions> permissionsList = uccPermissionsService.findAll(null);
+            UccPermissionsCriteria uccPermissionsCriteria = new UccPermissionsCriteria();
+            uccPermissionsCriteria.setDomainId("uccAdmin");
+            List<UccPermissions> permissionsList = uccPermissionsService.findAll(uccPermissionsCriteria);
             if(permissionsList != null && permissionsList.size() > 0){
 
                 Collection<UccPermissions> rolesPermissions = new ArrayList<>();

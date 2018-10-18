@@ -40,6 +40,16 @@ public class UccPermissionsSpecs {
             }
         };
     }
+    //不=
+    public static Specification<UccPermissions> noteqDomainId(final String domainId) {
+        return new Specification<UccPermissions>() {
+            @Override
+            public Predicate toPredicate(Root<UccPermissions> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.notEqual(root.get("domainId"), domainId);
+            }
+        };
+    }
+
     public static Specification<UccPermissions> createSpec(final UccPermissionsCriteria criteria) {
         Specification<UccPermissions> spec = null;
         if(criteria==null) return spec;
@@ -50,6 +60,10 @@ public class UccPermissionsSpecs {
         }
         if(!Strings.isNullOrEmpty(criteria.getPermissionName())){
             specs = specs.and(permissionNameLike(criteria.getPermissionName()));
+        }
+
+        if(!Strings.isNullOrEmpty(criteria.getDomainId())){
+            specs = specs.and(noteqDomainId(criteria.getDomainId()));
         }
         return specs;
     }

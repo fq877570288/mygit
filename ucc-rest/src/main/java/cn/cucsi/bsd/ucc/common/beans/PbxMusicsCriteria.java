@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 public class PbxMusicsCriteria  extends BasicCriteria   {
     private String musicName;
     private String contentType;
+    private String domainId;
 
     public String getMusicName() {
         return musicName;
@@ -24,5 +25,13 @@ public class PbxMusicsCriteria  extends BasicCriteria   {
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
     }
 }

@@ -82,6 +82,9 @@ public class UccRolesSpecs {
         if(null != criteria.getCreatedTimeTo()){
             specs = specs.and(createTimeLessOrEqualTo(criteria.getCreatedTimeTo()));
         }
+        if(null != criteria.getDomainId()){
+            specs = specs.and(domainIdEqual(criteria.getDomainId()));
+        }
         return specs;
     }
 
@@ -99,6 +102,10 @@ public class UccRolesSpecs {
         if(null != criteria.getCreatedTimeTo()){
             specs = specs.and(createTimeLessOrEqualTo(criteria.getCreatedTimeTo()));
         }
+        if(null != criteria.getDomainId()){
+            specs = specs.and(domainIdEqual(criteria.getDomainId()));
+        }
+
         return specs;
     }
 }

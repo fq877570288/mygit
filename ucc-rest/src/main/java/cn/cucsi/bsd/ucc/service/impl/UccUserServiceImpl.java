@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.common.mapper.UccUsersMapper;
+import cn.cucsi.bsd.ucc.common.mapper.UserRoleMapper;
 import cn.cucsi.bsd.ucc.common.untils.ImgUtil;
 import cn.cucsi.bsd.ucc.common.untils.MyUtils;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
@@ -47,6 +48,8 @@ public class UccUserServiceImpl implements UccUserService{
     private UserRoleService userRoleService;
     @Autowired
     private UccUsersMapper uccUsersMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
     private static Logger logger = Logger.getLogger(UccUserServiceImpl.class);
 
     @Override
@@ -74,66 +77,64 @@ public class UccUserServiceImpl implements UccUserService{
     }
 
     @Override
-    @Transactional
     public UccUsers save(UccUsers uccUsers) {
+        return this.uccUserRepository.save(uccUsers);
+    }
+
+    @Override
+    public UccUsers saveAll(UccUsers uccUsers,UccUsers targetUser) {
         String userId;
+        UccUsers uccUsersD = new UccUsers();
+        Collection<UccDepts> depts = uccUsers.getDepts();
+        Collection<UccRoles> roles = uccUsers.getRoles();
         Date currTime = new Date();
         uccUsers.setLastLoginTime(currTime);
         uccUsers.setLastOperateTime(currTime);
         uccUsers.setLockTime(currTime);
         uccUsers.setRegTime(currTime);
-        UccUsers uccUsersD = new UccUsers();
-
         if(uccUsers.getUserId() == null || uccUsers.getUserId() == ""){
             uccUsersD =  this.uccUserRepository.save(uccUsers);
-            userId = uccUsersD.getUserId();
         }
         else {
             userId = uccUsers.getUserId();
-        }
-
-
-        //添加或修改分机号码关联信息
-        /*if(uccUsers.getUserExt() != null){
-            UserExt userExt = new UserExt();
-            String extId = uccUsers.getUserExt().getExtId();
-            userExt.setUserId(userId);
-            userExt.setExtId(extId);
-
-            List<UserExt> queryList=userExtService.findByUserId(userExt);
-            if(queryList.size()>0){
-                int delResult = userExtService.del(userExt);
-                if(delResult>0){
-                    userExtService.insert(userExt);
-                }
-            }else {
-                 userExtService.insert(userExt);
+            UpdateUtil.copyNullProperties(targetUser,uccUsers);
+            boolean flag = this.uccUsersMapper.updateByPrimaryKeySelective(uccUsers)>0;
+            if(flag){
+                uccUsersD = uccUsers;
             }
-           *//* userExt.setCreatedTime(currTime);
-            userExt.setUpdatedTime(currTime);*//*
-//            userExt.setUpdatedPerson(uccUsers.getUpdatedPerson());
-
-        }*/
-
-        if(uccUsers.getUserId() == null || uccUsers.getUserId() == ""){
-            return uccUsersD;
+            if(targetUser.getUserDepts()!=null&&targetUser.getUserDepts().size()>0){
+                userDeptService.deleteByUserId(userId);
+            }
+            if(targetUser.getUserRoles()!=null&&targetUser.getUserRoles().size()>0&&roles!=null&&roles.size()>0) {
+                userRoleService.deleteByUserId(userId);
+            }
+            if(depts!=null&&depts.size()>0){
+                for (UccDepts dept : depts) {
+                    if(dept!=null){
+                        UserDeptKey userDept = new UserDeptKey();
+                        userDept.setUserId(userId);
+                        userDept.setDeptId(dept.getDeptId());
+                        userDeptService.insert(userDept);
+                    }
+                }
+            }
+            if(roles!=null&&roles.size()>0){
+                for (UccRoles role : roles) {
+                    if(role!=null){
+                        UserRole userRole = new UserRole();
+                        userRole.setUserId(userId);
+                        userRole.setRoleId(role.getRoleId());
+                        userRoleMapper.insert(userRole);
+                    }
+                }
+            }
         }
-        else{
-            return this.uccUserRepository.save(uccUsers);
-        }
-        //return this.uccUserRepository.save(uccUsers);
-
+        return uccUsersD;
     }
 
     @Override
     public Boolean delete(String userId) {
         Boolean result = false;
-        UserExt userExt = new UserExt();
-        userExt.setUserId(userId);
-        int delResult = userExtService.del(userExt);
-        if(delResult>0){
-            result=true;
-        }
         UserRoleCriteria userRoleCriteria = new UserRoleCriteria();
         userRoleCriteria.setUserId(userId);
         List<UserRole> roles = userRoleService.findAll(userRoleCriteria);
@@ -152,7 +153,6 @@ public class UccUserServiceImpl implements UccUserService{
             userDeptPK.setDeptId(userDept.getDeptId());
             userDeptService.delete(userDeptPK);
         }
-        uccUsersMapper.deleteByPrimaryKey(userId);
         return result;
     }
 

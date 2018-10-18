@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.data.domain;
 import cn.cucsi.bsd.ucc.common.JSONView;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import javax.persistence.Transient;
 import java.util.Date;
 /*
 * 用户号码关系
@@ -46,6 +47,9 @@ public class UserExt {
 
     @JsonView(JSONView.Summary.class)
     private String isdefault;
+    @JsonView(JSONView.Summary.class)
+    @Transient
+    private String extPwd;
 
     public String getCreatedNickName() {
         return createdNickName;
@@ -149,5 +153,14 @@ public class UserExt {
 
     public void setDomainId(String domainId) {
         this.domainId = domainId;
+    }
+
+    @Transient
+    public String getExtPwd() {
+        return extPwd;
+    }
+
+    public void setExtPwd(String extPwd) {
+        this.extPwd = extPwd;
     }
 }

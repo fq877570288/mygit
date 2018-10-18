@@ -30,6 +30,7 @@
     <result column="hangup_cause" property="hangupCause" jdbcType="VARCHAR" />
     <result column="RECEIVE_DEPT_NAME" property="receiveDeptName" jdbcType="VARCHAR" />
     <result column="OPERATOR_NAME" property="operatorName" jdbcType="VARCHAR" />
+    <result column="roperate_dept" property="roperateDept" jdbcType="VARCHAR" />
 
   </resultMap>
   <sql id="Base_Column_List" >
@@ -292,36 +293,38 @@
   <select id="selectTransferByTaskDetailId" resultMap="BaseResultMap"
           parameterType="java.lang.String">
     select
-      t.TASK_TRANSFER_ID TASK_TRANSFER_ID,
-      t.TASK_DETAIL_ID TASK_DETAIL_ID,
-      t.TRANSFER_STATUS TRANSFER_STATUS,
-      t.ROPERATE_PERSON_ID ROPERATE_PERSON_ID,
-      t.ROPERATE_DEPT_ID ROPERATE_DEPT_ID,
-      t.CALL_MEMO CALL_MEMO,
-      t.CALL_RESULT CALL_RESULT,
-      t.TRANSFE_ROPERATE TRANSFE_ROPERATE,
-      t.TRANSFER_TIME TRANSFER_TIME,
-      t.CDR_ID CDR_ID,
-      t.BACK_MEMO BACK_MEMO,
-      t.OPERATOR_ID OPERATOR_ID,
-      t.OPERATOR_DEPT OPERATOR_DEPT,
-      c.destination_number destination_number,
-      c.total_time total_time,
-      c.call_time call_time,
-      c.created_time created_time,
-      c.answered_time answered_time,
-      c.hangup_time hangup_time,
-      c.recordid1 recordid1,
-      c.recordid2 recordid2,
-      c.qc qc,
-      c.hangup_cause hangup_cause,
-      p1.dept_name RECEIVE_DEPT_NAME,
-      uu.user_name OPERATOR_NAME
+      t.TASK_TRANSFER_ID as TASK_TRANSFER_ID,
+      t.TASK_DETAIL_ID as TASK_DETAIL_ID,
+      t.TRANSFER_STATUS as TRANSFER_STATUS,
+      t.ROPERATE_PERSON_ID as ROPERATE_PERSON_ID,
+      t.ROPERATE_DEPT_ID as ROPERATE_DEPT_ID,
+      t.CALL_MEMO as CALL_MEMO,
+      t.CALL_RESULT as CALL_RESULT,
+      t.TRANSFE_ROPERATE as TRANSFE_ROPERATE,
+      t.TRANSFER_TIME as TRANSFER_TIME,
+      t.CDR_ID as CDR_ID,
+      t.BACK_MEMO as BACK_MEMO,
+      t.OPERATOR_ID as OPERATOR_ID,
+      t.OPERATOR_DEPT as OPERATOR_DEPT,
+      c.destination_number as destination_number,
+      c.total_time as total_time,
+      c.call_time as call_time,
+      c.created_time as created_time,
+      c.answered_time as answered_time,
+      c.hangup_time as hangup_time,
+      c.recordid1 as recordid1,
+      c.recordid2 as recordid2,
+      c.qc as qc,
+      c.hangup_cause as hangup_cause,
+      p1.dept_name as RECEIVE_DEPT_NAME,
+      p2.dept_name as roperate_dept,
+      uu.user_name as OPERATOR_NAME
     from OC_TASK_TRANSFER t
     left join pbx_cdrs c on t.CDR_ID = c.cdr_id
     left join OC_TASK_DETAIL d on d.TASK_DETAIL_ID = t.TASK_DETAIL_ID
-    left join ucc_depts p1 on d.DEPT_MESH_ID = p1.dept_id
-    LEFT JOIN ucc_users uu on uu.user_id = t.OPERATOR_ID
+    left join ucc_depts p1 on t.ROPERATE_DEPT_ID = p1.dept_id
+	left join ucc_depts p2 on t.OPERATOR_DEPT = p2.dept_id
+    left join ucc_users uu on uu.user_id = t.OPERATOR_ID
     where t.TASK_DETAIL_ID = #{taskDetailId,jdbcType=VARCHAR}
     order by t.TASK_DETAIL_ID, t.TRANSFER_TIME DESC
   </select>

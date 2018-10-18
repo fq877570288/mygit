@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.data.specs;
 
 import cn.cucsi.bsd.ucc.common.beans.PbxMusicsCriteria;
 import cn.cucsi.bsd.ucc.data.domain.PbxMusics;
+import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import com.google.common.base.Strings;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -26,6 +27,17 @@ public class PbxMusicsSpecs  {
             }
         };
     }
+
+
+    public static Specification<PbxMusics> domainIdEqual(final String domainId) {
+        return new Specification<PbxMusics>() {
+            @Override
+            public Predicate toPredicate(Root<PbxMusics> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("domainId"), domainId);
+            }
+        };
+    }
+
     public static Specification<PbxMusics> createSpec(final PbxMusicsCriteria criteria) {
         Specification<PbxMusics> spec = null;
         if(criteria==null) return spec;
@@ -35,6 +47,11 @@ public class PbxMusicsSpecs  {
         if(!Strings.isNullOrEmpty(criteria.getMusicName())){
             specs = specs.and(musicNameEqual(criteria.getMusicName()));
         }
+
+        if(!Strings.isNullOrEmpty(criteria.getDomainId())){
+            specs = specs.and(domainIdEqual(criteria.getDomainId()));
+        }
+
         return specs;
     }
 }
