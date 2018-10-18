@@ -2,6 +2,8 @@ package cn.cucsi.bsd.ucc.service.impl;
 
 import cn.cucsi.bsd.ucc.common.beans.PbxExtsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.mapper.PbxExtGroupsMapper;
+import cn.cucsi.bsd.ucc.common.mapper.PbxExtsMapper;
 import cn.cucsi.bsd.ucc.data.domain.ExtGroupExts;
 import cn.cucsi.bsd.ucc.data.domain.ExtGroupExtsPK;
 import cn.cucsi.bsd.ucc.data.domain.PbxExtGroups;
@@ -35,6 +37,8 @@ public class PbxExtsServiceImpl implements PbxExtsService {
     private ExtGroupExtsRepository ExtGroupExtsRepository;
     @Autowired
     private PbxExtGroupsRepository pbxExtGroupsRepository;
+    @Autowired
+    private PbxExtsMapper pbxExtsMapper;
 
     @Override
     public Page<PbxExts> findAll(PbxExtsCriteria criteria) {
@@ -216,5 +220,10 @@ public class PbxExtsServiceImpl implements PbxExtsService {
     @Override
     public List<PbxExts> findAllOfNoPage(PbxExtsCriteria search) {
         return pbxExtsRepository.findAll(PbxExtsSpecs.createSpec(search));
+    }
+
+    @Override
+    public List<PbxExts> findAllFreeExtsByDomainId(PbxExts search) {
+        return pbxExtsMapper.findAllFreeExts(search);
     }
 }
