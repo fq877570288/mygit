@@ -182,6 +182,14 @@ public class PbxCdrsSpecs {
             }
         };
     }
+    public static Specification<PbxCdrs> qcNotEqual(final Integer qc) {
+        return new Specification<PbxCdrs>() {
+            @Override
+            public Predicate toPredicate(Root<PbxCdrs> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.notEqual(root.<Integer>get("qc"), qc);
+            }
+        };
+    }
     public static Specification<PbxCdrs> typeEqual(final Integer type) {
         return new Specification<PbxCdrs>() {
             @Override
@@ -281,7 +289,14 @@ public class PbxCdrsSpecs {
             specs = specs.and(callTimeThanOrEqualTo(PbxCdrsCriteria.getCallTimeEnd()));
         }
         if(null != PbxCdrsCriteria.getSatisfaction()){
-            specs = specs.and(qcEqual(PbxCdrsCriteria.getSatisfaction()));
+            if (PbxCdrsCriteria.getSatisfaction().equals(1) || PbxCdrsCriteria.getSatisfaction().equals(2)) {
+                specs = specs.and(qcEqual(PbxCdrsCriteria.getSatisfaction()));
+            }
+            else
+            {
+                specs = specs.and(qcNotEqual(1));
+                specs = specs.and(qcNotEqual(2));
+            }
         }
         if(null != PbxCdrsCriteria.getType()){
             specs = specs.and(typeEqual(PbxCdrsCriteria.getType()));

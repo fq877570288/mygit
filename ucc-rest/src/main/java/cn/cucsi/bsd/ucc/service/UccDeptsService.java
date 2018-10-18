@@ -42,7 +42,7 @@ public interface UccDeptsService {
 
     int insertUserDepts(String userId, String[] depts) throws Exception;
 
-    UccDepts selectByNameInCache(String deptNameList)
+    UccDepts selectByNameInCache(String domainId, String deptNameList)
             throws Exception;
 
     List<UccDepts> formatDept(List<UccDepts> list);

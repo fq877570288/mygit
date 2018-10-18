@@ -383,6 +383,7 @@
       t.BACK_MEMO BACK_MEMO,
       t.OPERATOR_ID OPERATOR_ID,
       t.OPERATOR_DEPT OPERATOR_DEPT,
+      t.domain_id,
       c.destination_number destination_number,
       c.total_time total_time,
       c.call_time call_time,

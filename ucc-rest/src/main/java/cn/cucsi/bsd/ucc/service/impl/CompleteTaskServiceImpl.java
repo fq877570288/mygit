@@ -65,14 +65,21 @@ public class CompleteTaskServiceImpl implements CompleteTaskService {
 		// 所有办结任务
 		List<TaskRecord> taskRecordList = new ArrayList<TaskRecord>();
 		List<String> taskDetailIdList = new ArrayList<>();
+		TaskDetailSearch taskDetailSearch = null;
+
 		for (TaskDetail taskDetail : taskDetailList) {
 			taskDetailIdList.add(taskDetail.getTaskDetailId());
 
 			TaskRecord taskRecord = new TaskRecord();
+			taskDetailSearch = new TaskDetailSearch();
+			taskDetailSearch.setUserId(userId);
+			taskDetailSearch.setDomainId(taskDetail.getDomainId());
+			taskDetailSearch.setTaskDetailId(taskDetail.getTaskDetailId());
+			// 部门
+			deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
 			taskRecord.setTaskRecordId(taskDetail.getTaskDetailId());
 			taskRecord.setOperatorId(userId);
 			taskRecord.setOperatorDept(deptId);
-
 			taskRecord.setCallResult(callResult); //分派者关闭
 			taskRecord.setCallMemo("");
 			taskRecord.setImportBatch(taskDetail.getImportBatch());
@@ -111,14 +118,12 @@ public class CompleteTaskServiceImpl implements CompleteTaskService {
 			taskRecord.setInitDevelopment(taskDetail.getInitDevelopment()); //发展部门(初始)
 			taskRecord.setRecordTime(transferTime);
 			taskRecord.setEndDate(taskDetail.getEndDate());
-
+			taskRecord.setDomainId(taskDetail.getDomainId());
 			taskRecordList.add(taskRecord);
 
 			TaskTransferRecord taskTransferRecord = new TaskTransferRecord();
 			taskTransferRecord.setRoperateDeptId(deptId);
-
 			String taskTransferRecordUuid = generator.generate();
-
 			taskTransferRecord.setTaskRecordId(taskDetail.getTaskDetailId()); //归档表主键
 			taskTransferRecord.setTaskTransferRecordId(taskTransferRecordUuid); //流转归档表主键
 			taskTransferRecord.setTransferStatus("4"); //流转状态    0:未分派、1：未接收、2：待办、3：在办 4：办结
@@ -128,12 +133,11 @@ public class CompleteTaskServiceImpl implements CompleteTaskService {
 			taskTransferRecord.setRecordTime(transferTime);
 			taskTransferRecord.setRecordOperatorId(userId);
 			taskTransferRecord.setRecordOperatorDept(deptId);
-
 			taskTransferRecord.setRoperatePersonId(userId);
 			taskTransferRecord.setRoperateDeptId(deptId);
-
 			taskTransferRecord.setOperatorDept(deptId);
 			taskTransferRecord.setOperatorId(userId);
+			taskTransferRecord.setDomainId(taskDetail.getDomainId());
 
 			taskTransferRecordList.add(taskTransferRecord);
 		}
@@ -156,7 +160,7 @@ public class CompleteTaskServiceImpl implements CompleteTaskService {
 			taskTransferRecord.setRoperateDeptId(transfer.getRoperateDeptId());//受理部门
 			taskTransferRecord.setRecordOperatorId(transfer.getRoperatePersonId());//受理员
 			taskTransferRecord.setRecordOperatorDept(transfer.getRoperateDeptId());//受理部门
-
+			taskTransferRecord.setDomainId(transfer.getDomainId());
 			taskTransferRecordList.add(taskTransferRecord);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -208,12 +212,12 @@ public class CompleteTaskServiceImpl implements CompleteTaskService {
 		//List<UccDepts> ngtDeptList = uccDeptsService.selectByUserId(search.getUserId());
 		//String deptId = ngtDeptList.get(0).getDeptId().toString();
 		// 部门
-		String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(search);
-		search.setRoperateDeptId(deptId);
+		//String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(search);
+		//search.setRoperateDeptId(deptId);
 
 		List<TaskDetail> taskDetailList = taskDetailMapper.selectTaskStatusByEndDate(search);
 
-		this.updateTaskStatusByEndDate(search, taskDetailList, deptId, search.getUserId().toString(), "6");
+		this.updateTaskStatusByEndDate(search, taskDetailList, null, search.getUserId().toString(), "6");
 		return 0;
 	}
 
