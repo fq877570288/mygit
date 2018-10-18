@@ -143,17 +143,20 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 			UUIDGenerator generator = new UUIDGenerator();
 			// 流转时间
 			Timestamp transferTime = new Timestamp(System.currentTimeMillis());
-			TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
-			taskDetailSearch.setUserId(userId);
-			taskDetailSearch.setTaskDetailIdInList(detailIdsList);
-			// 部门
-			String deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
+			TaskDetailSearch taskDetailSearch = null;
+			//taskDetailSearch.setTaskDetailIdInList(detailIdsList);
+
 			/*List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 			String deptID = uccDeptsList.get(0).getDeptId().toString();*/
-
 			for(String id : detailIds){
                 taskTransfer = new TaskTransfer();
                 String taskTransferUuid = generator.generate();
+				taskDetailSearch = new TaskDetailSearch();
+				taskDetailSearch.setUserId(userId);
+				taskDetailSearch.setTaskDetailId(id);
+				taskDetailSearch.setDomainId(domainId);
+				// 部门
+				String deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
                 taskTransfer.setRoperateDeptId(deptID);
                 taskTransfer.setTaskDetailId(id);
                 taskTransfer.setTaskTransferId(taskTransferUuid);
