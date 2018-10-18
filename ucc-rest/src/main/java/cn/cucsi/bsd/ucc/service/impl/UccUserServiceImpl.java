@@ -110,7 +110,7 @@ public class UccUserServiceImpl implements UccUserService{
             }
             if(depts!=null&&depts.size()>0){
                 for (UccDepts dept : depts) {
-                    if(dept!=null){
+                    if(dept!=null && dept.getDeptId() != null){
                         UserDeptKey userDept = new UserDeptKey();
                         userDept.setUserId(userId);
                         userDept.setDeptId(dept.getDeptId());
