@@ -75,7 +75,7 @@ public class ChatLogin {
 		String uid = UUID.randomUUID().toString();
 		String identity = Md5.Get(userAgent+":"+uid);
 		try {
-			System.err.println("ChatLogin_" + identity);
+			logger.info("ChatLogin_" + identity);
             redisTemplate.opsForValue().set("ChatLogin_" + identity, mapper.writeValueAsString(info), 2, TimeUnit.MINUTES);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();

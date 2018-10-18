@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.ucc.common.mapper.PbxExtsMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.ucc.data.domain.PbxExts" >
+    <id column="ext_id" property="extId" jdbcType="VARCHAR" />
+    <result column="created_nick_name" property="createdNickName" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="created_user_id" property="createdUserId" jdbcType="VARCHAR" />
+    <result column="created_user_name" property="createdUserName" jdbcType="VARCHAR" />
+    <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
+    <result column="ext_num" property="extNum" jdbcType="VARCHAR" />
+    <result column="ext_pwd" property="extPwd" jdbcType="VARCHAR" />
+    <result column="updated_nick_name" property="updatedNickName" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="updated_user_id" property="updatedUserId" jdbcType="VARCHAR" />
+    <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ext_id, created_nick_name, created_time, created_user_id, created_user_name, domain_id, 
+    ext_num, ext_pwd, updated_nick_name, updated_time, updated_user_id, updated_user_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from pbx_exts
+    where ext_id = #{extId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pbx_exts
+    where ext_id = #{extId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.PbxExts" >
+    insert into pbx_exts (ext_id, created_nick_name, created_time, 
+      created_user_id, created_user_name, domain_id, 
+      ext_num, ext_pwd, updated_nick_name, 
+      updated_time, updated_user_id, updated_user_name
+      )
+    values (#{extId,jdbcType=VARCHAR}, #{createdNickName,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, 
+      #{createdUserId,jdbcType=VARCHAR}, #{createdUserName,jdbcType=VARCHAR}, #{domainId,jdbcType=VARCHAR}, 
+      #{extNum,jdbcType=VARCHAR}, #{extPwd,jdbcType=VARCHAR}, #{updatedNickName,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, #{updatedUserId,jdbcType=VARCHAR}, #{updatedUserName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.PbxExts" >
+    insert into pbx_exts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="extId != null" >
+        ext_id,
+      </if>
+      <if test="createdNickName != null" >
+        created_nick_name,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id,
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name,
+      </if>
+      <if test="domainId != null" >
+        domain_id,
+      </if>
+      <if test="extNum != null" >
+        ext_num,
+      </if>
+      <if test="extPwd != null" >
+        ext_pwd,
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id,
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="extId != null" >
+        #{extId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdNickName != null" >
+        #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="domainId != null" >
+        #{domainId,jdbcType=VARCHAR},
+      </if>
+      <if test="extNum != null" >
+        #{extNum,jdbcType=VARCHAR},
+      </if>
+      <if test="extPwd != null" >
+        #{extPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedNickName != null" >
+        #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.PbxExts" >
+    update pbx_exts
+    <set >
+      <if test="createdNickName != null" >
+        created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="domainId != null" >
+        domain_id = #{domainId,jdbcType=VARCHAR},
+      </if>
+      <if test="extNum != null" >
+        ext_num = #{extNum,jdbcType=VARCHAR},
+      </if>
+      <if test="extPwd != null" >
+        ext_pwd = #{extPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ext_id = #{extId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.PbxExts" >
+    update pbx_exts
+    set created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      domain_id = #{domainId,jdbcType=VARCHAR},
+      ext_num = #{extNum,jdbcType=VARCHAR},
+      ext_pwd = #{extPwd,jdbcType=VARCHAR},
+      updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+    where ext_id = #{extId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="findAllFreeExts" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.data.domain.UserExt">
+    select *
+    from pbx_exts a
+    where a.domain_id = #{domainId}
+    and not exists(
+    select 1
+    from user_ext b
+    inner join ucc_users c
+    on b.user_id = c.user_id
+    and c.domain_id = #{domainId}
+    where a.ext_id = b.ext_id
+    )
+    <if test="extNum != null and extNum != ''">
+      and a.ext_num like '%${extNum}%'
+    </if>
+    limit 10
+  </select>
+</mapper>

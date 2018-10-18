@@ -20,4 +20,6 @@ public interface PbxExtsService {
     List<PbxExts> findAllFreeExts(String domainId);
 
     List<PbxExts> findAllOfNoPage(PbxExtsCriteria search);
+
+    List<PbxExts> findAllFreeExtsByDomainId(PbxExts search);
 }
