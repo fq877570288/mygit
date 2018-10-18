@@ -16,14 +16,14 @@ import java.util.List;
 public interface PbxExtsRepository extends PagingAndSortingRepository<PbxExts,String>, JpaSpecificationExecutor {
     PbxExts findPbxExtsByExtIdEqualsAndDomainIdEquals(String extId , String domainId);
 
-    @Query(value="SELECT * FROM ucc.pbx_exts a WHERE a.domain_id= ?1 AND a.ext_id NOT IN (SELECT b.ext_id FROM ucc.user_ext b)",nativeQuery=true)
+    @Query(value="SELECT * FROM pbx_exts a WHERE a.domain_id= ?1 AND a.ext_id NOT IN (SELECT b.ext_id FROM user_ext b) limit 10",nativeQuery=true)
     List<PbxExts> findAllFreeExts(String domainId);
 
 
 
-    @Query(value="SELECT * FROM ucc.pbx_exts a WHERE a.domain_id= ?1 AND a.ext_num = ?2",nativeQuery=true)
+    @Query(value="SELECT * FROM pbx_exts a WHERE a.domain_id= ?1 AND a.ext_num = ?2",nativeQuery=true)
     List<PbxExts> findPbxExtsByExtNum(String domain_id,String ext_num);
 
-    @Query(value="SELECT * FROM ucc.pbx_exts a WHERE a.domain_id= ?1 AND a.ext_num = ?2 AND a.ext_id != ?3",nativeQuery=true)
+    @Query(value="SELECT * FROM pbx_exts a WHERE a.domain_id= ?1 AND a.ext_num = ?2 AND a.ext_id != ?3",nativeQuery=true)
     List<PbxExts> findPbxExtsByExtNumAndExtIdNotEquals(String domain_id,String extNum,String extId);
 }
