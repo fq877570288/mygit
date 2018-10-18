@@ -46,8 +46,16 @@ public class UccTeamsController {
     @ApiOperation(value = "创建UccTeams", notes = "创建UccTeams")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccTeams uccTeams) {
-        boolean result=this.uccTeamsService.save(uccTeams)!=null;
-        return new ResultBean<>(result);
+        UccTeamsCriteria uccTeamsCriteria = new UccTeamsCriteria();
+        uccTeamsCriteria.setTeamName(uccTeams.getTeamName());
+        List<UccTeams> uccTeamsList = uccTeamsService.findAllOfNoPage(uccTeamsCriteria);
+        Boolean resultByName = uccTeamsList.size()==0;
+        if(!resultByName){
+            return new ResultBean<>(ResultBean.FAIL,"班组名重复！",resultByName);
+        }else {
+            boolean result=this.uccTeamsService.save(uccTeams)!=null;
+            return new ResultBean<>(result);
+        }
     }
 
     @ApiOperation(value = "修改UccTeams", notes = "修改UccTeams")
