@@ -57,6 +57,22 @@ public class PbxCallTransferController {
         for(String extId : extIds.split(","))
         {
             pbxCallTransfer.setExtId(extId);
+            if(pbxCallTransfer.getNum1().equals(""))
+            {
+                pbxCallTransfer.setSt1(0);
+            }
+            else
+            {
+                pbxCallTransfer.setSt1(1);
+            }
+            if(pbxCallTransfer.getNum2().equals(""))
+            {
+                pbxCallTransfer.setSt2(0);
+            }
+            else
+            {
+                pbxCallTransfer.setSt2(1);
+            }
             result = this.pbxCallTransferService.save(pbxCallTransfer) != null;
             if(result){
                 PbxReload.reloadCallTransfer(pbxCallTransfer, "replace", zk);
