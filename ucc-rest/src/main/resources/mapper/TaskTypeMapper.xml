@@ -98,7 +98,24 @@
      		EXISTS (SELECT 1 FROM OC_TASK_DETAIL B WHERE A.TASK_TYPE_ID = B.TASK_TYPE_ID)
      	</if>
      </where>
+      ORDER  BY  A.CREATE_TIME DESC
     </select>
 	
    <!-- Add by bli  end -->
+  <select id="selectByPage" resultMap="BaseResultMap"  parameterType="cn.cucsi.bsd.ucc.common.beans.TaskTypeForMybatisCriteria">
+    select
+    <include refid="Base_Column_List"/>
+    from OC_TASK_TYPE
+    where 1=1
+    <if test="taskTypeId !=null and taskTypeId != ''">
+      and TASK_TYPE_ID = #{taskTypeId}
+    </if>
+    <if test="taskTypeCode != null and taskTypeCode!=''" >
+      and TASK_TYPE_CODE = #{taskTypeCode}
+    </if>
+    <if test="taskTypeName != null and taskTypeName!=''" >
+      and TASK_TYPE_NAME LIKE  '%${taskTypeName}%'
+    </if>
+    ORDER  BY  CREATE_TIME DESC
+  </select>
 </mapper>
