@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface UccRolesService {
     Page<UccRoles> findAll(UccRolesCriteria search);
+    List<UccRoles> findAllOfNoPage(UccRolesCriteria search);
     List<UccRoles> findByRoleName(UccRolesCriteria search);
     UccRoles findOne(String roleId );
     UccRoles save(UccRoles uccRoles);

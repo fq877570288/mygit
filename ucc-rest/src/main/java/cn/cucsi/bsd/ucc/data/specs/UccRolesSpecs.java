@@ -39,7 +39,6 @@ public class UccRolesSpecs {
         };
     }
 
-
     public static Specification<UccRoles> domainIdEqual(final String domainId) {
         return new Specification<UccRoles>() {
             @Override
@@ -73,6 +72,9 @@ public class UccRolesSpecs {
         Specifications specs = where(spec);
         if(!Strings.isNullOrEmpty(criteria.getRoleName())){
             specs = specs.and(roleNameLike(criteria.getRoleName()));
+        }
+        if(null != criteria.getDomainId()){
+            specs = specs.and(domainIdEqual(criteria.getDomainId()));
         }
         if(null != criteria.getCreatedTimeFrom()){
             specs = specs.and(createTimeThanOrEqualTo(criteria.getCreatedTimeFrom()));

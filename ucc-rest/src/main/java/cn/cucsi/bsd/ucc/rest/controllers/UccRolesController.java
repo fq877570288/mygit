@@ -3,8 +3,8 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.UccRolesCriteria;
+import cn.cucsi.bsd.ucc.common.beans.UccTeamsCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccRoles;
-import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.service.UccRolesService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +31,12 @@ public class UccRolesController {
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     public PageResultBean<List<UccRoles>> findAll(@RequestBody UccRolesCriteria search){
         return new PageResultBean(this.uccRolesService.findAll(search));
+    }
+
+    @ApiOperation(value="获取角色列表不带分页", notes="获取角色列表不带分页", httpMethod = "POST")
+    @RequestMapping(value = "/findAllOfNoPage", method = RequestMethod.POST)
+    public ResultBean<List<UccRoles>> findAllOfNoPage(@RequestBody UccRolesCriteria search) {
+        return new ResultBean(this.uccRolesService.findAllOfNoPage(search));
     }
 
     @ApiOperation(value = "根据roleId查询UccRoles", notes = "根据roleId查询UccRoles")

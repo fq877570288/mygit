@@ -49,7 +49,7 @@ public class SkillGroupUserController {
     }
 
     @ApiOperation(value = "创建SkillGroupUser", notes = "创建SkillGroupUser")
-    @RequestMapping(value = "", method =  RequestMethod.POST)
+    @RequestMapping(value = "/create", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody SkillGroupUser skillGroupUser) {
         boolean result = false;
         try {

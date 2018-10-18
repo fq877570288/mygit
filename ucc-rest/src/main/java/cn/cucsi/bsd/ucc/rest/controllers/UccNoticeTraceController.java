@@ -8,6 +8,7 @@ import cn.cucsi.bsd.ucc.data.domain.UccNoticeTrace;
 import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.service.UccNoticeTraceService;
 import io.swagger.annotations.ApiOperation;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +46,10 @@ public class UccNoticeTraceController {
     @ApiOperation(value = "创建uccNoticeTrace", notes = "创建uccNoticeTrace")
     @RequestMapping(value = "", method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody UccNoticeTrace uccNoticeTrace) {
+        Date dateTime = new Date();
+        uccNoticeTrace.setCreatedTime(dateTime);
+        uccNoticeTrace.setFlag("Y");
+        uccNoticeTrace.setOperateTime(dateTime);
         boolean result = this.uccNoticeTraceService.save(uccNoticeTrace) != null;
         return new ResultBean<>(result);
     }
