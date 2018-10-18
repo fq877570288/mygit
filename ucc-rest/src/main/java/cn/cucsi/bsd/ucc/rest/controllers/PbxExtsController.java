@@ -53,8 +53,8 @@ public class PbxExtsController {
     }
 
     @RequestMapping(value = "/findAllFreeByDomainId", method = RequestMethod.POST)
-    public List<PbxExts> findAllFreeByDomainId(@RequestBody PbxExts search) {
-        return this.PbxExtsService.findAllFreeExtsByDomainId(search);
+    public ResultBean<List<PbxExts>> findAllFreeByDomainId(@RequestBody PbxExts search) {
+        return new ResultBean<>(this.PbxExtsService.findAllFreeExtsByDomainId(search));
     }
 
     @ApiOperation(value = "根据extId查询PbxExts", notes = "根据extId查询PbxExts")
