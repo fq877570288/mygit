@@ -169,17 +169,11 @@
 
 
   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT pue.*
-    FROM ucc_users uu
-    LEFT JOIN
-    (
     SELECT ue.user_id,pe.ext_num, pe.domain_id, pe.ext_id,pe.ext_pwd
     FROM user_ext ue
     INNER JOIN pbx_exts pe
     ON ue.ext_id=pe.ext_id
-    )pue
-    ON uu.user_id=pue.user_id
     where
-    uu.user_id=#{userId}
+    ue.user_id=#{userId}
   </select>
 </mapper>
