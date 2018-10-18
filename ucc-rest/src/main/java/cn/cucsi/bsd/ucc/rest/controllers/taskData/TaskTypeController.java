@@ -1,7 +1,9 @@
 package cn.cucsi.bsd.ucc.rest.controllers.taskData;
 
 import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.ResultBean;
+import cn.cucsi.bsd.ucc.common.beans.TaskTypeForMybatisCriteria;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.TaskType;
 import cn.cucsi.bsd.ucc.service.TaskTypeService;
@@ -94,4 +96,19 @@ public class TaskTypeController {
         }
         return new ResultBean<>(result);
     }
+    @ApiOperation(value = "查询任务类别", notes = "查询任务类别，参数为true忽略在办任务的类别", httpMethod = "POST")
+    @RequestMapping(value = "/selectByPage", method = RequestMethod.POST)
+    public PageResultBean_New<List<TaskType>> selectByPage( @RequestBody TaskTypeForMybatisCriteria taskTypeForMybatisCriteria){
+        PageResultBean_New<List<TaskType>> bean = new PageResultBean_New<List<TaskType>>();
+        try{
+            bean = taskTypeService.selectByPage(taskTypeForMybatisCriteria);
+            return bean;
+        }catch (Exception e){
+            bean.setReturnMsg("error");
+            System.out.println("查询任务类别列表失败");
+            e.printStackTrace();
+            return bean;
+        }
+    }
+
 }

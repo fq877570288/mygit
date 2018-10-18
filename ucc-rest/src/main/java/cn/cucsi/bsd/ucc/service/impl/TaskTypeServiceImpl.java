@@ -1,8 +1,13 @@
 package cn.cucsi.bsd.ucc.service.impl;
 
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean;
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
+import cn.cucsi.bsd.ucc.common.beans.TaskTypeForMybatisCriteria;
 import cn.cucsi.bsd.ucc.common.mapper.TaskTypeMapper;
 import cn.cucsi.bsd.ucc.data.domain.TaskType;
 import cn.cucsi.bsd.ucc.service.TaskTypeService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +49,14 @@ public class TaskTypeServiceImpl implements TaskTypeService {
     @Override
     public List<TaskType> selectAll(String ignoreNotask) throws Exception {
         return taskTypeMapper.selectAll(ignoreNotask);
+    }
+
+    @Override
+    public PageResultBean_New<List<TaskType>> selectByPage(TaskTypeForMybatisCriteria taskTypeForMybatisCriteria) {
+        Page pageInfo = PageHelper.startPage(taskTypeForMybatisCriteria.getPageNum(), taskTypeForMybatisCriteria.getPageSize());
+        List<TaskType> list = taskTypeMapper.selectByPage(taskTypeForMybatisCriteria);
+        PageResultBean_New<List<TaskType>> pageResultBean = new PageResultBean_New(pageInfo);
+        pageResultBean.setList(list);
+        return pageResultBean;
     }
 }
