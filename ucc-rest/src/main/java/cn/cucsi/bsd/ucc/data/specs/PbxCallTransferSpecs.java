@@ -67,8 +67,12 @@ public class PbxCallTransferSpecs {
         if (!Strings.isNullOrEmpty(pbxCallTransferCriteria.getDomainId())) {
             specs = specs.and(domainIdEqual(pbxCallTransferCriteria.getDomainId()));
         }
+        
         if (!Strings.isNullOrEmpty(pbxCallTransferCriteria.getExtId())) {
-            specs = specs.and(extIdEqual(pbxCallTransferCriteria.getExtId()));
+            for(String extid : pbxCallTransferCriteria.getExtId().split(","))
+            {
+                specs = specs.or(extIdEqual(extid));
+            }
         }
         return specs;
     }
