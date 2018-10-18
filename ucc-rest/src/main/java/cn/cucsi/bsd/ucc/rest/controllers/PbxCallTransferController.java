@@ -26,9 +26,9 @@ public class PbxCallTransferController {
     @Autowired
     private ZooKeeperUtils zk;
 
-    @ApiOperation(value="根据查询条件获取呼转表", notes="根据查询条件获取呼转表", httpMethod = "GET")
-    @RequestMapping(value = "/findAll", method= RequestMethod.GET)
-    public PageResultBean<List<PbxCallTransfer>> findAll(@ModelAttribute PbxCallTransferCriteria pbxCallTransferCriteria){
+    @ApiOperation(value="根据查询条件获取呼转表", notes="根据查询条件获取呼转表", httpMethod = "POST")
+    @RequestMapping(value = "/findAll", method= RequestMethod.POST)
+    public PageResultBean<List<PbxCallTransfer>> findAll(@RequestBody PbxCallTransferCriteria pbxCallTransferCriteria){
         return new PageResultBean(this.pbxCallTransferService.findAll(pbxCallTransferCriteria));
     }
     @ApiOperation(value = "根据extId查询PbxCallTransfer", notes = "根据extId查询PbxCallTransfer")
@@ -52,11 +52,18 @@ public class PbxCallTransferController {
     public ResultBean<Boolean> create(@RequestBody PbxCallTransfer pbxCallTransfer) {
         Date dateTime = new Date();
         pbxCallTransfer.setCreatedTime(dateTime);
-        boolean result = this.pbxCallTransferService.save(pbxCallTransfer) != null;
-        if(result){
-            PbxReload.reloadCallTransfer(pbxCallTransfer, "replace", zk);
+        String extIds = pbxCallTransfer.getExtId();
+        boolean result = false;
+        for(String extId : extIds.split(","))
+        {
+            pbxCallTransfer.setExtId(extId);
+            result = this.pbxCallTransferService.save(pbxCallTransfer) != null;
+            if(result){
+                PbxReload.reloadCallTransfer(pbxCallTransfer, "replace", zk);
+            }
+            
         }
-        return new ResultBean<>(result);
+       return new ResultBean<>(result);
     }
     @ApiOperation(value = "修改PbxCallTransfer", notes = "修改PbxCallTransfer")
     @RequestMapping(value = "/{extId}", method =  RequestMethod.POST)

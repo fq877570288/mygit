@@ -9,7 +9,24 @@ import io.swagger.annotations.ApiModel;
 public class PbxCallTransferCriteria  extends BasicCriteria{
     private String num1;
     private String num2;
+    private String extId;
+    private String domainId;
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
 
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
+    public String getDomainId() {
+        return domainId;
+    }
+    
     public String getNum1() {
         return num1;
     }

@@ -2,6 +2,7 @@ package cn.cucsi.bsd.ucc.data.specs;
 
 import cn.cucsi.bsd.ucc.common.beans.PbxCallTransferCriteria;
 import cn.cucsi.bsd.ucc.data.domain.PbxCallTransfer;
+import cn.cucsi.bsd.ucc.data.domain.PbxCdrs;
 import com.google.common.base.Strings;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -35,7 +36,24 @@ public class PbxCallTransferSpecs {
             }
         };
     }
-
+      public static Specification<PbxCallTransfer> extIdEqual(final String extId) {
+        return new Specification<PbxCallTransfer>() {
+            @Override
+            public Predicate toPredicate(Root<PbxCallTransfer> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.<String>get("extId"), extId);
+            }
+        };
+    }
+      public static Specification<PbxCallTransfer> domainIdEqual(final String domainId) {
+        return new Specification<PbxCallTransfer>() {
+            @Override
+            public Predicate toPredicate(Root<PbxCallTransfer> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.<String>get("domainId"), domainId);
+            }
+        };
+    }
+    
+       
     public static Specification<PbxCallTransfer> createSpec(final PbxCallTransferCriteria pbxCallTransferCriteria) {
         Specification<PbxCallTransfer> spec = null;
         if (pbxCallTransferCriteria == null) return spec;
@@ -45,6 +63,12 @@ public class PbxCallTransferSpecs {
         }
         if (!Strings.isNullOrEmpty(pbxCallTransferCriteria.getNum2())) {
             specs = specs.and(num2Like(pbxCallTransferCriteria.getNum2()));
+        }
+        if (!Strings.isNullOrEmpty(pbxCallTransferCriteria.getDomainId())) {
+            specs = specs.and(domainIdEqual(pbxCallTransferCriteria.getDomainId()));
+        }
+        if (!Strings.isNullOrEmpty(pbxCallTransferCriteria.getExtId())) {
+            specs = specs.and(extIdEqual(pbxCallTransferCriteria.getExtId()));
         }
         return specs;
     }
