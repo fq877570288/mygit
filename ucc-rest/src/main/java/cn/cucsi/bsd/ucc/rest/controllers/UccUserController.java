@@ -59,6 +59,7 @@ public class UccUserController  {
     @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
     public PageResultBean<List<UccUsers>> findAll(@RequestBody UccUserCriteria criteria){
         PbxExtsCriteria search = new PbxExtsCriteria();
+        search.setDomainId(criteria.getDomainId());
         if(criteria.getExtNum()!=null&&!"".equals(criteria.getExtNum())){
             search.setExtNumVague(criteria.getExtNum());
             Page<PbxExts> extList = this.PbxExtsService.findAll(search);
