@@ -29,6 +29,11 @@ public class UccRolesServiceImpl implements UccRolesService{
     }
 
     @Override
+    public List<UccRoles> findAllOfNoPage(UccRolesCriteria criteria) {
+        return uccRolesRepository.findAll(UccRolesSpecs.createSpec(criteria));
+    }
+
+    @Override
     public List<UccRoles> findByRoleName(UccRolesCriteria criteria) {
         Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         return uccRolesRepository.findAll(UccRolesSpecs.createSpecByRoleName(criteria),sort);
