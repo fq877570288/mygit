@@ -5,7 +5,10 @@ import cn.cucsi.bsd.ucc.common.beans.UccNoticeCriteria;
 import cn.cucsi.bsd.ucc.data.domain.UccDomain;
 import cn.cucsi.bsd.ucc.data.domain.UccNotice;
 import com.google.common.base.Strings;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -33,7 +36,7 @@ public class UccNoticeSpecs {
         return new Specification<UccNotice>() {
             @Override
             public Predicate toPredicate(Root<UccNotice> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.like(root.<String>get("noticeTitle"), noticeTitle);
+                return criteriaBuilder.like(root.<String>get("noticeTitle"), "%" + noticeTitle + "%");
             }
         };
     }
@@ -79,6 +82,48 @@ public class UccNoticeSpecs {
             }
         };
     }
+    public static Specification<UccNotice> createTimeThanOrEqualFrom(final Date from) {
+        return new Specification<UccNotice>() {
+            @Override
+            public Predicate toPredicate(Root<UccNotice> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                try{
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                    String strDate = sdf.format(from);
+                    Date sDate=sdf.parse(strDate);
+                    return criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createdTime"), sDate);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                System.out.println("根据条件查询通话记录列表发生异常！");
+                return null;
+                }
+            }
+        };
+    }
+    
+  
+    
+    public static Specification<UccNotice> createTimeLessOrEqualTo(final Date to) {
+        return new Specification<UccNotice>() {
+            @Override
+            public Predicate toPredicate(Root<UccNotice> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                try{
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                    String strDate = sdf.format(to);
+                    Calendar calendar = new GregorianCalendar();
+                    calendar.setTime(sdf.parse(strDate));
+                    calendar.add(calendar.DATE,1);
+                    Date sDate=calendar.getTime();
+                    return criteriaBuilder.lessThanOrEqualTo(root.<Date>get("createdTime"), sDate);
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                System.out.println("根据条件查询通话记录列表发生异常！");
+                return null;
+                }
+            }
+        };
+    }
 
     public static Specification<UccNotice> createSpec(final UccNoticeCriteria criteria) {
 
@@ -107,6 +152,12 @@ public class UccNoticeSpecs {
         }
         if(!Strings.isNullOrEmpty(criteria.getDomainId())){
             specs = specs.and(domainIdEqual(criteria.getDomainId()));
+        }
+        if(null != criteria.getCreatedTimeTo()){
+            specs = specs.and(createTimeLessOrEqualTo(criteria.getCreatedTimeTo()));
+        }
+         if(null != criteria.getCreatedTimeFrom()){
+            specs = specs.and(createTimeThanOrEqualFrom(criteria.getCreatedTimeFrom()));
         }
         //System.out.println("2222");
         return specs;
