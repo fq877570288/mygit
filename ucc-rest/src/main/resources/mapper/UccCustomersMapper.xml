@@ -48,7 +48,7 @@
     <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
     <result column="release_time" property="releaseTime" jdbcType="TIMESTAMP" />
     <!-- 不是这张表的字段它是关联表字段 -->
-    <result column="domain_name" property="domainName" jdbcType="VARCHAR" />
+    <!--<result column="domain_name" property="domainName" jdbcType="VARCHAR" />-->
     <result column="TASK_TYPE_NAME" property="taskTypeName" jdbcType="VARCHAR" />
     <result column="TASK_TYPE_ID" property="taskTypeId" jdbcType="VARCHAR" />
     <result column="dept_name" property="deptName" jdbcType="VARCHAR" />
@@ -60,7 +60,7 @@
     created_time, created_user_id, created_user_name, cust_code, cust_name, defult_phone, 
     domain_id, email, fax, idcard, industrytype, installedaddress, memo, msg_resource, 
     phone, phone2, phone3, ponlogo, product_type, pull_black_reason, qq, rate, sex, status, 
-    tariffname, type, updated_nick_name, updated_time, updated_user_id, updated_user_name,domain_name,release_time
+    tariffname, type, updated_nick_name, updated_time, updated_user_id, updated_user_name,release_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria" >
     select
