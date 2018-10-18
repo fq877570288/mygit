@@ -139,9 +139,9 @@ public class CreateTaskServiceImpl implements CreateTaskService {
 					}
 					// 部门
 					// 判断数据库中是否存在该部门
-					UccDepts deptMesh = uccDeptsService.selectByNameInCache(dataImport.getDeptMeshName());
-					UccDepts deptArea = uccDeptsService.selectByNameInCache(dataImport.getDeptAreaName());
-					UccDepts deptDevelopment = uccDeptsService.selectByNameInCache(dataImport.getDevelopmentDept());
+					UccDepts deptMesh = uccDeptsService.selectByNameInCache(domainId,dataImport.getDeptMeshName());
+					UccDepts deptArea = uccDeptsService.selectByNameInCache(domainId,dataImport.getDeptAreaName());
+					UccDepts deptDevelopment = uccDeptsService.selectByNameInCache(domainId,dataImport.getDevelopmentDept());
 
 					// 判断UccDeptsNewMap中是否存在该部门
 					UccDepts meshNew = UccDeptsNewMap.get(dataImport.getDeptMeshName());

@@ -99,16 +99,20 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
-    public UccDepts selectByNameInCache(String deptName) throws Exception {
+    public UccDepts selectByNameInCache(String domainId, String deptName) throws Exception {
 
-        if(deptName==null){
+        if(MyUtils.isBlank(domainId)){
+            return null;
+        }
+
+        if(MyUtils.isBlank(deptName)){
             return null;
         }
         if(deptNameMap.isEmpty()){
             this.putAllToMap();
         }
-        if(deptNameMap.containsKey(deptName)){
-            return deptNameMap.get(deptName);
+        if(deptNameMap.containsKey(domainId+"_"+deptName)){
+            return deptNameMap.get(domainId+"_"+deptName);
         }
         return null;
     }
@@ -121,7 +125,7 @@ public class UccDeptsServiceImpl implements UccDeptsService {
         deptMap.clear();
 
         for(UccDepts dept: deptList){
-            deptNameMap.put(dept.getDeptName(), dept);
+            deptNameMap.put(dept.getDomainId()+"_"+dept.getDeptName(), dept);
             deptMap.put(dept.getDeptId(), dept);
         }
     }
@@ -129,7 +133,7 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     @Override
     public UccDepts selectByIdInCache(String deptId) throws Exception {
 
-        if(deptId==null){
+        if(MyUtils.isBlank(deptId)){
             return null;
         }
         if(deptMap.isEmpty()){
@@ -141,7 +145,7 @@ public class UccDeptsServiceImpl implements UccDeptsService {
             UccDepts _dept = this.selectByPrimaryKey(deptId);
             if(_dept != null){
                 deptMap.put(deptId, _dept);
-                deptNameMap.put(_dept.getDeptName(), _dept);
+                deptNameMap.put(_dept.getDomainId()+"_"+_dept.getDeptName(), _dept);
                 return _dept;
             }
         }
@@ -149,13 +153,13 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
-    public void putDeptToCache(UccDepts UccDepts) throws Exception {
+    public void putDeptToCache(UccDepts uccDepts) throws Exception {
 
-        if(UccDepts==null){
+        if(MyUtils.isBlank(uccDepts)){
             return;
         }
-        deptNameMap.put(UccDepts.getDeptName(), UccDepts);
-        deptMap.put(UccDepts.getDeptId(), UccDepts);
+        deptNameMap.put(uccDepts.getDomainId()+"_"+uccDepts.getDeptName(), uccDepts);
+        deptMap.put(uccDepts.getDeptId(), uccDepts);
     }
 
     @Override
