@@ -67,8 +67,6 @@ public class UccCustomers {
 
     //不是这张表的字段它是关联表字段
     @Transient
-    @OneToOne
-    @JoinColumn(name = "doamin_name", referencedColumnName = "domain_id")
     private String domainName;
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
@@ -672,8 +670,6 @@ public class UccCustomers {
         this.updatedTime = updatedTime;
     }
     @Transient
-    @OneToOne
-    @JoinColumn(name = "doamin_name", referencedColumnName = "domain_id")
     public String getDomainName() {
         return domainName;
     }
