@@ -26,7 +26,7 @@ public class TeamUsersController {
     @ApiOperation(value="根据查询条件获取班组成员列表", notes="根据查询条件获取班组成员列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     public  PageResultBean_New<List<UccUsers>> findAll(@RequestBody UccUserCriteria criteria){
-        PageResultBean_New<List<UccUsers>> pageResultBean_new = null;
+        PageResultBean_New<List<UccUsers>> pageResultBean_new = new PageResultBean_New<>();
         try {
             Page pageInfo = PageHelper.startPage(criteria.getPage(), criteria.getSize());
             List<UccUsers> list = teamUsersService.findAll(criteria);
@@ -34,7 +34,6 @@ public class TeamUsersController {
             pageResultBean_new.setList(list);
         } catch (Exception e) {
             System.out.println("获取班组成员列表异常:"+e);
-            return null;
         }
         return pageResultBean_new;
     }

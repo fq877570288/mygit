@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by mk on 2017/10/16.
  */
@@ -24,6 +26,11 @@ public class UccTeamsServiceImpl implements UccTeamsService{
         Sort sort = new Sort(Sort.Direction.DESC, "createdTime");
         Pageable pageable = new PageRequest(criteria.getPage(), criteria.getSize(), sort);
         return uccTeamsRepository.findAll(UccTeamsSpecs.createSpec(criteria),pageable);
+    }
+
+    @Override
+    public List<UccTeams> findAllOfNoPage(UccTeamsCriteria criteria) {
+        return uccTeamsRepository.findAll(UccTeamsSpecs.createSpec(criteria));
     }
 
     @Override
