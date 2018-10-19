@@ -39,7 +39,6 @@ public class UccTeamsController {
     @ApiOperation(value = "根据teamId删除UccTeams", notes = "根据teamId删除UccTeams")
     @RequestMapping(value = "/{teamId}", method= RequestMethod.DELETE)
     public ResultBean<Boolean> delete(@PathVariable String teamId){
-
         return new ResultBean<>(this.uccTeamsService.delete(teamId));
     }
 

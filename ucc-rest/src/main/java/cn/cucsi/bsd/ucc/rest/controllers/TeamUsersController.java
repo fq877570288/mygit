@@ -26,16 +26,11 @@ public class TeamUsersController {
     @ApiOperation(value="根据查询条件获取班组成员列表", notes="根据查询条件获取班组成员列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method= RequestMethod.POST)
     public  PageResultBean_New<List<UccUsers>> findAll(@RequestBody UccUserCriteria criteria){
-        PageResultBean_New<List<UccUsers>> pageResultBean_new = new PageResultBean_New<>();
-        try {
-            Page pageInfo = PageHelper.startPage(criteria.getPage(), criteria.getSize());
-            criteria.setUserStatus("0");//ucc_users表中状态标识0是有效，1是无效(不知道谁设定的)
-            List<UccUsers> list = teamUsersService.findAll(criteria);
-            pageResultBean_new = new PageResultBean_New(pageInfo);
-            pageResultBean_new.setList(list);
-        } catch (Exception e) {
-            System.out.println("获取班组成员列表异常:"+e);
-        }
+        Page pageInfo = PageHelper.startPage(criteria.getPage(), criteria.getSize());
+        criteria.setUserStatus("0");//ucc_users表中状态标识0是有效，1是无效(不知道谁设定的)
+        List<UccUsers> list = teamUsersService.findAll(criteria);
+        PageResultBean_New<List<UccUsers>> pageResultBean_new = new PageResultBean_New(pageInfo);
+        pageResultBean_new.setList(list);
         return pageResultBean_new;
     }
 
