@@ -84,6 +84,7 @@ public class UccUserController  {
     public ResultBean<List<UccUsers>> findAllByType(@PathVariable String type,@RequestBody UccUserCriteria uccUserCriteria){
         ResultBean<List<UccUsers>> resultBean = new ResultBean<>();
         if("team".equals(type)){
+            uccUserCriteria.setUserStatus("0");//ucc_users表中状态标识0是有效，1是无效(不知道谁设定的)
             List<UccUsers> uccUsersList = teamUsersService.addFindAll(uccUserCriteria);
             resultBean.setData(uccUsersList);
         }
