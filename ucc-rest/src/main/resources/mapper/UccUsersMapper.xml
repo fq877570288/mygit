@@ -660,6 +660,7 @@
           and  DATE_FORMAT(uu.created_time,'%Y-%m-%d') &lt;= #{createdTimeEnd}
         </if>
     GROUP BY uu.user_id
+    ORDER BY uu.created_time DESC
   </select>
 
   <!-- 查询不带班组信息的成员 -->

@@ -106,10 +106,10 @@ public class UccUsers {
     private String updatedNickName;
 
     @JsonView(JSONView.Summary.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createdTime;
     @JsonView(JSONView.Summary.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updatedTime;
 
     private Collection<LoginLog> loginLogs;
