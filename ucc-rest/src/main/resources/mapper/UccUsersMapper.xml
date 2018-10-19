@@ -644,6 +644,9 @@
     ) teams ON teams.user_id = uu.user_id
     WHERE 1=1
         AND  teams.team_name != ""
+        <if test="userStatus != null and userStatus!=''" >
+          AND uu.user_status =#{userStatus,jdbcType=VARCHAR}
+        </if>
         <if test="domainId != null and domainId!=''" >
           AND uu.domain_id =#{domainId,jdbcType=VARCHAR}
         </if>
@@ -679,6 +682,9 @@
     ) teams ON teams.user_id = uu.user_id
     WHERE 1=1
     AND  teams.team_name IS NULL
+    <if test="userStatus != null and userStatus!=''" >
+      AND uu.user_status =#{userStatus,jdbcType=VARCHAR}
+    </if>
     <if test="domainId != null and domainId!=''" >
       AND uu.domain_id =#{domainId,jdbcType=VARCHAR}
     </if>

@@ -29,6 +29,7 @@ public class TeamUsersController {
         PageResultBean_New<List<UccUsers>> pageResultBean_new = new PageResultBean_New<>();
         try {
             Page pageInfo = PageHelper.startPage(criteria.getPage(), criteria.getSize());
+            criteria.setUserStatus("0");//ucc_users表中状态标识0是有效，1是无效(不知道谁设定的)
             List<UccUsers> list = teamUsersService.findAll(criteria);
             pageResultBean_new = new PageResultBean_New(pageInfo);
             pageResultBean_new.setList(list);
