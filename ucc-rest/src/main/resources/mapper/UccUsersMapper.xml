@@ -654,10 +654,10 @@
           AND uu.user_name =#{userName,jdbcType=VARCHAR}
         </if>
         <if test="createdTimeStart != null ">
-          and  DATE_FORMAT(uu.created_time,'%Y-%m-%d') &gt;= #{createdTimeStart}
+          and  DATE_FORMAT(uu.created_time,'%Y-%m-%d %H:%i:%S') &gt;= #{createdTimeStart}
         </if>
         <if test="createdTimeEnd != null ">
-          and  DATE_FORMAT(uu.created_time,'%Y-%m-%d') &lt;= #{createdTimeEnd}
+          and  DATE_FORMAT(uu.created_time,'%Y-%m-%d %H:%i:%S') &lt;= #{createdTimeEnd}
         </if>
     GROUP BY uu.user_id
     ORDER BY uu.created_time DESC
