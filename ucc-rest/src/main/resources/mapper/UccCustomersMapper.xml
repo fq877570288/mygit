@@ -65,7 +65,7 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.UccBlackListCriteria" >
     select
     a.*,
-    b.domain_name as domain_name
+    b.domain_name as domainName
     from ucc_customers as a
     LEFT join ucc_domain as b ON a.domain_id = b.domain_id
     where 1=1
