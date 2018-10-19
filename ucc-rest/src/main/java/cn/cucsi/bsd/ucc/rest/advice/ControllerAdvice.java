@@ -5,6 +5,7 @@ import cn.cucsi.bsd.ucc.common.exceptions.CheckException;
 import cn.cucsi.bsd.ucc.common.exceptions.UnloginException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,7 +23,10 @@ public class ControllerAdvice {
         } else if (e instanceof UnloginException) {
             result.setMsg("Unlogin");
             result.setCode(ResultBean.NO_LOGIN);
-        } else {
+        } else if (e instanceof DataIntegrityViolationException) {
+            result.setMsg("外键存在关键，禁止删除！");
+            result.setCode(ResultBean.FAIL);
+        }  else {
             logger.error(" error ", e);
             result.setMsg(e.toString());
             result.setCode(ResultBean.FAIL);
