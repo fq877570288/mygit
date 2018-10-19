@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.cucsi.bsd.ucc.common.mapper.FsRecordMapper" >
+  <resultMap id="BaseResultMap" type="cn.cucsi.bsd.ucc.data.domain.FsRecord" >
+    <id column="record_id" property="recordId" jdbcType="VARCHAR" />
+    <result column="content_type" property="contentType" jdbcType="VARCHAR" />
+    <result column="created_nick_name" property="createdNickName" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="created_user_id" property="createdUserId" jdbcType="VARCHAR" />
+    <result column="created_user_name" property="createdUserName" jdbcType="VARCHAR" />
+    <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
+    <result column="record_from" property="recordFrom" jdbcType="VARCHAR" />
+    <result column="record_name" property="recordName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="updated_nick_name" property="updatedNickName" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="updated_user_id" property="updatedUserId" jdbcType="VARCHAR" />
+    <result column="updated_user_name" property="updatedUserName" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="cn.cucsi.bsd.ucc.data.domain.FsRecord" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="BINARY" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    record_id, content_type, created_nick_name, created_time, created_user_id, created_user_name, 
+    domain_id, record_from, record_name, type, updated_nick_name, updated_time, updated_user_id, 
+    updated_user_name
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+
+  <resultMap id="NameMap" type="cn.cucsi.bsd.ucc.data.domain.FsRecord" extends="BaseResultMap">
+    <result column="record_name" property="record_name" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from pbx_records
+    where record_id = #{recordId,jdbcType=VARCHAR}
+    and domain_id = #{domainId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from pbx_records
+    where record_id = #{recordId,jdbcType=VARCHAR}
+    and domain_id = #{domainId}
+  </delete>
+
+  <delete id="deleteByTime" parameterType="java.lang.String" >
+    delete from pbx_records
+    where created_time is not null
+    and created_time &lt; #{recordTime}
+    and domain_id = #{domainId}
+  </delete>
+
+  <insert id="insert" parameterType="cn.cucsi.bsd.ucc.data.domain.FsRecord" >
+    insert into pbx_records (record_id, content_type, created_nick_name, 
+      created_time, created_user_id, created_user_name, 
+      domain_id, record_from, record_name, 
+      type, updated_nick_name, updated_time, 
+      updated_user_id, updated_user_name, content
+      )
+    values (#{recordId,jdbcType=VARCHAR}, #{contentType,jdbcType=VARCHAR}, #{createdNickName,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{createdUserId,jdbcType=VARCHAR}, #{createdUserName,jdbcType=VARCHAR}, 
+      #{domainId,jdbcType=VARCHAR}, #{recordFrom,jdbcType=VARCHAR}, #{recordName,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{updatedNickName,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedUserId,jdbcType=VARCHAR}, #{updatedUserName,jdbcType=VARCHAR}, #{content,jdbcType=BINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.FsRecord" >
+    insert into pbx_records
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recordId != null" >
+        record_id,
+      </if>
+      <if test="contentType != null" >
+        content_type,
+      </if>
+      <if test="createdNickName != null" >
+        created_nick_name,
+      </if>
+      <if test="createdTime != null" >
+        created_time,
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id,
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name,
+      </if>
+      <if test="domainId != null" >
+        domain_id,
+      </if>
+      <if test="recordFrom != null" >
+        record_from,
+      </if>
+      <if test="recordName != null" >
+        record_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name,
+      </if>
+      <if test="updatedTime != null" >
+        updated_time,
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id,
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recordId != null" >
+        #{recordId,jdbcType=VARCHAR},
+      </if>
+      <if test="contentType != null" >
+        #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="createdNickName != null" >
+        #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="domainId != null" >
+        #{domainId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFrom != null" >
+        #{recordFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="recordName != null" >
+        #{recordName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedNickName != null" >
+        #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=BINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.cucsi.bsd.ucc.data.domain.FsRecord" >
+    update pbx_records
+    <set >
+      <if test="contentType != null" >
+        content_type = #{contentType,jdbcType=VARCHAR},
+      </if>
+      <if test="createdNickName != null" >
+        created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null" >
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createdUserId != null" >
+        created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createdUserName != null" >
+        created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="domainId != null" >
+        domain_id = #{domainId,jdbcType=VARCHAR},
+      </if>
+      <if test="recordFrom != null" >
+        record_from = #{recordFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="recordName != null" >
+        record_name = #{recordName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedNickName != null" >
+        updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null" >
+        updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedUserId != null" >
+        updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedUserName != null" >
+        updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=BINARY},
+      </if>
+    </set>
+    where record_id = #{recordId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.cucsi.bsd.ucc.data.domain.FsRecord" >
+    update pbx_records
+    set content_type = #{contentType,jdbcType=VARCHAR},
+      created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      domain_id = #{domainId,jdbcType=VARCHAR},
+      record_from = #{recordFrom,jdbcType=VARCHAR},
+      record_name = #{recordName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      updated_user_name = #{updatedUserName,jdbcType=VARCHAR},
+      content = #{content,jdbcType=BINARY}
+    where record_id = #{recordId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.cucsi.bsd.ucc.data.domain.FsRecord" >
+    update pbx_records
+    set content_type = #{contentType,jdbcType=VARCHAR},
+      created_nick_name = #{createdNickName,jdbcType=VARCHAR},
+      created_time = #{createdTime,jdbcType=TIMESTAMP},
+      created_user_id = #{createdUserId,jdbcType=VARCHAR},
+      created_user_name = #{createdUserName,jdbcType=VARCHAR},
+      domain_id = #{domainId,jdbcType=VARCHAR},
+      record_from = #{recordFrom,jdbcType=VARCHAR},
+      record_name = #{recordName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      updated_nick_name = #{updatedNickName,jdbcType=VARCHAR},
+      updated_time = #{updatedTime,jdbcType=TIMESTAMP},
+      updated_user_id = #{updatedUserId,jdbcType=VARCHAR},
+      updated_user_name = #{updatedUserName,jdbcType=VARCHAR}
+    where record_id = #{recordId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    FROM
+      pbx_records AS p
+    WHERE p.record_id > 0
+    and p.domain_id = #{domainId}
+  </select>
+
+  <select id="selectByTime" resultMap="NameMap" parameterType="java.lang.String" >
+    SELECT
+        p.record_name
+    FROM
+        pbx_records as p
+    WHERE
+	    p.created_time IS NOT NULL
+    and p.created_time &lt; #{recordTime}
+    and p.domain_id = #{domainId}
+  </select>
+
+  <!-- 查询recordTime之前的录音文件ID -->
+  <select id="selectRecordsIdByTime" resultType="java.lang.String" parameterType="java.lang.String" >
+    select
+      record_id
+    from
+      pbx_records
+    where
+      created_time is not null
+    and created_time &lt; #{recordTime}
+    and domain_id = #{domainId}
+  </select>
+
+  <!-- 删除数据库存放录音文件ById -->
+  <update id="updateContentByRecordsId" parameterType="java.lang.String" >
+    update pbx_records records
+    set records.content = null
+    where records.id = #{recordsId}
+    and domain_id = #{domainId}
+  </update>
+
+</mapper>

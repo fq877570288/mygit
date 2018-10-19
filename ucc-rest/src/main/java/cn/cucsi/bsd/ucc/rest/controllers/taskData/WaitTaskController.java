@@ -53,7 +53,7 @@ public class WaitTaskController {
 			session.setAttribute("taskDetailIdListForWait", taskDetailIdList);
 			//model.addAttribute("list", list);
 			waitTaskListMap.put("list", list);
-			waitTaskListMap.put("taskDetailIdListForWait", taskDetailIdList);
+			//waitTaskListMap.put("taskDetailIdListForWait", taskDetailIdList);
 			waitTaskListMap.put("taskDetailSearch",taskDetailSearch);
 			waitTaskListMap.put("msg","操作成功！");
 			waitTaskListMap.put("code","0");
@@ -136,74 +136,77 @@ public class WaitTaskController {
 
 		Map<String,Object> doTaskReceiveMap = new HashMap<String,Object>();
 		try {
-			if(!MyUtils.isBlank(taskDetailIdsList)){
-				if(!MyUtils.isBlank(userIdList)){
-					//如果所传用户ID列表不为空，则把任务平均分配给这些用户
-					List<List<String>> splitedTaskList = MyUtils.averageAssign(taskDetailIdsList,userIdList.size());
-					List<String> splitedTaskListbatch = null;
+			//如果前端不传taskDetailIdsList(即不勾选)，那么就从session拿
+			if(MyUtils.isBlank(taskDetailIdsList)){
+				taskDetailIdsList = (List<String>)session.getAttribute("taskDetailIdListForWait");
+			}
+			if(MyUtils.isBlank(taskDetailIdsList)){
+				taskReceiveMap.put("msg","操作失败！taskDetailIdListForWait为空！");
+				System.out.println("任务接收时 前端或从session获取taskDetailIdListForWait为空");
+				return taskReceiveMap;
+			}
+			if(!MyUtils.isBlank(userIdList)){
+				//如果所传用户ID列表不为空，则把任务平均分配给这些用户
+				List<List<String>> splitedTaskList = MyUtils.averageAssign(taskDetailIdsList,userIdList.size());
+				List<String> splitedTaskListbatch = null;
 
-					for (int i = 0; i < splitedTaskList.size(); i++) {
-						splitedTaskListbatch = splitedTaskList.get(i);
-						if(!MyUtils.isBlank(splitedTaskListbatch)){
-							StringBuilder stringBuilder = new StringBuilder();
-							for(String taskId: splitedTaskListbatch){
-								stringBuilder = stringBuilder.append(taskId).append(",");
-							}
-							String taskIdsStr = stringBuilder.toString();
-							if(taskIdsStr.endsWith(",")){
-								taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
-							}
-							for (int j = 0; j < userIdList.size(); j++) {
-								userId = userIdList.get(j);
-								doTaskReceiveMap = waitTaskService.taskReceive(userId, taskIdsStr,domainId);
-								if(doTaskReceiveMap.get("code").equals("-1")){
-									taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
-									return taskReceiveMap;
-								}
+				for (int i = 0; i < splitedTaskList.size(); i++) {
+					splitedTaskListbatch = splitedTaskList.get(i);
+					if(!MyUtils.isBlank(splitedTaskListbatch)){
+						StringBuilder stringBuilder = new StringBuilder();
+						for(String taskId: splitedTaskListbatch){
+							stringBuilder = stringBuilder.append(taskId).append(",");
+						}
+						String taskIdsStr = stringBuilder.toString();
+						if(taskIdsStr.endsWith(",")){
+							taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
+						}
+						for (int j = 0; j < userIdList.size(); j++) {
+							userId = userIdList.get(j);
+							doTaskReceiveMap = waitTaskService.taskReceive(userId, taskIdsStr,domainId);
+							if(doTaskReceiveMap.get("code").equals("-1")){
+								taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
+								return taskReceiveMap;
 							}
 						}
 					}
-				}else{
-					//如果所传用户ID列表为空，则先查询该用户下同部门的所有用户ID，然后再平均分配任务
-					List<UccUsers> userIdList2 = uccUserService.selectSameDeptUserIdByUserId(userId);
-					if(!MyUtils.isBlank(userIdList2)){
-						//把任务平均分配给这些用户
-						List<List<String>> splitedTaskList2 = MyUtils.averageAssign(taskDetailIdsList,userIdList2.size());
-						List<String> splitedTaskListbatch2 = null;
+				}
+			}else{
+				//如果所传用户ID列表为空，则先查询该用户下同部门的所有用户ID，然后再平均分配任务
+				List<UccUsers> userIdList2 = uccUserService.selectSameDeptUserIdByUserId(userId);
+				if(!MyUtils.isBlank(userIdList2)){
+					//把任务平均分配给这些用户
+					List<List<String>> splitedTaskList2 = MyUtils.averageAssign(taskDetailIdsList,userIdList2.size());
+					List<String> splitedTaskListbatch2 = null;
 
-						if(!MyUtils.isBlank(splitedTaskList2)){
-							for (int i = 0; i < splitedTaskList2.size(); i++) {
-								splitedTaskListbatch2 = splitedTaskList2.get(i);
-								if(!MyUtils.isBlank(splitedTaskListbatch2)){
-									StringBuilder stringBuilder2 = new StringBuilder();
-									for(String taskId: splitedTaskListbatch2){
-										stringBuilder2 = stringBuilder2.append(taskId).append(",");
-									}
-									String taskIdsStr = stringBuilder2.toString();
-									if(taskIdsStr.endsWith(",")){
-										taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
-									}
-									for (int j = 0; j < userIdList2.size(); j++) {
-										System.out.println("userIdList2:::" + userIdList2.get(j).getUserId());
-										userId = userIdList2.get(j).getUserId();
-										doTaskReceiveMap = waitTaskService.taskReceive(userId,taskIdsStr,domainId);
-										System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("code"));
-										System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("msg"));
+					if(!MyUtils.isBlank(splitedTaskList2)){
+						for (int i = 0; i < splitedTaskList2.size(); i++) {
+							splitedTaskListbatch2 = splitedTaskList2.get(i);
+							if(!MyUtils.isBlank(splitedTaskListbatch2)){
+								StringBuilder stringBuilder2 = new StringBuilder();
+								for(String taskId: splitedTaskListbatch2){
+									stringBuilder2 = stringBuilder2.append(taskId).append(",");
+								}
+								String taskIdsStr = stringBuilder2.toString();
+								if(taskIdsStr.endsWith(",")){
+									taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
+								}
+								for (int j = 0; j < userIdList2.size(); j++) {
+									System.out.println("userIdList2:::" + userIdList2.get(j).getUserId());
+									userId = userIdList2.get(j).getUserId();
+									doTaskReceiveMap = waitTaskService.taskReceive(userId,taskIdsStr,domainId);
+									System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("code"));
+									System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("msg"));
 
-										if(doTaskReceiveMap.get("code").equals("-1")){
-											taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
-											return taskReceiveMap;
-										}
+									if(doTaskReceiveMap.get("code").equals("-1")){
+										taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
+										return taskReceiveMap;
 									}
 								}
 							}
 						}
 					}
 				}
-			}else{
-				session.setAttribute("taskDetailIdListForWait", null);
-				taskReceiveMap.put("msg","入参：：：taskDetailIdsList不能为空！");
-				return taskReceiveMap;
 			}
 			session.setAttribute("taskDetailIdListForWait", null);
 			taskReceiveMap.put("msg","操作成功！");
