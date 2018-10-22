@@ -481,13 +481,15 @@ public class UccUserController  {
                     for (UserExt userEx : userExtList) {
                         insertResult= userExtService.insert(userEx);
                     }
-                    result=true;
+                    if(insertResult!=0||userExtList==null||userExtList.size()==0){
+                        result=true;
+                    }
                 }
             }else {
                 for (UserExt userEx : userExtList) {
                     insertResult= userExtService.insert(userEx);
                 }
-                if(insertResult!=0){
+                if(insertResult!=0||userExtList==null||userExtList.size()==0){
                     result=true;
                 }
             }
