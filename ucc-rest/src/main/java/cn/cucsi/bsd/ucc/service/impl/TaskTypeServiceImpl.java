@@ -59,4 +59,8 @@ public class TaskTypeServiceImpl implements TaskTypeService {
         pageResultBean.setList(list);
         return pageResultBean;
     }
+    @Override
+    public int selectByName(String name){
+        return taskTypeMapper.selectByName(name);
+    }
 }

@@ -86,9 +86,13 @@ public class TaskTypeController {
         taskType.setCreateTime(new Date(System.currentTimeMillis()));
         boolean result = false;
         try {
-            int num = this.taskTypeService.insertSelective(taskType);
-            if(num !=0){
-                result =true;
+            if(taskType.getTaskTypeName()!=null && taskType.getTaskTypeName().length()!=0){
+                int nameNum = this.taskTypeService.selectByName(taskType.getTaskTypeName());
+                if(nameNum!=0){
+                    if(this.taskTypeService.insertSelective(taskType)!=0){
+                        result =true;
+                    }
+                }
             }
         } catch (Exception e) {
             System.out.println("创建TaskType失败！");
