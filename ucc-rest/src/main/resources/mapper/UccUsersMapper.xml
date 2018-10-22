@@ -654,7 +654,7 @@
           AND teams.team_id =#{teamId,jdbcType=VARCHAR}
         </if>
         <if test="userName != null and userName!=''" >
-          AND uu.user_name =#{userName,jdbcType=VARCHAR}
+          AND uu.user_name LIKE '%${userName}%'
         </if>
         <if test="createdTimeStart != null ">
           and  DATE_FORMAT(uu.created_time,'%Y-%m-%d %H:%i:%S') &gt;= #{createdTimeStart}
