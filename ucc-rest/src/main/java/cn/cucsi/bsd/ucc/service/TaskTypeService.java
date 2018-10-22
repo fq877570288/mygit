@@ -23,4 +23,6 @@ public interface TaskTypeService {
     List<TaskType> selectAll(String ignoreNotask) throws Exception;
 
     PageResultBean_New<List<TaskType>> selectByPage(TaskTypeForMybatisCriteria taskTypeForMybatisCriteria);
+
+    int selectByName(String name);
 }
