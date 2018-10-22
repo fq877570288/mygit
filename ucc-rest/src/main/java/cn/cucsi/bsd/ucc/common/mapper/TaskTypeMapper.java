@@ -26,4 +26,6 @@ public interface TaskTypeMapper {
 	List<TaskType> selectAll(@Param("ignoreNotask")String ignoreNotask) throws Exception;
 
 	List<TaskType> selectByPage(TaskTypeForMybatisCriteria taskTypeForMybatisCriteria);
+
+    int selectByName(String name);
 }
