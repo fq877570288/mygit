@@ -677,10 +677,10 @@
   <!-- 在办任务列表 -->
   <select id="selectOngoingBySearchCount" resultType="Integer"
           parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch">
-    SELECT
-      count(DISTINCT concat(c.cust_id, tt.TASK_TYPE_ID))
+    select count(*) from(SELECT
+    c.cust_id, tt.TASK_TYPE_ID,t.OPERATOR_ID
     FROM
-      ucc_customers c
+    ucc_customers c
     INNER JOIN OC_TASK_DETAIL d ON c.businesscode = d.BUSINESS_CODE AND d.domain_id = c.domain_id
     inner join OC_TASK_TRANSFER t on t.TASK_DETAIL_ID = d.TASK_DETAIL_ID and t.TRANSFER_STATUS = d.TASK_STATUS
     LEFT JOIN ucc_depts uc ON uc.dept_id = d.ROPERATE_DEPT_ID
@@ -700,6 +700,7 @@
       and d.TASK_TYPE_ID = #{taskTypeId}
     </if>
     <include refid="Sql_WhereTask" />
+    GROUP BY c.cust_id) as c
   </select>
 
   <select id="selectOngoingBySearch" resultMap="BaseResultMap"

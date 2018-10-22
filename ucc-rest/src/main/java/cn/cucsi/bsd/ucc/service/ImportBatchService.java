@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.service;
 import java.util.List;
 import java.util.Map;
 import cn.cucsi.bsd.ucc.common.beans.AllocationTaskCriteria;
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.data.domain.ImportBatch;
 
 public interface ImportBatchService {
@@ -16,7 +17,7 @@ public interface ImportBatchService {
 
 	List<ImportBatch> selectAllByBatchFlag(ImportBatch importBatch) throws Exception;
 
-	List<ImportBatch> selectAllocationAllByBatchFlag(ImportBatch importBatch, AllocationTaskCriteria allocationTaskCriteria) throws Exception;
+	PageResultBean_New<List<ImportBatch>> selectAllocationAllByBatchFlag(ImportBatch importBatch, AllocationTaskCriteria allocationTaskCriteria) throws Exception;
 
 	List<ImportBatch> selectBySearch(Map<String, Object> barchsMap) throws Exception;
 
