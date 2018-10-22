@@ -473,7 +473,7 @@ public class UccUserController  {
         try {
             int insertResult=0;
             UserExt userExt = new UserExt();
-            userExt.setUserId(userExtList.get(0).getUserId());
+            userExt.setUserId(uccUsers.getUserId());
             List<UserExt> queryList=userExtService.findByUserId(userExt);
             if(queryList.size()>0){
                 int delResult = userExtService.del(userExt);
@@ -481,9 +481,7 @@ public class UccUserController  {
                     for (UserExt userEx : userExtList) {
                         insertResult= userExtService.insert(userEx);
                     }
-                    if(insertResult!=0){
-                        result=true;
-                    }
+                    result=true;
                 }
             }else {
                 for (UserExt userEx : userExtList) {
