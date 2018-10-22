@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Array;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -70,6 +71,7 @@ public class UccCustomersController {
     @RequestMapping(value = "", method =  RequestMethod.POST,produces="application/json;charset=UTF-8")
     public ResultBean<Boolean> create(@RequestBody UccCustomers uccCustomers) {
         boolean result = false;
+        uccCustomers.setCreatedTime(new Date(System.currentTimeMillis()));
         try {
             result = this.uccCustomersService.save(uccCustomers) != null;
         } catch (Exception e) {

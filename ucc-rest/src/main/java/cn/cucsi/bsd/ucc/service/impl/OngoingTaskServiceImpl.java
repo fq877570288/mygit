@@ -45,7 +45,6 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 		//taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
 		taskDetailSearch.setOperatorId(taskDetailSearch.getUserId());
 		Integer retcode = uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch)==null?0:uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch);
-
 		// 分页查询
 		taskDetailSearch.setup(retcode, taskDetailSearch.getShowLines());
 		return uccCustomersMapper.selectOngoingBySearch(taskDetailSearch);

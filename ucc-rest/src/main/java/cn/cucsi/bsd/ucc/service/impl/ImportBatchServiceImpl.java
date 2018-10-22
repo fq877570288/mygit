@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import cn.cucsi.bsd.ucc.common.beans.AllocationTaskCriteria;
+import cn.cucsi.bsd.ucc.common.beans.PageResultBean_New;
 import cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch;
 import cn.cucsi.bsd.ucc.common.mapper.ImportBatchMapper;
 import cn.cucsi.bsd.ucc.common.mapper.TaskDetailMapper;
@@ -16,6 +17,8 @@ import cn.cucsi.bsd.ucc.data.domain.UccDepts;
 import cn.cucsi.bsd.ucc.service.ImportBatchService;
 import cn.cucsi.bsd.ucc.service.UccDeptsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,9 +70,9 @@ public class ImportBatchServiceImpl implements ImportBatchService {
 	 * 分配任务列表查询
 	 */
 	@Override
-	public List<ImportBatch> selectAllocationAllByBatchFlag(ImportBatch importBatch, AllocationTaskCriteria allocationTaskCriteria)
+	public PageResultBean_New<List<ImportBatch>> selectAllocationAllByBatchFlag(ImportBatch importBatch, AllocationTaskCriteria allocationTaskCriteria)
 			throws Exception {
-
+		PageResultBean_New<List<ImportBatch>> pageResultBean_new = null;
 		TaskDetailSearch search = new TaskDetailSearch();
 		List<TaskDetail> taskDetailList = null;
 		try {
@@ -117,8 +120,13 @@ public class ImportBatchServiceImpl implements ImportBatchService {
                 importBatchs = "'" + importBatchs.substring(0, importBatchs.lastIndexOf(","));
                 importBatch.setImportBatchs(importBatchs);
             }
-
-			return importBatchMapper.selectAllByBatchFlag(importBatch);
+			Page pageInfo = PageHelper.startPage(allocationTaskCriteria.getPageNum(), allocationTaskCriteria.getPageSize());
+			List<ImportBatch> list= importBatchMapper.selectAllByBatchFlag(importBatch);
+			pageResultBean_new = new PageResultBean_New(pageInfo);
+			pageResultBean_new.setList(list);
+			pageResultBean_new.setReturnMsg("查询成功！");
+			pageResultBean_new.setReturnCode(PageResultBean_New.SUCCESS);
+			return pageResultBean_new;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("分配任务列表查询出现异常！");

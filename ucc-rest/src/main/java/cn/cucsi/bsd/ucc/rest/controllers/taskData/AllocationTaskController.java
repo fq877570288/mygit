@@ -43,8 +43,8 @@ public class AllocationTaskController {
 	@RequestMapping(value = "/allocationTaskList", method= RequestMethod.POST)
 	public PageResultBean_New<List<ImportBatch>> allocationTaskList(@RequestBody AllocationTaskCriteria allocationTaskCriteria, HttpSession session){
 
-		Page pageInfo = PageHelper.startPage(allocationTaskCriteria.getPageNum(), allocationTaskCriteria.getPageSize());
-		List<ImportBatch> importBatchlist = null;
+
+		//List<ImportBatch> importBatchlist = null;
 
 		String userId = allocationTaskCriteria.getUserId()==null?"":allocationTaskCriteria.getUserId();
 		ImportBatch importBatch = new ImportBatch();
@@ -54,14 +54,14 @@ public class AllocationTaskController {
 		try {
 			String deptIdAndChildId = (String)session.getAttribute("DeptIdAndChildIds");
 			allocationTaskCriteria.setDeptIdAndChildIds(deptIdAndChildId);
-			importBatchlist = importBatchervice.selectAllocationAllByBatchFlag(importBatch,allocationTaskCriteria);
-			System.out.println("importBatchlist:::" + importBatchlist.size());
+			pageResultBean_new = importBatchervice.selectAllocationAllByBatchFlag(importBatch,allocationTaskCriteria);
+			//System.out.println("importBatchlist:::" + importBatchlist.size());
 
 			//model.addAttribute("importBatchlist", importBatchlist);
-			pageResultBean_new = new PageResultBean_New(pageInfo);
+			/*pageResultBean_new = new PageResultBean_New(pageInfo);
 			pageResultBean_new.setList(importBatchlist);
 			pageResultBean_new.setReturnMsg("查询成功！");
-			pageResultBean_new.setReturnCode(PageResultBean_New.SUCCESS);
+			pageResultBean_new.setReturnCode(PageResultBean_New.SUCCESS);*/
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage(), e);
