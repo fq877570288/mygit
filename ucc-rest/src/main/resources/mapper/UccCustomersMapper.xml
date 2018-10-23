@@ -82,10 +82,10 @@
       AND a.cust_name LIKE '%${custName}%'
     </if>
     <if test="startTime!=null and startTime!=''">
-      and DATE_FORMAT(b.created_time,'%Y-%m-%d %H:%i:%S') &gt;=#{startTime}
+      and DATE_FORMAT(a.created_time,'%Y-%m-%d %H:%i:%S') &gt;=#{startTime}
     </if>
     <if test="endTime!=null and endTime!=''">
-      and DATE_FORMAT(b.created_time,'%Y-%m-%d %H:%i:%S') &lt;=#{endTime}
+      and DATE_FORMAT(a.created_time,'%Y-%m-%d %H:%i:%S') &lt;=#{endTime}
     </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
