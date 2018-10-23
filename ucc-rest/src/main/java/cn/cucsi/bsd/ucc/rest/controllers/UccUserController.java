@@ -443,6 +443,7 @@ public class UccUserController  {
         uccPermissionsAndUser.setName(uccPermissions.getPermissionName());
         uccPermissionsAndUser.setIcon(uccPermissions.getIcon());
         uccPermissionsAndUser.setPath(uccPermissions.getRoute());
+        uccPermissionsAndUser.setIsLeftMenu(uccPermissions.getIsLeftMenu());
         List<UccPermissions> uccPermissionsList = uccPermissions.getUccPermissions();
         List<UccPermissionsAndUserSecound> uccPermissionsAndUserList = new ArrayList<>();
         if(uccPermissionsList!=null&&uccPermissionsList.size()!=0){
@@ -452,6 +453,7 @@ public class UccUserController  {
                 permissionsAndUser.setName(permissions.getPermissionName());
                 permissionsAndUser.setIcon(permissions.getIcon());
                 permissionsAndUser.setPath(permissions.getRoute());
+                permissionsAndUser.setIsLeftMenu(permissions.getIsLeftMenu());
                 uccPermissionsAndUserList.add(permissionsAndUser);
             }
         }
