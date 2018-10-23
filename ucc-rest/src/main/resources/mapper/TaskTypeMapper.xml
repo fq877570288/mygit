@@ -118,7 +118,7 @@
     </if>
     ORDER  BY  CREATE_TIME DESC
   </select>
-  <select id="" resultType="int" parameterType="java.lang.String">
+  <select id="selectByName" resultType="int" parameterType="java.lang.String">
     select count(*) from OC_TASK_TYPE where TASK_TYPE_NAME = #{name}
   </select>
 </mapper>
