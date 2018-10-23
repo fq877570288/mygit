@@ -31,6 +31,8 @@ public class UccPermissions {
     private String mpid;
 
     private String domainId;
+    @JsonView(JSONView.Summary.class)
+    private String isLeftMenu;
 
 
 
@@ -249,5 +251,15 @@ public class UccPermissions {
 
     public void setDomainId(String domainId) {
         this.domainId = domainId;
+    }
+
+    @Basic
+    @Column(name = "is_left_menu", nullable = true, length = 32)
+    public String getIsLeftMenu() {
+        return isLeftMenu;
+    }
+
+    public void setIsLeftMenu(String isLeftMenu) {
+        this.isLeftMenu = isLeftMenu;
     }
 }
