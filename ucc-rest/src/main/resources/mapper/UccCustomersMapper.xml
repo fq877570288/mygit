@@ -87,6 +87,9 @@
     <if test="endTime!=null and endTime!=''">
       and DATE_FORMAT(a.created_time,'%Y-%m-%d %H:%i:%S') &lt;=#{endTime}
     </if>
+    <if test="domainName != null and domainName !=''">
+      and b.domain_name like '%${domainName}%'
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from ucc_customers

@@ -22,6 +22,16 @@ public class UccBlackListCriteria extends BasicPageCriteriaForBean{
     private String endTime;
     @ApiModelProperty(value = "状态（黑名单为7）",required = false)
     private Integer type;
+    @ApiModelProperty(value = "租户名",required = false)
+    private String domainName;
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
 
     public String getCustId() {
         return custId;
