@@ -1456,7 +1456,7 @@
             and  p.dept_name = #{deptName}
         </if>
         <include refid="Sql_MonitorWhere" />
-        order by d.TASK_STATUS, d.TASK_CODE DESC
+        order by r.TRANSFER_TIME DESC
         <if test="begin != null and showLines != null and showLines != 0">
             limit #{begin},#{showLines}
         </if>
