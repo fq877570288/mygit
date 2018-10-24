@@ -1108,7 +1108,7 @@
       d.domain_id,
       d.DEFULT_PHONE,
       d.TASK_STATUS,
-      e.dept_name
+      e.dept_name as DEVELOPMENT_DEPT_NAME
     FROM
       OC_TASK_DETAIL d
       LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
