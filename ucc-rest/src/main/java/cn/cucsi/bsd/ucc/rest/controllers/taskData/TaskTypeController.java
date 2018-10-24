@@ -87,8 +87,7 @@ public class TaskTypeController {
         boolean result = false;
         try {
             if(taskType.getTaskTypeName()!=null && taskType.getTaskTypeName().length()!=0){
-                int nameNum = this.taskTypeService.selectByName(taskType.getTaskTypeName());
-                if(nameNum!=0){
+                if(this.taskTypeService.selectByName(taskType.getTaskTypeName())==0){
                     if(this.taskTypeService.insertSelective(taskType)!=0){
                         result =true;
                     }

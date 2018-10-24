@@ -1087,6 +1087,7 @@
       OC_TASK_DETAIL d
       LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
       LEFT JOIN OC_TASK_TYPE as o on d.TASK_TYPE_ID = o.TASK_TYPE_ID
+      left join ucc_depts as e on e.dept_id = d.ROPERATE_DEPT_ID
     WHERE
       1 = 1
     <include refid="Sql_AllocationWhere" />
@@ -1106,11 +1107,13 @@
       d.USER_ID,
       d.domain_id,
       d.DEFULT_PHONE,
-      d.TASK_STATUS
+      d.TASK_STATUS,
+      e.dept_name as DEVELOPMENT_DEPT_NAME
     FROM
       OC_TASK_DETAIL d
       LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
       LEFT JOIN OC_TASK_TYPE as o on d.TASK_TYPE_ID = o.TASK_TYPE_ID
+      left join ucc_depts as e on e.dept_id = d.ROPERATE_DEPT_ID
     WHERE
     1 = 1
     <include refid="Sql_AllocationWhere" />
