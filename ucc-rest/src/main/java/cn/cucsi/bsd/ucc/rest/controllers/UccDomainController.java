@@ -78,6 +78,7 @@ public class UccDomainController {
         ResultBean<Object> resultBean = new ResultBean();
         if(loginUser != null && "uccAdmin".equals(loginUser.getUserId())){
 //            uccDomain.setCreatedTime(new Date());
+            uccDomain.setStatus("1");
             return uccDomainService.createDomin(uccDomain);
         }
         else{

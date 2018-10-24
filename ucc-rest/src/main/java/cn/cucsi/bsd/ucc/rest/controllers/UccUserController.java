@@ -443,6 +443,7 @@ public class UccUserController  {
         uccPermissionsAndUser.setName(uccPermissions.getPermissionName());
         uccPermissionsAndUser.setIcon(uccPermissions.getIcon());
         uccPermissionsAndUser.setPath(uccPermissions.getRoute());
+        uccPermissionsAndUser.setIsLeftMenu(uccPermissions.getIsLeftMenu());
         List<UccPermissions> uccPermissionsList = uccPermissions.getUccPermissions();
         List<UccPermissionsAndUserSecound> uccPermissionsAndUserList = new ArrayList<>();
         if(uccPermissionsList!=null&&uccPermissionsList.size()!=0){
@@ -452,6 +453,7 @@ public class UccUserController  {
                 permissionsAndUser.setName(permissions.getPermissionName());
                 permissionsAndUser.setIcon(permissions.getIcon());
                 permissionsAndUser.setPath(permissions.getRoute());
+                permissionsAndUser.setIsLeftMenu(permissions.getIsLeftMenu());
                 uccPermissionsAndUserList.add(permissionsAndUser);
             }
         }
@@ -473,7 +475,7 @@ public class UccUserController  {
         try {
             int insertResult=0;
             UserExt userExt = new UserExt();
-            userExt.setUserId(userExtList.get(0).getUserId());
+            userExt.setUserId(uccUsers.getUserId());
             List<UserExt> queryList=userExtService.findByUserId(userExt);
             if(queryList.size()>0){
                 int delResult = userExtService.del(userExt);
@@ -481,7 +483,7 @@ public class UccUserController  {
                     for (UserExt userEx : userExtList) {
                         insertResult= userExtService.insert(userEx);
                     }
-                    if(insertResult!=0){
+                    if(insertResult!=0||userExtList==null||userExtList.size()==0){
                         result=true;
                     }
                 }
@@ -489,7 +491,7 @@ public class UccUserController  {
                 for (UserExt userEx : userExtList) {
                     insertResult= userExtService.insert(userEx);
                 }
-                if(insertResult!=0){
+                if(insertResult!=0||userExtList==null||userExtList.size()==0){
                     result=true;
                 }
             }

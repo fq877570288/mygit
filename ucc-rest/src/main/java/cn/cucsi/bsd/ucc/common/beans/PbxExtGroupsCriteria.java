@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.common.beans;
 /**
  * Created by jjjjj on 2017-10-13.
  */
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,7 +35,7 @@ public class PbxExtGroupsCriteria extends BasicCriteria  {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-
+    @JsonFormat(pattern="yyyy-MM-ddHH:mm:ss")
     public Date getCreatedTimeFrom() {
         return createdTimeFrom;
     }
@@ -42,7 +43,7 @@ public class PbxExtGroupsCriteria extends BasicCriteria  {
     public void setCreatedTimeFrom(Date createdTimeFrom) {
         this.createdTimeFrom = createdTimeFrom;
     }
-
+    @JsonFormat(pattern="yyyy-MM-ddHH:mm:ss")
     public Date getCreatedTimeTo() {
         return createdTimeTo;
     }

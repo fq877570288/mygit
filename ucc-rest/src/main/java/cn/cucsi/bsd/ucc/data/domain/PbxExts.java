@@ -107,7 +107,7 @@ public class PbxExts {
     private String extGroupsByExtId;
 
     @Id
-    @Column(name = "ext_id", nullable = false, length = 32)
+    @Column(name = "ext_id", nullable = false, length = 64)
     @GenericGenerator(name="idGenerator", strategy="uuid")
     @GeneratedValue(generator="idGenerator")
     public String getExtId() {
