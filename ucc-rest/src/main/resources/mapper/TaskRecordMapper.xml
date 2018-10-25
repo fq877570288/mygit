@@ -121,10 +121,10 @@
 			and p3.dept_name LIKE '%${developmentDeptName}%'
 		</if>
 		<if test="null!=startTime and startTime != ''">
-			and DATE_FORMAT(a.RECORD_TIME,'%Y-%m-%d') &gt;= #{startTime}
+			and DATE_FORMAT(a.IMPORT_TIME,'%Y-%m-%d %H:%i:%S') &gt;= #{startTime}
 		</if>
 		<if test=" null!=endTime and endTime != ''">
-			and DATE_FORMAT(a.RECORD_TIME,'%Y-%m-%d') &lt;= #{endTime}
+			and DATE_FORMAT(a.IMPORT_TIME,'%Y-%m-%d %H:%i:%S') &lt;= #{endTime}
 		</if>
 		<if test=" callResult != null and callResult != ''">
 			and r.CALL_RESULT = #{callResult}
