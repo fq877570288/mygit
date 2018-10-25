@@ -24,7 +24,7 @@ public class ControllerAdvice {
             result.setMsg("Unlogin");
             result.setCode(ResultBean.NO_LOGIN);
         } else if (e instanceof DataIntegrityViolationException) {
-            result.setMsg("外键存在关键，禁止删除！");
+            result.setMsg("外键存在关联，禁止删除！");
             result.setCode(ResultBean.FAIL);
         }  else {
             logger.error(" error ", e);
