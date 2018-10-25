@@ -310,15 +310,16 @@ public class UccUserController  {
     public ResultBean_New<List<UccUserByDept>> userListByDept( HttpServletRequest request) {
         HttpSession session = request.getSession();
         UccUsers user = (UccUsers) session.getAttribute("uccUsers");
-        Collection<UccDepts> uccDepts = user.getDepts();
-        List<UserDeptCriteria> userDeptCriterias = new ArrayList<>();
-        for (UccDepts uccDept : uccDepts) {
-            UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
-            userDeptCriteria.setDeptId(uccDept.getDeptId());
-            userDeptCriteria.setDomainId(uccDept.getDomainId());
-            userDeptCriteria.setDeptName(uccDept.getDeptName());
-            userDeptCriterias.add(userDeptCriteria);
-        }
+        if(user!=null){
+            Collection<UccDepts> uccDepts = user.getDepts();
+            List<UserDeptCriteria> userDeptCriterias = new ArrayList<>();
+            for (UccDepts uccDept : uccDepts) {
+                UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
+                userDeptCriteria.setDeptId(uccDept.getDeptId());
+                userDeptCriteria.setDomainId(uccDept.getDomainId());
+                userDeptCriteria.setDeptName(uccDept.getDeptName());
+                userDeptCriterias.add(userDeptCriteria);
+            }
 
         /*UserDeptCriteria userDeptCriteria = new UserDeptCriteria();
         userDeptCriteria.setDeptId("4028e38165ea6d7f0165ea951c290000");
@@ -334,7 +335,11 @@ public class UccUserController  {
         userDeptCriterias.add(userDeptCriteria);
         userDeptCriterias.add(userDeptCriteria1);*/
 
-        return uccUserService.userListByDept(userDeptCriterias);
+            return uccUserService.userListByDept(userDeptCriterias);
+        }else{
+            return new ResultBean_New<List<UccUserByDept>>("FAIL","无法获取该用户");
+        }
+
     }
 
     /**
