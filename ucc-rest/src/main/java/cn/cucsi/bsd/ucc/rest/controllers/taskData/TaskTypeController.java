@@ -6,6 +6,7 @@ import cn.cucsi.bsd.ucc.common.beans.ResultBean;
 import cn.cucsi.bsd.ucc.common.beans.TaskTypeForMybatisCriteria;
 import cn.cucsi.bsd.ucc.common.untils.UUIDGenerator;
 import cn.cucsi.bsd.ucc.data.domain.TaskType;
+import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.service.TaskTypeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
@@ -30,12 +32,13 @@ public class TaskTypeController {
     private TaskTypeService taskTypeService;
     @ApiOperation(value = "查询任务类别", notes = "查询任务类别，参数为true忽略在办任务的类别", httpMethod = "GET")
     @RequestMapping(value = "/selectAll/{ignoreNotask}", method = RequestMethod.GET)
-    public PageResultBean<List<TaskType>> selectAll(@PathVariable String ignoreNotask){
+    public PageResultBean<List<TaskType>> selectAll(@PathVariable String ignoreNotask,HttpSession session){
         PageResultBean<List<TaskType>> bean = new PageResultBean<List<TaskType>>();
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
         try{
             //ignoreNotask 忽略没有任务的任务类型
             bean.setMsg("success");
-            List<TaskType> list =  taskTypeService.selectAll(ignoreNotask);
+            List<TaskType> list =  taskTypeService.selectAll(ignoreNotask,user.getDomainId());
             bean.setData(list);
             return bean;
         }catch(Exception e){
@@ -80,12 +83,14 @@ public class TaskTypeController {
 
     @ApiOperation(value = "创建TaskType", notes = "创建TaskType")
     @RequestMapping(value = "", method =  RequestMethod.POST,produces="application/json;charset=UTF-8")
-    public ResultBean<Boolean> create(@RequestBody TaskType taskType) {
+    public ResultBean<Boolean> create(@RequestBody TaskType taskType, HttpSession session) {
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
         UUIDGenerator uuidGenerator = new UUIDGenerator();
         taskType.setTaskTypeId(uuidGenerator.generate());
         taskType.setCreateTime(new Date(System.currentTimeMillis()));
         boolean result = false;
         try {
+            taskType.setDomainId(user.getDomainId());
             if(taskType.getTaskTypeName()!=null && taskType.getTaskTypeName().length()!=0){
                 if(this.taskTypeService.selectByName(taskType.getTaskTypeName())==0){
                     if(this.taskTypeService.insertSelective(taskType)!=0){
@@ -101,9 +106,11 @@ public class TaskTypeController {
     }
     @ApiOperation(value = "查询任务类别", notes = "查询任务类别，参数为true忽略在办任务的类别", httpMethod = "POST")
     @RequestMapping(value = "/selectByPage", method = RequestMethod.POST)
-    public PageResultBean_New<List<TaskType>> selectByPage( @RequestBody TaskTypeForMybatisCriteria taskTypeForMybatisCriteria){
+    public PageResultBean_New<List<TaskType>> selectByPage( @RequestBody TaskTypeForMybatisCriteria taskTypeForMybatisCriteria,HttpSession session){
         PageResultBean_New<List<TaskType>> bean = new PageResultBean_New<List<TaskType>>();
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
         try{
+            taskTypeForMybatisCriteria.setDomainId(user.getDomainId());
             bean = taskTypeService.selectByPage(taskTypeForMybatisCriteria);
             return bean;
         }catch (Exception e){

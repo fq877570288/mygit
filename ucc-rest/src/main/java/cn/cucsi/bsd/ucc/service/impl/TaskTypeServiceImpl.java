@@ -47,8 +47,8 @@ public class TaskTypeServiceImpl implements TaskTypeService {
     }
 
     @Override
-    public List<TaskType> selectAll(String ignoreNotask) throws Exception {
-        return taskTypeMapper.selectAll(ignoreNotask);
+    public List<TaskType> selectAll(String ignoreNotask,String domainId) throws Exception {
+        return taskTypeMapper.selectAll(ignoreNotask,domainId);
     }
 
     @Override

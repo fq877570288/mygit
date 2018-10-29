@@ -19,6 +19,16 @@ public class TaskType {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime; //创建时间
 
+    private String domainId;//租户id
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
     public String getTaskTypeId() {
         return taskTypeId;
     }

@@ -20,7 +20,7 @@ public interface TaskTypeService {
 
     int updateByPrimaryKey(TaskType record);
 
-    List<TaskType> selectAll(String ignoreNotask) throws Exception;
+    List<TaskType> selectAll(String ignoreNotask,String domainId) throws Exception;
 
     PageResultBean_New<List<TaskType>> selectByPage(TaskTypeForMybatisCriteria taskTypeForMybatisCriteria);
 
