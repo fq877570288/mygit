@@ -2,12 +2,14 @@ package cn.cucsi.bsd.ucc.rest.controllers;
 
 import cn.cucsi.bsd.ucc.common.beans.*;
 import cn.cucsi.bsd.ucc.data.domain.UccCustomers;
+import cn.cucsi.bsd.ucc.data.domain.UccUsers;
 import cn.cucsi.bsd.ucc.service.UccCustomersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Array;
 import java.util.Date;
 import java.util.List;
@@ -27,8 +29,10 @@ public class UccCustomersController {
     @ApiOperation(value="根据查询条件获取客户列表", notes="根据查询条件获取客户列表", httpMethod = "POST")
     @RequestMapping(value = "/findAll", method = RequestMethod.POST,produces="application/json;charset=UTF-8")
     @ResponseBody
-    public PageResultBean<List<UccCustomers>> findAll(@RequestBody UccCustomersCriteria search) {
+    public PageResultBean<List<UccCustomers>> findAll(@RequestBody UccCustomersCriteria search, HttpSession session) {
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
         try {
+            search.setDomainId(user.getDomainId());
             PageResultBean<List<UccCustomers>> bean = new PageResultBean(this.uccCustomersService.findAll(search));
             bean.getData().forEach(e->{
                 if(e.getUccDomain()!=null&&e.getUccDomain().getDomainName()!=null){
@@ -69,10 +73,12 @@ public class UccCustomersController {
 
     @ApiOperation(value = "创建UccCustomers", notes = "创建UccCustomers")
     @RequestMapping(value = "", method =  RequestMethod.POST,produces="application/json;charset=UTF-8")
-    public ResultBean<Boolean> create(@RequestBody UccCustomers uccCustomers) {
+    public ResultBean<Boolean> create(@RequestBody UccCustomers uccCustomers,HttpSession session) {
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
         boolean result = false;
         uccCustomers.setCreatedTime(new Date(System.currentTimeMillis()));
         try {
+            uccCustomers.setDomainId(user.getDomainId());
             result = this.uccCustomersService.save(uccCustomers) != null;
         } catch (Exception e) {
             System.out.println("创建UccCustomers客户失败！");
@@ -122,9 +128,11 @@ public class UccCustomersController {
      */
     @ApiOperation(value = "根据条件查询黑名单列表", notes = "根据条件查询黑名单列表")
     @RequestMapping(value = "/findBlackList", method= RequestMethod.POST,produces="application/json;charset=UTF-8")
-    public PageResultBean_New<List<UccCustomers>> findBlackList(@RequestBody UccBlackListCriteria uccBlackListCriteria){
+    public PageResultBean_New<List<UccCustomers>> findBlackList(@RequestBody UccBlackListCriteria uccBlackListCriteria,HttpSession session){
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
         PageResultBean_New<List<UccCustomers>> pageResultBean = null;
         try{
+            uccBlackListCriteria.setDomainId(user.getDomainId());
             pageResultBean =  this.uccCustomersService.findBlackList(uccBlackListCriteria);
         }catch (Exception e){
             e.printStackTrace();
