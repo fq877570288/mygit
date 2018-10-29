@@ -6,9 +6,10 @@
     <result column="TASK_TYPE_CODE" property="taskTypeCode" jdbcType="VARCHAR" />
     <result column="TASK_TYPE_NAME" property="taskTypeName" jdbcType="VARCHAR" />
     <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="domain_id" property="domainId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TASK_TYPE_ID, TASK_TYPE_CODE, TASK_TYPE_NAME, CREATE_TIME
+    TASK_TYPE_ID, TASK_TYPE_CODE, TASK_TYPE_NAME, CREATE_TIME,domain_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -24,9 +25,9 @@
     <selectKey resultType="java.lang.String" keyProperty="taskTypeId" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into OC_TASK_TYPE (TASK_TYPE_CODE, TASK_TYPE_NAME, CREATE_TIME
+    insert into OC_TASK_TYPE (TASK_TYPE_CODE, TASK_TYPE_NAME, CREATE_TIME,domain_id
       )
-    values (#{taskTypeCode,jdbcType=VARCHAR}, #{taskTypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+    values (#{taskTypeCode,jdbcType=VARCHAR}, #{taskTypeName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},#{domainId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskType" >
@@ -47,6 +48,9 @@
       <if test="createTime != null" >
         CREATE_TIME,
       </if>
+      <if test="domainId != null" >
+        domain_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="taskTypeId != null" >
@@ -60,6 +64,9 @@
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="domainId != null" >
+        #{domainId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -75,6 +82,9 @@
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="domainId != null" >
+        domain_id = #{domainId,jdbcType=VARCHAR},
+      </if>
     </set>
     where TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR}
   </update>
@@ -82,7 +92,8 @@
     update OC_TASK_TYPE
     set TASK_TYPE_CODE = #{taskTypeCode,jdbcType=VARCHAR},
       TASK_TYPE_NAME = #{taskTypeName,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP}
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+       domain_id = #{domainId,jdbcType=VARCHAR}
     where TASK_TYPE_ID = #{taskTypeId,jdbcType=VARCHAR}
   </update>
   
@@ -98,6 +109,9 @@
      		EXISTS (SELECT 1 FROM OC_TASK_DETAIL B WHERE A.TASK_TYPE_ID = B.TASK_TYPE_ID)
      	</if>
      </where>
+      <if test="domainId != null and domainId!=''">
+        and A.domain_id = #{domainId}
+      </if>
       ORDER  BY  A.CREATE_TIME DESC
     </select>
 	
@@ -116,9 +130,12 @@
     <if test="taskTypeName != null and taskTypeName!=''" >
       and TASK_TYPE_NAME LIKE  '%${taskTypeName}%'
     </if>
+    <if test="domainId != null and domainId!=''" >
+      and domain_id = #{domainId}
+    </if>
     ORDER  BY  CREATE_TIME DESC
   </select>
   <select id="selectByName" resultType="int" parameterType="java.lang.String">
-    select count(*) from OC_TASK_TYPE where TASK_TYPE_NAME = #{name}
+    select count(*) from OC_TASK_TYPE where TASK_TYPE_NAME = #{name} and domain_id = #{domainId}
   </select>
 </mapper>

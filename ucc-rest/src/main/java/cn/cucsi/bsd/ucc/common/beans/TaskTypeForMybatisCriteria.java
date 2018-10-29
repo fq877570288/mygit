@@ -12,6 +12,16 @@ public class TaskTypeForMybatisCriteria extends BasicPageCriteriaForBean{
 
     private Date createTime; //创建时间
 
+    private String domainId;//租户id
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
     public String getTaskTypeId() {
         return taskTypeId;
     }

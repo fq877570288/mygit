@@ -23,7 +23,7 @@ public interface TaskTypeMapper {
 
     int updateByPrimaryKey(TaskType record);
 	
-	List<TaskType> selectAll(@Param("ignoreNotask")String ignoreNotask) throws Exception;
+	List<TaskType> selectAll(@Param("ignoreNotask")String ignoreNotask,@Param("domainId")String domainId) throws Exception;
 
 	List<TaskType> selectByPage(TaskTypeForMybatisCriteria taskTypeForMybatisCriteria);
 
