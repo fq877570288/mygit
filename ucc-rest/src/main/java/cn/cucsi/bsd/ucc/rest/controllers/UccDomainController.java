@@ -90,16 +90,28 @@ public class UccDomainController {
 
     @ApiOperation(value = "修改UccDomain", notes = "修改UccDomain")
     @RequestMapping(value = "/{domainId}", method =  RequestMethod.PUT)
-    public ResultBean<UccDomain> save(@PathVariable String domainId, @RequestBody UccDomain uccDomain){
-        UccDomain targetDomain = this.uccDomainService.findOne(domainId);
-        String targetStatus = targetDomain.getStatus();
-        String status = uccDomain.getStatus();
-        UpdateUtil.copyNullProperties(targetDomain,uccDomain);
-        if(status==null||"".equals(status)){
-            uccDomain.setStatus(targetStatus);
+    public ResultBean<Object> save(@PathVariable String domainId, @RequestBody UccDomain uccDomain,HttpServletRequest request){
+        HttpSession session = request.getSession();
+
+        UccUsers loginUser = (UccUsers) session.getAttribute("LoginUser");
+        ResultBean<Object> resultBean = new ResultBean();
+
+        if(loginUser != null && "uccAdmin".equals(loginUser.getUserId())){
+            UccDomain targetDomain = this.uccDomainService.findOne(domainId);
+            String targetStatus = targetDomain.getStatus();
+            String status = uccDomain.getStatus();
+            UpdateUtil.copyNullProperties(targetDomain,uccDomain);
+            if(status==null||"".equals(status)){
+                uccDomain.setStatus(targetStatus);
+            }
+            uccDomain.setUpdatedTime(new Date());
+            return new ResultBean<Object>(this.uccDomainService.save(uccDomain));
+        }else{
+            resultBean.setCode(1);
+            resultBean.setMsg("该用户没有此操作权限");
+            return resultBean;
         }
-        uccDomain.setUpdatedTime(new Date());
-        return new ResultBean<>(this.uccDomainService.save(uccDomain));
+
     }
 
     @ApiOperation(value = "更新UccDomain的状态", notes = "更新UccDomain的状态")
