@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiModel;
 public class UccDomainCriteria extends BasicCriteria {
     String domainEmail;
     String domainName;
+    String domainCode;//域ID
     String addr;
     String tel;
     String status;
@@ -77,5 +78,13 @@ public class UccDomainCriteria extends BasicCriteria {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    public String getDomainCode() {
+        return domainCode;
+    }
+
+    public void setDomainCode(String domainCode) {
+        this.domainCode = domainCode;
     }
 }
