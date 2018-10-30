@@ -21,6 +21,8 @@ public class UccDomain {
     @JsonView(JSONView.Summary.class)
     private String domainId;//域ID
     @JsonView(JSONView.Summary.class)
+    private String domainCode;//域ID
+    @JsonView(JSONView.Summary.class)
     private String tel1;//联系电话1
     @JsonView(JSONView.Summary.class)
     private String tel2;//联系电话2
@@ -123,6 +125,20 @@ public class UccDomain {
     public void setDomainId(String domainId) {
         this.domainId = domainId;
     }
+
+
+
+    @Basic
+    @Column(name = "domain_code", nullable = true, length = 1)
+    public String getDomainCode() {
+        return domainCode;
+    }
+
+    public void setDomainCode(String domainCode) {
+        this.domainCode = domainCode;
+    }
+
+
 
     @Basic
     @Column(name = "status", nullable = true, length = 1)
@@ -238,6 +254,7 @@ public class UccDomain {
         if (domainId != null ? !domainId.equals(uccDomain.domainId) : uccDomain.domainId != null) return false;
         if (tel1 != null ? !tel1.equals(uccDomain.tel1) : uccDomain.tel1 != null) return false;
         if (tel2 != null ? !tel2.equals(uccDomain.tel2) : uccDomain.tel2 != null) return false;
+        if (domainCode != null ? !domainCode.equals(uccDomain.domainCode) : uccDomain.domainCode != null) return false;
         if (domainEmail != null ? !domainEmail.equals(uccDomain.domainEmail) : uccDomain.domainEmail != null)
             return false;
         if (domainName != null ? !domainName.equals(uccDomain.domainName) : uccDomain.domainName != null) return false;
@@ -252,6 +269,7 @@ public class UccDomain {
     public int hashCode() {
         int result = domainId != null ? domainId.hashCode() : 0;
         result = 31 * result + (tel1 != null ? tel1.hashCode() : 0);
+        result = 31 * result + (domainCode != null ? domainCode.hashCode() : 0);
         result = 31 * result + (tel2 != null ? tel2.hashCode() : 0);
         result = 31 * result + (domainEmail != null ? domainEmail.hashCode() : 0);
         result = 31 * result + (domainName != null ? domainName.hashCode() : 0);
