@@ -13,6 +13,7 @@ import cn.cucsi.bsd.ucc.service.UccRolesService;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -126,5 +127,19 @@ public class UccDomainController {
     public PageResultBean<List<UccDomain>> allDoamin() {
         UccDomainCriteria search = new UccDomainCriteria();
         return new PageResultBean(this.uccDomainService.findAll(search));
+    }
+
+    @ApiOperation(value="验证域ID是否重复", notes="验证域ID是否重复", httpMethod = "GET")
+    @RequestMapping(value = "/validate/{domainCode}", method= RequestMethod.GET)
+    @JsonView(JSONView.UccUserWithDeptAndRoleAndExt.class)
+    public  ResultBean<Boolean> validate(@PathVariable String domainCode) {
+        UccDomainCriteria criteria = new UccDomainCriteria();
+        criteria.setDomainCode(domainCode);
+        List<UccDomain> list = this.uccDomainService.findAllOfNoPage(criteria);
+        Boolean result = list.size()==0;
+        if(result){
+            return new ResultBean<>(ResultBean.SUCCESS,"域ID不重复！",result);
+        }
+        return new ResultBean<>(ResultBean.FAIL,"域ID重复！",result);
     }
 }

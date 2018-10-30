@@ -22,6 +22,15 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 public class UccDomainSpecs {
 
+    public static Specification<UccDomain> domainCodeEqual(final String domainCode) {
+        return new Specification<UccDomain>() {
+            @Override
+            public Predicate toPredicate(Root<UccDomain> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.equal(root.get("domainCode"), domainCode);
+            }
+        };
+    }
+
     public static Specification<UccDomain> uccDomainDomainEmailLike(final String domainEmail) {
         return new Specification<UccDomain>() {
             @Override
@@ -134,6 +143,9 @@ public class UccDomainSpecs {
             specs = specs.and(createTimeLessOrEqualTo(criteria.getCreatedTimeTo()));
         }
 
+        if(null != criteria.getDomainCode()){
+            specs = specs.and(domainCodeEqual(criteria.getDomainCode()));
+        }
 
         return specs;
     }
