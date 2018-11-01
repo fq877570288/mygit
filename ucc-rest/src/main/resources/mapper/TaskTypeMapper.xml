@@ -104,14 +104,13 @@
      select 
      <include refid="Base_Column_List" />
      from OC_TASK_TYPE A
-     <where>
-     	<if test="ignoreNotask != null and ignoreNotask != '' and ignoreNotask == 'true'">
-     		EXISTS (SELECT 1 FROM OC_TASK_DETAIL B WHERE A.TASK_TYPE_ID = B.TASK_TYPE_ID)
-     	</if>
-     </where>
-      <if test="domainId != null and domainId!=''">
-        and A.domain_id = #{domainId}
-      </if>
+      where 1=1
+        <if test="ignoreNotask != null and ignoreNotask != '' and ignoreNotask == 'true'">
+     		and EXISTS (SELECT 1 FROM OC_TASK_DETAIL B WHERE A.TASK_TYPE_ID = B.TASK_TYPE_ID)
+        </if>
+       <if test="domainId != null and domainId!=''">
+         and A.domain_id = #{domainId}
+       </if>
       ORDER  BY  A.CREATE_TIME DESC
     </select>
 	
