@@ -1394,11 +1394,9 @@
           count(d.TASK_DETAIL_ID)
         FROM
           OC_TASK_DETAIL d
-          LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
-          INNER JOIN OC_TASK_TRANSFER r ON d.TASK_DETAIL_ID = r.TASK_DETAIL_ID
-        AND r.TRANSFER_STATUS = d.TASK_STATUS
-            LEFT JOIN ucc_users u ON u.user_id = r.OPERATOR_ID
-            LEFT JOIN ucc_depts p ON p.dept_id = r.OPERATOR_DEPT
+            LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode and d.domain_id = c.domain_id
+            LEFT JOIN ucc_users u ON u.user_id = .d.USER_ID
+            LEFT JOIN ucc_depts p ON p.dept_id = d.ROPERATE_DEPT_ID
             LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
             LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
             LEFT JOIN OC_TASK_TYPE e ON e.TASK_TYPE_ID = d.TASK_TYPE_ID
@@ -1426,8 +1424,8 @@
             c.cust_name USER_NAME,
             d.DEFULT_PHONE DEFULT_PHONE,
             u.nick_name nick_name,
+            d.IMPORT_TIME,
             p.dept_name dept_name,
-            r.TRANSFER_TIME TRANSFER_TIME,
             d.TASK_DETAIL_ID TASK_DETAIL_ID,
             d.DEPT_MESH_ID DEPT_MESH_ID,
             d.DEPT_AREA_ID DEPT_AREA_ID,
@@ -1437,10 +1435,8 @@
             OC_TASK_DETAIL d
             LEFT JOIN ucc_customers c ON d.BUSINESS_CODE = c.businesscode
             AND d.domain_id = c.domain_id
-            INNER JOIN OC_TASK_TRANSFER r ON d.TASK_DETAIL_ID = r.TASK_DETAIL_ID
-            AND r.TRANSFER_STATUS = d.TASK_STATUS
-            LEFT JOIN ucc_users u ON u.user_id = r.OPERATOR_ID
-            LEFT JOIN ucc_depts p ON p.dept_id = r.OPERATOR_DEPT
+            LEFT JOIN ucc_users u ON u.user_id = .d.USER_ID
+             LEFT JOIN ucc_depts p ON p.dept_id = d.ROPERATE_DEPT_ID
             LEFT JOIN ucc_depts p1 ON d.DEPT_MESH_ID = p1.dept_id
             LEFT JOIN ucc_depts p2 ON d.DEPT_AREA_ID = p2.dept_id
             LEFT JOIN OC_TASK_TYPE e ON e.TASK_TYPE_ID = d.TASK_TYPE_ID
@@ -1456,7 +1452,7 @@
             and  p.dept_name = #{deptName}
         </if>
         <include refid="Sql_MonitorWhere" />
-        order by r.TRANSFER_TIME DESC
+        order by d.IMPORT_TIME DESC
         <if test="begin != null and showLines != null and showLines != 0">
             limit #{begin},#{showLines}
         </if>
