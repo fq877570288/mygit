@@ -27,6 +27,7 @@ public class UccSkillGroup {
     private String updatedUserId;
     private String updatedUserName;
     private String updatedNickName;
+    private Integer type;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTime;
@@ -105,6 +106,15 @@ public class UccSkillGroup {
         this.domainId = domainId;
     }
 
+    @Basic
+    @Column(name = "type", nullable = false, length = 11)
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
