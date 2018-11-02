@@ -28,4 +28,6 @@ public interface TaskTypeMapper {
 	List<TaskType> selectByPage(TaskTypeForMybatisCriteria taskTypeForMybatisCriteria);
 
     int selectByName(String name);
+
+    List<TaskType> selectAllTaskTypeByToDoTask(String domainId);
 }
