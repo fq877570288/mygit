@@ -120,5 +120,20 @@ public class TaskTypeController {
             return bean;
         }
     }
+    @ApiOperation(value = "查询任务类别（所有在办任务的类别）", notes = "查询任务类别（所有在办任务的类别）", httpMethod = "GET")
+    @RequestMapping(value = "/selectAllTaskTypeByToDoTask", method = RequestMethod.GET)
+    public PageResultBean<List<TaskType>> selectAllTaskTypeByToDoTask(HttpSession session){
+        PageResultBean<List<TaskType>> bean = new PageResultBean<List<TaskType>>();
+        UccUsers user = (UccUsers)session.getAttribute("uccUsers");
+        try{
+            bean = taskTypeService.selectAllTaskTypeByToDoTask(user.getDomainId());
+            return bean;
+        }catch (Exception e){
+            System.out.println("查询任务类别（所有在办任务的类别）失败！");
+            System.out.println("登陆用户为："+user);
+            e.printStackTrace();
+            return bean;
+        }
 
+    }
 }

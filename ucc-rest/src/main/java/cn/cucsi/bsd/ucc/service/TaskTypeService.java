@@ -25,4 +25,6 @@ public interface TaskTypeService {
     PageResultBean_New<List<TaskType>> selectByPage(TaskTypeForMybatisCriteria taskTypeForMybatisCriteria);
 
     int selectByName(String name);
+
+    PageResultBean<List<TaskType>> selectAllTaskTypeByToDoTask(String domainId);
 }

@@ -63,4 +63,10 @@ public class TaskTypeServiceImpl implements TaskTypeService {
     public int selectByName(String name){
         return taskTypeMapper.selectByName(name);
     }
+    public PageResultBean<List<TaskType>> selectAllTaskTypeByToDoTask(String domainId){
+        List<TaskType> list = taskTypeMapper.selectAllTaskTypeByToDoTask(domainId);
+        PageResultBean<List<TaskType>> bean =new PageResultBean<List<TaskType>>();
+        bean.setData(list);
+        return bean;
+    }
 }

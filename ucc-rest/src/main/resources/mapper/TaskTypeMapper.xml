@@ -137,4 +137,11 @@
   <select id="selectByName" resultType="int" parameterType="java.lang.String">
     select count(*) from OC_TASK_TYPE where TASK_TYPE_NAME = #{name} and domain_id = #{domainId}
   </select>
+  <select id="selectAllTaskTypeByToDoTask" resultMap="BaseResultMap"  parameterType="java.lang.String">
+    select
+    A.*
+    from OC_TASK_TYPE A
+    LEFT JOIN OC_TASK_DETAIL B ON A.TASK_TYPE_ID = B.TASK_TYPE_ID
+    where B.TASK_STATUS = 3 AND  A.domain_id = #{domainId}
+  </select>
 </mapper>

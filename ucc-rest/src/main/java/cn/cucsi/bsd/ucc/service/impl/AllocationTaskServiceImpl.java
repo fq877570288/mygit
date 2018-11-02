@@ -280,9 +280,12 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 			// 插入最新客户信息
 			List<UccCustomers> cusNewList = new ArrayList<UccCustomers>();
 			Iterator<Map.Entry<String, UccCustomers>> titer = cusMap.entrySet().iterator();//获得map的Iterator
+			UccCustomers custUser;
 			while(titer.hasNext()) {
                 Map.Entry<String, UccCustomers> entry = (Map.Entry<String, UccCustomers>)titer.next();
-                cusNewList.add((UccCustomers) entry.getValue());
+				custUser = (UccCustomers)entry.getValue();
+				custUser.setCreatedTime(new Date(System.currentTimeMillis()));
+                cusNewList.add(custUser);
             }
 			Map<String, Object> cusNewmap = new HashMap<String, Object>();
 			cusNewmap.put("list", cusNewList);
