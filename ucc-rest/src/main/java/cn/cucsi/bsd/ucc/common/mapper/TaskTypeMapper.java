@@ -29,5 +29,5 @@ public interface TaskTypeMapper {
 
     int selectByName(String name);
 
-    List<TaskType> selectAllTaskTypeByToDoTask(String domainId);
+    List<TaskType> selectAllTaskTypeByToDoTask(@Param("domainId")String domainId);
 }

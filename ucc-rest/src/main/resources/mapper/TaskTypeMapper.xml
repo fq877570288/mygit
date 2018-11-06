@@ -139,7 +139,7 @@
   </select>
   <select id="selectAllTaskTypeByToDoTask" resultMap="BaseResultMap"  parameterType="java.lang.String">
     select
-    A.*
+    A.TASK_TYPE_ID, A.TASK_TYPE_CODE, A.TASK_TYPE_NAME, A.CREATE_TIME,A.domain_id
     from OC_TASK_TYPE A
     LEFT JOIN OC_TASK_DETAIL B ON A.TASK_TYPE_ID = B.TASK_TYPE_ID
     where B.TASK_STATUS = 3 AND  A.domain_id = #{domainId}
