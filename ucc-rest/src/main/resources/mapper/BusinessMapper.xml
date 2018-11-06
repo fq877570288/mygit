@@ -42,12 +42,28 @@
 		select
 		<include refid="Base_Column_List" />
 		<include refid="Sql_From"></include>
+		where 1 = 1
+		<if test="domainId !=null and domainId != ''">
+			and  a.domain_id = #{domainId}
+		</if>
 		order by a.TASK_TYPE_ID desc
 		<if test="begin != null and showLines != null and showLines != 0">
 			limit #{begin},#{showLines}
 		</if>
 	</select>
-	
+
+	<select id="selectAllBySearch" resultMap="BaseResultMap" parameterType="cn.cucsi.bsd.ucc.common.beans.TaskTypeCriteria">
+		select
+		<include refid="Base_Column_List" />
+		<include refid="Sql_From"></include>
+		where 1 = 1
+		<if test="domainId !=null and domainId != ''">
+			and  a.domain_id = #{domainId}
+		</if>
+		order by a.TASK_TYPE_ID desc
+	</select>
+
+
 	<select id="selectBySearchCount" resultType="int" parameterType="cn.cucsi.bsd.ucc.common.beans.TaskTypeCriteria">
 		select
 		count(*)

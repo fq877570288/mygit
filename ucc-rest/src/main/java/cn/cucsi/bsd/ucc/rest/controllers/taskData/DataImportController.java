@@ -413,7 +413,7 @@ public class DataImportController {
 						return customFieldsSaveMap;
 					}
 				}
-				if(!checkTaskType(taskType)){
+				if(!checkTaskType(taskType,domainId)){
 					//model.addAttribute("msg", "任务类型不存在，请检查您的任务类型!");
 					//return "info.view";
 					customFieldsSaveMap.put("msg", "任务类型不存在，请检查您的任务类型!");
@@ -437,8 +437,8 @@ public class DataImportController {
 	 * 校验任务类型
 	 * add by wangxiaoyu
 	 */
-	private boolean checkTaskType(String taskTypeName) throws Exception{
-		TaskType taskType = businessService.selectByNameInCache(taskTypeName);
+	private boolean checkTaskType(String taskTypeName,String domainId) throws Exception{
+		TaskType taskType = businessService.selectByNameAndDomainIdInCache(taskTypeName,domainId);
 		if(taskType != null && taskType.getTaskTypeId() != null && !"".equals(taskType.getTaskTypeId())){
 			return true;
 		}

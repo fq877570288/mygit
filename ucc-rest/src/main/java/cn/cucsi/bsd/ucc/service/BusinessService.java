@@ -25,6 +25,8 @@ public interface BusinessService {
 
 	TaskType selectByNameInCache(String taskTypeName) throws Exception;
 
+	TaskType selectByNameAndDomainIdInCache(String taskTypeName,String domainId) throws Exception;
+
 	TaskType selectByIdInCache(String taskTypeId) throws Exception;
 
 	String getJson() throws Exception;
