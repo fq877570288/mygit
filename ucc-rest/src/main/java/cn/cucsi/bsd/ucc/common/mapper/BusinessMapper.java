@@ -22,6 +22,8 @@ public interface BusinessMapper {
 
 	List<TaskType> selectAll(TaskTypeCriteria search);
 
+	List<TaskType> selectAllBySearch(TaskTypeCriteria search);
+
 	int selectBySearchCount(TaskTypeCriteria search);
 	
 	int deleteByGroup(Map<String, Object> map);

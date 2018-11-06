@@ -94,7 +94,7 @@ public class BusinessServiceImpl implements BusinessService {
 	
 	@Override
 	public TaskType selectByNameInCache(String taskTypeName) throws Exception {
-		
+
 		if(taskTypeNameMap.isEmpty()){
 			this.putAllToMap();
 		}
@@ -115,7 +115,19 @@ public class BusinessServiceImpl implements BusinessService {
 		taskTypeMap.put(taskType.getTaskTypeId(), taskType);
 		taskTypeNameMap.put(taskType.getTaskTypeName(), taskType);
 	}
-	
+
+	public TaskType selectByNameAndDomainIdInCache(String taskTypeName,String domainId) throws Exception {
+
+		if(taskTypeNameMap.isEmpty()){
+			this.putAllToMapFroDomainId(domainId);
+		}
+		if(taskTypeNameMap.containsKey(taskTypeName)){
+			return taskTypeNameMap.get(taskTypeName);
+		}
+
+		return null;
+	}
+
 	private void putAllToMap() throws Exception {
 		List<TaskType> taskTypeList =  m.selectAll(null);
 		if(taskTypeList==null || taskTypeList.isEmpty()) return;
@@ -131,7 +143,23 @@ public class BusinessServiceImpl implements BusinessService {
 			taskTypeNameMap.put(taskType.getTaskTypeName(), taskType);
 		}
 	}
-	
+	private void putAllToMapFroDomainId(String domainId) throws Exception {
+		TaskTypeCriteria search = new TaskTypeCriteria();
+        search.setDomainId(domainId);
+		List<TaskType> taskTypeList =  m.selectAllBySearch(search);
+		if(taskTypeList==null || taskTypeList.isEmpty()) return;
+
+		if(taskTypeMap!=null){
+			taskTypeMap.clear();
+		}
+		if(taskTypeNameMap!=null){
+			taskTypeNameMap.clear();
+		}
+		for(TaskType taskType: taskTypeList){
+			taskTypeMap.put(taskType.getTaskTypeId(), taskType);
+			taskTypeNameMap.put(taskType.getTaskTypeName(), taskType);
+		}
+	}
 	@Override
 	public String getJson() throws Exception {
 		if (taskTypeMap.isEmpty()) {

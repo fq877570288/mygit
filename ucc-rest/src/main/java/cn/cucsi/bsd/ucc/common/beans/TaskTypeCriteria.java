@@ -16,6 +16,17 @@ public class TaskTypeCriteria extends Paging {
 
     private Date createTime; //创建时间
 
+    private String domainId;
+
+
+    public String getDomainId() {
+        return domainId;
+    }
+
+    public void setDomainId(String domainId) {
+        this.domainId = domainId;
+    }
+
     public String getTaskTypeId() {
         return taskTypeId;
     }
