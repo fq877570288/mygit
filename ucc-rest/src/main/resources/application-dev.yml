@@ -51,6 +51,7 @@ logging:
     level.org.hibernate.SQL: trace
     level.org.hibernate.type: trace
 
+
 management.security.enabled: false
 
 #mybatis  by  wangxiaoyu  2018-08-28
@@ -58,6 +59,7 @@ mybatis:
    mapper-locations: classpath:mapper/*Mapper.xml
    type-aliases-package: cn.cucsi.bsd.ucc.data.domain
    defaultExecutorType: SIMPLE
+   #configuration.log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 ucc.zk:
   hostPort: 10.64.8.133:2181
