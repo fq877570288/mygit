@@ -150,7 +150,7 @@ public class WaitTaskController {
 				List<List<String>> splitedTaskList = MyUtils.averageAssign(taskDetailIdsList,userIdList.size());
 				List<String> splitedTaskListbatch = null;
 
-				for (int i = 0; i < splitedTaskList.size(); i++) {
+				for (int i = 0; i < splitedTaskList.size(); i++) {//循环任务id
 					splitedTaskListbatch = splitedTaskList.get(i);
 					if(!MyUtils.isBlank(splitedTaskListbatch)){
 						StringBuilder stringBuilder = new StringBuilder();
@@ -161,15 +161,14 @@ public class WaitTaskController {
 						if(taskIdsStr.endsWith(",")){
 							taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
 						}
-						for (int j = 0; j < userIdList.size(); j++) {
-							userId = userIdList.get(j);
+							userId = userIdList.get(i);
 							doTaskReceiveMap = waitTaskService.taskReceive(userId, taskIdsStr,domainId);
 							if(doTaskReceiveMap.get("code").equals("-1")){
 								taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
 								return taskReceiveMap;
 							}
-						}
 					}
+
 				}
 			}else{
 				//如果所传用户ID列表为空，则先查询该用户下同部门的所有用户ID，然后再平均分配任务
@@ -191,9 +190,9 @@ public class WaitTaskController {
 								if(taskIdsStr.endsWith(",")){
 									taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
 								}
-								for (int j = 0; j < userIdList2.size(); j++) {
-									System.out.println("userIdList2:::" + userIdList2.get(j).getUserId());
-									userId = userIdList2.get(j).getUserId();
+
+									System.out.println("userIdList2:::" + userIdList2.get(i).getUserId());
+									userId = userIdList2.get(i).getUserId();
 									doTaskReceiveMap = waitTaskService.taskReceive(userId,taskIdsStr,domainId);
 									System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("code"));
 									System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("msg"));
@@ -202,7 +201,7 @@ public class WaitTaskController {
 										taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
 										return taskReceiveMap;
 									}
-								}
+
 							}
 						}
 					}
