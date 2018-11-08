@@ -18,4 +18,5 @@ public interface ExtGroupExtsService {
     ExtGroupExts save(ExtGroupExts ExtGroupExts);
     Boolean delete(ExtGroupExtsPK ExtGroupExtsPK);
     PageResultBean_New<List<PbxExtGroups>> queryDashboardList(String domainId);
+    PageResultBean_New<List<PbxExtGroups>> AllPbxExtList(String domainId);
 }

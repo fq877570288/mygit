@@ -42,6 +42,17 @@ public class DashboardController {
     @Autowired
     private PbxCdrsMapper pbxCdrsMapper;
 
+    @ApiOperation(value = "查询机组、分机号集合", notes = "查询机组、分机号集合")
+    @RequestMapping(value = "/AllPbxExtList", method =  RequestMethod.GET)
+    public PageResultBean_New<List<PbxExtGroups>> AllPbxExtList(String domainId){
+        try {
+            return this.extGroupExtsService.AllPbxExtList(domainId);
+        } catch (Exception e) {
+            System.out.println("根据domainId查询查询机组、分机号集合失败！");
+            e.printStackTrace();
+            return new PageResultBean_New<List<PbxExtGroups>>();
+        }
+    }
     @ApiOperation(value = "查询机组、坐席员、分机号集合", notes = "查询机组、坐席员、分机号集合")
     @RequestMapping(value = "/list", method =  RequestMethod.GET)
     public PageResultBean_New<List<PbxExtGroups>> list(String domainId){

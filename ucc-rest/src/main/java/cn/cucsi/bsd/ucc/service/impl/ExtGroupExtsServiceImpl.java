@@ -56,5 +56,10 @@ public class ExtGroupExtsServiceImpl implements ExtGroupExtsService {
         bean.setList(pbxExtsMapper.queryDashboardList(domainId));
         return bean;
     }
-
+    @Override
+    public PageResultBean_New<List<PbxExtGroups>> AllPbxExtList(String domainId) {
+        PageResultBean_New<List<PbxExtGroups>> bean = new PageResultBean_New<List<PbxExtGroups>>();
+        bean.setList(pbxExtsMapper.AllPbxExtList(domainId));
+        return bean;
+    }
 }
