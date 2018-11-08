@@ -52,4 +52,12 @@
         GROUP BY d.ext_id
         ORDER BY b.updated_time
   </select>
+    <select id="AllPbxExtList" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select b.*,c.* from  ext_group_exts as a
+        LEFT JOIN pbx_ext_groups as b on b.group_id = a.group_id
+        LEFT JOIN pbx_exts as c on c.ext_id =a.ext_id
+        where
+        b.domain_id = #{domainId}
+        ORDER BY b.updated_time
+   </select>
 </mapper>

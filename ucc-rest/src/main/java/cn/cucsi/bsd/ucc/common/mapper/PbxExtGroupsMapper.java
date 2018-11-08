@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface PbxExtGroupsMapper {
     List<PbxExtGroups> queryDashboardList(String domainId);
+    List<PbxExtGroups> AllPbxExtList(String domainId);
 }
