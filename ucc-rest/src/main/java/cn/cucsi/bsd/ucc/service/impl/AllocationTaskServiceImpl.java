@@ -37,7 +37,7 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 
 	@Override
 	@Transactional
-	public Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate,String deptIds) throws Exception {
+	public Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate,String deptIds,List<String> dispatchDept) throws Exception {
 
 		Map<String,Object> allocationTaskMap = new HashMap<String,Object>();
 		allocationTaskMap.put("msg", "分派任务失败!");
@@ -87,58 +87,91 @@ public class AllocationTaskServiceImpl  implements AllocationTaskService {
 				String checkFlag = "0";
 				TaskDetailSearch taskDetailSearch = null;
 				if(!MyUtils.isBlank(taskDetailList)){
-					for(TaskDetail taskDetail : taskDetailList){
-						checkFlag = taskDetail.getCheckFlag()==null?"0":taskDetail.getCheckFlag();
-						TaskTransfer taskTransfer = new TaskTransfer();
-						// 主键
-						UUIDGenerator generator = new UUIDGenerator();
-						String taskTransferUuid = generator.generate();
-						taskTransfer.setTaskTransferId(taskTransferUuid);
-						taskTransfer.setTaskDetailId(taskDetail.getTaskDetailId()); //任务明细表主键
-						taskTransfer.setTransferStatus("1"); //流转状态    0:未分派、1：未接收、2：待办、3：在办
-						taskTransfer.setTransfeRoperate(TaskTransfer.ALLOCATION); //流转操作  0:创建、1：分派、2：接收、3：回退
-						taskTransfer.setTransferTime(transferTime); //流转时间
-						taskTransfer.setOperatorId(userId); //操作员
-						taskTransfer.setRoperatePersonId(userId);//受理员
+					if(Task.CUSTOMALLOC.equals(alloc)){
+						List<List<TaskDetail>> taskDetailLists = MyUtils.averageAssign(taskDetailList,dispatchDept.size());
+						for(int i = 0; i < taskDetailLists.size(); i++){
+							List<TaskDetail> List = taskDetailLists.get(i);
+							for(TaskDetail taskDetail:List){
+								checkFlag = taskDetail.getCheckFlag()==null?"0":taskDetail.getCheckFlag();
+								TaskTransfer taskTransfer = new TaskTransfer();
+								// 主键
+								UUIDGenerator generator = new UUIDGenerator();
+								String taskTransferUuid = generator.generate();
+								taskTransfer.setTaskTransferId(taskTransferUuid);
+								taskTransfer.setTaskDetailId(taskDetail.getTaskDetailId()); //任务明细表主键
+								taskTransfer.setTransferStatus("1"); //流转状态    0:未分派、1：未接收、2：待办、3：在办
+								taskTransfer.setTransfeRoperate(TaskTransfer.ALLOCATION); //流转操作  0:创建、1：分派、2：接收、3：回退
+								taskTransfer.setTransferTime(transferTime); //流转时间
+								taskTransfer.setOperatorId(userId); //操作员
+								taskTransfer.setRoperatePersonId(userId);//受理员
 
-						taskDetailSearch = new TaskDetailSearch();
-						taskDetailSearch.setUserId(userId);
-						taskDetailSearch.setTaskDetailId(taskDetail.getTaskDetailId());
-						deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
-
-						taskTransfer.setRoperateDeptId(deptID);//受理部门
-						taskTransfer.setOperatorDept(deptID);
-						taskTransfer.setDomainId(domainId);
-						if(Task.ALLOCDEFULT.equals(alloc)){
-							// 默认分派
-							if(taskDetail.getDevelopmentDept() != null && !"".equals(taskDetail.getDevelopmentDept())
-									&& !"-1".equals(taskDetail.getDevelopmentDept())){
-								taskTransfer.setRoperateDeptId(taskDetail.getDevelopmentDept());
-							}else if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
-									&& !"-1".equals(taskDetail.getDeptAreaId())){
-								taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
-							}else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
-									&& !"-1".equals(taskDetail.getDeptMeshId())){
-								taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
-							}
-						}else if(Task.ALLOCAREA.equals(alloc)){
-							// 分派到包区
-							if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
-									&& !"-1".equals(taskDetail.getDeptAreaId())){
-								taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
-							}else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
-									&& !"-1".equals(taskDetail.getDeptMeshId())){
-								taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
-							}
-						}else if(Task.ALLOCMESH.equals(alloc)){
-							// 分派到网格
-							if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
-									&& !"-1".equals(taskDetail.getDeptMeshId())){
-								taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
+								taskDetailSearch = new TaskDetailSearch();
+								taskDetailSearch.setUserId(userId);
+								taskDetailSearch.setTaskDetailId(taskDetail.getTaskDetailId());
+								deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
+								//这一步 会在分派的时候往流转表插入一条流转记录 这条流转记录的 操作部门和受理部门是 生成任务选择的
+								taskTransfer.setRoperateDeptId(deptID);//受理部门
+								taskTransfer.setOperatorDept(deptID);
+								taskTransfer.setDomainId(domainId);
+								taskTransfer.setRoperateDeptId(dispatchDept.get(i));
+								taskTransferList.add(taskTransfer);
 							}
 						}
-						taskTransferList.add(taskTransfer);
+					}else{
+						for(TaskDetail taskDetail : taskDetailList){
+							checkFlag = taskDetail.getCheckFlag()==null?"0":taskDetail.getCheckFlag();
+							TaskTransfer taskTransfer = new TaskTransfer();
+							// 主键
+							UUIDGenerator generator = new UUIDGenerator();
+							String taskTransferUuid = generator.generate();
+							taskTransfer.setTaskTransferId(taskTransferUuid);
+							taskTransfer.setTaskDetailId(taskDetail.getTaskDetailId()); //任务明细表主键
+							taskTransfer.setTransferStatus("1"); //流转状态    0:未分派、1：未接收、2：待办、3：在办
+							taskTransfer.setTransfeRoperate(TaskTransfer.ALLOCATION); //流转操作  0:创建、1：分派、2：接收、3：回退
+							taskTransfer.setTransferTime(transferTime); //流转时间
+							taskTransfer.setOperatorId(userId); //操作员
+							taskTransfer.setRoperatePersonId(userId);//受理员
+
+							taskDetailSearch = new TaskDetailSearch();
+							taskDetailSearch.setUserId(userId);
+							taskDetailSearch.setTaskDetailId(taskDetail.getTaskDetailId());
+							deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
+							//这一步 会在分派的时候往流转表插入一条流转记录 这条流转记录的 操作部门和受理部门是 生成任务选择的
+							taskTransfer.setRoperateDeptId(deptID);//受理部门
+							taskTransfer.setOperatorDept(deptID);
+							taskTransfer.setDomainId(domainId);
+							if(Task.ALLOCDEFULT.equals(alloc)){
+								// 默认分派
+								if(taskDetail.getDevelopmentDept() != null && !"".equals(taskDetail.getDevelopmentDept())
+										&& !"-1".equals(taskDetail.getDevelopmentDept())){
+									taskTransfer.setRoperateDeptId(taskDetail.getDevelopmentDept());
+								}else if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
+										&& !"-1".equals(taskDetail.getDeptAreaId())){
+									taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
+								}else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
+										&& !"-1".equals(taskDetail.getDeptMeshId())){
+									taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
+								}
+							}else if(Task.ALLOCAREA.equals(alloc)){
+								// 分派到包区
+								if(taskDetail.getDeptAreaId() != null && !"".equals(taskDetail.getDeptAreaId())
+										&& !"-1".equals(taskDetail.getDeptAreaId())){
+									taskTransfer.setRoperateDeptId(taskDetail.getDeptAreaId());
+								}else if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
+										&& !"-1".equals(taskDetail.getDeptMeshId())){
+									taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
+								}
+							}else if(Task.ALLOCMESH.equals(alloc)){
+								// 分派到网格
+								if(taskDetail.getDeptMeshId() != null && !"".equals(taskDetail.getDeptMeshId())
+										&& !"-1".equals(taskDetail.getDeptMeshId())){
+									taskTransfer.setRoperateDeptId(taskDetail.getDeptMeshId());
+								}
+							}
+							taskTransferList.add(taskTransfer);
+						}
 					}
+
 					// 更新客户表信息
 					//if(UccDeptsList.get(0).getDeptLevel() <= 1){
 					if(checkFlag.equals("0")){

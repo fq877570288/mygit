@@ -19,7 +19,7 @@ public interface UccDeptsService {
     Page<UccDepts> findAllTree(UccDeptsCriteria criteria);
 
     List<UccDepts> selectByUserId(String userId) throws Exception;
-
+    List<UccDepts>  findAllBySearch (UccDeptsCriteria criteria) throws Exception;
     int deleteByPrimaryKey(String deptId) throws Exception;
 
     int insert(UccDepts record) throws Exception;

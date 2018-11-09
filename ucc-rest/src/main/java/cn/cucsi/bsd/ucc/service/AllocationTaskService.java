@@ -11,7 +11,7 @@ public interface AllocationTaskService {
 	/***
 	 * 默认分派
 	 */
-	Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate,String deptIds) throws Exception;
+	Map<String,Object> allocationTask(String userId, String alloc, String barchs, String endDate,String deptIds,List<String> dispatchDept) throws Exception;
 
     /***
 	 * 修改任务组织结构
