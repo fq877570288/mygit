@@ -127,6 +127,36 @@ public class UccDeptsController {
         }
         return new PageResultBean<List<UccDepts>>();
     }
+    //add  张宇 根据部门id列表查询树结构部门列表
+    @ApiOperation(value="根据查询条件获取部门列表", notes="根据查询条件获取部门列表", httpMethod = "POST")
+    @RequestMapping(value = "/findDeptsBySearch", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultBean<List<UccDepts>> findDeptsBySearch(@RequestBody UccDeptsCriteria search) {
+        try {
+            UccDeptsCriteria criteria = new UccDeptsCriteria();
+            criteria.setDomainId(search.getDomainId());
+
+            List<UccDepts> list = this.uccDeptsService.findAllBySearch(criteria);
+
+            ResultBean<List<UccDepts>> bean = new PageResultBean(this.uccDeptsService.findAllTree(search));
+
+            List<UccDepts> mainList = bean.getData();
+            if(mainList!=null&&mainList.size()!=0) {
+                for (int i = 0; i < mainList.size(); i++) {
+                    if(mainList.get(i).getDeptAdminByUserId()!=null&&mainList.get(i).getDeptAdminByUserId().getUserName()!=null){
+                        mainList.get(i).setDeptAdminName(mainList.get(i).getDeptAdminByUserId().getUserName());
+                    }
+                    queryChildren(mainList.get(i),list);
+                }
+            }
+            bean.setData(mainList);
+            return bean;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("根据查询条件获取部门列表失败!");
+        }
+        return new PageResultBean<List<UccDepts>>();
+    }
     //zss
     public void queryChildren(UccDepts uccDepts,List<UccDepts> list){
         List<UccDepts> Childrens = new ArrayList<UccDepts>();

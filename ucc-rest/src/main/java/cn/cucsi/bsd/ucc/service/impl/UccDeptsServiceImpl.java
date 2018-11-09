@@ -77,6 +77,12 @@ public class UccDeptsServiceImpl implements UccDeptsService {
     }
 
     @Override
+    public List<UccDepts> findAllBySearch(UccDeptsCriteria criteria) throws Exception  {
+        List<UccDepts> list = this.uccDeptsRepository.findAll(UccDeptsSpecs.createSpec(criteria));
+        return list;
+    }
+
+    @Override
     @Transactional
     public int deleteByPrimaryKey(String deptId) throws Exception {
         uccDeptsMapper.clearUsersDeptsByDeptId(deptId);

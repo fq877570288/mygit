@@ -14,7 +14,7 @@ public class Task {
     public static final String ALLOCDEFULT = "allocdefult"; // 默认分派
     public static final String ALLOCMESH = "allocmesh"; // 分派到网格
     public static final String ALLOCAREA = "allocarea"; // 分派到包区
-
+    public static final String CUSTOMALLOC = "customDept"; // 自定义部门
     public String getTaskId() {
         return taskId;
     }

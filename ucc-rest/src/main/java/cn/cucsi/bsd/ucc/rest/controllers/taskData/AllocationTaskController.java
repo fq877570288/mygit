@@ -85,7 +85,7 @@ public class AllocationTaskController {
 		String barchs = doAllocationTaskCriteria.getBarchs()==null?"":doAllocationTaskCriteria.getBarchs();
 		barchs = "'" + barchs.replaceAll(",", "','") + "'";
 		String endDate = doAllocationTaskCriteria.getEndDate()==null?"":doAllocationTaskCriteria.getEndDate();
-
+		List<String> dispatchDept = doAllocationTaskCriteria.getDeptIds();
 		ResultBean_New<String> resultBean = new ResultBean_New<>();
 		//初始化赋值
 		resultBean.setReturnMsg("任务分派失败！");
@@ -94,7 +94,7 @@ public class AllocationTaskController {
 		try {
 			String deptIds = (String)session.getAttribute("DeptIds");
 			System.out.println("分派任务时 从session获取到的deptIds:::" + deptIds);
-			allocationTaskMap = allocationTaskService.allocationTask(userId, alloc, barchs, endDate,deptIds);
+			allocationTaskMap = allocationTaskService.allocationTask(userId, alloc, barchs, endDate,deptIds,dispatchDept);
 			if(allocationTaskMap.get("code").equals("-1")){
 				resultBean.setReturnMsg((String)allocationTaskMap.get("msg"));
 				return resultBean;
