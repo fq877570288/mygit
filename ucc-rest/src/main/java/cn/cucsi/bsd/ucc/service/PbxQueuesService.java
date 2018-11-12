@@ -20,4 +20,5 @@ public interface PbxQueuesService {
     Boolean delete(String queueId);
     Map<String,List<PbxExts>> findAllPbxExtGroups(PbxQueuesCriteria search);
     List<PbxQueues> findAllOfNoPage(PbxQueuesCriteria search);
+    List<PbxQueues> findQueueList(PbxQueuesCriteria criteria);
 }

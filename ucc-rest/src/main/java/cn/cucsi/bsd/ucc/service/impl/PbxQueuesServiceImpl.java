@@ -3,6 +3,7 @@ package cn.cucsi.bsd.ucc.service.impl;
 import cn.cucsi.bsd.ucc.common.beans.ExtGroupExtsCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PbxQueueNumbersCriteria;
 import cn.cucsi.bsd.ucc.common.beans.PbxQueuesCriteria;
+import cn.cucsi.bsd.ucc.common.mapper.PbxQueuesMapper;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.data.repo.ExtGroupExtsRepository;
 import cn.cucsi.bsd.ucc.data.repo.PbxExtGroupsRepository;
@@ -38,6 +39,8 @@ public class PbxQueuesServiceImpl implements PbxQueuesService {
     PbxExtsRepository pbxExtsRepository;
     @Autowired
     PbxQueuesRepository repository;
+    @Autowired
+    PbxQueuesMapper pbxQueuesMapper;
 
     @Override
     public Page<PbxQueues> findAll(PbxQueuesCriteria criteria) {
@@ -50,6 +53,11 @@ public class PbxQueuesServiceImpl implements PbxQueuesService {
     @Override
     public List<PbxQueues> findAllOfNoPage(PbxQueuesCriteria criteria) {
         return repository.findAll(PbxQueuesSpecs.createSpec(criteria));
+    }
+
+    @Override
+    public List<PbxQueues> findQueueList(PbxQueuesCriteria criteria) {
+        return pbxQueuesMapper.findQueueList(criteria);
     }
 
     @Override
