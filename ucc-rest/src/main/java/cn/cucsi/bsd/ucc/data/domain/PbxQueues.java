@@ -29,6 +29,8 @@ public class PbxQueues {
 
     private String[] extGroupExts;
 
+    private String exts;
+
     @Transient
     public String[] getExtGroupExts() {
         return extGroupExts;
@@ -231,5 +233,13 @@ public class PbxQueues {
 
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    public String getExts() {
+        return exts;
+    }
+
+    public void setExts(String exts) {
+        this.exts = exts;
     }
 }

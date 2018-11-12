@@ -6,6 +6,8 @@ import cn.cucsi.bsd.ucc.common.untils.ZooKeeperUtils;
 import cn.cucsi.bsd.ucc.data.domain.*;
 import cn.cucsi.bsd.ucc.service.PbxQueueNumbersService;
 import cn.cucsi.bsd.ucc.service.PbxQueuesService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -134,5 +136,14 @@ public class PbxQueuesController {
     @RequestMapping(value = "/findNoCheckPbxExts", method= RequestMethod.POST)
     public ResultBean<Map<String,List<PbxExts>>> findNoCheckPbxExts(@RequestBody PbxQueuesCriteria search){
         return new ResultBean(this.PbxQueuesService.findAllPbxExtGroups(search));
+    }
+    @ApiOperation(value="查询队列监控列表", notes="查询队列监控列表", httpMethod = "POST")
+    @RequestMapping(value = "/findQueueList", method= RequestMethod.POST)
+    public PageResultBean_New<List<PbxQueues>> findQueueList(@RequestBody PbxQueuesCriteria search){
+        Page pageInfo = PageHelper.startPage(search.getPage(), search.getSize());
+        List<PbxQueues> list = PbxQueuesService.findQueueList(search);
+        PageResultBean_New<List<PbxQueues>> pageResultBean_new = new PageResultBean_New(pageInfo);
+        pageResultBean_new.setList(list);
+        return pageResultBean_new;
     }
 }
