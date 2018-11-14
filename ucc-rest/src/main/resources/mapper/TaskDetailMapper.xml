@@ -786,7 +786,8 @@
   <update id="updateTaskStatus" parameterType="cn.cucsi.bsd.ucc.data.domain.TaskTransfer">
     update OC_TASK_DETAIL
     <set>
-      TASK_STATUS=#{transferStatus}
+      TASK_STATUS=#{transferStatus},
+      USER_ID=#{operatorId}
     </set>
     where TASK_DETAIL_ID=#{taskDetailId}
   </update>
@@ -1240,7 +1241,15 @@
     WHERE
       1 = 1
     AND d.TASK_STATUS IN ('2', '3')
-    <include refid="Sql_Where" />
+    <if test="businessCode != null and businessCode != ''">
+      and d.BUSINESS_CODE = '${businessCode}'
+    </if>
+    <if test="userId != null and userId != ''">
+      and d.USER_ID = '${userId}'
+    </if>
+    <if test="domainId != null and domainId != ''">
+      and d.domain_id = '${domainId}'
+    </if>
     order by d.TASK_CODE DESC
   </select>
 
@@ -1547,7 +1556,7 @@
 
   <select id="selDeptByUserIdFromTaskDetail" resultType="java.lang.String" parameterType="cn.cucsi.bsd.ucc.common.beans.TaskDetailSearch" >
     SELECT
-        a.ROPERATE_DEPT_ID
+      DISTINCT a.ROPERATE_DEPT_ID
     FROM
         OC_TASK_DETAIL AS a
     WHERE 1=1

@@ -43,7 +43,6 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 		// 部门
 		//List<UccDepts> uccDeptsist = uccDeptsService.selectByUserId(taskDetailSearch.getUserId());
 		//taskDetailSearch.setRoperateDeptId(uccDeptsist.get(0).getDeptId());
-		taskDetailSearch.setOperatorId(taskDetailSearch.getUserId());
 		Integer retcode = uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch)==null?0:uccCustomersMapper.selectOngoingBySearchCount(taskDetailSearch);
 		// 分页查询
 		taskDetailSearch.setup(retcode, taskDetailSearch.getShowLines());
@@ -51,11 +50,12 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 	}
 
 	@Override
-	public List<TaskDetail> selectDetailByBusinessCode(String businessCode,String domainId) throws Exception {
+	public List<TaskDetail> selectDetailByBusinessCode(String userId,String businessCode,String domainId) throws Exception {
 		try {
 			Map<String, Object> whereMap = new HashMap<String, Object>();
 			whereMap.put("businessCode", businessCode);
 			whereMap.put("domainId", domainId);
+			whereMap.put("userId", userId);
 			return taskDetailMapper.selectDetailByCode(whereMap);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -379,16 +379,17 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 		TaskDetailSearch search = new TaskDetailSearch();
 		// 部门
 		//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
-		TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+		/*TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
 		taskDetailSearch.setUserId(userId);
 		taskDetailSearch.setTaskDetailIds(taskDetailIds);
 		String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
-		search.setRoperateDeptId(deptId);
+		search.setRoperateDeptId(deptId);*/
 
 		// 查询下一个businessCode 状态为待办
 		search.setTaskStatus("2");
 		search.setBusinessCode(businessCode);
 		search.setShowLines(1);
+		search.setUserId(userId);
 		if(taskTypeId!=null && !taskTypeId.isEmpty()){
 			search.setTaskTypeId(taskTypeId);
 		}

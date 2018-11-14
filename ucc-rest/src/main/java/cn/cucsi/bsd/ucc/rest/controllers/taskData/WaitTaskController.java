@@ -161,8 +161,7 @@ public class WaitTaskController {
 						if(taskIdsStr.endsWith(",")){
 							taskIdsStr = taskIdsStr.substring(0, taskIdsStr.length()-1);
 						}
-							userId = userIdList.get(i);
-							doTaskReceiveMap = waitTaskService.taskReceive(userId, taskIdsStr,domainId);
+							doTaskReceiveMap = waitTaskService.taskReceive(userId,userIdList.get(i), taskIdsStr,domainId);
 							if(doTaskReceiveMap.get("code").equals("-1")){
 								taskReceiveMap.put("msg",doTaskReceiveMap.get("msg"));
 								return taskReceiveMap;
@@ -192,8 +191,8 @@ public class WaitTaskController {
 								}
 
 									System.out.println("userIdList2:::" + userIdList2.get(i).getUserId());
-									userId = userIdList2.get(i).getUserId();
-									doTaskReceiveMap = waitTaskService.taskReceive(userId,taskIdsStr,domainId);
+
+									doTaskReceiveMap = waitTaskService.taskReceive(userId,userIdList2.get(i).getUserId(),taskIdsStr,domainId);
 									System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("code"));
 									System.out.println("doTaskReceiveMap:::" + doTaskReceiveMap.get("msg"));
 

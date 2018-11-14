@@ -102,7 +102,7 @@ public class OngoingTaskController {
 			// 根据businessCode 查询客户基本信息
 			uccCustomers = uccCustomersService.selectByBusinessCode(businessCode,domainId);
 			// 查询任务列表
-			taskDetailList = ongoingTaskService.selectDetailByBusinessCode(businessCode,domainId);
+			taskDetailList = ongoingTaskService.selectDetailByBusinessCode(userId,businessCode,domainId);
 			String selectTaskTypeId = "";
 			if(taskDetailList != null && taskDetailList.size() > 0){
 				taskDetailCount = taskDetailList.size();

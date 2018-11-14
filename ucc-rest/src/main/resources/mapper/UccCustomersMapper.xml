@@ -693,8 +693,8 @@
     <if test="roperateDeptId != null and roperateDeptId != ''">
       and d.ROPERATE_DEPT_ID = #{roperateDeptId}
     </if>
-    <if test="operatorId != null and operatorId != ''">
-      and t.OPERATOR_ID = #{operatorId}
+    <if test="userId != null and userId != ''">
+      and d.USER_ID = #{userId}
     </if>
     <if test="deptIdAndChildIds != null and deptIdAndChildIds != ''">
       and d.ROPERATE_DEPT_ID in (${deptIdAndChildIds})
@@ -732,8 +732,8 @@
     <if test="roperateDeptId != null and roperateDeptId != ''">
       and d.ROPERATE_DEPT_ID = #{roperateDeptId}
     </if>
-    <if test="operatorId != null and operatorId != ''">
-      and t.OPERATOR_ID = #{operatorId}
+    <if test="userId != null and userId != ''">
+      and d.USER_ID = #{userId}
     </if>
     <if test="deptIdAndChildIds != null and deptIdAndChildIds != ''">
       and d.ROPERATE_DEPT_ID in (${deptIdAndChildIds})
@@ -810,6 +810,9 @@
       </if>
       <if test="taskTypeId != null and taskTypeId != ''">
         and d.TASK_TYPE_ID = #{taskTypeId}
+      </if>
+      <if test="userId != null and userId != ''">
+        and d.USER_ID = #{userId}
       </if>
       <!-- 注意：这是不等于 -->
       <if test="businesscode != null and businesscode != ''">
