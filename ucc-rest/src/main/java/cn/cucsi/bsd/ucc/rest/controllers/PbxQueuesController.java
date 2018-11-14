@@ -74,6 +74,7 @@ public class PbxQueuesController {
     @RequestMapping(value = "" , method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody PbxQueues PbxQueues) {
         String[] extGroupExts=PbxQueues.getExtGroupExts();
+        PbxQueues.setNumbers(PbxQueues.getExtGroupExts());
         PbxQueues queues = this.PbxQueuesService.save(PbxQueues);
 
         boolean result =queues != null;
@@ -101,6 +102,7 @@ public class PbxQueuesController {
     @RequestMapping(value = "/{queueId}", method= RequestMethod.PUT)
     public ResultBean<Boolean> save(@PathVariable String queueId,@RequestBody PbxQueues PbxQueues){
         String[] extGroupExts = PbxQueues.getExtGroupExts();
+        PbxQueues.setNumbers(PbxQueues.getExtGroupExts());
         PbxQueues queues = this.PbxQueuesService.save(PbxQueues);//修改队列表
         boolean result = queues != null;
         if(result){

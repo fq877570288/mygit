@@ -72,6 +72,7 @@ public class PbxGatewaysController {
     @RequestMapping(value = "" , method =  RequestMethod.POST)
     public ResultBean<Boolean> create(@RequestBody PbxGateways PbxGateways) {
         String[] gwNumbersStr = PbxGateways.getGwNumbersStr();
+        PbxGateways.setNumbers(PbxGateways.getGwNumbersStr());
         PbxGateways pbxGateway = this.PbxGatewaysService.save(PbxGateways);
         if(pbxGateway!=null && gwNumbersStr.length>0){//插入大号表(pbx_gw_numbers)信息
             for (String gwNumber: gwNumbersStr
@@ -100,6 +101,7 @@ public class PbxGatewaysController {
     @RequestMapping(value = "/{gwId}", method= RequestMethod.PUT)
     public ResultBean<Boolean> save(@PathVariable String gwId, @RequestBody PbxGateways PbxGateways ){
         String[] gwNumbersStr = PbxGateways.getGwNumbersStr();
+        PbxGateways.setNumbers(PbxGateways.getGwNumbersStr());
         Date nowDate = new Date();
         PbxGateways.setUpdatedTime(nowDate);
         PbxGateways pbxGateway = this.PbxGatewaysService.save(PbxGateways);

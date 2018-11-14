@@ -32,6 +32,7 @@ public class PbxGateways {
     private String registerTransport;
     private String domainId;
     private String[] gwNumbersStr;
+    private String[] numbers;
 
     //以下六个字段，作为创建和更新 使用，不再使用关联关系
     @JsonView(JSONView.Summary.class)
@@ -393,5 +394,13 @@ public class PbxGateways {
 
     public void setGwNumbersStr(String[] gwNumbersStr) {
         this.gwNumbersStr = gwNumbersStr;
+    }
+    @Transient
+    public String[] getNumbers() {
+        return numbers;
+    }
+
+    public void setNumbers(String[] numbers) {
+        this.numbers = numbers;
     }
 }
