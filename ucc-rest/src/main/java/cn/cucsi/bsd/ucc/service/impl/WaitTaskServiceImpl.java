@@ -125,7 +125,7 @@ public class WaitTaskServiceImpl implements WaitTaskService {
 
 	@Override
 	@Transactional
-	public Map<String,Object> taskReceive(String userId, String taskDetailIds,String domainId) throws Exception {
+	public Map<String,Object> taskReceive(String OperatorId,String roperateUserId, String taskDetailIds,String domainId) throws Exception {
 
 		Map<String,Object> doTaskReceiveMap = new HashMap<String,Object>();
 		doTaskReceiveMap.put("msg", "任务接收操作失败!");
@@ -152,21 +152,23 @@ public class WaitTaskServiceImpl implements WaitTaskService {
                 taskTransfer = new TaskTransfer();
                 String taskTransferUuid = generator.generate();
 				taskDetailSearch = new TaskDetailSearch();
-				taskDetailSearch.setUserId(userId);
+				taskDetailSearch.setUserId(OperatorId);
 				taskDetailSearch.setTaskDetailId(id);
 				taskDetailSearch.setDomainId(domainId);
 				// 部门
-				String deptID = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
-                taskTransfer.setRoperateDeptId(deptID);
+				String operatordeptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);//操作部门
+				/*taskDetailSearch.setUserId(roperateUserId);
+				String roperateDeptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);//操作部门*/
+
                 taskTransfer.setTaskDetailId(id);
                 taskTransfer.setTaskTransferId(taskTransferUuid);
                 taskTransfer.setTransferStatus("2"); //流转状态    0:未分派、1：未接收、2：待办、3：在办
                 taskTransfer.setTransfeRoperate(TaskTransfer.RECEIVE); //流转操作  0:创建、1：分派、2：接收、3：回退
                 taskTransfer.setTransferTime(transferTime); //流转时间
-                taskTransfer.setOperatorId(userId); //操作员
-                taskTransfer.setOperatorDept(deptID);
-                taskTransfer.setRoperatePersonId(userId);//受理员
-                taskTransfer.setRoperateDeptId(deptID);//受理部门
+                taskTransfer.setOperatorId(OperatorId); //操作员
+                taskTransfer.setOperatorDept(operatordeptId);
+                taskTransfer.setRoperatePersonId(roperateUserId);//受理员
+                taskTransfer.setRoperateDeptId(operatordeptId);//受理部门
                 taskTransfer.setDomainId(domainId);
 
                 taskTransferList.add(taskTransfer);
