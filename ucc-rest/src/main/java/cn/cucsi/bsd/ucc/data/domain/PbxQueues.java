@@ -28,6 +28,7 @@ public class PbxQueues {
     private String updatedNickName;
 
     private String[] extGroupExts;
+    private String[] numbers;
 
     private String exts;
 
@@ -241,5 +242,14 @@ public class PbxQueues {
 
     public void setExts(String exts) {
         this.exts = exts;
+    }
+
+    @Transient
+    public String[] getNumbers() {
+        return numbers;
+    }
+
+    public void setNumbers(String[] numbers) {
+        this.numbers = numbers;
     }
 }
