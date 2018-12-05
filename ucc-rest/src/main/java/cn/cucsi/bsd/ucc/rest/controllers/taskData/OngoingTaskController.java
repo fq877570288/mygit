@@ -271,6 +271,9 @@ public class OngoingTaskController {
 		session.setAttribute("selectTaskTypeId", taskTypeId);
 		try {
 			businesscode = ongoingTaskService.saveAndGoonDetail(callinfo, userId, taskTypeId, cdrId, businessCode,domainId,taskDetailIds);
+			if("error".equals(businesscode)){
+				return saveDetailMap;
+			}
 			if(businesscode != null && !"".equals(businesscode)){
 				businesscode = AESUtil.encrypt(businesscode, this.aesPwd);
                 saveDetailMap.put("businesscode",businesscode);
