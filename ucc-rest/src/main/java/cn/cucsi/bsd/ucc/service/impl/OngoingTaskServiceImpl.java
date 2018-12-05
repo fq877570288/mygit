@@ -130,10 +130,8 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 			// 部门
 			//List<UccDepts> uccDeptsList = uccDeptsService.selectByUserId(userId);
 			//String deptId = uccDeptsList.get(0).getDeptId();
-			TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
-			taskDetailSearch.setUserId(userId);
-			taskDetailSearch.setTaskDetailIds(taskDetailIds);
-			String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
+
+
 
 			List<TaskTransfer> taskTransferList = new ArrayList<TaskTransfer>();
 			TaskTransfer taskTransfer = null;
@@ -157,6 +155,10 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
                     }
                     if("4".equals(cinfos[3])){
                         TaskDetail taskDetail = taskDetailMapper.selectByPrimaryKeyForWEB(cinfos[0]);
+						TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+						taskDetailSearch.setUserId(userId);
+						taskDetailSearch.setTaskDetailId(taskDetail.getTaskDetailId());
+						String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
                         if(taskDetail==null){
                             logger.error("taskDetail为空,也许是重复提交导致的，忽略本条任务: "+cinfo);
                             continue;
@@ -256,13 +258,18 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
                         taskTransferRecord.setRecordOperatorId(userId);
                         taskTransferRecord.setRecordOperatorDept(deptId);
                         taskTransferRecord.setRoperatePersonId(userId);
-                        taskTransferRecord.setRoperateDeptId(deptId);
                         taskTransferRecord.setDomainId(domainId);
 
                         taskTransferRecordList.add(taskTransferRecord);
                     }else {
                         taskTransfer = new TaskTransfer();
                         String taskTransferUuid = generator.generate();
+
+						TaskDetail taskDetail = taskDetailMapper.selectByPrimaryKeyForWEB(cinfos[0]);
+						TaskDetailSearch taskDetailSearch = new TaskDetailSearch();
+						taskDetailSearch.setUserId(userId);
+						taskDetailSearch.setTaskDetailId(taskDetail.getTaskDetailId());
+						String deptId = taskDetailMapper.selDeptByUserIdFromTaskDetail(taskDetailSearch);
 
                         taskTransfer.setRoperateDeptId(deptId);
                         taskTransfer.setRoperatePersonId(userId);
@@ -374,7 +381,10 @@ public class OngoingTaskServiceImpl implements OngoingTaskService {
 	public String saveAndGoonDetail(String callinfo, String userId, String taskTypeId, String cdrId, String businessCode,String domainId,String taskDetailIds) throws Exception {
 		
 		// 保存任务信息
-		saveDetail(callinfo, userId, cdrId,domainId,taskDetailIds);
+		Map<String,Object> doSaveDetailMap =	saveDetail(callinfo, userId, cdrId,domainId,taskDetailIds);
+		if(doSaveDetailMap.get("code").equals("-1")){
+			return  "error";
+		}
 		List<UccCustomers> customerList = null;
 		TaskDetailSearch search = new TaskDetailSearch();
 		// 部门
