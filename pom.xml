@@ -3,13 +3,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.cucsi.bsd</groupId>
-    <artifactId>ucc</artifactId>
+    <groupId>cn.unihotel</groupId>
+    <artifactId>unihotel</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
     <modules>
-        <module>ucc-rest</module>
-        <module>ucc-admin</module>
+        <module>unihotel-rest</module>
+        <module>unihotel-admin</module>
     </modules>
 
     <properties>
@@ -108,6 +108,8 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+
         </plugins>
     </build>
 </project>
