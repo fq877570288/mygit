@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.unihotel.mapper.ReserveInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.unihotel.entry.ReserveInfo">
+    <id column="reserve_id" jdbcType="VARCHAR" property="reserveId" />
+    <result column="reserve_person" jdbcType="VARCHAR" property="reservePerson" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="id_card_num" jdbcType="VARCHAR" property="idCardNum" />
+    <result column="reserve_time" jdbcType="DATE" property="reserveTime" />
+    <result column="room_no" jdbcType="VARCHAR" property="roomNo" />
+    <result column="roomtype_name" jdbcType="VARCHAR" property="roomtypeName" />
+    <result column="roomtype_id" jdbcType="INTEGER" property="roomtypeId" />
+    <result column="reserve_way" jdbcType="INTEGER" property="reserveWay" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from reserve_info
+    where reserve_id = #{reserveId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.unihotel.entry.ReserveInfo">
+    insert into reserve_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="reserveId!= null">
+        reserve_id,
+      </if>
+      <if test="reservePerson!= null">
+        reserve_person,
+      </if>
+      <if test="phoneNum!= null">
+        phone_num,
+      </if>
+      <if test="idCardNum != null">
+        id_card_num,
+      </if>
+      <if test="reserveTime!= null">
+        reserve_time,
+      </if>
+      <if test="roomNo!= null">
+        room_no,
+      </if>
+      <if test="roomtypeId!= null">
+        roomtype_id,
+      </if>
+      <if test="reserveWay!= null">
+        reserve_way,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="reserveId != null">
+        #{reserveId,jdbcType=VARCHAR},
+      </if>
+      <if test="reservePerson != null">
+        #{reservePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNum != null">
+        #{idCardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveTime != null">
+        #{reserveTime,jdbcType=DATE},
+      </if>
+      <if test="roomNo!= null">
+        #{roomNo,jdbcType=INTEGER},
+      </if>
+      <if test="roomtypeId != null">
+        #{roomtypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reserveWay != null">
+        #{reserveWay,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.unihotel.entry.ReserveInfo">
+    update reserve_info
+    <set>
+      <if test="reservePerson!=null and reservePerson!=''">
+        reserve_person = #{reservePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum!=null and phoneNum!=''">
+        phone_num = #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="idCardNum!=null and idCardNum!=''">
+        id_card_num=#{idCardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="reserveTime!=null and reserveTime!=''">
+        reserve_time = #{reserveTime,jdbcType=DATE},
+      </if>
+      <if test="roomNo!=null and roomNo!=''">
+        room_no = #{roomNo,jdbcType=VARCHAR},
+      </if>
+      <if test="roomtypeId!=null and roomtypeId!=''">
+        roomtype_id = #{roomtypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reserveWay!=null and reserveWay!=''">
+        reserve_way = #{reserveWay,jdbcType=INTEGER}
+      </if>
+    </set>
+    where reserve_id = #{reserveId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="cn.unihotel.entry.request.Reserve_info_search">
+    select ri.*,r.roomtype_name
+    from reserve_info ri LEFT JOIN  roomtype r ON ri.roomtype_id=r.roomtype_id
+    <where>
+      <if test="reserveId !=null and reserveId!=''">
+        and reserve_id like concat('%',#{reserveId}, '%')
+      </if>
+      <if test="idCardNum !=null and idCardNum!=''">
+        and id_card_num like concat ('%',#{idCardNum},'%')
+      </if>
+      <if test="reservePerson !=null and reservePerson!=''">
+        and reserve_person like concat('%',#{reservePerson},'%')
+      </if>
+      <if test="paTimeFrom!=null and paTimeFrom!=''">
+        and Date(reserve_time) &gt;=#{paTimeFrom}
+      </if>
+      <if test="paTimeTo!=null and paTimeTo!=''">
+        and Date(reserve_time) &lt;=#{paTimeTo}
+      </if>
+    </where>
+    order by ri.reserve_time DESC
+  </select>
+</mapper>

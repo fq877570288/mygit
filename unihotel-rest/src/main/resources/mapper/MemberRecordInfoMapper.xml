@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.unihotel.mapper.MemberRecordInfoMapper">
+  <resultMap id="BaseResultMap" type="cn.unihotel.entry.MemberRecordInfo">
+    <id column="in_id" jdbcType="INTEGER" property="inId" />
+    <result column="id_card_num" jdbcType="VARCHAR" property="idCardNum" />
+    <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+    <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+    <result column="check_in_date" jdbcType="TIMESTAMP" property="checkInDate" />
+    <result column="check_out_date" jdbcType="TIMESTAMP" property="checkOutDate" />
+    <result column="room_type" jdbcType="INTEGER" property="roomType" />
+    <result column="roomtype_name" jdbcType="INTEGER" property="roomtypeName" />
+    <result column="room_id" jdbcType="INTEGER" property="roomId" />
+    <result column="money" jdbcType="DOUBLE" property="money" />
+    <result column="room_no" jdbcType="VARCHAR" property="roomNo" />
+  </resultMap>
+  <sql id="colum">
+    in_id, id_card_num,member_name, phone_num, check_in_date, check_out_date, room_type,room_id,money,roomtype_name,room_no
+  </sql>
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="cn.unihotel.entry.request.MemberRecord_info_search">
+    select mri.*,ri.roomtype_name
+    from member_record_info mri LEFT  JOIN  roomtype ri ON mri.room_type=ri.roomtype_id
+    <where>
+      <if test="idCardNum!=null and idCardNum!=''">
+        and id_card_num like concat('%',#{idCardNum}, '%')
+      </if>
+      <if test="memberName!=null and memberName!=''">
+        and member_name like concat('%',#{memberName},'%')
+      </if>
+      <if test="createdTimeFrom!=null and createdTimeFrom!=''">
+        and check_in_date &gt;=#{createdTimeFrom}
+      </if>
+      <if test="createdTimeTo!=null and createdTimeTo!=''">
+        and check_out_date &lt;=#{createdTimeTo}
+      </if>
+  </where>
+   </select>
+  <insert id="insertSelective" parameterType="cn.unihotel.entry.MemberRecordInfo">
+    insert into member_record_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="inId != null">
+        in_id,
+      </if>
+      <if test="idCardNum != null">
+        id_card_num,
+      </if>
+      <if test="memberName != null">
+        member_name,
+      </if>
+      <if test="phoneNum != null">
+        phone_num,
+      </if>
+      <if test="checkInDate != null">
+        check_in_date,
+      </if>
+      <if test="checkOutDate != null">
+        check_out_date,
+      </if>
+      <if test="roomType != null">
+        room_type,
+      </if>
+      <if test="roomId != null">
+        room_id,
+      </if>
+      <if test="money != null">
+        money
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="inId != null">
+        #{inId,jdbcType=INTEGER},
+      </if>
+      <if test="idCardNum != null">
+        #{idCardNum,jdbcType=VARCHAR},
+      </if>
+      <if test="memberName != null">
+        #{memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        #{phoneNum,jdbcType=VARCHAR},
+      </if>
+      <if test="checkInDate != null">
+        #{checkInDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkOutDate != null">
+        #{checkOutDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roomType != null">
+        #{roomType,jdbcType=INTEGER},
+      </if>
+      <if test="roomId != null">
+        #{roomId,jdbcType=INTEGER},
+      </if>
+      <if test="money != null">
+        #{money,jdbcType=DOUBLE}
+      </if>
+    </trim>
+  </insert>
+  <!--<insert id="addRemberRecord" parameterType="cn.unihotel.entry.ReserveInfo">-->
+    <!--insert into member_record_info values (#{idCardNum},#{memberName},#{phoneNum},#{checkInDate},{checkOutDate},{roomType})-->
+  <!--</insert>-->
+</mapper>
